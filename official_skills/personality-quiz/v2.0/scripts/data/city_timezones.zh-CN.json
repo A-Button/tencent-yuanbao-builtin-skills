@@ -1,0 +1,339 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_version": "2026-09-23",
+  "source": "builtin-city-timezone-table",
+  "records": [
+    {
+      "label": "北京",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["北京", "北京市", "beijing", "peking"]
+    },
+    {
+      "label": "上海",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["上海", "上海市", "shanghai"]
+    },
+    {
+      "label": "天津",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["天津", "天津市", "tianjin"]
+    },
+    {
+      "label": "重庆",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["重庆", "重庆市", "重慶", "重慶市", "chongqing"]
+    },
+    {
+      "label": "广州",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["广州", "广州市", "廣州", "廣州市", "广东广州", "guangzhou", "canton"]
+    },
+    {
+      "label": "深圳",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["深圳", "深圳市", "广东深圳", "shenzhen"]
+    },
+    {
+      "label": "珠海",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["珠海", "珠海市", "广东珠海", "zhuhai"]
+    },
+    {
+      "label": "佛山",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["佛山", "佛山市", "广东佛山", "foshan"]
+    },
+    {
+      "label": "成都",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["成都", "成都市", "四川成都", "chengdu"]
+    },
+    {
+      "label": "杭州",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["杭州", "杭州市", "浙江杭州", "浙江省杭州市", "hangzhou"]
+    },
+    {
+      "label": "温州",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["温州", "温州市", "浙江温州", "浙江省温州", "浙江省温州市", "wenzhou"]
+    },
+    {
+      "label": "宁波",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["宁波", "宁波市", "寧波", "寧波市", "浙江宁波", "ningbo"]
+    },
+    {
+      "label": "武汉",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["武汉", "武汉市", "武漢", "武漢市", "湖北武汉", "wuhan"]
+    },
+    {
+      "label": "南京",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["南京", "南京市", "江苏南京", "nanjing"]
+    },
+    {
+      "label": "苏州",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["苏州", "苏州市", "蘇州", "蘇州市", "江苏苏州", "suzhou"]
+    },
+    {
+      "label": "西安",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["西安", "西安市", "陕西西安", "陝西西安", "xian", "xi'an", "xi’an"]
+    },
+    {
+      "label": "郑州",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["郑州", "郑州市", "鄭州", "鄭州市", "河南郑州", "zhengzhou"]
+    },
+    {
+      "label": "长沙",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["长沙", "长沙市", "長沙", "長沙市", "湖南长沙", "changsha"]
+    },
+    {
+      "label": "青岛",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["青岛", "青岛市", "青島", "青島市", "山东青岛", "qingdao", "tsingtao"]
+    },
+    {
+      "label": "厦门",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["厦门", "厦门市", "廈門", "廈門市", "福建厦门", "xiamen", "amoy"]
+    },
+    {
+      "label": "福州",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["福州", "福州市", "福建福州", "fuzhou"]
+    },
+    {
+      "label": "济南",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["济南", "济南市", "濟南", "濟南市", "山东济南", "jinan"]
+    },
+    {
+      "label": "沈阳",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["沈阳", "沈阳市", "瀋陽", "瀋陽市", "辽宁沈阳", "shenyang"]
+    },
+    {
+      "label": "大连",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["大连", "大连市", "大連", "大連市", "辽宁大连", "dalian"]
+    },
+    {
+      "label": "哈尔滨",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["哈尔滨", "哈尔滨市", "哈爾濱", "哈爾濱市", "黑龙江哈尔滨", "harbin"]
+    },
+    {
+      "label": "长春",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["长春", "长春市", "長春", "長春市", "吉林长春", "changchun"]
+    },
+    {
+      "label": "昆明",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["昆明", "昆明市", "云南昆明", "kunming"]
+    },
+    {
+      "label": "贵阳",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["贵阳", "贵阳市", "貴陽", "貴陽市", "贵州贵阳", "guiyang"]
+    },
+    {
+      "label": "南宁",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["南宁", "南宁市", "南寧", "南寧市", "广西南宁", "nanning"]
+    },
+    {
+      "label": "海口",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["海口", "海口市", "海南海口", "haikou"]
+    },
+    {
+      "label": "三亚",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["三亚", "三亚市", "三亞", "三亞市", "海南三亚", "sanya"]
+    },
+    {
+      "label": "合肥",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["合肥", "合肥市", "安徽合肥", "hefei"]
+    },
+    {
+      "label": "南昌",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["南昌", "南昌市", "江西南昌", "nanchang"]
+    },
+    {
+      "label": "石家庄",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["石家庄", "石家庄市", "石家莊", "石家莊市", "河北石家庄", "shijiazhuang"]
+    },
+    {
+      "label": "太原",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["太原", "太原市", "山西太原", "taiyuan"]
+    },
+    {
+      "label": "呼和浩特",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["呼和浩特", "呼和浩特市", "内蒙古呼和浩特", "hohhot"]
+    },
+    {
+      "label": "兰州",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["兰州", "兰州市", "蘭州", "蘭州市", "甘肃兰州", "lanzhou"]
+    },
+    {
+      "label": "西宁",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["西宁", "西宁市", "西寧", "西寧市", "青海西宁", "xining"]
+    },
+    {
+      "label": "银川",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["银川", "银川市", "銀川", "銀川市", "宁夏银川", "yinchuan"]
+    },
+    {
+      "label": "拉萨",
+      "timezone": "Asia/Shanghai",
+      "precision": "city",
+      "aliases": ["拉萨", "拉萨市", "拉薩", "拉薩市", "西藏拉萨", "lhasa"]
+    },
+    {
+      "label": "香港",
+      "timezone": "Asia/Hong_Kong",
+      "precision": "city",
+      "aliases": ["香港", "香港特别行政区", "香港特別行政區", "hongkong", "hong kong", "hk"]
+    },
+    {
+      "label": "澳门",
+      "timezone": "Asia/Macau",
+      "precision": "city",
+      "aliases": ["澳门", "澳門", "澳门特别行政区", "澳門特別行政區", "macau", "macao"]
+    },
+    {
+      "label": "台北",
+      "timezone": "Asia/Taipei",
+      "precision": "city",
+      "aliases": ["台北", "台北市", "臺北", "臺北市", "taipei"]
+    },
+    {
+      "label": "新北",
+      "timezone": "Asia/Taipei",
+      "precision": "city",
+      "aliases": ["新北", "新北市", "newtaipei", "new taipei"]
+    },
+    {
+      "label": "台中",
+      "timezone": "Asia/Taipei",
+      "precision": "city",
+      "aliases": ["台中", "台中市", "臺中", "臺中市", "taichung"]
+    },
+    {
+      "label": "台南",
+      "timezone": "Asia/Taipei",
+      "precision": "city",
+      "aliases": ["台南", "台南市", "臺南", "臺南市", "tainan"]
+    },
+    {
+      "label": "高雄",
+      "timezone": "Asia/Taipei",
+      "precision": "city",
+      "aliases": ["高雄", "高雄市", "kaohsiung"]
+    },
+    {
+      "label": "台湾",
+      "timezone": "Asia/Taipei",
+      "precision": "region",
+      "aliases": ["台湾", "臺灣", "taiwan"]
+    },
+    {
+      "label": "新疆",
+      "precision": "region",
+      "ambiguity_code": "xinjiang_clock_required",
+      "aliases": ["新疆", "新疆维吾尔自治区", "新疆維吾爾自治區", "xinjiang"]
+    },
+    {
+      "label": "乌鲁木齐",
+      "precision": "city",
+      "ambiguity_code": "xinjiang_clock_required",
+      "aliases": ["乌鲁木齐", "乌鲁木齐市", "烏魯木齊", "烏魯木齊市", "新疆乌鲁木齐", "urumqi", "urumchi"]
+    },
+    {
+      "label": "喀什",
+      "precision": "city",
+      "ambiguity_code": "xinjiang_clock_required",
+      "aliases": ["喀什", "喀什市", "喀什地区", "新疆喀什", "kashgar", "kashi"]
+    },
+    {
+      "label": "伊宁",
+      "precision": "city",
+      "ambiguity_code": "xinjiang_clock_required",
+      "aliases": ["伊宁", "伊宁市", "伊寧", "伊寧市", "新疆伊宁", "yining"]
+    },
+    {
+      "label": "库尔勒",
+      "precision": "city",
+      "ambiguity_code": "xinjiang_clock_required",
+      "aliases": ["库尔勒", "库尔勒市", "庫爾勒", "庫爾勒市", "新疆库尔勒", "korla"]
+    },
+    {
+      "label": "阿克苏",
+      "precision": "city",
+      "ambiguity_code": "xinjiang_clock_required",
+      "aliases": ["阿克苏", "阿克苏市", "阿克蘇", "阿克蘇市", "新疆阿克苏", "aksu"]
+    },
+    {
+      "label": "和田",
+      "precision": "city",
+      "ambiguity_code": "xinjiang_clock_required",
+      "aliases": ["和田", "和田市", "新疆和田", "hotan", "khotan"]
+    },
+    {"label": "旧金山", "timezone": "America/Los_Angeles", "precision": "city", "aliases": ["旧金山", "舊金山", "美国旧金山", "美国加州旧金山", "加州旧金山", "San Francisco", "San Francisco, California", "San Francisco, CA"], "source_url": "https://data.iana.org/time-zones/tzdb/northamerica"},
+    {"label": "洛杉矶", "timezone": "America/Los_Angeles", "precision": "city", "aliases": ["洛杉矶", "洛杉磯", "美国洛杉矶", "美国加州洛杉矶", "加州洛杉矶", "Los Angeles", "Los Angeles, California", "Los Angeles, CA"], "source_url": "https://data.iana.org/time-zones/tzdb/northamerica"}
+  ]
+}

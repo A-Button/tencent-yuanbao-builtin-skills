@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="ohTvPHIP2U97LHtLpDuAWd">
+<head data-page-node-id="Y3AnVIXbDbRRRDsAgy5zJR">
+<meta charset="UTF-8" data-page-node-id="rSZ85Yu7KoJaeYQPUXIqqU">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" data-page-node-id="IrAEvlsiRwavgcDbRTCN5j">
+<title>健康周报 · {{WEEK_TITLE}}</title>
+<style>
+:root{
+  --ink:#171815;--text:#555853;--muted:#8A8D88;--hair:#E8E9E6;--white:#FFF;
+  --overall:#6E7972;--overall-soft:#F0F2F0;--overall-line:#DDE2DE;
+  --diet:#D97745;--diet-deep:#974727;--diet-soft:#FAEEE7;--diet-line:#EECFBE;
+  --sport:#477DA3;--sport-deep:#285C80;--sport-soft:#EAF2F7;--sport-line:#C9DDE9;
+  --good:#3F8067;--good-soft:#EAF4EF;--warn:#B06B2D;
+  --advice:#6E766F;--advice-soft:#F0F1EE;--advice-line:#DADDD7;
+  --num:"DIN Alternate","SF Pro Display",-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;background:#F4F4F2}
+body{font-family:"PingFang SC",-apple-system,"Helvetica Neue",sans-serif;background:#F4F4F2;color:var(--ink);line-height:1.6}
+.page{width:100%;max-width:430px;min-height:100vh;margin:0 auto;background:#FAFAF8;padding:0 0 calc(30px + env(safe-area-inset-bottom))}
+.num{font-family:var(--num);font-variant-numeric:tabular-nums}
+.serif{font-family:"Songti SC","Noto Serif SC",Georgia,serif}
+.hero{padding:34px 22px 26px;background:linear-gradient(180deg,#EEF1EE 0%,#F7F8F6 66%,#FAFAF8 100%)}
+.date{font-size:11px;letter-spacing:.13em;font-weight:600;color:var(--overall)}
+h1{font-size:28px;font-weight:500;letter-spacing:-.35px;line-height:1.42;margin-top:12px}
+.week-desc{font-size:14px;line-height:1.9;color:#4D504C;margin-top:13px}
+.week-desc b{font-weight:600;color:var(--diet-deep)}
+.coverage{display:flex;align-items:center;gap:7px;margin-top:17px;font-size:10px;color:var(--muted)}
+.coverage .dots{display:flex;gap:4px}.coverage i{width:7px;height:7px;border-radius:50%;background:#D5D8D4}.coverage i.on{background:var(--good)}
+
+.module{margin:12px 12px 0;border:1px solid;border-radius:22px;padding:10px}
+.module.overall{background:var(--overall-soft);border-color:var(--overall-line)}
+.module.diet{background:var(--diet-soft);border-color:var(--diet-line)}
+.module.sport{background:var(--sport-soft);border-color:var(--sport-line)}
+.module.closing{background:var(--advice-soft);border-color:var(--advice-line)}
+.module-head{display:flex;align-items:center;padding:7px 6px 12px}
+.module-head .index{font-size:10px;font-weight:700;letter-spacing:.1em;margin-right:8px}
+.module.overall .index{color:var(--overall)}.module.diet .index{color:var(--diet-deep)}.module.sport .index{color:var(--sport-deep)}.module.closing .index{color:var(--advice)}
+.module-head h2{font-size:17px;font-weight:600}
+.module-head .meta{font-size:10.5px;color:var(--muted);margin-left:auto}
+.sheet{background:var(--white);border-radius:15px;padding:17px 16px}
+.sheet+.sheet{margin-top:9px}
+
+/* Overall */
+.energy-kicker{font-size:11px;color:var(--muted);letter-spacing:.04em}
+.energy-result{display:flex;align-items:baseline;gap:7px;margin-top:5px;flex-wrap:wrap}
+.energy-result .value{font-size:43px;line-height:1;font-weight:700;letter-spacing:-1.5px}
+.energy-result .unit{font-size:13px;color:var(--muted);font-weight:500}
+.energy-result .label{font-size:15px;font-weight:600;color:{{BALANCE_DOT_COLOR}}}
+.energy-lead{font-size:12px;color:var(--text);line-height:1.7;margin-top:11px}
+.energy-coverage{margin-top:17px;padding-top:14px;border-top:1px solid var(--hair)}
+.balance-axis{position:relative;height:34px;margin:4px 7px 0}
+.balance-track{position:absolute;left:0;right:0;top:13px;height:8px;border-radius:999px;background:linear-gradient(90deg,#DCEDE6 0%,#79AC95 45%,#D9DAD7 49%,#D9DAD7 51%,#E7A276 55%,#F5DED0 100%)}
+.balance-center{position:absolute;left:50%;top:8px;width:1px;height:19px;background:#777B76}
+.balance-dot{position:absolute;left:{{BALANCE_DOT_POSITION}}%;top:8px;width:18px;height:18px;border-radius:50%;background:{{BALANCE_DOT_COLOR}};border:3px solid #FFF;box-shadow:0 0 0 1px {{BALANCE_DOT_SHADOW}};transform:translateX(-50%)}
+.balance-dot::after{content:"{{BALANCE_SIGNED_TEXT}}";position:absolute;left:50%;bottom:21px;transform:translateX(-50%);font:700 9px var(--num);color:{{BALANCE_DOT_COLOR}};white-space:nowrap}
+.balance-labels{display:grid;grid-template-columns:1fr auto 1fr;align-items:start;margin-top:3px;font-size:10px;font-weight:600;line-height:1.35}
+.balance-labels .left{color:var(--good);text-align:left}.balance-labels .mid{color:var(--muted);text-align:center;font-weight:400}.balance-labels .right{color:var(--diet-deep);text-align:right}
+.energy-explain{font-size:11.5px;color:var(--text);line-height:1.7;margin-top:14px;padding:11px 12px;border-radius:11px;background:#FBF3EE;border-left:3px solid var(--diet)}
+.energy-explain b{color:var(--diet-deep)}
+.week-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:15px;padding-top:13px;border-top:1px solid var(--hair)}
+.week-kpi{text-align:center;border-right:1px solid var(--hair)}.week-kpi:last-child{border-right:none}
+.week-kpi .v{font-size:15px;font-weight:700}.week-kpi .k{font-size:9px;color:var(--muted);margin-top:2px}
+
+/* Combined line chart */
+.chart-head{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+.chart-title{font-size:14px;font-weight:600}.chart-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.legend{display:flex;gap:9px;font-size:9.5px;color:var(--text);flex:none}.legend span{display:flex;align-items:center;gap:4px}.legend i{width:14px;height:3px;border-radius:99px}
+.trend-table{margin-top:13px;border:1px solid var(--hair);border-radius:13px;overflow:hidden;background:#FCFCFB}
+.trend-plot{padding:8px 6px 3px}
+.trend-plot svg{display:block;width:100%;height:auto}
+.trend-summary{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--hair)}
+.trend-summary div{padding:10px 12px}.trend-summary div+div{border-left:1px solid var(--hair)}
+.trend-summary .k{font-size:9px;color:var(--muted)}.trend-summary .v{font-size:13px;font-weight:700;margin-top:2px}.trend-summary .orange{color:var(--diet-deep)}.trend-summary .blue{color:var(--sport-deep)}
+.chart-note{font-size:9.5px;color:var(--muted);line-height:1.55;margin-top:9px}
+
+/* Nutrition */
+.nutri-title{font-size:14px;font-weight:600}.nutri-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.nutri-chart{height:202px;position:relative;margin-top:12px;padding:13px 8px 35px 32px;border-bottom:1px solid #D8D9D6}
+.scale-line{position:absolute;left:32px;right:8px;border-top:1px dashed #CED0CC}.scale-line.s100{top:13px}.scale-line.s50{top:88px}.scale-line span{position:absolute;left:-31px;top:-8px;font-size:9px;color:var(--muted)}
+.bars{height:150px;display:flex;align-items:flex-end;gap:12px;position:relative;z-index:1}
+.col{position:relative;flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-width:0}.bar-value{font-size:11px;font-weight:700;margin-bottom:4px}.bar{width:min(30px,70%);border-radius:7px 7px 0 0}.bar.over{background:repeating-linear-gradient(135deg,#D97745 0 5px,#E79B72 5px 10px)}.bar.protein{background:#6F88C8}.bar.fat{background:#D59B50}.bar.carb{background:#72A87E}.bar-label{position:absolute;left:50%;transform:translateX(-50%);bottom:-29px;width:64px;font-size:10px;color:var(--text);text-align:center;line-height:1.25}.bar-label small{display:block;font-size:8px;color:var(--muted)}
+.insight-line{font-size:12px;color:var(--text);line-height:1.7;margin-top:12px}.insight-line b{color:var(--diet-deep)}
+
+/* Weekly matrix: columns are days, rows are meals / activity slots */
+.matrix-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px}.matrix-title h3{font-size:14px}.matrix-title span{font-size:9px;color:var(--muted);text-align:right}
+.matrix-wrap{width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-x;border:1px solid var(--hair);border-radius:13px;background:#FFF;scrollbar-width:none}.matrix-wrap::-webkit-scrollbar{display:none}
+.week-matrix{width:744px;min-width:744px;border-collapse:separate;border-spacing:0;table-layout:fixed}
+.week-matrix th,.week-matrix td{border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);vertical-align:top}.week-matrix tr:last-child th,.week-matrix tr:last-child td{border-bottom:none}.week-matrix th:last-child,.week-matrix td:last-child{border-right:none}
+.week-matrix thead th{height:45px;padding:7px 5px;background:#F6F6F3;text-align:center;font-size:10px;font-weight:700;color:var(--ink)}
+.week-matrix thead th small{display:block;font:400 8px var(--num);color:var(--muted);margin-top:1px}
+.week-matrix .corner{position:sticky;left:0;z-index:3;width:58px;min-width:58px;background:#ECEDE9;color:var(--muted);font-size:8px;letter-spacing:.05em}
+.week-matrix tbody th{position:sticky;left:0;z-index:2;width:58px;min-width:58px;padding:9px 7px;background:#F8F8F5;text-align:left;font-size:9px;font-weight:700;color:var(--muted)}
+.week-matrix thead th:not(.corner),.week-matrix td{width:98px;min-width:98px;max-width:98px}
+.week-matrix td{padding:8px 7px;font-size:9.5px;line-height:1.48;color:var(--text);overflow-wrap:anywhere}
+.week-matrix td .main{color:var(--ink);font-weight:600}.week-matrix td .note{display:block;color:var(--muted);font-size:8px;margin-top:3px;line-height:1.4}.week-matrix td.empty{color:#B0B2AE;text-align:center;vertical-align:middle;font-size:9px;white-space:nowrap}
+.diet .week-matrix thead th:not(.corner){background:var(--diet-soft);color:var(--diet-deep)}.diet .week-matrix tbody th{background:#FDF7F3;color:var(--diet-deep)}
+.sport .week-matrix thead th:not(.corner){background:var(--sport-soft);color:var(--sport-deep)}.sport .week-matrix tbody th{background:#F4F8FB;color:var(--sport-deep)}
+.week-matrix .total-row th,.week-matrix .total-row td{background:#F1F2EF;font-weight:700;vertical-align:middle}.diet .week-matrix .total-row td{color:var(--diet-deep);font-family:var(--num)}.sport .week-matrix .total-row td{color:var(--sport-deep);font-family:var(--num)}
+.matrix-hint{font-size:8.5px;color:var(--muted);margin-top:7px;text-align:right}
+
+/* Sport */
+.sport-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.sport-kpi{border:1px solid var(--sport-line);border-radius:12px;padding:11px 8px;text-align:center}.sport-kpi .emoji{font-size:18px}.sport-kpi .v{font-size:18px;font-weight:700;color:var(--sport-deep);margin-top:4px}.sport-kpi .v small{font-size:9px;color:var(--muted);font-weight:400}.sport-kpi .k{font-size:9px;color:var(--muted);margin-top:1px}
+.sport-summary{font-size:11.5px;color:var(--text);line-height:1.7;margin-top:12px;padding:10px 11px;background:var(--sport-soft);border-radius:10px;border-left:3px solid var(--sport)}.sport-summary b{color:var(--sport-deep)}
+
+/* Advice + plan */
+.advice-pair{display:grid;grid-template-columns:1fr 1fr;gap:8px}.advice-card{border:1px solid var(--hair);border-radius:13px;padding:12px;min-height:188px}.advice-card.d{border-color:var(--diet-line);background:#FFFDFC}.advice-card.s{border-color:var(--sport-line);background:#FCFEFF}
+.advice-tag{font-size:9px;font-weight:700;border-radius:999px;padding:3px 7px;display:inline-block}.advice-card.d .advice-tag{color:var(--diet-deep);background:var(--diet-soft)}.advice-card.s .advice-tag{color:var(--sport-deep);background:var(--sport-soft)}
+.advice-card h3{font-size:13px;line-height:1.5;margin-top:8px}.advice-card p{font-size:10.5px;color:var(--text);line-height:1.65;margin-top:6px}.advice-card .why{font-size:9.5px;color:var(--muted);margin-top:8px;padding-top:7px;border-top:1px dashed var(--hair)}
+.plan-title{font-size:14px;font-weight:600}.plan-sub{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.55}
+.plan-matrix{margin-top:12px}.closing .week-matrix thead th:not(.corner){background:#EFF1EE;color:var(--advice)}.closing .week-matrix tbody th{background:#F6F7F4;color:var(--advice)}
+.closing .week-matrix td.meal-cell{background:#FFFCFA}.closing .week-matrix td.move-cell{background:#F8FBFD}.closing .week-matrix .target-row td{font:700 10px var(--num);color:var(--good);background:var(--good-soft);vertical-align:middle}
+.plan-result{margin-top:12px;border-radius:13px;padding:14px;background:#25332D;color:#FFF}.plan-result .k{font-size:9px;letter-spacing:.08em;color:#B9C8C0}.plan-result .main{font-size:14px;font-weight:600;line-height:1.55;margin-top:5px}.plan-result .math{font-size:11px;color:#DCE9E3;margin-top:7px}.plan-result .note{font-size:9.5px;color:#AFC0B7;line-height:1.55;margin-top:6px}
+
+.foot{text-align:center;font-size:10px;color:var(--muted);line-height:1.7;padding:24px 22px 0}
+
+@media(max-width:400px){
+  .week-matrix{width:618px;min-width:618px}
+  .week-matrix thead th:not(.corner),.week-matrix td{width:80px;min-width:80px;max-width:80px}
+}
+
+@media(max-width:360px){
+  .hero{padding-left:18px;padding-right:18px}h1{font-size:25px}.week-desc{font-size:13px}
+  .module{margin-left:8px;margin-right:8px;padding:8px}.sheet{padding:15px 13px}
+  .energy-result .value{font-size:39px}.week-kpi .v{font-size:13px}.week-kpi .k{font-size:8px}
+  .legend{gap:6px;font-size:8.5px}.bars{gap:7px}.nutri-chart{padding-left:28px}.scale-line{left:28px}.scale-line span{left:-27px}
+  .week-matrix{width:633px;min-width:633px}.week-matrix thead th:not(.corner),.week-matrix td{width:82px;min-width:82px;max-width:82px}.week-matrix td{padding:7px 6px}.week-matrix .corner,.week-matrix tbody th{width:54px;min-width:54px}
+  .advice-pair{grid-template-columns:1fr}.advice-card{min-height:auto}
+}
+
+@media(max-width:340px){
+  .week-matrix{width:544px;min-width:544px}
+  .week-matrix thead th:not(.corner),.week-matrix td{width:70px;min-width:70px;max-width:70px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="hero">
+    <div class="date">{{DATE_RANGE_DISPLAY}}</div>
+    <h1 class="serif">{{HERO_TITLE}}</h1>
+    <p class="week-desc serif">{{WEEK_DESCRIPTION_HTML}}</p>
+    <div class="coverage"><div class="dots">{{COVERAGE_DOTS_HTML}}</div><span>{{COVERAGE_TEXT}}</span></div>
+  </header>
+
+  <section class="module overall">
+    <div class="module-head"><span class="index">01</span><h2>整体数据分析</h2><span class="meta">能量趋势</span></div>
+    {{OVERALL_SHEETS_HTML}}
+  </section>
+
+  <section class="module diet">
+    <div class="module-head"><span class="index">02</span><h2>摄入 · 饮食</h2><span class="meta">{{DIET_META}}</span></div>
+    {{NUTRITION_SHEET_HTML}}
+    <div class="sheet">
+      <div class="matrix-title"><h3>饮食周历</h3><span>列是每天 · 行是三餐与摄入</span></div>
+      <div class="matrix-wrap"><table class="week-matrix">{{DIET_MATRIX_HTML}}</table></div>
+      <div class="matrix-hint">左右滑动查看完整一周 · 一屏显示 3 天</div>
+    </div>
+  </section>
+
+  <section class="module sport">
+    <div class="module-head"><span class="index">03</span><h2>消耗 · 运动</h2><span class="meta">{{SPORT_META}}</span></div>
+    {{SPORT_SUMMARY_SHEET_HTML}}
+    <div class="sheet">
+      <div class="matrix-title"><h3>运动周历</h3><span>列是每天 · 行是运动时段与消耗</span></div>
+      <div class="matrix-wrap"><table class="week-matrix">{{SPORT_MATRIX_HTML}}</table></div>
+      <div class="matrix-hint">左右滑动查看完整一周 · 一屏显示 3 天</div>
+    </div>
+  </section>
+
+  <section class="module closing">
+    <div class="module-head"><span class="index">04</span><h2>下周建议与行动计划</h2><span class="meta">饮食 + 运动</span></div>
+    {{ADVICE_SHEET_HTML}}
+    <div class="sheet">
+      <div class="plan-title">下周 7 天饮食 × 运动执行表</div>
+      <div class="plan-sub">列是周一到周日；行是三餐、顺手运动和当天目标差值。</div>
+      <div class="matrix-wrap plan-matrix"><table class="week-matrix">{{PLAN_MATRIX_HTML}}</table></div>
+      <div class="matrix-hint">左右滑动查看完整一周 · 一屏显示 3 天</div>
+      {{PLAN_RESULT_HTML}}
+    </div>
+  </section>
+
+  <footer class="foot">{{FOOTER_TEXT}}</footer>
+</div>
+</body>
+</html>

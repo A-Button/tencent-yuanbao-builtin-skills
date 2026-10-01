@@ -1,0 +1,18 @@
+{
+  "name": "daily-fortune-oneagent-app",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build:ui": "node scripts/build-ui.mjs",
+    "test": "python3 -m unittest discover -s tests -v && node tests/bridge-runtime.mjs && node tests/bridge-instance.mjs && node tests/bridge-local-switch.mjs && node scripts/build-demo.mjs && node tests/verify-demo.mjs ../daily-fortune-demo.html",
+    "build:demo": "node scripts/build-demo.mjs"
+  },
+  "engines": {
+    "node": ">=22.14"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/ext-apps": "1.7.5",
+    "esbuild": "0.25.9",
+    "jsdom": "30.0.1"
+  }
+}

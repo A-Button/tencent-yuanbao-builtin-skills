@@ -1,0 +1,378 @@
+{
+  "components": [
+    {
+      "id": "root",
+      "component": "Card",
+      "child": "body",
+      "style": {
+        "padding": {
+          "horizontal": 16,
+          "vertical": 14
+        },
+        "containerColor": "basic_container_primary",
+        "shape": 24
+      }
+    },
+    {
+      "id": "body",
+      "component": "Column",
+      "children": [
+        "header-block",
+        "tile-stack",
+        "action-row"
+      ],
+      "align": "stretch",
+      "style": {
+        "spacing": 0
+      }
+    },
+    {
+      "id": "header-block",
+      "component": "Column",
+      "children": [
+        "source-row",
+        "countdown",
+        "summary"
+      ],
+      "align": "stretch",
+      "style": {
+        "spacing": 6,
+        "padding": {
+          "bottom": 10
+        }
+      }
+    },
+    {
+      "id": "source-row",
+      "component": "Row",
+      "children": [
+        "source-icon",
+        "source-label"
+      ],
+      "align": "center",
+      "style": {
+        "spacing": 4
+      }
+    },
+    {
+      "id": "source-icon",
+      "component": "Text",
+      "text": "◷",
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_function_blue",
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "source-label",
+      "component": "Text",
+      "text": {
+        "path": "/source_label"
+      },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_function_blue",
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "countdown",
+      "component": "Text",
+      "text": {
+        "path": "/countdown"
+      },
+      "variant": "h3",
+      "maxLines": 2,
+      "style": {
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "summary",
+      "component": "Text",
+      "text": {
+        "path": "/summary"
+      },
+      "variant": "caption",
+      "maxLines": 2,
+      "style": {
+        "color": "basic_text_quinary"
+      }
+    },
+    {
+      "id": "tile-stack",
+      "component": "Column",
+      "children": [
+        "schedule-card",
+        "prep-card"
+      ],
+      "align": "stretch",
+      "style": {
+        "spacing": 6
+      }
+    },
+    {
+      "id": "schedule-card",
+      "component": "Card",
+      "child": "schedule-body",
+      "style": {
+        "padding": {
+          "horizontal": 12,
+          "vertical": 10
+        },
+        "containerColor": "basic_bg_secondary",
+        "shape": 14
+      }
+    },
+    {
+      "id": "schedule-body",
+      "component": "Column",
+      "children": [
+        "schedule-heading",
+        "schedule-summary"
+      ],
+      "align": "stretch",
+      "style": {
+        "spacing": 4
+      }
+    },
+    {
+      "id": "schedule-heading",
+      "component": "Row",
+      "children": [
+        "title",
+        "status-label"
+      ],
+      "justify": "spaceBetween",
+      "align": "center",
+      "style": {
+        "spacing": 8
+      }
+    },
+    {
+      "id": "title",
+      "component": "Text",
+      "text": {
+        "path": "/title"
+      },
+      "variant": "h5",
+      "maxLines": 2,
+      "weight": 1,
+      "style": {
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "status-label",
+      "component": "Text",
+      "text": {
+        "path": "/status_label"
+      },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_function_orange",
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "schedule-summary",
+      "component": "Text",
+      "text": {
+        "path": "/schedule_summary"
+      },
+      "variant": "caption",
+      "maxLines": 2,
+      "style": {
+        "color": "basic_text_quinary"
+      }
+    },
+    {
+      "id": "prep-card",
+      "component": "Card",
+      "child": "prep-body",
+      "style": {
+        "padding": {
+          "horizontal": 12,
+          "vertical": 10
+        },
+        "containerColor": "basic_bg_secondary",
+        "shape": 14
+      }
+    },
+    {
+      "id": "prep-body",
+      "component": "Column",
+      "children": [
+        "prep-heading",
+        "prep-list"
+      ],
+      "align": "stretch",
+      "style": {
+        "spacing": 6
+      }
+    },
+    {
+      "id": "prep-heading",
+      "component": "Row",
+      "children": [
+        "prep-title",
+        "prep-count"
+      ],
+      "justify": "spaceBetween",
+      "align": "center",
+      "style": {
+        "spacing": 8
+      }
+    },
+    {
+      "id": "prep-title",
+      "component": "Text",
+      "text": "建议准备",
+      "variant": "h5",
+      "maxLines": 1,
+      "weight": 1,
+      "style": {
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "prep-count",
+      "component": "Text",
+      "text": {
+        "path": "/prep_count_label"
+      },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_function_blue",
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "prep-list",
+      "component": "Column",
+      "align": "stretch",
+      "children": {
+        "path": "/prep_items",
+        "componentId": "prep-item"
+      },
+      "style": {
+        "spacing": 4
+      }
+    },
+    {
+      "id": "prep-item",
+      "component": "Row",
+      "children": [
+        "prep-dot",
+        "prep-item-title"
+      ],
+      "align": "center",
+      "style": {
+        "spacing": 6
+      }
+    },
+    {
+      "id": "prep-dot",
+      "component": "Text",
+      "text": "•",
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_function_blue",
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "prep-item-title",
+      "component": "Text",
+      "text": {
+        "path": "title"
+      },
+      "variant": "caption",
+      "maxLines": 1,
+      "weight": 1,
+      "style": {
+        "color": "basic_text_secondary"
+      }
+    },
+    {
+      "id": "action-row",
+      "component": "Row",
+      "children": [
+        "later-button",
+        "prepare-button"
+      ],
+      "justify": "end",
+      "align": "center",
+      "style": {
+        "spacing": 4,
+        "padding": {
+          "top": 12
+        }
+      }
+    },
+    {
+      "id": "later-button",
+      "component": "Button",
+      "child": "later-label",
+      "variant": "default",
+      "style": {
+        "containerColor": "components_button_gray",
+        "shape": 18
+      },
+      "action": {
+        "functionCall": {
+          "call": "sendQuery",
+          "args": {
+            "prompt": {
+              "path": "/actions/0/prompt"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "later-label",
+      "component": "Text",
+      "text": "模拟面试",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_text_primary"
+      }
+    },
+    {
+      "id": "prepare-button",
+      "component": "Button",
+      "child": "prepare-label",
+      "variant": "primary",
+      "style": {
+        "containerColor": "components_button_primary",
+        "shape": 18
+      },
+      "action": {
+        "functionCall": {
+          "call": "sendQuery",
+          "args": {
+            "prompt": {
+              "path": "/actions/1/prompt"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "prepare-label",
+      "component": "Text",
+      "text": "帮我准备",
+      "maxLines": 1,
+      "style": {
+        "color": "components_button_primary_title"
+      }
+    }
+  ]
+}

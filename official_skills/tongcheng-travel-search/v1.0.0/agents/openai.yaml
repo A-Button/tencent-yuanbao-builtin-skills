@@ -1,0 +1,15 @@
+interface:
+  display_name: "同程旅行搜索"
+  short_description: "用户搜索航班、酒店或国内火车票，查看已选航班详情或国际航班验价时使用。产品数据来源为同程旅行。机票支持搜索、详情和预订，酒店和火车票仅支持列表搜索。"
+  default_prompt: "使用 $tongcheng-travel-search 查询航班、酒店或国内火车票"
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "tongcheng-travel-search"
+      description: "同程旅行航班、酒店和火车票搜索 MCP"
+      transport: "streamable_http"
+      url: "http://arsenalgw.qa.ly.com/yb_mcp/mcp"
+
+policy:
+  allow_implicit_invocation: true

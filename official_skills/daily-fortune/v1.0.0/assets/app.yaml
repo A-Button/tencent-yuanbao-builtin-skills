@@ -1,0 +1,62 @@
+id: daily-fortune
+name: 每日运势
+version: v1.2.1
+description: 生成个性化每日运势卡片；卡片内可切换今日/本周/本月/今年与事业/感情/财富/人际，内容由本地确定性引擎计算。
+
+ui:
+  defaultSize:
+    width: 520
+    height: 720
+
+resources:
+  - uri: ui://daily-fortune/main
+    name: 每日运势卡片
+    description: 运势卡片界面（今日/本周/本月/今年 × 事业/感情/财富/人际）
+    path: assets/ui/index.html
+    mimeType: text/html;profile=mcp-app
+
+tools:
+  - name: daily_fortune
+    title: 每日运势
+    description: >
+      生成个性化运势卡片。operation 取值：get_card 出卡（可带 timekey/topickey/target_date/subject）；
+      describe 查看契约。无订阅与推送能力，调用即出卡。
+    inputSchema:
+      type: object
+      properties:
+        operation:
+          type: string
+          enum: [describe, get_card]
+          description: 动作名
+        subject:
+          type: string
+          description: 档案主体，默认 self
+        target_date:
+          type: string
+          description: 目标日期 YYYY-MM-DD，默认今天
+        timekey:
+          type: string
+          enum: [today, week, month, year]
+          description: 时间维度，默认 today
+        topickey:
+          type: string
+          enum: [career, love, wealth, social]
+          description: 解读主题，默认 career
+        instanceId:
+          type: string
+          description: >
+            卡片实例标识，由宿主在 ui/initialize 的 hostContext 里下发。界面原样回传、
+            引擎原样回显，供宿主把这一次的结果路由回对应那张卡，避免多张卡互相覆盖。
+            宿主不下发时整个字段缺席，行为与旧版完全一致。
+      required: [operation]
+      additionalProperties: false
+    outputSchema:
+      type: object
+      additionalProperties: true
+    handler:
+      type: script
+      path: scripts/daily_fortune.py
+    _meta:
+      ui:
+        resourceUri: ui://daily-fortune/main
+        visibility: [model, app]

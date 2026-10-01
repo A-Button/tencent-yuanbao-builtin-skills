@@ -1,0 +1,4 @@
+interface:
+  display_name: "个人日签"
+  short_description: "围绕心情、状态与运势，为自己或在意的人创作每日图签"
+  default_prompt: "使用 $personal-daily-sign 给我一张今日签。"

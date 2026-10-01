@@ -1,0 +1,337 @@
+{
+  "components": [
+    {
+      "id": "root",
+      "component": "Card",
+      "child": "content",
+      "style": {
+        "padding": 0,
+        "containerColor": "basic_container_primary",
+        "shape": 18
+      }
+    },
+    {
+      "id": "content",
+      "component": "Column",
+      "children": ["header", "title", "panel-frame", "note-slot", "action-frame"],
+      "align": "stretch"
+    },
+
+    {
+      "id": "header",
+      "component": "Row",
+      "children": ["kicker-icon", "kicker"],
+      "align": "center",
+      "style": {
+        "spacing": 5,
+        "padding": { "horizontal": 16, "top": 14 }
+      }
+    },
+    {
+      "id": "kicker-icon",
+      "component": "Text",
+      "text": "◷",
+      "variant": "body",
+      "style": { "color": "basic_function_blue" }
+    },
+    {
+      "id": "kicker",
+      "component": "Text",
+      "text": { "path": "/kicker" },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": { "color": "basic_function_blue", "fontWeight": 600 }
+    },
+    {
+      "id": "title",
+      "component": "Text",
+      "text": { "path": "/title" },
+      "variant": "h3",
+      "maxLines": 2,
+      "style": {
+        "color": "basic_text_primary",
+        "fontWeight": 600,
+        "padding": { "horizontal": 16, "top": 10 }
+      }
+    },
+
+    {
+      "id": "panel-frame",
+      "component": "Box",
+      "children": ["panel"],
+      "style": { "padding": { "horizontal": 14, "top": 14 } }
+    },
+    {
+      "id": "panel",
+      "component": "Card",
+      "child": "panel-body",
+      "style": {
+        "containerColor": "basic_container_tertiary",
+        "shape": 14,
+        "padding": 14
+      }
+    },
+    {
+      "id": "panel-body",
+      "component": "Column",
+      "children": ["as-of", "quote-block"],
+      "align": "stretch",
+      "style": { "spacing": 8 }
+    },
+    {
+      "id": "as-of",
+      "component": "Text",
+      "text": { "path": "/as_of_text" },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": { "color": "basic_text_quaternary" }
+    },
+    {
+      "id": "quote-block",
+      "component": "Column",
+      "children": ["name-row", "code-row"],
+      "align": "stretch",
+      "style": { "spacing": 3 }
+    },
+    {
+      "id": "name-row",
+      "component": "Row",
+      "children": ["name", "price-stack"],
+      "align": "center",
+      "justify": "spaceBetween",
+      "style": { "spacing": 12 }
+    },
+    {
+      "id": "name",
+      "component": "Text",
+      "text": { "path": "/name" },
+      "variant": "h3",
+      "maxLines": 1,
+      "weight": 1,
+      "style": { "color": "basic_text_primary", "fontWeight": 600 }
+    },
+    {
+      "id": "price-stack",
+      "component": "Column",
+      "children": ["price-red", "price-green", "price-flat"],
+      "align": "end",
+      "style": { "spacing": 0 }
+    },
+    {
+      "id": "price-red",
+      "component": "Visibility",
+      "value": { "path": "/is_red" },
+      "child": "price-red-text"
+    },
+    {
+      "id": "price-red-text",
+      "component": "Text",
+      "text": { "path": "/price_text" },
+      "variant": "h3",
+      "maxLines": 1,
+      "style": { "color": "basic_function_red", "fontWeight": 600 }
+    },
+    {
+      "id": "price-green",
+      "component": "Visibility",
+      "value": { "path": "/is_green" },
+      "child": "price-green-text"
+    },
+    {
+      "id": "price-green-text",
+      "component": "Text",
+      "text": { "path": "/price_text" },
+      "variant": "h3",
+      "maxLines": 1,
+      "style": { "color": "basic_function_green", "fontWeight": 600 }
+    },
+    {
+      "id": "price-flat",
+      "component": "Visibility",
+      "value": { "path": "/is_plain_price" },
+      "child": "price-flat-text"
+    },
+    {
+      "id": "price-flat-text",
+      "component": "Text",
+      "text": { "path": "/price_text" },
+      "variant": "h3",
+      "maxLines": 1,
+      "style": { "color": "basic_text_primary", "fontWeight": 600 }
+    },
+    {
+      "id": "code-row",
+      "component": "Row",
+      "children": ["code", "change-stack"],
+      "align": "center",
+      "justify": "spaceBetween",
+      "style": { "spacing": 12 }
+    },
+    {
+      "id": "code",
+      "component": "Text",
+      "text": { "path": "/code_text" },
+      "variant": "caption",
+      "maxLines": 1,
+      "weight": 1,
+      "style": { "color": "basic_text_quaternary" }
+    },
+    {
+      "id": "change-stack",
+      "component": "Column",
+      "children": ["change-red", "change-green", "change-flat"],
+      "align": "end",
+      "style": { "spacing": 0 }
+    },
+    {
+      "id": "change-red",
+      "component": "Visibility",
+      "value": { "path": "/is_red" },
+      "child": "change-red-text"
+    },
+    {
+      "id": "change-red-text",
+      "component": "Text",
+      "text": { "path": "/change_text" },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": { "color": "basic_function_red", "fontWeight": 500 }
+    },
+    {
+      "id": "change-green",
+      "component": "Visibility",
+      "value": { "path": "/is_green" },
+      "child": "change-green-text"
+    },
+    {
+      "id": "change-green-text",
+      "component": "Text",
+      "text": { "path": "/change_text" },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": { "color": "basic_function_green", "fontWeight": 500 }
+    },
+    {
+      "id": "change-flat",
+      "component": "Visibility",
+      "value": { "path": "/is_flat" },
+      "child": "change-flat-text"
+    },
+    {
+      "id": "change-flat-text",
+      "component": "Text",
+      "text": { "path": "/change_text" },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": { "color": "basic_text_quaternary", "fontWeight": 500 }
+    },
+
+    {
+      "id": "note-slot",
+      "component": "Visibility",
+      "value": { "path": "/has_note" },
+      "child": "note"
+    },
+    {
+      "id": "note",
+      "component": "Text",
+      "text": { "path": "/note_text" },
+      "variant": "caption",
+      "maxLines": 3,
+      "style": {
+        "color": "basic_text_tertiary",
+        "padding": { "horizontal": 16, "top": 12 }
+      }
+    },
+
+    {
+      "id": "action-frame",
+      "component": "Box",
+      "children": ["action-row"],
+      "style": { "padding": { "horizontal": 14, "top": 14, "bottom": 14 } }
+    },
+    {
+      "id": "action-row",
+      "component": "Row",
+      "children": ["detail-slot", "edit-slot", "primary-action"],
+      "align": "center",
+      "justify": "end",
+      "style": { "spacing": 10 }
+    },
+    {
+      "id": "detail-slot",
+      "component": "Visibility",
+      "value": { "path": "/has_detail_url" },
+      "child": "detail-action"
+    },
+    {
+      "id": "detail-action",
+      "component": "Button",
+      "child": "detail-label",
+      "variant": "default",
+      "style": { "shape": 22, "height": 44, "padding": { "horizontal": 28 } },
+      "action": {
+        "functionCall": {
+          "call": "openUrl",
+          "args": { "url": { "path": "/detail_url" } }
+        }
+      }
+    },
+    {
+      "id": "detail-label",
+      "component": "Text",
+      "text": { "path": "/secondary_label" },
+      "variant": "body",
+      "maxLines": 1,
+      "style": { "fontWeight": 500 }
+    },
+    {
+      "id": "edit-slot",
+      "component": "Visibility",
+      "value": { "path": "/has_secondary_prompt" },
+      "child": "secondary-action"
+    },
+    {
+      "id": "secondary-action",
+      "component": "Button",
+      "child": "secondary-label",
+      "variant": "default",
+      "style": { "shape": 22, "height": 44, "padding": { "horizontal": 28 } },
+      "action": {
+        "functionCall": {
+          "call": "sendQuery",
+          "args": { "prompt": { "path": "/secondary_prompt" } }
+        }
+      }
+    },
+    {
+      "id": "secondary-label",
+      "component": "Text",
+      "text": { "path": "/secondary_label" },
+      "variant": "body",
+      "maxLines": 1,
+      "style": { "fontWeight": 500 }
+    },
+    {
+      "id": "primary-action",
+      "component": "Button",
+      "child": "primary-label",
+      "variant": "primary",
+      "style": { "shape": 22, "height": 44, "padding": { "horizontal": 22 } },
+      "action": {
+        "functionCall": {
+          "call": "sendQuery",
+          "args": { "prompt": { "path": "/primary_prompt" } }
+        }
+      }
+    },
+    {
+      "id": "primary-label",
+      "component": "Text",
+      "text": { "path": "/primary_label" },
+      "variant": "body",
+      "maxLines": 1,
+      "style": { "color": "components_button_primary_title", "fontWeight": 600 }
+    }
+  ]
+}

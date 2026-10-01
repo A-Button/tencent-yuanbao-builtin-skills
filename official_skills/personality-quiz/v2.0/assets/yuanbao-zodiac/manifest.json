@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0.0",
+  "asset_kind": "yuanbao_zodiac_mascots",
+  "mime_type": "image/png",
+  "generation_mode": "builtin-imagegen",
+  "order": [
+    "白羊",
+    "金牛",
+    "双子",
+    "巨蟹",
+    "狮子",
+    "处女",
+    "天秤",
+    "天蝎",
+    "射手",
+    "摩羯",
+    "水瓶",
+    "双鱼"
+  ],
+  "signs": {
+    "白羊": {
+      "file": "aries.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "dcd56c56affe3bc1711f243ccf9efe96060270b1122f2833aec2bf0b8547f340",
+      "visual_anchor": "珊瑚色卷角羊徽记"
+    },
+    "金牛": {
+      "file": "taurus.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "6ecf644b93cc04c20cbde0cec495611ff30e364d53796cbfc224b9bd5c09c975",
+      "visual_anchor": "金色牛角徽记"
+    },
+    "双子": {
+      "file": "gemini.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "6044e81217fd1705ab13651fdb6c54764998c4762f96d273213a96a90e27a858",
+      "visual_anchor": "蓝金相扣对话气泡"
+    },
+    "巨蟹": {
+      "file": "cancer.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "cb69d0580916bb8c315508c8f41eab5ed7bcaa0c65f63dba24db88dc6117647c",
+      "visual_anchor": "珊瑚色螃蟹抱枕"
+    },
+    "狮子": {
+      "file": "leo.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "17f21b43321c53f1a39fe2e0243a02ad68defbf7353145521a249030693d65e7",
+      "visual_anchor": "金色鬃毛徽记"
+    },
+    "处女": {
+      "file": "virgo.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "78336669297be611c1454c2e91379e79114bfedf90bf61c66aafc1b26273122f",
+      "visual_anchor": "金色麦穗"
+    },
+    "天秤": {
+      "file": "libra.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "a8a519107c6a31a5570ded97d1ceebd864541a6f55be84f1f36743153328dc08",
+      "visual_anchor": "金色平衡天秤"
+    },
+    "天蝎": {
+      "file": "scorpio.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "f9a0b7563390f6ebd83563f940bc0588085bfe42f250ad6ba799e794725e59dc",
+      "visual_anchor": "紫色蝎尾挂件"
+    },
+    "射手": {
+      "file": "sagittarius.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "ba631487d62ee7d41932dd2642b4651bb146940f666d7987e0febaa00a128c56",
+      "visual_anchor": "圆钝玩具弓箭"
+    },
+    "摩羯": {
+      "file": "capricorn.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "19eb40129a6c9a384c7b8545b6c0c87fd924d4d413e17560529c55af6cc6f7a5",
+      "visual_anchor": "羊角山峰摆件"
+    },
+    "水瓶": {
+      "file": "aquarius.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "6e6f8a4961c0766faf529752b9b4f1c57d0f58c85da32477912037115ad45146",
+      "visual_anchor": "蓝绿色水壶"
+    },
+    "双鱼": {
+      "file": "pisces.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "952e8bbeb91b102844df7e064e47b0ac8f0fa980bd2ed8ec65305b0313adc161",
+      "visual_anchor": "相向双鱼饰"
+    }
+  },
+  "background": "transparent",
+  "edit_mode": "user-approved-local-background-extraction"
+}

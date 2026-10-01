@@ -1,0 +1,12 @@
+interface:
+  display_name: "ima"
+  short_description: "查询真实商圈、小区与房源，核验通勤并完成选址和方案比较"
+  default_prompt: "使用 $housing-search，先查询适合我的商圈和小区，再根据预算与上班地点找房。"
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "ima"
+      description: "ima test"
+      transport: "streamable_http"
+      url: "https://ima.qq.com/mcp"
+      auth_type: "oauth2_code"

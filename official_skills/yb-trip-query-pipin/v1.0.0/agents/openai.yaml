@@ -1,0 +1,4 @@
+interface:
+  display_name: "行程查询"
+  short_description: "查机票、火车票、酒店和景点门票"
+  default_prompt: "查一下明天北京到上海的高铁"

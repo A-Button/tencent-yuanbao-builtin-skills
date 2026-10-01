@@ -1,0 +1,70 @@
+/* Keep the three cards together; give their readings enough width on phones. */
+html{-webkit-text-size-adjust:100%;scrollbar-gutter:stable}
+.app .card-readings{display:grid;grid-template-columns:repeat(3,var(--slot-width));gap:clamp(14px,4vw,52px);justify-content:center;margin:6px 0 0;flex-shrink:0}
+.app .reading-summary{min-width:0}
+.app .reading-summary-title{display:none}
+.app .reading-summary .card-reading{margin:0}
+.app .result-button,.app .reset,.app .shuffle,.app .close-button{touch-action:manipulation}
+.app .close-button{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
+
+@media(max-width:700px){
+ html{scrollbar-gutter:auto}
+ .app{padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+ .app .topbar{height:calc(64px + env(safe-area-inset-top,0px));padding:calc(10px + env(safe-area-inset-top,0px)) 18px 10px}
+ .app .reset{min-height:44px;padding:8px 0 8px 12px;gap:6px;font-size:12px}
+ .app .experience{min-height:calc(100svh - 64px - env(safe-area-inset-top,0px))!important;padding:0 0 calc(20px + env(safe-area-inset-bottom,0px))}
+ .app .introduction{padding:8px 16px 20px}
+ .app .experience .introduction h1{font-size:clamp(22px,6vw,28px);line-height:1.4;letter-spacing:.01em;overflow-wrap:anywhere}
+ .app .result-guidance{font-size:12px;line-height:1.7;letter-spacing:0;margin-top:8px}
+ .app .question-context{font-size:12px;line-height:1.7;max-width:420px;padding:0;margin-top:10px;letter-spacing:0}
+ .app .spread{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:min(420px,calc(100% - 32px));padding:0;margin:0 auto;gap:12px}
+ .app .spread .slot{width:100%;min-width:0}
+ .app .spread .card-caption{height:58px;min-height:58px;padding-top:8px}
+ .app .spread .card-caption button{width:100%;min-height:44px;flex-direction:column;flex-wrap:nowrap;gap:4px;padding:0 2px;font-size:14px;line-height:1.3;white-space:nowrap;letter-spacing:0}
+ .app .spread .card-caption .orientation{font-size:10px;line-height:1.3;padding:1px 5px}
+ .app .draw-area{padding-top:6px}
+ .app .draw-area>.shuffle{min-height:48px;min-width:144px;margin-top:8px;font-size:14px}
+ .app .card-readings{grid-template-columns:minmax(0,1fr);gap:12px;width:calc(100% - 32px);max-width:520px;margin:16px auto 0}
+ .app .reading-summary{padding:16px;border:1px solid #b99a622e;border-radius:16px;background:#171a15b3}
+ .app .reading-summary-title{display:flex;align-items:center;gap:10px;margin:0 0 8px;font-size:17px;line-height:1.4;font-weight:500}
+ .app .reading-summary-title span{font-size:11px;font-weight:400;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+ .app .reading-summary .card-reading{font-size:15px;line-height:1.85;letter-spacing:0;margin:0}
+ .app .completion{width:calc(100% - 32px);max-width:520px;margin:20px auto 0}
+ .app .completion-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .app .completion-actions .result-button{min-height:48px;font-size:14px;padding:12px 8px}
+ .app .modal,.app .utility-modal,.app .utility-modal.share-modal[open]{width:calc(100% - 24px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px));max-height:calc(100dvh - 24px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));border-radius:20px}
+ .app .utility-modal,.app .utility-modal.share-modal[open]{padding:16px}
+ .app .dialog-actions{gap:10px;margin-top:16px}
+ .app .dialog-actions .result-button{flex:1;min-height:48px;font-size:14px;padding:12px 10px}
+ .app .copy-modal textarea{font-size:16px;height:30dvh;min-height:144px;max-height:none}
+ .app .copy-modal h2{font-size:21px}
+ .app .reading-modal[open]{grid-template-columns:minmax(0,1fr);gap:20px;padding:48px 20px 24px}
+ .app .reading-art{height:min(34dvh,260px);width:auto;max-width:100%;object-fit:contain}
+ .app .reading-copy h2{font-size:30px}
+ .app .reading-copy>p:not(.eyebrow):not(.reading-keywords){font-size:16px;line-height:1.85}
+ .app .reading-copy>.text-button{min-height:44px}
+ .app .toast{bottom:calc(16px + env(safe-area-inset-bottom,0px));font-size:13px;max-width:calc(100% - 32px);padding:12px 16px}
+}
+@media(max-width:359px){
+ .app .brand>span{font-size:21px}
+ .app .brand small{font-size:6px}
+ .app .spread{gap:8px;width:calc(100% - 24px)}
+ .app .spread .card-caption button{font-size:13px}
+}
+@media(hover:none){.app .tarot-card:hover .foil{opacity:0}}
+@media(orientation:landscape) and (max-height:500px) and (pointer:coarse){
+ .app{--slot-width:100px;padding-inline:env(safe-area-inset-left,0px) env(safe-area-inset-right,0px)}
+ .app .topbar{height:56px;padding:8px 18px}
+ .app .experience{min-height:calc(100svh - 56px)!important;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+ .app .introduction{padding-top:4px;padding-bottom:14px}
+ .app .experience .introduction h1{font-size:24px}
+ .app .spread{max-width:340px;margin-inline:auto}
+ .app .card-readings{grid-template-columns:minmax(0,1fr);width:calc(100% - 40px);max-width:560px;gap:12px;margin:16px auto 0}
+ .app .reading-summary{padding:16px;border:1px solid #b99a622e;border-radius:16px;background:#171a15b3}
+ .app .reading-summary-title{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:500;margin:0 0 8px}
+ .app .reading-summary-title span{font-size:11px;color:var(--muted)}
+ .app .reading-summary .card-reading{font-size:15px;line-height:1.85}
+ .app .modal,.app .utility-modal.share-modal[open]{max-height:calc(100dvh - 20px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));width:min(620px,calc(100% - 32px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px)))}
+ .app .reading-modal[open]{grid-template-columns:130px minmax(0,1fr);gap:24px;padding:24px}
+ .app .reading-art{width:130px;height:auto}
+}

@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+"""列出全部{{APP_NAME}}记录。"""
+
+from __future__ import annotations
+
+from _store import Store, execute, print_model_result
+
+
+def _list_{{ENTITY_PLURAL}}(args: dict, store: Store) -> dict:
+    # 全量快照由 execute() 统一补上，读操作这里没有额外要返回的。
+    return {}
+
+
+def list_{{ENTITY_PLURAL}}(args: dict) -> dict:
+    result = execute(_list_{{ENTITY_PLURAL}}, args)
+    print_model_result(result, "{{ENTITY_PLURAL}}", "count")
+    return result

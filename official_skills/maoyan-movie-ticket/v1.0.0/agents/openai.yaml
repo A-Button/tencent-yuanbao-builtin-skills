@@ -1,0 +1,7 @@
+interface:
+  display_name: "猫眼影讯查询"
+  short_description: "查询热映影片、附近影院与排片场次"
+  default_prompt: "最近有哪些热映电影"
+
+policy:
+  allow_implicit_invocation: true

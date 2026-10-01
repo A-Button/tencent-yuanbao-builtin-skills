@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	attributeFormDefault="unqualified" elementFormDefault="qualified"
+	targetNamespace="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <!--
+    MCE (Markup Compatibility and Extensibility) — OOXML 的版本兼容机制。
+
+    核心问题：新版 Office 会往 XML 里塞旧版不认识的命名空间和元素，
+    如果没有兼容机制，旧版解析器会报错或丢数据。MCE 就是解决这个的。
+
+    本 schema 定义两类东西：
+
+    【1】mc:Ignorable 属性
+        告诉解析器"这些命名空间前缀你不认识就跳过，别报错"。
+        例：mc:Ignorable="w14 w15 wp14" 表示 w14/w15/wp14 三个命名空间可安全忽略。
+        生成 XML 时必须保留此属性（round-trip），否则其他工具打开会出问题。
+
+    【2】AlternateContent / Choice / Fallback 元素
+        条件分支：按能力选择渲染内容。
+        - Choice: Requires 属性指定所需命名空间，能力匹配则用此分支
+        - Fallback: 所有 Choice 都不匹配时的兜底内容
+        典型场景：新版 Office 用新特性渲染（Choice），同时提供旧版兼容内容（Fallback）。
+
+        结构约束：
+        AlternateContent
+          ├─ Choice   (1..n, 必须在前, Requires 属性必填)
+          └─ Fallback (0..1, 必须在最后)
+
+    参考：ECMA-376 4th Edition, Part 3 — Markup Compatibility and Extensibility
+    改编自：https://github.com/plutext/docx4j/blob/master/xsd/mce/markup-compatibility-2006-MINIMAL.xsd
+  -->
+
+  <!-- mc:Ignorable — 空格分隔的可忽略命名空间前缀列表 -->
+  <xsd:attribute name="Ignorable" type="xsd:string" />
+
+  <!-- mc:MustUnderstand — 空格分隔的必须理解的命名空间前缀列表，不认识则必须报错 -->
+	<xsd:attribute name="MustUnderstand" type="xsd:string"  />
+  <!-- mc:ProcessContent — 空格分隔的命名空间前缀列表，即使元素本身被忽略，其子内容仍需处理 -->
+	<xsd:attribute name="ProcessContent" type="xsd:string"  />
+
+	<xsd:element name="AlternateContent">
+		<xsd:complexType>
+			<xsd:sequence>
+				<!-- Choice: 按 Requires 指定的命名空间能力匹配，可出现多个，按顺序取第一个匹配的 -->
+				<xsd:element name="Choice" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:any minOccurs="0" maxOccurs="unbounded"
+								processContents="strict">
+							</xsd:any>
+						</xsd:sequence>
+						<xsd:attribute name="Requires" type="xsd:string" use="required" />
+						<xsd:attribute ref="mc:Ignorable" use="optional" />
+						<xsd:attribute ref="mc:MustUnderstand" use="optional" />
+						<xsd:attribute ref="mc:ProcessContent" use="optional" />
+					</xsd:complexType>
+				</xsd:element>
+				<!-- Fallback: 所有 Choice 都不匹配时使用，最多一个 -->
+				<xsd:element name="Fallback" minOccurs="0" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:any minOccurs="0" maxOccurs="unbounded"
+								processContents="strict">
+							</xsd:any>
+						</xsd:sequence>
+						<xsd:attribute ref="mc:Ignorable" use="optional" />
+						<xsd:attribute ref="mc:MustUnderstand" use="optional" />
+						<xsd:attribute ref="mc:ProcessContent" use="optional" />
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+			<xsd:attribute ref="mc:Ignorable" use="optional" />
+			<xsd:attribute ref="mc:MustUnderstand" use="optional" />
+			<xsd:attribute ref="mc:ProcessContent" use="optional" />
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

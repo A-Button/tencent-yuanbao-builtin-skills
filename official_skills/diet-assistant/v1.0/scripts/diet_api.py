@@ -1,0 +1,409 @@
+#!/usr/bin/env python3
+"""饮食助手唯一业务门面。
+
+用法：
+    python3 diet_api.py '<json>'          # {"operation": "...", ...}
+
+输出就是三 tab 的 render_payload 本身，外加一个 `_model` 键——那是给模型看的精简回执，
+由 _run.py 摘出来单独打印，不进卡片。这样 Agent 走 _run.py、iframe 直连 app.yaml 声明的
+handler，两条路拿到的是同一种形状。
+
+不管哪个 operation，payload 里都是完整的 current_meal + today + stats，只有 default_tab
+不同：宿主每次 tool-result 会整体替换 iframe 的数据，缺哪一段那一段就空了。
+"""
+
+from __future__ import annotations
+
+import json
+import re
+import sys
+from datetime import datetime, timedelta
+
+import nutrition
+import store
+from a2ui import enrich_display_fields
+from cli_contract import CONTRACT, ContractError, validate
+from payload_schema import PayloadValidationError, validate_payload
+
+
+
+def build_payload(default_tab: str, current_meal: dict | None, date_str: str, period: str = "week") -> dict:
+    meals = store.load_meals()
+    todays = [m for m in meals if str(m.get("eaten_at", ""))[:10] == date_str]
+    anchor = store.parse_time(date_str + "T12:00:00+08:00")
+    # 日视图/统计/删除这几个 operation 本身没有「本餐」，但卡片的第一个 tab 还在。
+    # 拿当天最后一餐兜底，让用户切过去时看到的是最近这顿而不是空白。
+    if current_meal is None and todays:
+        current_meal = todays[-1]
+    payload = {
+        "current_meal": current_meal or {},
+        "today": {
+            "date": date_str,
+            "meals_by_type": nutrition.group_by_meal_type(todays),
+            "totals": nutrition.day_totals(todays),
+        },
+        "stats": {
+            "default_period": period,
+            "day": nutrition.stats_for_day(meals, date_str),
+            "week": nutrition.stats_for_week(meals, anchor),
+        },
+        "default_tab": default_tab,
+        "default_period": period,
+    }
+    # A2UI / XCard 与 HTML 共用这一份 structuredContent。
+    # 展示字段写在 current_meal 上，模板按 /current_meal/* 绑定。
+    return enrich_display_fields(payload)
+
+
+def _day_has_meals(payload: dict) -> bool:
+    grouped = (payload.get("today") or {}).get("meals_by_type") or {}
+    return any(grouped.values())
+
+
+def _nothing_to_render(payload: dict, operation: str) -> bool:
+    """该不该把这份载荷变成卡片。
+
+    get_day / delete_meal 只看**被查询的那一天**：当天一条都没有就不出卡。
+    删掉当日最后一条之后也走这条——再发只会得到一张灰色空卡。
+
+    get_stats 仍看统计窗口：日/周都是零条才跳过。今天没吃、近 7 天还有记录时，
+    统计洞察那个 tab 有东西，卡片照发。
+    """
+    if payload.get("current_meal") or _day_has_meals(payload):
+        return False
+    if operation in ("get_day", "delete_meal"):
+        return True
+    stats = payload.get("stats") or {}
+    return not any((stats.get(p) or {}).get("meal_count") for p in ("day", "week"))
+
+
+def _skip_reason(operation: str) -> str:
+    if operation in ("get_day", "delete_meal"):
+        return "empty_day"
+    return "empty_archive"
+
+
+def _recompute(meal: dict) -> dict:
+    """按 items 重算 totals 并跑交叉核验。ai_price 是模型估的，原样保留。"""
+    totals = nutrition.sum_items(meal.get("items") or [])
+    price = (meal.get("totals") or {}).get("ai_price")
+    if price is not None:
+        totals["ai_price"] = price
+    meal["totals"] = totals
+    return nutrition.cross_check(totals)
+
+
+def _duplicate_photo_warning(photo_url: str | None, date_str: str, meal_id: str) -> str | None:
+    """同一天另一条记录already用了这张图，多半是短链抄串了。
+
+    模型手里同时躺着历史几轮的短链，补记第二餐时很容易把上一餐那条抄下来——
+    卡片就配上一张别的东西的照片，而落库、校验、出卡全都正常，没有任何地方会报错。
+    「同一天两条记录共用一张图」是个纯机械信号，不需要看图也不需要猜意图。
+
+    只告警不拦截：一张合影里拍到两餐、分两条记下来是合法的，虽然少见。
+    拦下去会把这种用户逼进反复重试，而告警至少让模型有机会自己发现抄错了。
+    """
+    if not photo_url:
+        return None
+    for other in store.load_meals():
+        if other.get("meal_id") == meal_id:
+            continue
+        if str(other.get("eaten_at", ""))[:10] != date_str:
+            continue
+        if other.get("photo_url") == photo_url:
+            return (
+                f"这张图 {date_str} 已经挂在另一条记录「{other.get('title')}」上了。"
+                "多半是短链抄串了——历史消息里还躺着前几轮的图片链接。"
+                "回去核对用户这一轮那条消息旁边的短链，是这张就忽略本条提醒，"
+                f"不是就用 update_meal 把 {meal_id} 的 photoUrl 改过来。"
+            )
+    return None
+
+
+def _cross_check_warning(check: dict) -> str:
+    return (
+        f"交叉核验偏差 {check.get('delta_pct')}% 超过 5%，"
+        "正文里要说明并重估这几项的 kcal/蛋白/脂肪/碳水。"
+    )
+
+
+def _model_receipt(meal: dict, check: dict, extra: dict) -> dict:
+    """给模型的回执。只回数字和状态；正文按 SKILL §9.1 的 7 段写，不要把本回执贴进正文。"""
+    totals = meal.get("totals") or {}
+    receipt = {
+        "meal_id": meal.get("meal_id"),
+        "meal_type": meal.get("meal_type"),
+        "meal_label": store.MEAL_LABEL.get(meal.get("meal_type"), ""),
+        "eaten_at": meal.get("eaten_at"),
+        "eaten_at_source": meal.get("eaten_at_source"),
+        "totals": totals,
+        "cross_check": check.get("cross_check"),
+        "delta_pct": check.get("delta_pct"),
+        "cross_check_passed": check.get("passed"),
+    }
+    if not check.get("passed"):
+        receipt["warning"] = _cross_check_warning(check)
+    receipt.update(extra)
+    return receipt
+
+
+_DATE_ONLY = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+# 允许的时钟误差。超过这个的「未来用餐时间」按上传时刻收，不让模型把封面写成今晚七点。
+_FUTURE_SLACK = timedelta(minutes=2)
+
+
+def _raw_clock(raw: object) -> datetime | None:
+    """用户/模型给的完整时间。只给日期的不算，那种钟点本来就要借此刻。"""
+    if raw is None:
+        return None
+    text = str(raw).strip()
+    if not text or _DATE_ONLY.fullmatch(text):
+        return None
+    return store.parse_time(text)
+
+
+def resolve_eaten_at(raw: object) -> datetime:
+    """定这一餐吃在什么时候：没给就是此刻，给了就听给的。
+
+    多出来的一档是「只给了日期」。模型把「昨天」翻成 2026-09-03 是常事，
+    直接解析会落到 00:00，餐次被判成夜宵，卡片上也显示成凌晨十二点。
+    这种情况日期照用户说的，钟点补成当前时刻。
+
+    再多一档：完整时间落在未来。模型常把英式早餐写成「今晚 19:30 晚餐」，
+    封面既不是拍摄时间也不是上传时间。未来钟点一律收成此刻。
+    """
+    now = store.now()
+    if not raw:
+        return now
+    text = str(raw).strip()
+    if not text:
+        return now
+    when = store.parse_time(text)
+    if _DATE_ONLY.fullmatch(text):
+        when = when.replace(hour=now.hour, minute=now.minute, second=now.second)
+    if when > now + _FUTURE_SLACK:
+        return now
+    return when
+
+
+def op_record_meal(args: dict) -> tuple[dict, dict]:
+    raw_eaten = args.get("eatenAt")
+    eaten_at = resolve_eaten_at(raw_eaten)
+    source = args.get("eatenAtSource") or "upload"
+    requested = _raw_clock(raw_eaten)
+    if requested is not None and requested > store.now() + _FUTURE_SLACK:
+        source = "upload"
+    date_str = eaten_at.strftime("%Y-%m-%d")
+    meal_type = args.get("mealType") or store.derive_meal_type(
+        eaten_at, beverage_only=bool(args.get("beverageOnly"))
+    )
+    now_iso = store.now_iso()
+
+    # 同槽多卡：同一天同一 mealType 再记一次就新建一条，不合并。
+    # 午餐先记盖浇饭、后补水果，日视图午餐槽下应并排两张独立卡（各有图、标题、营养）。
+    meal = {
+        "meal_id": store.new_meal_id(date_str, meal_type),
+        "user_id": args.get("userId") or "u_local",
+        "eaten_at": eaten_at.replace(microsecond=0).isoformat(),
+        "eaten_at_source": source,
+        "meal_type": meal_type,
+        "title": args["title"],
+        "scene_oneliner": args["sceneOneliner"],
+        "items": list(args["items"]),
+        "totals": {"ai_price": args["aiPrice"]} if args.get("aiPrice") is not None else {},
+        "narrative": args.get("narrative") or {},
+        "nutrients": args.get("nutrients") or [],
+        "photo_url": args.get("photoUrl"),
+        "is_favorited": False,
+        "created_at": now_iso,
+        "updated_at": now_iso,
+        "deleted_at": None,
+    }
+    check = _recompute(meal)
+    # 落库前查：append 之后自己也会成为「另一条记录」，就永远告警自己了。
+    photo_warning = _duplicate_photo_warning(meal["photo_url"], date_str, meal["meal_id"])
+    store.append_meal(meal)
+
+    payload = build_payload("meal", meal, date_str)
+    extra = {
+        "saved": True,
+        "today_totals": payload["today"]["totals"],
+    }
+    if photo_warning:
+        extra["photo_warning"] = photo_warning
+    receipt = _model_receipt(meal, check, extra)
+    return receipt, payload
+
+
+def op_estimate_meal(args: dict) -> tuple[dict, dict]:
+    """只算不存，但照样出卡。
+
+    合计和交叉核验跟 record_meal 同一套算法。不调 store 的写接口：测算结果只放在
+    这次 payload 的 current_meal 上，今日食书和统计仍读档案，不会被这笔测算污染。
+    """
+    totals = nutrition.sum_items(args["items"])
+    if args.get("aiPrice") is not None:
+        totals["ai_price"] = args["aiPrice"]
+    check = nutrition.cross_check(totals)
+    eaten_at = store.now().replace(microsecond=0)
+    date_str = eaten_at.strftime("%Y-%m-%d")
+    meal = {
+        "meal_id": "m_estimate",
+        "user_id": "u_local",
+        "eaten_at": eaten_at.isoformat(),
+        "eaten_at_source": "upload",
+        "meal_type": store.derive_meal_type(eaten_at),
+        "title": args["title"],
+        "scene_oneliner": args["sceneOneliner"],
+        "items": list(args["items"]),
+        "totals": totals,
+        "narrative": args.get("narrative") or {},
+        "nutrients": [],
+        "photo_url": args.get("photoUrl"),
+        "is_favorited": False,
+        "created_at": store.now_iso(),
+        "updated_at": store.now_iso(),
+        "deleted_at": None,
+    }
+    payload = build_payload("meal", meal, date_str)
+    receipt = {
+        "totals": totals,
+        "cross_check": check.get("cross_check"),
+        "delta_pct": check.get("delta_pct"),
+        "cross_check_passed": check.get("passed"),
+        "saved": False,
+    }
+    if not check.get("passed"):
+        receipt["warning"] = _cross_check_warning(check)
+    return receipt, payload
+
+
+def op_get_meal(args: dict) -> tuple[dict, dict]:
+    meal = store.find_meal(args["mealId"])
+    if meal is None:
+        raise ContractError("not_found", f"没找到 {args['mealId']}，可能已被删除")
+    date_str = str(meal.get("eaten_at", ""))[:10]
+    payload = build_payload("meal", meal, date_str)
+    return _model_receipt(meal, nutrition.cross_check(meal.get("totals") or {}), {}), payload
+
+
+def op_get_day(args: dict) -> tuple[dict, dict]:
+    date_str = args.get("date") or store.now().strftime("%Y-%m-%d")
+    payload = build_payload("today", None, date_str)
+    today = payload["today"]
+    return {
+        "date": date_str,
+        "totals": today["totals"],
+        "meals": [
+            {"meal_id": m["meal_id"], "meal_type": mt, "title": m["title"], "kcal": m["totals"]["kcal"]}
+            for mt, rows in today["meals_by_type"].items() for m in rows
+        ],
+    }, payload
+
+
+def op_get_stats(args: dict) -> tuple[dict, dict]:
+    date_str = args.get("date") or store.now().strftime("%Y-%m-%d")
+    period = args["period"]
+    payload = build_payload("stats", None, date_str, period=period)
+    return {"period": period, **payload["stats"][period]}, payload
+
+
+def op_update_meal(args: dict) -> tuple[dict, dict]:
+    meal = store.find_meal(args["mealId"])
+    if meal is None:
+        raise ContractError("not_found", f"没找到 {args['mealId']}，可能已被删除")
+
+    patch = args["patch"]
+    unknown = [k for k in patch if k not in meal]
+    if unknown:
+        raise ContractError("invalid_argument", f"patch 里有档案上没有的字段：{', '.join(unknown)}")
+    meal.update(patch)
+    meal["updated_at"] = store.now_iso()
+    # items 改了就必须重算 totals，不能只改一边
+    check = _recompute(meal) if "items" in patch else nutrition.cross_check(meal.get("totals") or {})
+    store.replace_meal(meal["meal_id"], meal)
+
+    date_str = str(meal.get("eaten_at", ""))[:10]
+    payload = build_payload("meal", meal, date_str)
+    return _model_receipt(meal, check, {
+        "changed_fields": sorted(patch),
+        "today_totals": payload["today"]["totals"],
+    }), payload
+
+
+def op_delete_meal(args: dict) -> tuple[dict, dict]:
+    meal = store.find_meal(args["mealId"])
+    if meal is None:
+        raise ContractError("not_found", f"没找到 {args['mealId']}，可能已经删过了")
+    meal["deleted_at"] = store.now_iso()
+    meal["updated_at"] = meal["deleted_at"]
+    store.replace_meal(meal["meal_id"], meal)
+
+    date_str = str(meal.get("eaten_at", ""))[:10]
+    payload = build_payload("today", None, date_str)
+    return {
+        "meal_id": meal["meal_id"],
+        "deleted_at": meal["deleted_at"],
+        "deleted": True,
+        "today_totals": payload["today"]["totals"],
+    }, payload
+
+
+HANDLERS = {
+    "record_meal": op_record_meal,
+    "estimate_meal": op_estimate_meal,
+    "get_meal": op_get_meal,
+    "get_day": op_get_day,
+    "get_stats": op_get_stats,
+    "update_meal": op_update_meal,
+    "delete_meal": op_delete_meal,
+}
+
+
+MODEL_VIEW_KEY = "_model"
+
+
+def dispatch(args: dict) -> dict:
+    operation = args.get("operation") or ""
+    args = validate(operation, args)
+    receipt, payload = HANDLERS[operation](args)
+    # 测算 / 记一餐 / 改一餐都带着 current_meal，不会走进这里。
+    if _nothing_to_render(payload, operation):
+        return {MODEL_VIEW_KEY: {
+            "phase": operation, "ok": True, "card_skipped": _skip_reason(operation), **receipt,
+        }}
+    payload["default_tab"] = args.get("tab") or CONTRACT[operation]["defaultTab"]
+    # Only a fully valid shared payload may reach either the A2UI or HTML resource.
+    # Validate after all derived fields/defaults are applied, before adding model-only metadata.
+    validate_payload(payload)
+    payload[MODEL_VIEW_KEY] = {"phase": operation, "ok": True, **receipt}
+    return payload
+
+
+def main() -> int:
+    raw = sys.argv[1] if len(sys.argv) > 1 else "{}"
+    try:
+        args = json.loads(raw)
+        if not isinstance(args, dict):
+            raise ContractError("invalid_argument", "参数必须是 JSON 对象")
+        result = dispatch(args)
+        # 库在本地盘上跑，这一步把它推回挂载卷。只在本次真写过时才传。
+        store.publish()
+        code = 0
+    except ContractError as exc:
+        error = {"phase": "error", "code": exc.code, "message": str(exc)}
+        result, code = {**error, MODEL_VIEW_KEY: error}, 2
+    except PayloadValidationError as exc:
+        error = {"phase": "error", "code": "invalid_payload", "message": str(exc)}
+        result, code = {**error, MODEL_VIEW_KEY: error}, 3
+    except (json.JSONDecodeError, ValueError, OSError) as exc:
+        error = {"phase": "error", "code": "internal_error", "message": str(exc)}
+        result, code = {**error, MODEL_VIEW_KEY: error}, 1
+    print(json.dumps(result, ensure_ascii=False))
+    return code
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

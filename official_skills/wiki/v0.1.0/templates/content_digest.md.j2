@@ -1,0 +1,53 @@
+{#-
+  单篇解读 body 模板 —— 由 wiki/ingest_entry (render_type=content_digest) 渲染。
+  所有正文文本都来自结构化字段插值；keyInsights[].text 逐字出现，不被改写。
+
+  上下文变量：
+    summary            str
+    advisoryNotes      list[str]      非空时出 ⚠️ 行（取第 0 条）
+    readGuide          {referenceRecordId, diff, readSuggestion, note}
+    keyInsights        list[{text, diff, ref, group}]
+    recommendation     {verdict, reason}
+    category           str
+
+  块顺序：摘要 → 风险提示 → 开篇条 → 你可能不知道的/重点速览 → 可能的用处
+-#}
+{#- 三出口标题：有任一 added/contradicted → 你可能不知道的；非空且全 repeated → 重点速览；否则 → 你可能不知道的 -#}
+{%- set has_new = keyInsights | selectattr('diff', 'in', ['added', 'contradicted']) | list | length > 0 -%}
+{%- set all_repeated = keyInsights | length > 0 and (keyInsights | rejectattr('diff', 'equalto', 'repeated') | list | length == 0) -%}
+{%- if all_repeated and not has_new %}{% set insights_title = '重点速览' %}{% else %}{% set insights_title = '你可能不知道的' %}{% endif -%}
+## 摘要
+
+{{ summary }}
+{% if advisoryNotes %}
+
+⚠️ {{ advisoryNotes[0] }}
+{% endif %}
+
+{% if readGuide.referenceRecordId %}
+> 🆚对比
+{% else %}
+> 🌟新知
+{% endif %}
+>
+> {{ readGuide.note }}
+
+## {{ insights_title }}
+{% set ns = namespace(cur_group='') %}
+{% for ki in keyInsights %}
+{% if ki.group and ki.group != ns.cur_group %}
+{% set ns.cur_group = ki.group %}
+
+**{{ ki.group }}**
+
+{% elif loop.first %}
+
+{% endif %}
+- {{ ki.text }}
+{% endfor %}
+{% if recommendation.verdict == 'useful' %}
+
+## 可能的用处
+
+{{ recommendation.reason | trim('。！？') }}，已存到 我的文件-{{ category }}。
+{% endif %}

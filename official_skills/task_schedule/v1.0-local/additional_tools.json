@@ -1,0 +1,138 @@
+[
+  {
+    "name": "task_schedule/create_task",
+    "description": "创建定时任务。task_kind=once 时使用 run_at；task_kind=rrule 时使用 rrule 与 dtstart。未使用的时间字段填空字符串。title 非空。rrule 中不要带 RRULE: 前缀，不要包含 BYHOUR/BYMINUTE（时分秒由 dtstart 承载）。时间字段用紧凑格式 YYYYMMDDTHHMMSS。timezone 必填，默认 Asia/Shanghai。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "instruction": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": "string",
+          "minLength": 1,
+          "default": "Asia/Shanghai"
+        },
+        "task_kind": {
+          "type": "string",
+          "enum": [
+            "once",
+            "rrule"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "run_at": {
+          "type": "string"
+        },
+        "rrule": {
+          "type": "string"
+        },
+        "dtstart": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "instruction",
+        "task_kind",
+        "title",
+        "run_at",
+        "rrule",
+        "dtstart",
+        "enabled"
+      ]
+    }
+  },
+  {
+    "name": "task_schedule/list_tasks",
+    "description": "列出当前会话中的任务。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled_only": {
+          "type": "boolean",
+          "default": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 30,
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "required": []
+    }
+  },
+  {
+    "name": "task_schedule/update_task",
+    "description": "更新已有任务：只传需要修改的字段，未传的字段自动保留原值。task_id 必填，其余字段按需传入。task_id 仅作工具参数，禁止在对用户回复中写出。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": "string",
+          "minLength": 1,
+          "default": "Asia/Shanghai"
+        },
+        "task_kind": {
+          "type": "string",
+          "enum": [
+            "once",
+            "rrule"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "run_at": {
+          "type": "string"
+        },
+        "rrule": {
+          "type": "string"
+        },
+        "dtstart": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "task_id"
+      ]
+    }
+  },
+  {
+    "name": "task_schedule/delete_task",
+    "description": "删除任务：task_id 仅作工具参数，禁止在对用户回复中写出；可来自同轮或近期 create/list/update 的工具返回（如用户删刚建的任务），或 list_tasks 后与 title/instruction 唯一对齐。无可靠 id 或有多条可能时先 list_tasks 再确认。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "task_id"
+      ]
+    }
+  }
+]

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>实验报告模板</title>
+<style>
+  @page {
+    size: A4;
+    margin: 22mm 20mm 20mm 20mm;
+    @bottom-center { content: counter(page) " / " counter(pages); }
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: "Songti SC", "STSong", "SimSun", serif;
+    color: #1a1a1a;
+    font-size: 10.5pt;
+    line-height: 1.7;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .hei { font-family: "Heiti SC", "STHeiti", "SimHei", "PingFang SC", sans-serif; }
+
+  /* ============ 封面 ============ */
+  .cover {
+    height: 253mm;            /* A4 版心高度，恰好一页 */
+    display: flex;
+    flex-direction: column;
+    page-break-after: always;
+    overflow: hidden;
+  }
+  .cover-top {
+    text-align: center;
+    margin-top: 8mm;
+    flex: 0 0 auto;
+  }
+  .cover-school {
+    font-family: "Heiti SC", "STHeiti", "SimHei", sans-serif;
+    font-size: 24pt;
+    letter-spacing: 8px;
+    color: #1f3a5f;
+    font-weight: 700;
+  }
+  .cover-sub {
+    font-size: 12pt;
+    color: #555;
+    letter-spacing: 3px;
+    margin-top: 4mm;
+  }
+  .cover-rule {
+    width: 60%;
+    margin: 6mm auto 0;
+    border: none;
+    border-top: 2.5px solid #1f3a5f;
+  }
+  .cover-rule.thin { border-top: 1px solid #b08d57; width: 62%; margin-top: 1.2mm; }
+  .cover-title-block {
+    text-align: center;
+    flex: 0 0 auto;
+    margin-top: 26mm;
+  }
+  .cover-title-label {
+    font-family: "Heiti SC", "STHeiti", "SimHei", sans-serif;
+    font-size: 30pt;
+    color: #b08d57;
+    letter-spacing: 14px;
+    font-weight: 700;
+  }
+  .cover-exp-name {
+    font-family: "Heiti SC", "STHeiti", "SimHei", sans-serif;
+    font-size: 18pt;
+    color: #1f3a5f;
+    margin-top: 12mm;
+    letter-spacing: 2px;
+    border-bottom: 1.5px solid #1f3a5f;
+    display: inline-block;
+    padding: 0 6mm 2mm;
+  }
+  .cover-meta {
+    margin: 0 auto;
+    width: 96mm;
+    flex: 1 1 auto;            /* 占据中部弹性空间，将页脚推到底部 */
+    display: flex;
+    align-items: center;
+    font-family: "Heiti SC", "STHeiti", "SimHei", sans-serif;
+    font-size: 12pt;
+  }
+  .cover-meta table { width: 100%; border-collapse: collapse; }
+  .cover-meta td { padding: 2.8mm 0; vertical-align: bottom; }
+  .cover-meta .lab { width: 30mm; color: #333; letter-spacing: 4px; }
+  .cover-meta .val { border-bottom: 1px solid #555; color: #1a1a1a; padding-left: 3mm; }
+  .cover-foot {
+    flex: 0 0 auto;
+    text-align: center;
+    padding-bottom: 4mm;
+    font-family: "Heiti SC", "STHeiti", "SimHei", sans-serif;
+    font-size: 11pt;
+    color: #666;
+    letter-spacing: 2px;
+  }
+
+  /* ============ 正文标题层级 ============ */
+  h1.doc-title {
+    font-family: "Heiti SC", "STHeiti", "SimHei", sans-serif;
+    font-size: 17pt;
+    text-align: center;
+    color: #1f3a5f;
+    margin: 0 0 2mm;
+    letter-spacing: 1px;
+  }
+  .doc-subtitle {
+    text-align: center;
+    font-size: 10pt;
+    color: #666;
+    margin-bottom: 5mm;
+    padding-bottom: 3mm;
+    border-bottom: 1.5px double #1f3a5f;
+  }
+  h2.sec {
+    font-family: "Heiti SC", "STHeiti", "SimHei", sans-serif;
+    font-size: 13.5pt;
+    color: #1f3a5f;
+    margin: 7mm 0 2.5mm;
+    padding-left: 3mm;
+    border-left: 5px solid #b08d57;
+    line-height: 1.3;
+  }
+  h3.sub {
+    font-family: "Heiti SC", "STHeiti", "SimHei", sans-serif;
+    font-size: 11.5pt;
+    color: #2a4a70;
+    margin: 4mm 0 1.5mm;
+  }
+  h4.subsub {
+    font-family: "Heiti SC", "STHeiti", "SimHei", sans-serif;
+    font-size: 10.5pt;
+    color: #333;
+    margin: 3mm 0 1mm;
+  }
+  p { margin: 0 0 2mm; text-align: justify; text-indent: 2em; }
+  p.noindent { text-indent: 0; }
+  ul, ol { margin: 1mm 0 2.5mm; padding-left: 8mm; }
+  li { margin-bottom: 0.8mm; }
+
+  /* ============ 摘要框 ============ */
+  .abstract {
+    background: #f5f7fa;
+    border: 1px solid #d4dce6;
+    border-left: 4px solid #1f3a5f;
+    padding: 3mm 4mm;
+    margin: 3mm 0 4mm;
+  }
+  .abstract .lab {
+    font-family: "Heiti SC", "STHeiti", "SimHei", sans-serif;
+    color: #1f3a5f;
+    font-weight: 700;
+  }
+  .abstract p { text-indent: 0; margin-bottom: 1.5mm; }
+  .keywords { font-size: 9.5pt; }
+  .keywords .lab {
+    font-family: "Heiti SC", "STHeiti", "SimHei", sans-serif;
+    color: #b08d57;
+  }
+
+  /* ============ 表格（三线表） ============ */
+  table.data {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2mm 0 3mm;
+    font-size: 9.8pt;
+  }
+  table.data caption {
+    font-family: "Heiti SC", "STHeiti", "SimHei", sans-serif;
+    font-size: 9.8pt;
+    color: #333;
+    text-align: center;
+    margin-bottom: 1.2mm;
+    caption-side: top;
+  }
+  table.data th, table.data td {
+    padding: 1.6mm 2mm;
+    text-align: center;
+  }
+  table.data thead th {
+    border-top: 1.5px solid #1a1a1a;
+    border-bottom: 1px solid #1a1a1a;
+    background: #eef2f7;
+    font-family: "Heiti SC", "STHeiti", "SimHei", sans-serif;
+  }
+  table.data tbody tr:last-child td { border-bottom: 1.5px solid #1a1a1a; }
+  table.data td.lcell { text-align: left; }
+
+  /* ============ 公式（三栏网格：左占位 / 居中公式 / 右编号，互不重叠） ============ */
+  .formula {
+    display: grid;
+    grid-template-columns: 18mm 1fr 18mm;
+    align-items: center;
+    margin: 2.5mm 0;
+    font-family: "Cambria Math", "Times New Roman", serif;
+    font-size: 11pt;
+  }
+  .formula .body {
+    grid-column: 2;
+    text-align: center;
+    font-style: italic;
+  }
+  .formula .num {
+    grid-column: 3;
+    text-align: right;
+    font-style: normal;
+    font-family: serif;
+    color: #555;
+    font-size: 10pt;
+  }
+  .figbox {
+    border: 1px dashed #9aa7b5;
+    background: #fafbfc;
+    text-align: center;
+    color: #8893a0;
+    padding: 14mm 0;
+    margin: 2mm 0 1mm;
+    font-family: "Heiti SC", "STHeiti", "SimHei", sans-serif;
+    font-size: 10pt;
+  }
+  .figcap {
+    text-align: center;
+    font-family: "Heiti SC", "STHeiti", "SimHei", sans-serif;
+    font-size: 9.5pt;
+    color: #333;
+    margin-bottom: 3mm;
+  }
+  .note {
+    font-size: 9pt;
+    color: #777;
+    text-indent: 0;
+    border-top: 1px dotted #ccc;
+    padding-top: 1mm;
+    margin-top: 1mm;
+  }
+  .refs { counter-reset: ref; padding-left: 0; list-style: none; font-size: 9.6pt; }
+  .refs li { text-indent: -7mm; padding-left: 7mm; margin-bottom: 1mm; text-align: justify; }
+  .sign-row { display: flex; justify-content: flex-end; gap: 18mm; margin-top: 8mm; font-family: "Heiti SC","STHeiti","SimHei",sans-serif; font-size: 10pt; }
+  .pagebreak { page-break-before: always; }
+  .two-col { display: flex; gap: 6mm; }
+  .two-col > div { flex: 1; }
+</style>
+</head>
+<body>
+
+<!-- ===================== 封面 ===================== -->
+<section class="cover">
+  <div class="cover-top">
+    <div class="cover-school">○○ 大 学</div>
+    <div class="cover-sub">UNIVERSITY  ·  ○○学院</div>
+    <hr class="cover-rule">
+    <hr class="cover-rule thin">
+  </div>
+
+  <div class="cover-title-block">
+    <div class="cover-title-label">实 验 报 告</div>
+    <div class="cover-exp-name">缓冲溶液的配制与 pH 值的测定</div>
+  </div>
+
+  <div class="cover-meta">
+    <table>
+      <tr><td class="lab hei">课程名称</td><td class="val">物理化学实验</td></tr>
+      <tr><td class="lab hei">实验项目</td><td class="val">缓冲溶液配制与 pH 测定</td></tr>
+      <tr><td class="lab hei">专业班级</td><td class="val">应用化学 2024 级 1 班</td></tr>
+      <tr><td class="lab hei">姓　　名</td><td class="val">○ ○ ○</td></tr>
+      <tr><td class="lab hei">学　　号</td><td class="val">2024010101</td></tr>
+      <tr><td class="lab hei">同 组 者</td><td class="val">○○○　○○○</td></tr>
+      <tr><td class="lab hei">指导教师</td><td class="val">○ ○ ○　副教授</td></tr>
+      <tr><td class="lab hei">实验日期</td><td class="val">2026 年 ○○ 月 ○○ 日</td></tr>
+    </table>
+  </div>
+
+  <div class="cover-foot">教 务 处 制 · 实 验 教 学 中 心</div>
+</section>
+
+<!-- ===================== 正文 ===================== -->
+<h1 class="doc-title">缓冲溶液的配制与 pH 值的测定</h1>
+<div class="doc-subtitle hei">物理化学实验 No.07　|　实验类型：验证性 · 综合性　|　学时：4</div>
+
+<!-- 摘要 -->
+<div class="abstract">
+  <p><span class="lab">【摘　要】</span>本实验以醋酸—醋酸钠体系为研究对象，依据缓冲溶液的作用原理与亨德森—哈塞尔巴尔赫（Henderson–Hasselbalch）方程，配制了一系列不同缓冲比的缓冲溶液，使用经标准缓冲液校准的 pH 计测定其 pH 值，并将实测值与理论计算值进行比较。结果表明，缓冲溶液 pH 随缓冲比对数线性变化，实测值与理论值偏差在 ±0.05 以内；向缓冲溶液中加入少量强酸、强碱或稀释时，其 pH 基本保持稳定，验证了缓冲溶液的抗酸、抗碱与抗稀释能力。本实验加深了对缓冲作用机理、缓冲容量及其影响因素的理解，并掌握了 pH 计的规范使用方法。</p>
+  <p class="keywords"><span class="lab">【关键词】</span>缓冲溶液；缓冲比；pH 测定；Henderson–Hasselbalch 方程；缓冲容量</p>
+</div>
+
+<!-- 1 实验目的 -->
+<h2 class="sec">一、实验目的</h2>
+<ol>
+  <li>理解缓冲溶液的组成、作用原理及其抗酸、抗碱、抗稀释的特性。</li>
+  <li>掌握根据 Henderson–Hasselbalch 方程进行缓冲溶液配制与 pH 计算的方法。</li>
+  <li>熟练掌握 pH 计的校准与规范使用，能正确读取并记录测量数据。</li>
+  <li>学会通过实验数据分析缓冲容量及其影响因素，培养误差分析与数据处理能力。</li>
+</ol>
+
+<!-- 2 实验原理 -->
+<h2 class="sec">二、实验原理</h2>
+<h3 class="sub">2.1　缓冲溶液的组成与作用机理</h3>
+<p>缓冲溶液是指能够在加入少量强酸、强碱或适度稀释时，其 pH 值不发生显著改变的溶液。它通常由弱酸及其共轭碱（或弱碱及其共轭酸）按一定比例组成。本实验采用的醋酸（CH₃COOH，记作 HAc）与醋酸钠（CH₃COONa，记作 NaAc）即构成典型的弱酸—共轭碱缓冲体系，溶液中存在如下平衡：</p>
+<div class="formula"><span class="body">HAc &#8651; H<sup>+</sup> + Ac<sup>&#8722;</sup></span><span class="num">（2-1）</span></div>
+<p>当外加少量 H⁺ 时，平衡左移，Ac⁻ 与 H⁺ 结合生成 HAc，消耗外加酸；当外加少量 OH⁻ 时，HAc 电离出 H⁺ 与之中和，平衡右移。由于体系中同时存在大量的 HAc 与 Ac⁻，故能在两个方向上缓冲外界扰动，维持 pH 相对稳定。</p>
+
+<h3 class="sub">2.2　Henderson–Hasselbalch 方程</h3>
+<p>对弱酸 HAc，其电离常数为 <i>K</i><sub>a</sub>，则：</p>
+<div class="formula"><span class="body"><i>K</i><sub>a</sub> = [H<sup>+</sup>][Ac<sup>&#8722;</sup>] / [HAc]</span><span class="num">（2-2）</span></div>
+<p>两边取负对数并整理，得到缓冲溶液 pH 的计算式，即 Henderson–Hasselbalch 方程：</p>
+<div class="formula"><span class="body">pH = p<i>K</i><sub>a</sub> + lg ( [Ac<sup>&#8722;</sup>] / [HAc] )</span><span class="num">（2-3）</span></div>
+<p>式中 [Ac⁻]/[HAc] 称为<strong>缓冲比</strong>。25 ℃ 时醋酸的 p<i>K</i><sub>a</sub> = 4.74。由式（2-3）可见，当缓冲比为 1∶1 时，pH = p<i>K</i><sub>a</sub>；改变缓冲比可在 p<i>K</i><sub>a</sub> ± 1 的范围内调节缓冲溶液的 pH 值，此区间缓冲能力最强。</p>
+
+<h3 class="sub">2.3　缓冲容量</h3>
+<p>缓冲容量 <i>β</i> 定义为使单位体积缓冲溶液 pH 改变一个单位所需加入强酸或强碱的物质的量：</p>
+<div class="formula"><span class="body"><i>β</i> = d<i>n</i><sub>(B)</sub> / d(pH)</span><span class="num">（2-4）</span></div>
+<p>缓冲容量与缓冲溶液的总浓度成正比，并在缓冲比为 1∶1（即 pH = p<i>K</i><sub>a</sub>）时达到极大值。本实验通过向缓冲溶液中定量加入强酸/强碱并测定 pH 变化，定性考察缓冲容量的变化规律。</p>
+
+<!-- 3 仪器与试剂 -->
+<h2 class="sec">三、实验仪器与试剂</h2>
+<div class="two-col">
+  <div>
+    <h3 class="sub">3.1　实验仪器</h3>
+    <ul>
+      <li>pHS-3C 型数字式酸度计　1 台</li>
+      <li>复合 pH 玻璃电极　1 支</li>
+      <li>电子天平（精度 0.0001 g）　1 台</li>
+      <li>容量瓶（100 mL、250 mL）　各若干</li>
+      <li>移液管（10 mL、25 mL）、刻度吸管　若干</li>
+      <li>烧杯（50 mL、100 mL）、玻璃棒　若干</li>
+      <li>洗瓶、滤纸、磁力搅拌器　各 1</li>
+    </ul>
+  </div>
+  <div>
+    <h3 class="sub">3.2　实验试剂</h3>
+    <ul>
+      <li>冰醋酸（A.R.）　0.1 mol·L⁻¹ HAc 标准溶液</li>
+      <li>醋酸钠（A.R.）　0.1 mol·L⁻¹ NaAc 标准溶液</li>
+      <li>盐酸标准溶液　0.1 mol·L⁻¹ HCl</li>
+      <li>氢氧化钠标准溶液　0.1 mol·L⁻¹ NaOH</li>
+      <li>标准缓冲液：pH 4.00（邻苯二甲酸氢钾）</li>
+      <li>标准缓冲液：pH 6.86（混合磷酸盐）</li>
+      <li>去离子水（电导率 &lt; 2 μS·cm⁻¹）</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 4 实验步骤 -->
+<h2 class="sec">四、实验步骤</h2>
+<h3 class="sub">4.1　pH 计的校准</h3>
+<ol>
+  <li>开机预热 30 min，将电极用去离子水冲洗并以滤纸吸干。</li>
+  <li>采用两点校准法：先将电极插入 pH 6.86 标准缓冲液定位，再插入 pH 4.00 标准缓冲液调节斜率，反复校验至读数稳定。</li>
+  <li>校准完毕后用去离子水冲洗电极，备用。</li>
+</ol>
+
+<h3 class="sub">4.2　缓冲溶液的配制</h3>
+<p>按表 4-1 所列缓冲比，分别用移液管量取 0.1 mol·L⁻¹ 的 HAc 与 NaAc 标准溶液于 50 mL 烧杯中，混合均匀，配制 5 组缓冲溶液（总体积均为 20.00 mL）。</p>
+<table class="data">
+  <caption>表 4-1　不同缓冲比的缓冲溶液配制方案</caption>
+  <thead>
+    <tr><th>编号</th><th>V(HAc)/mL</th><th>V(NaAc)/mL</th><th>缓冲比 c(Ac⁻)/c(HAc)</th><th>lg(缓冲比)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>S1</td><td>16.00</td><td>4.00</td><td>1 : 4 (0.25)</td><td>&#8722;0.602</td></tr>
+    <tr><td>S2</td><td>13.33</td><td>6.67</td><td>1 : 2 (0.50)</td><td>&#8722;0.301</td></tr>
+    <tr><td>S3</td><td>10.00</td><td>10.00</td><td>1 : 1 (1.00)</td><td>0.000</td></tr>
+    <tr><td>S4</td><td>6.67</td><td>13.33</td><td>2 : 1 (2.00)</td><td>+0.301</td></tr>
+    <tr><td>S5</td><td>4.00</td><td>16.00</td><td>4 : 1 (4.00)</td><td>+0.602</td></tr>
+  </tbody>
+</table>
+
+<h3 class="sub">4.3　pH 值的测定</h3>
+<ol>
+  <li>将校准后的电极依次插入 S1—S5 各缓冲溶液中，待读数稳定后记录 pH 实测值。</li>
+  <li>每个样品平行测定 3 次，取算术平均值，每次测量前后均以去离子水冲洗电极。</li>
+</ol>
+
+<h3 class="sub">4.4　缓冲性能验证</h3>
+<h4 class="subsub">4.4.1　抗酸/抗碱能力</h4>
+<p>取 S3 缓冲溶液 20.00 mL，分别加入 0.50 mL 的 0.1 mol·L⁻¹ HCl 与 NaOH，测定加入前后 pH 的变化；同时以等体积去离子水作空白对照实验。</p>
+<h4 class="subsub">4.4.2　抗稀释能力</h4>
+<p>取 S3 缓冲溶液，用去离子水稀释 1 倍，测定稀释前后 pH 的变化。</p>
+
+<!-- 5 数据记录与处理 -->
+<h2 class="sec">五、数据记录与处理</h2>
+<h3 class="sub">5.1　原始数据记录</h3>
+<table class="data">
+  <caption>表 5-1　各缓冲溶液 pH 实测数据（室温 25.0 ℃）</caption>
+  <thead>
+    <tr><th>编号</th><th>第 1 次</th><th>第 2 次</th><th>第 3 次</th><th>平均值 pH<sub>实测</sub></th><th>pH<sub>理论</sub></th><th>绝对偏差</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>S1</td><td>4.15</td><td>4.13</td><td>4.14</td><td>4.14</td><td>4.14</td><td>0.00</td></tr>
+    <tr><td>S2</td><td>4.45</td><td>4.43</td><td>4.44</td><td>4.44</td><td>4.44</td><td>0.00</td></tr>
+    <tr><td>S3</td><td>4.76</td><td>4.74</td><td>4.75</td><td>4.75</td><td>4.74</td><td>+0.01</td></tr>
+    <tr><td>S4</td><td>5.06</td><td>5.04</td><td>5.05</td><td>5.05</td><td>5.04</td><td>+0.01</td></tr>
+    <tr><td>S5</td><td>5.38</td><td>5.34</td><td>5.36</td><td>5.36</td><td>5.34</td><td>+0.02</td></tr>
+  </tbody>
+</table>
+
+<h3 class="sub">5.2　理论值计算示例</h3>
+<p class="noindent">以 S3（缓冲比 1∶1）为例，由式（2-3）：</p>
+<div class="formula"><span class="body">pH = 4.74 + lg(1.00) = 4.74 + 0 = 4.74</span></div>
+<p class="noindent">以 S5（缓冲比 4∶1）为例：</p>
+<div class="formula"><span class="body">pH = 4.74 + lg(4.00) = 4.74 + 0.602 = 5.34</span></div>
+
+<h3 class="sub">5.3　pH—lg(缓冲比) 关系曲线</h3>
+<div class="figbox">［ 此处粘贴 / 绘制 pH 对 lg(缓冲比) 的散点—拟合直线图 ］</div>
+<div class="figcap">图 5-1　pH 实测值随 lg(缓冲比) 的变化关系</div>
+<p>由表 5-1 数据作 pH 对 lg(缓冲比) 图，得近似直线，线性拟合方程为 pH = 0.99·lg(缓冲比) + 4.75，相关系数 <i>R</i>² = 0.999，截距 4.75 与 p<i>K</i><sub>a</sub>（4.74）高度吻合，斜率接近理论值 1，验证了 Henderson–Hasselbalch 方程的正确性。</p>
+
+<h3 class="sub">5.4　缓冲性能验证结果</h3>
+<table class="data">
+  <caption>表 5-2　S3 缓冲溶液抗酸、抗碱与抗稀释性能</caption>
+  <thead>
+    <tr><th>处理方式</th><th>处理前 pH</th><th>处理后 pH</th><th>ΔpH</th><th>对照（纯水）ΔpH</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="lcell">加入 0.50 mL HCl</td><td>4.75</td><td>4.70</td><td>&#8722;0.05</td><td>&#8722;约 3.0</td></tr>
+    <tr><td class="lcell">加入 0.50 mL NaOH</td><td>4.75</td><td>4.81</td><td>+0.06</td><td>+约 3.2</td></tr>
+    <tr><td class="lcell">稀释 1 倍</td><td>4.75</td><td>4.76</td><td>+0.01</td><td>—</td></tr>
+  </tbody>
+</table>
+<p class="note">注：纯水对照组加入等量强酸/强碱后 pH 发生剧烈变化，对比可见缓冲溶液的缓冲作用显著。</p>
+
+<!-- 6 结果分析与讨论 -->
+<h2 class="sec">六、结果分析与讨论</h2>
+<h3 class="sub">6.1　结果分析</h3>
+<p>由 5.1—5.3 节数据可知，缓冲溶液 pH 实测值与理论值偏差均不超过 ±0.02，pH 与 lg(缓冲比) 呈良好线性关系，斜率与截距均与理论高度一致，说明实验配制与测定过程准确可靠。由表 5-2 可知，加入少量强酸、强碱及稀释后缓冲溶液 pH 变化极小（|ΔpH| ≤ 0.06），而纯水对照组变化巨大，充分体现了缓冲溶液的抗酸、抗碱与抗稀释能力。</p>
+<h3 class="sub">6.2　误差来源分析</h3>
+<ol>
+  <li><strong>系统误差：</strong>pH 计校准不充分、电极老化、标准缓冲液污染或温度补偿不准确均会引入系统偏差。</li>
+  <li><strong>随机误差：</strong>移液管读数、溶液混合不均匀、读数时刻电极未完全稳定等导致测量值波动。</li>
+  <li><strong>操作误差：</strong>电极冲洗不彻底造成交叉污染、烧杯残留水稀释样品等。</li>
+</ol>
+<h3 class="sub">6.3　思考题</h3>
+<ol>
+  <li>为什么缓冲比在 1∶1 附近时缓冲容量最大？试结合缓冲容量公式说明。</li>
+  <li>若改用更高总浓度的 HAc–NaAc 体系，缓冲容量将如何变化？pH 是否改变？</li>
+  <li>温度变化对缓冲溶液 pH 有何影响？应如何在测定中加以控制？</li>
+</ol>
+
+<!-- 7 结论 -->
+<h2 class="sec">七、结论</h2>
+<ol>
+  <li>成功配制了 5 组不同缓冲比的 HAc–NaAc 缓冲溶液，其 pH 实测值与由 Henderson–Hasselbalch 方程计算的理论值偏差不超过 ±0.02。</li>
+  <li>pH 与 lg(缓冲比) 呈线性关系（<i>R</i>² = 0.999），拟合截距 4.75 与醋酸 p<i>K</i><sub>a</sub> 一致，验证了缓冲方程的正确性。</li>
+  <li>缓冲溶液在加入少量强酸、强碱及稀释时 pH 基本稳定，具有显著的缓冲能力，且缓冲比为 1∶1 时缓冲性能最佳。</li>
+</ol>
+
+<!-- 8 参考文献 -->
+<h2 class="sec">八、参考文献</h2>
+<ol class="refs">
+  <li>[1]　武汉大学. 分析化学（上册）[M]. 6 版. 北京：高等教育出版社，2016：182–205.</li>
+  <li>[2]　傅献彩，沈文霞，姚天扬，等. 物理化学（下册）[M]. 5 版. 北京：高等教育出版社，2006.</li>
+  <li>[3]　北京大学化学学院. 物理化学实验[M]. 4 版. 北京：北京大学出版社，2015：56–63.</li>
+  <li>[4]　GB/T 27501—2011. pH 缓冲溶液制备方法[S]. 北京：中国标准出版社，2011.</li>
+  <li>[5]　Atkins P W, de Paula J. Atkins' Physical Chemistry[M]. 11th ed. Oxford: Oxford University Press, 2018.</li>
+</ol>
+
+<div class="sign-row">
+  <span>指导教师签字：________________</span>
+  <span>批阅日期：__________</span>
+</div>
+
+</body>
+</html>

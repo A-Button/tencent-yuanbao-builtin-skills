@@ -1,0 +1,195 @@
+{
+  "schema_version": "1.0.0",
+  "instrument": {
+    "name": "Mini-IPIP-20",
+    "version": "donnellan-2006",
+    "source": "https://ipip.ori.org/MiniIPIPKey.htm",
+    "scoring_source": "https://ipip.ori.org/newScoringInstructions.htm",
+    "recommended_citation": "Donnellan, M. B., Oswald, F. L., Baird, B. M., & Lucas, R. E. (2006). The Mini-IPIP scales: Tiny-yet-effective measures of the Big Five factors of personality. Psychological Assessment, 18, 192-203. https://doi.org/10.1037/1040-3590.18.2.192",
+    "construct_family": "lexical-big-five-markers",
+    "license_status": "public-domain",
+    "commercial_use_allowed": true,
+    "english_items_status": "verbatim-public-domain",
+    "source_snapshot_sha256": "ecad5acbde0bf4ba3276956731ebaf75144b6b944d8c3bfed4ee543eff768e35",
+    "zh_cn_translation": "project-translation-draft-0.1-unvalidated",
+    "chinese_translation_note": "The project Simplified Chinese wording is an independent draft based on the public-domain English items. A Chinese Mini-IPIP was translated, back-translated, and validated in Li et al. (2012), but that publication is not an IPIP-project-certified official edition and its wording is not copied here.",
+    "chinese_validation_reference": "https://doi.org/10.2466/16.12.15.PR0.111.5.641-651",
+    "construct_note": "The source labels Factor V Intellect or Imagination. Factor IV is scored as Neuroticism, the reverse orientation of Emotional Stability."
+  },
+  "scoring": {
+    "positive_key_formula": "keyed_value = response",
+    "negative_key_formula": "keyed_value = 6 - response",
+    "scale_sum_formula": "sum(keyed_value for the four items assigned to the trait)",
+    "scale_mean_formula": "scale_sum / 4",
+    "sum_range": [
+      4,
+      20
+    ],
+    "mean_range": [
+      1,
+      5
+    ],
+    "norm_reference": null,
+    "interpretation_boundary": "Raw sums and means only; do not report percentiles or population labels without a validated target-population norm."
+  },
+  "response_scale": {
+    "min": 1,
+    "max": 5,
+    "en": {
+      "1": "Very inaccurate",
+      "2": "Moderately inaccurate",
+      "3": "Neither inaccurate nor accurate",
+      "4": "Moderately accurate",
+      "5": "Very accurate"
+    },
+    "zh-CN": {
+      "1": "非常不符合",
+      "2": "比较不符合",
+      "3": "不确定或一般",
+      "4": "比较符合",
+      "5": "非常符合"
+    }
+  },
+  "items": [
+    {
+      "id": 1,
+      "trait": "extraversion",
+      "reverse": false,
+      "en": "Am the life of the party.",
+      "zh_cn_draft": "你常常是聚会中活跃气氛的人。"
+    },
+    {
+      "id": 2,
+      "trait": "agreeableness",
+      "reverse": false,
+      "en": "Sympathize with others' feelings.",
+      "zh_cn_draft": "你能体会并同情他人的感受。"
+    },
+    {
+      "id": 3,
+      "trait": "conscientiousness",
+      "reverse": false,
+      "en": "Get chores done right away.",
+      "zh_cn_draft": "你会及时把该做的日常事务完成。"
+    },
+    {
+      "id": 4,
+      "trait": "neuroticism",
+      "reverse": false,
+      "en": "Have frequent mood swings.",
+      "zh_cn_draft": "你的情绪经常起伏。"
+    },
+    {
+      "id": 5,
+      "trait": "imagination",
+      "reverse": false,
+      "en": "Have a vivid imagination.",
+      "zh_cn_draft": "你有丰富而生动的想象力。"
+    },
+    {
+      "id": 6,
+      "trait": "extraversion",
+      "reverse": true,
+      "en": "Don't talk a lot.",
+      "zh_cn_draft": "你平时话不多。"
+    },
+    {
+      "id": 7,
+      "trait": "agreeableness",
+      "reverse": true,
+      "en": "Am not interested in other people's problems.",
+      "zh_cn_draft": "你对别人的困难不太感兴趣。"
+    },
+    {
+      "id": 8,
+      "trait": "conscientiousness",
+      "reverse": true,
+      "en": "Often forget to put things back in their proper place.",
+      "zh_cn_draft": "你常忘记把东西放回原位。"
+    },
+    {
+      "id": 9,
+      "trait": "neuroticism",
+      "reverse": true,
+      "en": "Am relaxed most of the time.",
+      "zh_cn_draft": "大多数时候，你很放松。"
+    },
+    {
+      "id": 10,
+      "trait": "imagination",
+      "reverse": true,
+      "en": "Am not interested in abstract ideas.",
+      "zh_cn_draft": "你对抽象的想法不太感兴趣。"
+    },
+    {
+      "id": 11,
+      "trait": "extraversion",
+      "reverse": false,
+      "en": "Talk to a lot of different people at parties.",
+      "zh_cn_draft": "在聚会上，你会和许多不同的人交谈。"
+    },
+    {
+      "id": 12,
+      "trait": "agreeableness",
+      "reverse": false,
+      "en": "Feel others' emotions.",
+      "zh_cn_draft": "你能感受到他人的情绪。"
+    },
+    {
+      "id": 13,
+      "trait": "conscientiousness",
+      "reverse": false,
+      "en": "Like order.",
+      "zh_cn_draft": "你喜欢井然有序。"
+    },
+    {
+      "id": 14,
+      "trait": "neuroticism",
+      "reverse": false,
+      "en": "Get upset easily.",
+      "zh_cn_draft": "你很容易感到烦乱或不安。"
+    },
+    {
+      "id": 15,
+      "trait": "imagination",
+      "reverse": true,
+      "en": "Have difficulty understanding abstract ideas.",
+      "zh_cn_draft": "你很难理解抽象的想法。"
+    },
+    {
+      "id": 16,
+      "trait": "extraversion",
+      "reverse": true,
+      "en": "Keep in the background.",
+      "zh_cn_draft": "在人群中，你通常待在不显眼的位置。"
+    },
+    {
+      "id": 17,
+      "trait": "agreeableness",
+      "reverse": true,
+      "en": "Am not really interested in others.",
+      "zh_cn_draft": "你其实不太关心别人。"
+    },
+    {
+      "id": 18,
+      "trait": "conscientiousness",
+      "reverse": true,
+      "en": "Make a mess of things.",
+      "zh_cn_draft": "你常把事情或环境弄得一团乱。"
+    },
+    {
+      "id": 19,
+      "trait": "neuroticism",
+      "reverse": true,
+      "en": "Seldom feel blue.",
+      "zh_cn_draft": "你很少感到低落。"
+    },
+    {
+      "id": 20,
+      "trait": "imagination",
+      "reverse": true,
+      "en": "Do not have a good imagination.",
+      "zh_cn_draft": "你的想象力不太丰富。"
+    }
+  ]
+}

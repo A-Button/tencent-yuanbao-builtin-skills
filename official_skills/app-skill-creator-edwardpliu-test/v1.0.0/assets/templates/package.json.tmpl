@@ -1,0 +1,17 @@
+{
+  "name": "{{APP_ID}}-oneagent-app",
+  "private": true,
+  "version": "{{VERSION_SEMVER}}",
+  "scripts": {
+    "build:ui": "node scripts/build-ui.mjs",
+    "test": "python3 -m unittest discover -s tests -v && node tests/bridge-runtime.mjs"
+  },
+  "engines": {
+    "node": ">=22.14"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/ext-apps": "1.7.5",
+    "esbuild": "0.25.9",
+    "jsdom": "30.0.1"
+  }
+}

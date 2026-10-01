@@ -1,0 +1,12 @@
+interface:
+  display_name: "ima"
+  short_description: "查看我在 ima 中的知识列表，按关键词查找或翻页浏览"
+  default_prompt: "使用 $ima-knowledge，列出我的知识列表。"
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "ima"
+      description: "ima test"
+      transport: "streamable_http"
+      url: "https://ima.qq.com/mcp"
+      auth_type: "oauth2_code"

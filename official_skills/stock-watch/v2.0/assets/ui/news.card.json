@@ -1,0 +1,414 @@
+{
+  "components": [
+    {
+      "id": "root",
+      "component": "Card",
+      "child": "content",
+      "style": {
+        "padding": 0,
+        "containerColor": "basic_container_primary",
+        "shape": 18
+      }
+    },
+    {
+      "id": "content",
+      "component": "Column",
+      "children": ["header", "title", "summary-slot", "rows", "colour-hint-slot", "action-row"],
+      "align": "stretch"
+    },
+
+    {
+      "id": "header",
+      "component": "Row",
+      "children": ["kicker-chip", "kicker"],
+      "align": "center",
+      "style": {
+        "spacing": 7,
+        "padding": { "horizontal": 16, "top": 14 }
+      }
+    },
+    {
+      "id": "kicker-chip",
+      "component": "Card",
+      "child": "kicker-chip-text",
+      "style": {
+        "containerColor": "basic_container_tertiary",
+        "shape": 5,
+        "padding": { "horizontal": 5, "vertical": 1 }
+      }
+    },
+    {
+      "id": "kicker-chip-text",
+      "component": "Text",
+      "text": "讯",
+      "variant": "caption",
+      "style": { "color": "basic_text_tertiary", "fontWeight": 500 }
+    },
+    {
+      "id": "kicker",
+      "component": "Text",
+      "text": { "path": "/kicker" },
+      "variant": "caption",
+      "maxLines": 0,
+      "style": { "color": "basic_text_quaternary" }
+    },
+    {
+      "id": "title",
+      "component": "Text",
+      "text": { "path": "/title" },
+      "variant": "h3",
+      "maxLines": 2,
+      "style": {
+        "color": "basic_text_primary",
+        "fontWeight": 600,
+        "padding": { "horizontal": 16, "top": 8 }
+      }
+    },
+    {
+      "id": "summary-slot",
+      "component": "Visibility",
+      "value": { "path": "/has_summary" },
+      "child": "summary"
+    },
+    {
+      "id": "summary",
+      "component": "Text",
+      "text": { "path": "/summary_text" },
+      "variant": "caption",
+      "maxLines": 2,
+      "style": {
+        "color": "basic_text_tertiary",
+        "padding": { "horizontal": 16, "top": 6 }
+      }
+    },
+
+    {
+      "id": "rows",
+      "component": "Column",
+      "align": "stretch",
+      "children": { "path": "/rows", "componentId": "row" },
+      "style": { "spacing": 12, "padding": { "horizontal": 16, "top": 12 } }
+    },
+    {
+      "id": "row",
+      "component": "Column",
+      "children": ["title-box", "meta-text"],
+      "align": "stretch",
+      "style": { "spacing": 2 }
+    },
+    {
+      "id": "title-box",
+      "component": "Box",
+      "children": ["title-col", "chip-row"],
+      "contentAlignment": "topStart",
+      "style": { "fillMaxWidth": 1 }
+    },
+    {
+      "id": "title-col",
+      "component": "Column",
+      "children": ["title-link-slot", "title-plain-slot"],
+      "align": "stretch",
+      "style": { "fillMaxWidth": 1 }
+    },
+    {
+      "id": "chip-row",
+      "component": "Row",
+      "children": ["kind-warn", "kind-info", "kind-mute", "stance-red", "stance-green", "stance-mute"],
+      "align": "center",
+      "justify": "start",
+      "style": { "spacing": 0 }
+    },
+    {
+      "id": "meta-text",
+      "component": "Text",
+      "text": { "path": "meta_text" },
+      "variant": "caption",
+      "maxLines": 0,
+      "style": { "color": "basic_text_quaternary", "fillMaxWidth": 1 }
+    },
+    {
+      "id": "title-link-slot",
+      "component": "Visibility",
+      "value": { "path": "has_url" },
+      "child": "title-click"
+    },
+    {
+      "id": "title-click",
+      "component": "Clickable",
+      "child": "title-link-text",
+      "action": {
+        "functionCall": {
+          "call": "openUrl",
+          "args": { "url": { "path": "url" } }
+        }
+      }
+    },
+    {
+      "id": "title-link-text",
+      "component": "Text",
+      "text": { "path": "title_shown" },
+      "variant": "h5",
+      "maxLines": 2,
+      "style": { "color": "basic_text_primary", "fontWeight": 600, "fillMaxWidth": 1 }
+    },
+    {
+      "id": "title-plain-slot",
+      "component": "Visibility",
+      "value": { "path": "no_url" },
+      "child": "title-plain-text"
+    },
+    {
+      "id": "title-plain-text",
+      "component": "Text",
+      "text": { "path": "title_shown" },
+      "variant": "h5",
+      "maxLines": 2,
+      "style": { "color": "basic_text_primary", "fontWeight": 600, "fillMaxWidth": 1 }
+    },
+
+    {
+      "id": "kind-warn",
+      "component": "Visibility",
+      "value": { "path": "kind_warn" },
+      "child": "kind-warn-pad"
+    },
+    {
+      "id": "kind-warn-pad",
+      "component": "Row",
+      "children": ["kind-warn-chip"],
+      "style": { "padding": { "end": 4 } }
+    },
+    {
+      "id": "kind-warn-chip",
+      "component": "Card",
+      "child": "kind-warn-text",
+      "style": {
+        "containerColor": "basic_container_tertiary",
+        "shape": 4,
+        "padding": { "horizontal": 6, "vertical": 1 }
+      }
+    },
+    {
+      "id": "kind-warn-text",
+      "component": "Text",
+      "text": { "path": "kind_text" },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": { "color": "basic_function_orange", "fontWeight": 500 }
+    },
+    {
+      "id": "kind-info",
+      "component": "Visibility",
+      "value": { "path": "kind_info" },
+      "child": "kind-info-pad"
+    },
+    {
+      "id": "kind-info-pad",
+      "component": "Row",
+      "children": ["kind-info-chip"],
+      "style": { "padding": { "end": 4 } }
+    },
+    {
+      "id": "kind-info-chip",
+      "component": "Card",
+      "child": "kind-info-text",
+      "style": {
+        "containerColor": "basic_container_tertiary",
+        "shape": 4,
+        "padding": { "horizontal": 6, "vertical": 1 }
+      }
+    },
+    {
+      "id": "kind-info-text",
+      "component": "Text",
+      "text": { "path": "kind_text" },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": { "color": "basic_function_blue", "fontWeight": 500 }
+    },
+    {
+      "id": "kind-mute",
+      "component": "Visibility",
+      "value": { "path": "kind_mute" },
+      "child": "kind-mute-pad"
+    },
+    {
+      "id": "kind-mute-pad",
+      "component": "Row",
+      "children": ["kind-mute-chip"],
+      "style": { "padding": { "end": 4 } }
+    },
+    {
+      "id": "kind-mute-chip",
+      "component": "Card",
+      "child": "kind-mute-text",
+      "style": {
+        "containerColor": "basic_container_tertiary",
+        "shape": 4,
+        "padding": { "horizontal": 6, "vertical": 1 }
+      }
+    },
+    {
+      "id": "kind-mute-text",
+      "component": "Text",
+      "text": { "path": "kind_text" },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": { "color": "basic_text_tertiary", "fontWeight": 500 }
+    },
+    {
+      "id": "stance-red",
+      "component": "Visibility",
+      "value": { "path": "stance_red" },
+      "child": "stance-red-pad"
+    },
+    {
+      "id": "stance-red-pad",
+      "component": "Row",
+      "children": ["stance-red-chip"],
+      "style": { "padding": { "end": 4 } }
+    },
+    {
+      "id": "stance-red-chip",
+      "component": "Card",
+      "child": "stance-red-text",
+      "style": {
+        "containerColor": "basic_container_tertiary",
+        "shape": 4,
+        "padding": { "horizontal": 6, "vertical": 1 }
+      }
+    },
+    {
+      "id": "stance-red-text",
+      "component": "Text",
+      "text": { "path": "stance_text" },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": { "color": "basic_function_red", "fontWeight": 500 }
+    },
+    {
+      "id": "stance-green",
+      "component": "Visibility",
+      "value": { "path": "stance_green" },
+      "child": "stance-green-pad"
+    },
+    {
+      "id": "stance-green-pad",
+      "component": "Row",
+      "children": ["stance-green-chip"],
+      "style": { "padding": { "end": 4 } }
+    },
+    {
+      "id": "stance-green-chip",
+      "component": "Card",
+      "child": "stance-green-text",
+      "style": {
+        "containerColor": "basic_container_tertiary",
+        "shape": 4,
+        "padding": { "horizontal": 6, "vertical": 1 }
+      }
+    },
+    {
+      "id": "stance-green-text",
+      "component": "Text",
+      "text": { "path": "stance_text" },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": { "color": "basic_function_green", "fontWeight": 500 }
+    },
+    {
+      "id": "stance-mute",
+      "component": "Visibility",
+      "value": { "path": "stance_mute" },
+      "child": "stance-mute-pad"
+    },
+    {
+      "id": "stance-mute-pad",
+      "component": "Row",
+      "children": ["stance-mute-chip"],
+      "style": { "padding": { "end": 4 } }
+    },
+    {
+      "id": "stance-mute-chip",
+      "component": "Card",
+      "child": "stance-mute-text",
+      "style": {
+        "containerColor": "basic_container_tertiary",
+        "shape": 4,
+        "padding": { "horizontal": 6, "vertical": 1 }
+      }
+    },
+    {
+      "id": "stance-mute-text",
+      "component": "Text",
+      "text": { "path": "stance_text" },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": { "color": "basic_text_tertiary", "fontWeight": 500 }
+    },
+
+    {
+      "id": "colour-hint-slot",
+      "component": "Visibility",
+      "value": { "path": "/has_colour_hint" },
+      "child": "colour-hint"
+    },
+    {
+      "id": "colour-hint",
+      "component": "Text",
+      "text": { "path": "/colour_hint_text" },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_text_quaternary",
+        "padding": { "horizontal": 16, "top": 12 }
+      }
+    },
+
+    {
+      "id": "action-row",
+      "component": "Row",
+      "children": ["secondary-action", "primary-action"],
+      "align": "center",
+      "justify": "end",
+      "style": { "spacing": 10, "padding": { "horizontal": 12, "top": 14, "bottom": 16 } }
+    },
+    {
+      "id": "secondary-action",
+      "component": "Button",
+      "child": "secondary-label",
+      "variant": "default",
+      "action": {
+        "functionCall": {
+          "call": "sendQuery",
+          "args": { "prompt": { "path": "/secondary_prompt" } }
+        }
+      }
+    },
+    {
+      "id": "secondary-label",
+      "component": "Text",
+      "text": { "path": "/secondary_label" },
+      "variant": "body"
+    },
+    {
+      "id": "primary-action",
+      "component": "Button",
+      "child": "primary-label",
+      "variant": "primary",
+      "action": {
+        "functionCall": {
+          "call": "sendQuery",
+          "args": { "prompt": { "path": "/primary_prompt" } }
+        }
+      }
+    },
+    {
+      "id": "primary-label",
+      "component": "Text",
+      "text": { "path": "/primary_label" },
+      "variant": "body",
+      "style": { "color": "components_button_primary_title" }
+    }
+  ]
+}

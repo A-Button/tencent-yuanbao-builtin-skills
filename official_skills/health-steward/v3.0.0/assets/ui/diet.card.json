@@ -1,0 +1,354 @@
+{
+  "components": [
+    {
+      "id": "root",
+      "component": "PlatformSwitch",
+      "condition": {
+        "mobile": "mobile-root",
+        "ios": "mobile-root",
+        "android": "mobile-root",
+        "harmony": "mobile-root",
+        "web": "web-root",
+        "desktop": "desktop-root"
+      }
+    },
+    {
+      "id": "mobile-root",
+      "component": "Card",
+      "children": [
+        "content"
+      ],
+      "style": {
+        "padding": 0
+      }
+    },
+    {
+      "id": "content",
+      "component": "Column",
+      "children": [
+        "title-bar",
+        "record-frame"
+      ],
+      "align": "stretch"
+    },
+    {
+      "id": "title-bar",
+      "component": "Box",
+      "children": [
+        "title-row"
+      ],
+      "style": {
+        "padding": {
+          "horizontal": 16,
+          "top": 12,
+          "bottom": 4
+        }
+      }
+    },
+    {
+      "id": "title-row",
+      "component": "Row",
+      "children": [
+        "title-lead",
+        "record-expand"
+      ],
+      "justify": "spaceBetween",
+      "align": "center"
+    },
+    {
+      "id": "title-lead",
+      "component": "Row",
+      "children": [
+        "title-icon",
+        "title-text"
+      ],
+      "align": "center"
+    },
+    {
+      "id": "title-icon",
+      "component": "Icon",
+      "name": "grid",
+      "style": {
+        "width": 20,
+        "height": 20,
+        "tint": "basic_function_blue"
+      }
+    },
+    {
+      "id": "title-text",
+      "component": "Text",
+      "text": {
+        "path": "/current_meal/card_title"
+      },
+      "variant": "h5",
+      "style": {
+        "padding": {
+          "start": 0
+        }
+      }
+    },
+    {
+      "id": "record-expand",
+      "component": "IconButton",
+      "name": "expand",
+      "style": {
+        "width": 28,
+        "height": 28,
+        "padding": 4,
+        "tint": "basic_text_quaternary"
+      },
+      "action": {
+        "functionCall": {
+          "call": "yb_navigation_open_url",
+          "returnType": "void",
+          "args": {
+            "url": {
+              "path": "/current_meal/jump_url"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "record-frame",
+      "component": "Column",
+      "children": [
+        "record-card"
+      ],
+      "align": "stretch",
+      "style": {
+        "padding": {
+          "start": 16,
+          "end": 16,
+          "bottom": 12
+        }
+      }
+    },
+    {
+      "id": "record-card",
+      "component": "Card",
+      "children": [
+        "record-body"
+      ],
+      "style": {
+        "containerColor": "basic_container_tertiary",
+        "shape": 20,
+        "padding": 16
+      }
+    },
+    {
+      "id": "record-body",
+      "component": "Column",
+      "children": [
+        "meal-title",
+        "meal-meta",
+        "photo-box",
+        "foods-panel"
+      ],
+      "align": "stretch"
+    },
+    {
+      "id": "meal-title",
+      "component": "Text",
+      "text": {
+        "path": "/current_meal/title"
+      },
+      "variant": "h2",
+      "maxLines": 1
+    },
+    {
+      "id": "meal-meta",
+      "component": "Text",
+      "text": {
+        "call": "formatString",
+        "args": {
+          "value": "${formatDate(value: ${/current_meal/eaten_at}, format: 'EEEE')} · ${formatDate(value: ${/current_meal/eaten_at}, format: 'a h:mm')} · ${/current_meal/meal_type_display}"
+        }
+      },
+      "variant": "caption",
+      "style": {
+        "color": "basic_text_quaternary",
+        "padding": {
+          "top": 2
+        }
+      }
+    },
+    {
+      "id": "photo-box",
+      "component": "Box",
+      "contentAlignment": "bottomStart",
+      "children": [
+        "meal-photo",
+        "capture-inset"
+      ],
+      "style": {
+        "padding": {
+          "horizontal": 24
+        }
+      }
+    },
+    {
+      "id": "meal-photo",
+      "component": "Image",
+      "url": {
+        "path": "/current_meal/photo_url"
+      },
+      "description": {
+        "path": "/current_meal/title"
+      },
+      "fit": "cover",
+      "variant": "largeFeature",
+      "style": {
+        "shape": 12,
+        "border": true,
+        "height": 300
+      }
+    },
+    {
+      "id": "capture-inset",
+      "component": "Box",
+      "contentAlignment": "bottomStart",
+      "children": [
+        "capture-stamp"
+      ],
+      "style": {
+        "padding": 8
+      }
+    },
+    {
+      "id": "capture-stamp",
+      "component": "Card",
+      "align": "start",
+      "children": [
+        "capture-text"
+      ],
+      "style": {
+        "containerColor": "components_mask_popup",
+        "shape": 8,
+        "padding": {
+          "horizontal": 8,
+          "vertical": 5
+        }
+      }
+    },
+    {
+      "id": "capture-text",
+      "component": "Text",
+      "text": {
+        "call": "formatString",
+        "args": {
+          "value": "${/current_meal/photo_badge} · ${formatDate(value: ${/current_meal/eaten_at}, format: 'yyyy/MM/dd')} · ${formatDate(value: ${/current_meal/eaten_at}, format: 'a h:mm')}"
+        }
+      },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_text_disabled"
+      }
+    },
+    {
+      "id": "foods-panel",
+      "component": "Column",
+      "children": [
+        "foods-label",
+        "foods-list"
+      ],
+      "align": "stretch",
+      "style": {
+        "padding": {
+          "top": 12
+        }
+      }
+    },
+    {
+      "id": "foods-label",
+      "component": "Text",
+      "text": {
+        "path": "/current_meal/foods_label"
+      },
+      "variant": "h5",
+      "style": {
+        "color": "basic_text_quaternary",
+        "fontWeight": 500
+      }
+    },
+    {
+      "id": "foods-list",
+      "component": "Column",
+      "children": {
+        "path": "/current_meal/items",
+        "componentId": "food-row"
+      },
+      "align": "stretch",
+      "style": {
+        "spacing": 10,
+        "padding": {
+          "top": 8
+        }
+      }
+    },
+    {
+      "id": "food-row",
+      "component": "Row",
+      "children": [
+        "food-emoji",
+        "food-name",
+        "food-spacer",
+        "food-amount"
+      ],
+      "align": "center",
+      "style": {
+        "spacing": 8
+      }
+    },
+    {
+      "id": "food-emoji",
+      "component": "Text",
+      "text": {
+        "path": "emoji"
+      },
+      "variant": "h4"
+    },
+    {
+      "id": "food-name",
+      "component": "Text",
+      "text": {
+        "path": "name"
+      },
+      "variant": "h5",
+      "maxLines": 1,
+      "weight": 200,
+      "style": {
+        "fontWeight": 500
+      }
+    },
+    {
+      "id": "food-spacer",
+      "component": "Box",
+      "children": [],
+      "weight": 1
+    },
+    {
+      "id": "food-amount",
+      "component": "Text",
+      "text": {
+        "path": "portion"
+      },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_text_quinary"
+      }
+    },
+    {
+      "id": "desktop-root",
+      "component": "WebCard",
+      "uriPath": "/e/diet-assistant"
+    },
+    {
+      "id": "web-root",
+      "component": "WebCard",
+      "uriPath": "/e/diet-assistant"
+    }
+  ]
+}

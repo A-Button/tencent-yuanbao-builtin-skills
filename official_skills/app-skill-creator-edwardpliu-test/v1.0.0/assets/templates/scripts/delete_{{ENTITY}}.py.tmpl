@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+"""删除一条{{APP_NAME}}记录。"""
+
+from __future__ import annotations
+
+from _store import Store, require_text, execute, print_model_result
+
+
+def _delete_{{ENTITY}}(args: dict, store: Store) -> dict:
+    removed = store.remove(require_text(args, "id"))
+    return {"id": removed["id"], "deleted": True}
+
+
+def delete_{{ENTITY}}(args: dict) -> dict:
+    result = execute(_delete_{{ENTITY}}, args)
+    print_model_result(result, "id", "deleted", "count")
+    return result

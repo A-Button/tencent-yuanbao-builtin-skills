@@ -1,0 +1,9 @@
+pypdf==6.14.2
+pdfplumber==0.11.10
+pdf2image==1.17.0
+reportlab==5.0.0
+Pillow==12.3.0
+graphviz==0.21
+pytesseract==0.3.13
+pypdfium2==5.11.0
+pandas==2.3.3

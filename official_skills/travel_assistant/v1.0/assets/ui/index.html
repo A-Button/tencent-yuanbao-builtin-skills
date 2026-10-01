@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<!--
+  旅游规划行程卡 UI（自包含）。视觉对齐元宝原生行程卡：深色标题栏 + 地图为主体，
+  左上浮动 tab（总览 / 第N天），右侧浮层（总览列每日路线 / 每日列景点与段间交通），
+  点景点弹详情浮层（封面 / 名称 / 导航 / 评分·营业状态·门票·等级四格栏 / 地点介绍 / 附近酒店）。
+
+  数据怎么进来：宿主是同源 srcDoc iframe，会直接调用本页 window 上的
+  travelPlanMcp.applyToolResult(result)，result.structuredContent 就是 render_trip
+  的整张卡片 {title, tabs, days}。宿主还会在 <body> 后注入 `var travelPlanMcp;`
+  预声明，所以本页在 body 末尾对它赋值即可。兼容 postMessage({type:'ui_update',
+  payload:{structuredContent}}) 与预置 window.__CARD_PAYLOAD__（本地预览）。
+
+  地图：优先用腾讯地图 GL（宿主注入的 __TENCENT_MAP_BROWSER_KEY__），与原生卡一致；
+  无 key / 加载失败时回退到自绘 SVG 路线图（GCJ-02 坐标，无外部依赖），保证任何环境都能出图。
+
+  链接外跳：iframe sandbox 无 allow-popups，页面自身开不了外链。导航/购票/酒店做
+  多级降级：宿主 openLink → 新窗口 → 摊开链接兜底，始终不吞数据。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>旅游规划</title>
+<style>
+  :root{
+    --brand:#2b6fff; --brand-d:#1f5fe0; --brand-soft:#eaf1ff;
+    --ink:#1a1c1f; --sub:#8a8f99; --line:#eef0f3; --card:#fff;
+    --head:#20232b; --warn:#f5842a; --ok:#12b76a; --gold:#ff9500;
+    --shadow:0 2px 8px rgba(18,24,40,.10),0 12px 30px rgba(18,24,40,.10);
+    --panelw:clamp(206px,44%,270px);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:#0e1013;color:var(--ink);
+    font:14px/1.55 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+  img{display:block;border:0}
+  button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;padding:0}
+
+  .tp-card{max-width:980px;margin:0 auto;background:var(--card);border-radius:14px;overflow:hidden;
+    box-shadow:0 1px 2px rgba(0,0,0,.2)}
+
+  /* 顶部深色标题栏 */
+  .tp-head{display:flex;align-items:center;gap:9px;background:var(--head);color:#fff;
+    padding:11px 14px}
+  .tp-head .ico{width:18px;height:18px;border-radius:5px;flex:0 0 auto;
+    background:linear-gradient(135deg,#3f8bff,#12b76a)}
+  .tp-head h1{margin:0;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tp-head .full{margin-left:auto;opacity:.75;font-size:15px;line-height:1;padding:2px}
+  .tp-head .full:hover{opacity:1}
+
+  /* 舞台：地图铺满，控件浮在其上 */
+  .tp-stage{position:relative;height:clamp(360px,60vh,520px);background:#e8edf2;overflow:hidden}
+  #tp-map{position:absolute;inset:0}
+  #tp-map svg{width:100%;height:100%;display:block}
+
+  /* 顶部 tab */
+  .tp-tabs{position:absolute;top:10px;left:10px;display:flex;gap:6px;max-width:60%;
+    overflow-x:auto;scrollbar-width:none;z-index:5}
+  .tp-tabs::-webkit-scrollbar{display:none}
+  .tp-tab{flex:0 0 auto;padding:6px 13px;border-radius:999px;font-size:12px;white-space:nowrap;
+    background:rgba(255,255,255,.92);color:#4a4e55;box-shadow:0 1px 4px rgba(0,0,0,.14);backdrop-filter:blur(2px)}
+  .tp-tab.on{background:#20232b;color:#fff;font-weight:600}
+
+  /* 右侧浮层：总览 / 每日 / 详情 共用定位 */
+  .tp-panel,.tp-detail{position:absolute;top:48px;right:10px;bottom:44px;width:var(--panelw);
+    background:var(--card);border-radius:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;
+    overflow:hidden;z-index:6}
+  .tp-detail{display:none}
+  .tp-panel .ph{padding:12px 14px 8px;font-size:15px;font-weight:700;flex:0 0 auto}
+  .tp-body{overflow-y:auto;overflow-x:hidden;padding:0 8px 8px}
+  .tp-body::-webkit-scrollbar{width:5px} .tp-body::-webkit-scrollbar-thumb{background:#d7dae0;border-radius:9px}
+
+  /* 总览：每日一行 */
+  .ov{width:100%;text-align:left;padding:10px 8px;border-radius:9px;display:block}
+  .ov+.ov{border-top:1px solid var(--line)}
+  .ov:hover{background:#f6f8fc}
+  .ov .t{font-size:14px;font-weight:600}
+  .ov .r{margin-top:3px;color:var(--sub);font-size:12px;line-height:1.5}
+
+  /* 每日：景点行 + 段间交通 */
+  .st{width:100%;text-align:left;display:flex;gap:9px;padding:9px 8px;border-radius:9px;align-items:flex-start}
+  .st:hover{background:#f6f8fc}
+  .st .thumb{width:44px;height:44px;border-radius:8px;flex:0 0 auto;object-fit:cover;background:#e6e9ee}
+  .st .m{min-width:0;flex:1}
+  .st .nm{font-size:13.5px;font-weight:600;line-height:1.3;display:flex;align-items:center;gap:6px}
+  .st .nm .tag{font-size:10px;font-weight:600;color:var(--ok);background:#e7f7ee;padding:1px 6px;border-radius:5px;flex:0 0 auto}
+  .st .sum{margin-top:3px;color:var(--sub);font-size:12px;line-height:1.45;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .tr{width:100%;display:flex;align-items:center;gap:6px;color:var(--sub);font-size:12px;
+    padding:5px 10px;margin:1px 0}
+  .tr .ic{opacity:.75}
+  .tr .arr{margin-left:auto;opacity:.5}
+  .tr:hover{color:var(--brand)}
+
+  /* 详情浮层 */
+  .dt-cover{position:relative;width:100%;height:132px;background:#e6e9ee;flex:0 0 auto}
+  .dt-cover img{width:100%;height:100%;object-fit:cover}
+  .dt-close{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;
+    background:rgba(0,0,0,.5);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center}
+  .dt-scroll{overflow-y:auto;padding:12px 14px 14px}
+  .dt-scroll::-webkit-scrollbar{width:5px} .dt-scroll::-webkit-scrollbar-thumb{background:#d7dae0;border-radius:9px}
+  .dt-titlerow{display:flex;align-items:center;gap:8px}
+  .dt-name{font-size:16px;font-weight:700;flex:1;min-width:0}
+  .dt-nav{flex:0 0 auto;display:flex;align-items:center;gap:4px;background:#20232b;color:#fff;
+    font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px}
+  .dt-addr{color:var(--sub);font-size:12px;margin-top:5px;line-height:1.5}
+
+  .facts{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
+    border-radius:10px;overflow:hidden;margin:12px 0}
+  .fact{background:#fafbfc;padding:8px 4px;text-align:center;min-width:0}
+  .fact .k{color:var(--sub);font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .fact .v{margin-top:2px;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .fact .v.star{color:var(--gold)} .fact .v.ok{color:var(--ok)} .fact .v.closed{color:var(--warn)}
+
+  .dt-h{font-size:13px;font-weight:700;margin:10px 0 6px}
+  .dt-intro{color:#54585f;font-size:12.5px;line-height:1.6}
+  .dt-intro.clip{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+  .dt-more{color:var(--brand);font-size:12px;font-weight:600;margin-top:4px}
+  .dt-links{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .dt-link{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:#4a4e55;
+    background:#f1f2f4;padding:8px 12px;border-radius:999px}
+  .dt-link.pri{background:var(--brand-soft);color:var(--brand)}
+  .dt-link img{width:14px;height:14px;border-radius:3px}
+
+  /* 左下 生成行程图 + 出处 */
+  .tp-gen{position:absolute;left:10px;bottom:10px;display:flex;align-items:center;gap:5px;
+    background:rgba(255,255,255,.94);color:#3a3d42;font-size:12px;font-weight:600;
+    padding:7px 12px;border-radius:999px;box-shadow:0 1px 5px rgba(0,0,0,.16);z-index:5}
+  .tp-credit{position:absolute;left:50%;transform:translateX(-50%);bottom:5px;color:#7a8090;
+    font-size:10px;z-index:4;display:none;text-shadow:0 1px 2px rgba(255,255,255,.7)}
+
+  .tp-fallback{position:absolute;left:10px;right:10px;bottom:48px;z-index:9;
+    background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:9px 12px;
+    font-size:12px;color:#9a3412;word-break:break-all;box-shadow:var(--shadow)}
+  .tp-fallback b{display:block;margin-bottom:3px;color:#7c2d12}
+  .tp-toast{position:absolute;left:50%;bottom:56px;transform:translateX(-50%);z-index:12;
+    background:rgba(32,35,43,.92);color:#fff;font-size:12px;padding:7px 14px;border-radius:999px;
+    opacity:0;transition:opacity .2s;pointer-events:none}
+  .tp-toast.on{opacity:1}
+  .tp-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:#6b7280;font-size:13px;text-align:center;padding:24px}
+
+  @media(max-width:560px){
+    :root{--panelw:56%}
+    .tp-stage{height:clamp(340px,64vh,480px)}
+    .dt-cover{height:118px}
+  }
+</style>
+</head>
+<body>
+<div id="app"><div class="tp-empty">正在载入行程…</div></div>
+
+<script>
+/* ============================ 工具 ============================ */
+var MAP_KEY="__TENCENT_MAP_BROWSER_KEY__";
+var MODE_ICON={walk:"🚶",walking:"🚶",bike:"🚴",bicycling:"🚴",car:"🚗",driving:"🚗",taxi:"🚕",
+  transit:"🚌",bus:"🚌",subway:"🚇"};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;}
+function txt(v){return (v==null?"":String(v)).trim();}
+function num(v){var n=typeof v==="number"?v:parseFloat(v);return isFinite(n)?n:null;}
+function keyValid(k){return !!k&&k.indexOf("__")!==0&&k.length>=8;}
+function pickUrl(d){if(!d||typeof d!=="object")return "";return txt(d.link)||txt(d.schema);}
+
+function openUrl(url,label){
+  url=txt(url);if(!url)return;
+  try{var b=window.travelPlanMcp;if(b&&typeof b.openLink==="function"){b.openLink({url:url});return;}}catch(e){}
+  try{var w=window.open(url,"_blank","noopener");if(w)return;}catch(e){}
+  showFallback(label||"链接",url);
+}
+function showFallback(label,url){
+  var stage=document.getElementById("tp-stage");if(!stage)return;
+  var box=document.getElementById("tp-fallback");
+  if(!box){box=el("div","tp-fallback");box.id="tp-fallback";stage.appendChild(box);}
+  box.innerHTML="";box.appendChild(el("b",null,"当前环境无法直接跳转，"+label+"地址："));
+  box.appendChild(el("span",null,url));
+  var c=el("button",null," ✕");c.style.cssText="float:right;color:#7c2d12";c.onclick=function(){box.remove();};
+  box.appendChild(c);
+}
+function toast(msg){
+  var stage=document.getElementById("tp-stage");if(!stage)return;
+  var t=el("div","tp-toast",msg);stage.appendChild(t);
+  requestAnimationFrame(function(){t.classList.add("on");});
+  setTimeout(function(){t.classList.remove("on");setTimeout(function(){t.remove();},250);},1600);
+}
+
+/* ============================ 状态 ============================ */
+var STATE={card:null,day:null,stop:null,tabs:[],map:null,markerLayer:null,lineLayer:null,tmapOk:false,tmapTrying:false};
+
+function dayList(){
+  var days=STATE.card&&STATE.card.days||{};
+  return STATE.tabs.map(function(t){return {id:t.id,label:t.label,day:days[t.id]};})
+    .filter(function(x){return x.day;});
+}
+function dayNumber(id){for(var i=0;i<STATE.tabs.length;i++)if(STATE.tabs[i].id===id)return i+1;return 1;}
+
+/* 取一天里的定位点与折线段 */
+function dayGeo(day){
+  var stops=Array.isArray(day&&day.stops)?day.stops:[];
+  var pts=[],segs=[];
+  stops.forEach(function(s,i){
+    var loc=s&&s.location,la=num(loc&&loc.lat),ln=num(loc&&loc.lng);
+    if(la!=null&&ln!=null)pts.push({lat:la,lng:ln,stop:s,i:i});
+    var tr=s&&s.transferToNext,pl=tr&&tr.polyline;
+    if(Array.isArray(pl)&&pl.length>1){
+      var seg=[];pl.forEach(function(q){var a=num(q.lat),b=num(q.lng);if(a!=null&&b!=null)seg.push([a,b]);});
+      if(seg.length>1)segs.push(seg);
+    }else{
+      var nx=stops[i+1],nl=nx&&nx.location,a=la,b=ln,c=num(nl&&nl.lat),d=num(nl&&nl.lng);
+      if(a!=null&&c!=null)segs.push([[a,b],[c,d]]);
+    }
+  });
+  return {pts:pts,segs:segs,stops:stops};
+}
+
+/* 当前地图作用域 */
+function scopeGeo(){
+  var pts=[],segs=[];
+  if(STATE.day==null){ // 总览：每天一个代表点（质心）+ 全部折线
+    dayList().forEach(function(d){
+      var g=dayGeo(d.day);g.segs.forEach(function(s){segs.push(s);});
+      if(g.pts.length){
+        var cla=0,cln=0;g.pts.forEach(function(p){cla+=p.lat;cln+=p.lng;});
+        pts.push({lat:cla/g.pts.length,lng:cln/g.pts.length,label:"第"+dayNumber(d.id)+"天",
+          idx:dayNumber(d.id),dayId:d.id});
+      }
+    });
+  }else{
+    var day=(STATE.card.days||{})[STATE.day];var g=dayGeo(day);
+    g.segs.forEach(function(s){segs.push(s);});
+    g.pts.forEach(function(p,i){pts.push({lat:p.lat,lng:p.lng,label:txt(p.stop.name),idx:i+1,stop:p.stop});});
+  }
+  return {pts:pts,segs:segs};
+}
+
+/* ============================ 渲染 ============================ */
+function render(card){
+  if(!card||typeof card!=="object")return;
+  var days=card.days&&typeof card.days==="object"?card.days:null;
+  if(!days||!Object.keys(days).length){if(!STATE.card)showEmpty(card);return;}
+  STATE.card=card;
+  STATE.tabs=Array.isArray(card.tabs)&&card.tabs.length?card.tabs
+    :Object.keys(days).map(function(id,i){return {id:id,label:"第"+(i+1)+"天"};});
+  if(STATE.day!=null&&!days[STATE.day])STATE.day=null;
+  STATE.stop=null;
+  buildShell();
+  ensureMapThenDraw();
+  renderPanel();
+}
+
+function buildShell(){
+  var app=document.getElementById("app");app.innerHTML="";
+  var card=el("div","tp-card");
+
+  var head=el("div","tp-head");
+  head.appendChild(el("div","ico"));
+  head.appendChild(el("h1",null,txt(STATE.card.title)||"行程安排"));
+  var full=el("button","full","⤢");full.title="全屏查看";
+  full.onclick=function(){try{var c=document.querySelector(".tp-card");if(document.fullscreenElement)document.exitFullscreen();else c.requestFullscreen&&c.requestFullscreen();}catch(e){}};
+  head.appendChild(full);
+  card.appendChild(head);
+
+  var stage=el("div","tp-stage");stage.id="tp-stage";
+  var map=el("div",null);map.id="tp-map";stage.appendChild(map);
+
+  var tabs=el("div","tp-tabs");
+  tabs.appendChild(mkTab("总览",STATE.day==null,function(){STATE.day=null;STATE.stop=null;selectTab();ensureMapThenDraw();renderPanel();}));
+  STATE.tabs.forEach(function(t){
+    tabs.appendChild(mkTab(txt(t.label)||t.id,STATE.day===t.id,function(){STATE.day=t.id;STATE.stop=null;selectTab();ensureMapThenDraw();renderPanel();}));
+  });
+  stage.appendChild(tabs);
+
+  var panel=el("div","tp-panel");panel.id="tp-panel";stage.appendChild(panel);
+  var detail=el("div","tp-detail");detail.id="tp-detail";stage.appendChild(detail);
+
+  var gen=el("div","tp-gen","🗺 生成行程图");gen.onclick=function(){toast("行程图由客户端生成");};
+  stage.appendChild(gen);
+  var credit=el("div","tp-credit","路线示意图");credit.id="tp-credit";stage.appendChild(credit);
+
+  card.appendChild(stage);
+  app.appendChild(card);
+}
+function mkTab(label,on,fn){var b=el("button","tp-tab"+(on?" on":""),label);b.onclick=fn;return b;}
+function selectTab(){
+  var tabs=document.querySelectorAll(".tp-tab");
+  tabs[0]&&tabs[0].classList.toggle("on",STATE.day==null);
+  STATE.tabs.forEach(function(t,i){var b=tabs[i+1];if(b)b.classList.toggle("on",STATE.day===t.id);});
+}
+
+/* ---------- 右侧浮层 ---------- */
+function renderPanel(){
+  var detail=document.getElementById("tp-detail");if(detail)detail.style.display="none";
+  var panel=document.getElementById("tp-panel");if(!panel)return;
+  panel.style.display="flex";panel.innerHTML="";
+  if(STATE.day==null){
+    panel.appendChild(el("div","ph","总览"));
+    var body=el("div","tp-body");
+    dayList().forEach(function(d){
+      var stops=Array.isArray(d.day.stops)?d.day.stops:[];
+      var route=stops.map(function(s){return txt(s.name);}).filter(Boolean).join(" → ");
+      var b=el("button","ov");
+      b.appendChild(el("div","t","第"+dayNumber(d.id)+"天"));
+      b.appendChild(el("div","r",route||txt(d.day.title)||""));
+      b.onclick=function(){STATE.day=d.id;STATE.stop=null;selectTab();ensureMapThenDraw();renderPanel();};
+      body.appendChild(b);
+    });
+    panel.appendChild(body);
+  }else{
+    var day=(STATE.card.days||{})[STATE.day];
+    panel.appendChild(el("div","ph",txt(day.title)||("第"+dayNumber(STATE.day)+"天")));
+    var body2=el("div","tp-body");
+    var stops2=Array.isArray(day.stops)?day.stops:[];
+    stops2.forEach(function(s,i){
+      body2.appendChild(stopRow(s,i+1));
+      var tr=s.transferToNext;
+      if(tr&&typeof tr==="object"&&i<stops2.length-1)body2.appendChild(transferRow(tr));
+    });
+    panel.appendChild(body2);
+  }
+}
+function stopRow(s,idx){
+  var b=el("button","st");
+  var imgs=Array.isArray(s.images)?s.images.filter(function(u){return txt(u);}):[];
+  var cover=txt(s.thumbnail)||imgs[0];
+  var im=el("img","thumb");if(cover){im.src=cover;im.onerror=function(){im.style.visibility="hidden";};}else im.style.visibility="hidden";
+  b.appendChild(im);
+  var m=el("div","m");
+  var nm=el("div","nm");nm.appendChild(el("span",null,idx+"."+(txt(s.name)||"未命名")));
+  if(txt(s.category))nm.appendChild(el("span","tag",txt(s.category)));
+  m.appendChild(nm);
+  if(txt(s.summary))m.appendChild(el("div","sum",txt(s.summary)));
+  b.appendChild(m);
+  b.onclick=function(){openDetail(s);};
+  return b;
+}
+function transferRow(tr){
+  var op=(Array.isArray(tr.options)&&tr.options[0])||tr;
+  var mode=txt(op.mode)||txt(tr.mode);
+  var b=el("button","tr");
+  b.appendChild(el("span","ic",MODE_ICON[mode]||"🚗"));
+  var parts=[];if(txt(op.distance))parts.push(txt(op.distance));if(txt(op.duration))parts.push(txt(op.duration));
+  b.appendChild(el("span",null,parts.join("·")||"路线"));
+  b.appendChild(el("span","arr","›"));
+  var u=pickUrl(op.navigationData||tr.navigationData);
+  b.onclick=function(){if(u)openUrl(u,"路线导航");};
+  return b;
+}
+
+/* ---------- 详情浮层 ---------- */
+function openDetail(s){
+  STATE.stop=s;
+  var panel=document.getElementById("tp-panel");if(panel)panel.style.display="none";
+  var d=document.getElementById("tp-detail");if(!d)return;
+  d.style.display="flex";d.innerHTML="";
+
+  var imgs=Array.isArray(s.images)?s.images.filter(function(u){return txt(u);}):[];
+  var cover=txt(s.thumbnail)||imgs[0];
+  var cv=el("div","dt-cover");
+  if(cover){var im=el("img");im.src=cover;im.onerror=function(){cv.style.height="0";};cv.appendChild(im);}
+  var cls=el("button","dt-close","✕");cls.onclick=function(){STATE.stop=null;renderPanel();};
+  cv.appendChild(cls);d.appendChild(cv);
+
+  var sc=el("div","dt-scroll");
+  var tr=el("div","dt-titlerow");
+  tr.appendChild(el("div","dt-name",txt(s.name)||"景点"));
+  var navUrl=pickUrl(s.navigationData);
+  if(navUrl){var nb=el("button","dt-nav");nb.appendChild(document.createTextNode("🧭 导航"));nb.onclick=function(){openUrl(navUrl,"导航");};tr.appendChild(nb);}
+  sc.appendChild(tr);
+  if(txt(s.address))sc.appendChild(el("div","dt-addr",txt(s.address)));
+
+  sc.appendChild(buildFacts(s));
+
+  var intro=txt(s.introduction)||txt(s.summary);
+  if(intro){
+    sc.appendChild(el("div","dt-h","地点介绍"));
+    var ip=el("div","dt-intro clip",intro);sc.appendChild(ip);
+    if(intro.length>72){var mo=el("div","dt-more","展开");mo.onclick=function(){var c=ip.classList.toggle("clip");mo.textContent=c?"展开":"收起";};sc.appendChild(mo);}
+  }
+
+  var links=el("div","dt-links");
+  var tk=s.ticketPurchaseData,tkU=pickUrl(tk);
+  if(tkU){var l1=el("button","dt-link pri");l1.appendChild(iconLabel(tk,"🎫","购票"));l1.onclick=function(){openUrl(tkU,"购票");};links.appendChild(l1);}
+  var ht=s.nearbyHotelsData,htU=pickUrl(ht);
+  if(htU){var l2=el("button","dt-link");l2.appendChild(iconLabel(ht,"🏨","附近酒店"));l2.onclick=function(){openUrl(htU,"附近酒店");};links.appendChild(l2);}
+  var tel=txt(s.phone);
+  if(tel){var t0=tel.split(/[;,、]/)[0];var l3=el("button","dt-link");l3.appendChild(document.createTextNode("📞 电话"));l3.onclick=function(){try{location.href="tel:"+t0;}catch(e){showFallback("电话",tel);}};links.appendChild(l3);}
+  if(links.children.length)sc.appendChild(links);
+
+  d.appendChild(sc);
+}
+function iconLabel(data,emoji,text){
+  var f=document.createDocumentFragment();var icon=txt(data&&data.icon);
+  if(icon){var im=el("img");im.src=icon;im.onerror=function(){im.replaceWith(document.createTextNode(emoji+" "));};f.appendChild(im);}
+  else f.appendChild(document.createTextNode(emoji+" "));
+  f.appendChild(document.createTextNode(txt(data&&data.label)||text));
+  return f;
+}
+function buildFacts(s){
+  var f=el("div","facts");
+  var rating=num(s.rating);
+  f.appendChild(fact("评分",rating!=null?rating.toFixed(1):"暂无",rating!=null?"star":""));
+  var status=txt(s.openStatus)||"暂无";
+  var cls=/闭园|停业|关闭|未开放|已闭/.test(status)?"closed":(/营业中|开放/.test(status)?"ok":"");
+  f.appendChild(fact(txt(s.businessHours)||"营业状态",status,cls));
+  f.appendChild(fact("门票价格",txt(s.ticketPrice)||"暂无",""));
+  f.appendChild(fact("景区等级",txt(s.level)||"暂无",""));
+  return f;
+}
+function fact(k,v,cls){var c=el("div","fact");c.appendChild(el("div","k",k));c.appendChild(el("div","v"+(cls?" "+cls:""),v));return c;}
+
+/* ============================ 地图 ============================ */
+function ensureMapThenDraw(){
+  if(STATE.tmapOk&&window.TMap){drawTMap();return;}
+  if(keyValid(MAP_KEY)&&!STATE.tmapTrying&&!window.TMap){
+    STATE.tmapTrying=true;
+    var s=document.createElement("script");
+    s.src="https://map.qq.com/api/gljs?v=1.exp&key="+encodeURIComponent(MAP_KEY)+"&callback=__tpTMapReady";
+    window.__tpTMapReady=function(){STATE.tmapTrying=false;STATE.tmapOk=true;initTMap();};
+    s.onerror=function(){STATE.tmapTrying=false;drawSvg();};
+    document.head.appendChild(s);
+    setTimeout(function(){if(!window.TMap){STATE.tmapTrying=false;drawSvg();}},6000);
+    drawSvg(); // 先出 SVG，加载好再切
+    return;
+  }
+  if(window.TMap&&!STATE.map){initTMap();return;}
+  drawSvg();
+}
+function initTMap(){
+  try{
+    var c=document.getElementById("tp-map");if(!c)return;
+    if(!STATE.map){
+      STATE.map=new TMap.Map(c,{zoom:11,center:new TMap.LatLng(39.91,116.40),
+        showControl:false,baseMap:{type:"vector"}});
+    }
+    STATE.tmapOk=true;drawTMap();
+  }catch(e){STATE.tmapOk=false;drawSvg();}
+}
+function pinUri(text,bg){
+  var svg='<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"><circle cx="15" cy="15" r="12.5" fill="'+bg+'" stroke="#fff" stroke-width="2.5"/><text x="15" y="20" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" font-family="sans-serif">'+text+'</text></svg>';
+  return "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
+}
+function drawTMap(){
+  var g=scopeGeo();if(!STATE.map)return;
+  try{
+    if(STATE.markerLayer){STATE.markerLayer.setMap(null);STATE.markerLayer=null;}
+    if(STATE.lineLayer){STATE.lineLayer.setMap(null);STATE.lineLayer=null;}
+    if(g.segs.length){
+      STATE.lineLayer=new TMap.MultiPolyline({map:STATE.map,
+        styles:{b:new TMap.PolylineStyle({color:"#2b6fff",width:6,borderWidth:2,borderColor:"#ffffff",lineCap:"round"})},
+        geometries:g.segs.map(function(seg,i){return {id:"l"+i,styleId:"b",
+          paths:seg.map(function(c){return new TMap.LatLng(c[0],c[1]);})};})});
+    }
+    var styles={};g.pts.forEach(function(p){styles["p"+p.idx]=new TMap.MarkerStyle({width:30,height:30,
+      anchor:{x:15,y:15},src:pinUri(String(p.idx),"#2b6fff"),color:"#20232b",size:11,direction:"bottom",offset:{x:0,y:4}});});
+    STATE.markerLayer=new TMap.MultiMarker({map:STATE.map,styles:styles,
+      geometries:g.pts.map(function(p,i){return {id:"m"+i,styleId:"p"+p.idx,
+        position:new TMap.LatLng(p.lat,p.lng),content:txt(p.label)};})});
+    STATE.markerLayer.on("click",function(e){
+      var i=parseInt((e.geometry&&e.geometry.id||"m0").slice(1),10);var p=g.pts[i];if(!p)return;
+      if(STATE.day==null&&p.dayId){STATE.day=p.dayId;STATE.stop=null;selectTab();ensureMapThenDraw();renderPanel();}
+      else if(p.stop){openDetail(p.stop);}
+    });
+    fitPts(g.pts);
+    var cr=document.getElementById("tp-credit");if(cr)cr.style.display="none";
+  }catch(e){STATE.tmapOk=false;drawSvg();}
+}
+function fitPts(pts){
+  try{
+    if(!pts.length)return;
+    if(pts.length===1){STATE.map.setCenter(new TMap.LatLng(pts[0].lat,pts[0].lng));STATE.map.setZoom(13);return;}
+    var b=new TMap.LatLngBounds();pts.forEach(function(p){b.extend(new TMap.LatLng(p.lat,p.lng));});
+    STATE.map.fitBounds(b,{padding:{top:56,right:290,bottom:56,left:40}});
+  }catch(e){}
+}
+
+/* ---------- SVG 回退地图 ---------- */
+function drawSvg(){
+  var c=document.getElementById("tp-map");if(!c)return;
+  var g=scopeGeo();
+  var W=c.clientWidth||640,H=c.clientHeight||420;
+  var ns="http://www.w3.org/2000/svg";
+  c.innerHTML="";
+  var svg=document.createElementNS(ns,"svg");svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  // 底：淡地图色 + 网格
+  var bg=document.createElementNS(ns,"rect");bg.setAttribute("width",W);bg.setAttribute("height",H);
+  bg.setAttribute("fill","#eef3ee");svg.appendChild(bg);
+  for(var gx=0;gx<W;gx+=48){var l=document.createElementNS(ns,"line");l.setAttribute("x1",gx);l.setAttribute("y1",0);l.setAttribute("x2",gx);l.setAttribute("y2",H);l.setAttribute("stroke","#e0e7e0");l.setAttribute("stroke-width","1");svg.appendChild(l);}
+  for(var gy=0;gy<H;gy+=48){var l2=document.createElementNS(ns,"line");l2.setAttribute("x1",0);l2.setAttribute("y1",gy);l2.setAttribute("x2",W);l2.setAttribute("y2",gy);l2.setAttribute("stroke","#e0e7e0");l2.setAttribute("stroke-width","1");svg.appendChild(l2);}
+
+  if(!g.pts.length){c.appendChild(svg);return;}
+  function mx(ln){return ln*Math.PI/180;}function my(la){return Math.log(Math.tan(Math.PI/4+la*Math.PI/360));}
+  var xs=[],ys=[];var all=g.pts.map(function(p){return [p.lat,p.lng];});
+  g.segs.forEach(function(s){s.forEach(function(cc){all.push(cc);});});
+  all.forEach(function(cc){xs.push(mx(cc[1]));ys.push(my(cc[0]));});
+  var minX=Math.min.apply(0,xs),maxX=Math.max.apply(0,xs),minY=Math.min.apply(0,ys),maxY=Math.max.apply(0,ys);
+  var padL=44,padR=300,padT=56,padB=56;
+  if(W<560){padR=W*0.56+20;}
+  var spanX=(maxX-minX)||1e-6,spanY=(maxY-minY)||1e-6;
+  var sc=Math.min((W-padL-padR)/spanX,(H-padT-padB)/spanY);if(!isFinite(sc)||sc<=0)sc=1;
+  var offX=padL+((W-padL-padR)-spanX*sc)/2,offY=padT+((H-padT-padB)-spanY*sc)/2;
+  function X(ln){return offX+(mx(ln)-minX)*sc;}
+  function Y(la){return H-(offY+(my(la)-minY)*sc);}
+
+  g.segs.forEach(function(seg){
+    var d="M"+seg.map(function(cc){return X(cc[1]).toFixed(1)+","+Y(cc[0]).toFixed(1);}).join("L");
+    var p=document.createElementNS(ns,"path");p.setAttribute("d",d);p.setAttribute("fill","none");
+    p.setAttribute("stroke","#ffffff");p.setAttribute("stroke-width","7");p.setAttribute("stroke-linejoin","round");p.setAttribute("stroke-linecap","round");svg.appendChild(p);
+    var p2=document.createElementNS(ns,"path");p2.setAttribute("d",d);p2.setAttribute("fill","none");
+    p2.setAttribute("stroke","#2b6fff");p2.setAttribute("stroke-width","4");p2.setAttribute("stroke-linejoin","round");p2.setAttribute("stroke-linecap","round");svg.appendChild(p2);
+  });
+  g.pts.forEach(function(p){
+    var cx=X(p.lng),cy=Y(p.lat);
+    // 标签
+    var label=txt(p.label);
+    if(label){
+      var tw=Math.min(label.length,7)*12+14;
+      var rect=document.createElementNS(ns,"rect");rect.setAttribute("x",cx-tw/2);rect.setAttribute("y",cy+15);
+      rect.setAttribute("width",tw);rect.setAttribute("height",19);rect.setAttribute("rx","9");
+      rect.setAttribute("fill","#20232b");svg.appendChild(rect);
+      var lt=document.createElementNS(ns,"text");lt.setAttribute("x",cx);lt.setAttribute("y",cy+28);
+      lt.setAttribute("text-anchor","middle");lt.setAttribute("fill","#fff");lt.setAttribute("font-size","11");
+      lt.textContent=label.length>7?label.slice(0,7)+"…":label;svg.appendChild(lt);
+    }
+    var circ=document.createElementNS(ns,"circle");circ.setAttribute("cx",cx);circ.setAttribute("cy",cy);
+    circ.setAttribute("r","13");circ.setAttribute("fill","#2b6fff");circ.setAttribute("stroke","#fff");circ.setAttribute("stroke-width","2.5");
+    circ.style.cursor="pointer";svg.appendChild(circ);
+    var t=document.createElementNS(ns,"text");t.setAttribute("x",cx);t.setAttribute("y",cy+4);
+    t.setAttribute("text-anchor","middle");t.setAttribute("fill","#fff");t.setAttribute("font-size","13");t.setAttribute("font-weight","700");
+    t.textContent=p.idx;t.style.cursor="pointer";svg.appendChild(t);
+    function hit(){if(STATE.day==null&&p.dayId){STATE.day=p.dayId;STATE.stop=null;selectTab();ensureMapThenDraw();renderPanel();}else if(p.stop){openDetail(p.stop);}}
+    circ.addEventListener("click",hit);t.addEventListener("click",hit);
+  });
+  c.appendChild(svg);
+  var cr=document.getElementById("tp-credit");if(cr)cr.style.display="block";
+}
+
+function showEmpty(card){
+  var app=document.getElementById("app");app.innerHTML="";
+  var phase=card&&card.phase;
+  var card2=el("div","tp-card");var st=el("div","tp-stage");st.id="tp-stage";
+  st.appendChild(el("div","tp-empty",phase==="empty"?"还没有行程，去对话里让我帮你规划一份吧。":"行程正在整理中…"));
+  card2.appendChild(st);app.appendChild(card2);
+}
+
+/* 视口变化时若走 SVG 需重绘 */
+var _rz;window.addEventListener("resize",function(){clearTimeout(_rz);_rz=setTimeout(function(){if(STATE.card&&!STATE.tmapOk)drawSvg();},200);});
+
+/* ============================ 数据接入 ============================ */
+function applyResult(result){
+  if(!result||typeof result!=="object")return;
+  var sc=result.structuredContent||result.data||result;
+  if(sc&&typeof sc==="object")render(sc);
+}
+try{
+  var existing=(typeof travelPlanMcp!=="undefined"&&travelPlanMcp)?travelPlanMcp:null;
+  var bridge=existing||{};bridge.applyToolResult=function(r){applyResult(r);};
+  try{travelPlanMcp=bridge;}catch(e){}
+  try{window.travelPlanMcp=bridge;}catch(e){}
+}catch(e){}
+window.addEventListener("message",function(ev){
+  var d=ev&&ev.data;if(!d||typeof d!=="object")return;
+  if(d.type==="ui_update"&&d.payload)applyResult(d.payload);
+  else if(d.structuredContent)applyResult(d);
+});
+if(window.__CARD_PAYLOAD__)applyResult({structuredContent:window.__CARD_PAYLOAD__});
+</script>
+</body>
+</html>

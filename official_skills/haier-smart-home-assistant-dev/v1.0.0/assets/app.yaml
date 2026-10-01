@@ -1,0 +1,12 @@
+id: haier-smart-home-assistant
+name: 海尔智家助手
+version: v1.0
+description: 海尔、卡萨帝与统帅家电 MCP Tool Result 的商品推荐页面。
+
+resources:
+  - uri: ui://haier-smart-home-assistant/recommend
+    name: 海尔家电推荐
+    description: 以响应式商品卡展示海尔家电推荐结果。
+    path: assets/ui/recommend.html
+    mimeType: text/html;profile=mcp-app
+

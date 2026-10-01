@@ -1,0 +1,947 @@
+{
+  "components": [
+    {
+      "id": "root",
+      "component": "Card",
+      "child": "body",
+      "style": {
+        "padding": {
+          "horizontal": 16,
+          "bottom": 16
+        },
+        "containerColor": "basic_container_primary",
+        "borderWidth": 0.5,
+        "borderColor": "card_border",
+        "shape": 16
+      }
+    },
+    {
+      "id": "body",
+      "component": "Column",
+      "children": [
+        "tickets-visible",
+        "weather-visible",
+        "route-visible"
+      ],
+      "style": {
+        "spacing": 0
+      }
+    },
+    {
+      "id": "ticket-icon",
+      "component": "Image",
+      "url": {
+        "path": "icon"
+      },
+      "fit": "cover",
+      "style": {
+        "height": 22,
+        "shape": 0,
+        "width": 22
+      }
+    },
+    {
+      "id": "ticket-head",
+      "component": "Text",
+      "text": {
+        "path": "head"
+      },
+      "variant": "body",
+      "style": {
+        "color": "basic_text_secondary",
+        "fontSize": 14,
+        "fontWeight": 500
+      },
+      "maxLines": 1,
+      "weight": 1
+    },
+    {
+      "id": "ticket-status-basic_function_green-text",
+      "component": "Text",
+      "text": {
+        "path": "status"
+      },
+      "variant": "footnote",
+      "style": {
+        "color": "basic_function_green",
+        "fontWeight": 600
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "ticket-status-basic_function_green",
+      "component": "Visibility",
+      "value": {
+        "path": "statusOk"
+      },
+      "child": "ticket-status-basic_function_green-text"
+    },
+    {
+      "id": "ticket-status-basic_function_red-text",
+      "component": "Text",
+      "text": {
+        "path": "status"
+      },
+      "variant": "footnote",
+      "style": {
+        "color": "basic_function_red",
+        "fontWeight": 600
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "ticket-status-basic_function_red",
+      "component": "Visibility",
+      "value": {
+        "path": "statusWarn"
+      },
+      "child": "ticket-status-basic_function_red-text"
+    },
+    {
+      "id": "ticket-top",
+      "component": "Row",
+      "children": [
+        "ticket-icon",
+        "ticket-head",
+        "ticket-status-basic_function_green",
+        "ticket-status-basic_function_red"
+      ],
+      "style": {
+        "spacing": 6
+      },
+      "align": "center"
+    },
+    {
+      "id": "ticket-dep-time",
+      "component": "Text",
+      "text": {
+        "path": "depTime"
+      },
+      "variant": "h2",
+      "style": {
+        "color": "basic_text_primary",
+        "fontWeight": 600
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "ticket-dep-place",
+      "component": "Text",
+      "text": {
+        "path": "depPlace"
+      },
+      "variant": "body",
+      "style": {
+        "color": "basic_text_tertiary",
+        "fontSize": 14
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "ticket-dep",
+      "component": "Column",
+      "children": [
+        "ticket-dep-time",
+        "ticket-dep-place"
+      ],
+      "style": {
+        "spacing": 0
+      },
+      "align": "start",
+      "weight": 1
+    },
+    {
+      "id": "ticket-duration",
+      "component": "Text",
+      "text": {
+        "path": "duration"
+      },
+      "variant": "caption",
+      "style": {
+        "color": "basic_text_quaternary"
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "ticket-line",
+      "component": "Text",
+      "text": "———————",
+      "variant": "caption",
+      "style": {
+        "color": "basic_text_quinary"
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "ticket-mid",
+      "component": "Column",
+      "children": [
+        "ticket-duration",
+        "ticket-line"
+      ],
+      "style": {
+        "spacing": 0
+      },
+      "align": "center"
+    },
+    {
+      "id": "ticket-arr-time",
+      "component": "Text",
+      "text": {
+        "path": "arrTime"
+      },
+      "variant": "h2",
+      "style": {
+        "color": "basic_text_primary",
+        "fontWeight": 600
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "ticket-arr-place",
+      "component": "Text",
+      "text": {
+        "path": "arrPlace"
+      },
+      "variant": "body",
+      "style": {
+        "color": "basic_text_tertiary",
+        "fontSize": 14
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "ticket-arr",
+      "component": "Column",
+      "children": [
+        "ticket-arr-time",
+        "ticket-arr-place"
+      ],
+      "style": {
+        "spacing": 0
+      },
+      "align": "end",
+      "weight": 1
+    },
+    {
+      "id": "ticket-main",
+      "component": "Row",
+      "children": [
+        "ticket-dep",
+        "ticket-mid",
+        "ticket-arr"
+      ],
+      "style": {
+        "spacing": 8
+      },
+      "align": "center"
+    },
+    {
+      "id": "extra-label",
+      "component": "Text",
+      "text": {
+        "path": "label"
+      },
+      "variant": "body",
+      "style": {
+        "color": "basic_text_quaternary",
+        "fontSize": 14
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "extra-value",
+      "component": "Text",
+      "text": {
+        "path": "value"
+      },
+      "variant": "h5",
+      "style": {
+        "color": "basic_text_primary",
+        "fontSize": 16,
+        "fontWeight": 400
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "extra",
+      "component": "Column",
+      "children": [
+        "extra-label",
+        "extra-value"
+      ],
+      "style": {
+        "spacing": 2
+      },
+      "weight": 1
+    },
+    {
+      "id": "ticket-divider",
+      "component": "Divider",
+      "axis": "horizontal"
+    },
+    {
+      "id": "ticket-extras-row",
+      "component": "Row",
+      "children": {
+        "path": "extras",
+        "componentId": "extra"
+      },
+      "style": {
+        "spacing": 8
+      },
+      "align": "start"
+    },
+    {
+      "id": "ticket-extras",
+      "component": "Column",
+      "children": [
+        "ticket-divider",
+        "ticket-extras-row"
+      ],
+      "style": {
+        "spacing": 12
+      }
+    },
+    {
+      "id": "ticket-extras-visible",
+      "component": "Visibility",
+      "value": {
+        "path": "hasExtras"
+      },
+      "child": "ticket-extras"
+    },
+    {
+      "id": "ticket-pending-text",
+      "component": "Text",
+      "text": {
+        "path": "pendingText"
+      },
+      "variant": "body",
+      "style": {
+        "color": "basic_text_tertiary",
+        "fontSize": 14
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "ticket-pending-card",
+      "component": "Card",
+      "child": "ticket-pending-text",
+      "style": {
+        "padding": {
+          "horizontal": 10,
+          "vertical": 6
+        },
+        "containerColor": "basic_container_primary",
+        "shape": 8
+      }
+    },
+    {
+      "id": "ticket-pending-visible",
+      "component": "Visibility",
+      "value": {
+        "path": "pending"
+      },
+      "child": "ticket-pending-card"
+    },
+    {
+      "id": "ticket-price",
+      "component": "Text",
+      "text": {
+        "path": "price"
+      },
+      "variant": "h5",
+      "style": {
+        "color": "basic_function_orange",
+        "fontWeight": 600
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "ticket-price-unit",
+      "component": "Text",
+      "text": "起",
+      "variant": "caption",
+      "style": {
+        "color": "basic_text_quaternary"
+      }
+    },
+    {
+      "id": "ticket-price-row",
+      "component": "Row",
+      "children": [
+        "ticket-price",
+        "ticket-price-unit"
+      ],
+      "style": {
+        "spacing": 2
+      },
+      "align": "end"
+    },
+    {
+      "id": "ticket-price-visible",
+      "component": "Visibility",
+      "value": {
+        "path": "hasPrice"
+      },
+      "child": "ticket-price-row"
+    },
+    {
+      "id": "ticket-book-label",
+      "component": "Text",
+      "text": "同程预订",
+      "variant": "h5",
+      "style": {
+        "fontSize": 16,
+        "fontWeight": 400,
+        "color": "basic_text_primary"
+      }
+    },
+    {
+      "id": "ticket-book-logo",
+      "component": "Image",
+      "url": {
+        "path": "bookLogo"
+      },
+      "fit": "cover",
+      "style": {
+        "height": 16,
+        "shape": 4,
+        "width": 16
+      }
+    },
+    {
+      "id": "ticket-book-inner",
+      "component": "Row",
+      "children": [
+        "ticket-book-logo",
+        "ticket-book-label"
+      ],
+      "style": {
+        "spacing": 5
+      },
+      "align": "center"
+    },
+    {
+      "id": "ticket-book-center",
+      "component": "Box",
+      "children": [
+        "ticket-book-inner"
+      ],
+      "contentAlignment": "center"
+    },
+    {
+      "id": "ticket-book-shape",
+      "component": "Card",
+      "child": "ticket-book-center",
+      "style": {
+        "padding": {
+          "horizontal": 16,
+          "vertical": 9
+        },
+        "containerColor": "basic_container_primary",
+        "shape": 18
+      }
+    },
+    {
+      "id": "ticket-book",
+      "component": "Clickable",
+      "child": "ticket-book-shape",
+      "action": {
+        "functionCall": {
+          "call": "openWechatMiniProgram",
+          "args": {
+            "userName": {
+              "path": "mini"
+            },
+            "path": {
+              "path": "wxPath"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "ticket-book-row",
+      "component": "Row",
+      "children": [
+        "ticket-price-visible",
+        "ticket-book"
+      ],
+      "align": "center",
+      "justify": "spaceBetween"
+    },
+    {
+      "id": "ticket-book-visible",
+      "component": "Visibility",
+      "value": {
+        "path": "canBook"
+      },
+      "child": "ticket-book-row"
+    },
+    {
+      "id": "ticket-body",
+      "component": "Column",
+      "children": [
+        "ticket-top",
+        "ticket-main",
+        "ticket-extras-visible",
+        "ticket-pending-visible",
+        "ticket-book-visible"
+      ],
+      "style": {
+        "spacing": 12
+      }
+    },
+    {
+      "id": "ticket",
+      "component": "Card",
+      "child": "ticket-body",
+      "style": {
+        "padding": 14,
+        "containerColor": "basic_container_secondary",
+        "shape": 12
+      }
+    },
+    {
+      "id": "tickets-list",
+      "component": "Column",
+      "children": {
+        "path": "tickets",
+        "componentId": "ticket"
+      },
+      "style": {
+        "spacing": 10
+      }
+    },
+    {
+      "id": "tickets-module",
+      "component": "Column",
+      "children": [
+        "tickets-list"
+      ],
+      "style": {
+        "padding": {
+          "top": 16
+        },
+        "spacing": 10
+      }
+    },
+    {
+      "id": "tickets-visible",
+      "component": "Visibility",
+      "value": {
+        "path": "hasTickets"
+      },
+      "child": "tickets-module"
+    },
+    {
+      "id": "route-icon",
+      "component": "Image",
+      "url": {
+        "path": "route/icon"
+      },
+      "fit": "cover",
+      "style": {
+        "height": 22,
+        "shape": 0,
+        "width": 22
+      }
+    },
+    {
+      "id": "route-head",
+      "component": "Text",
+      "text": {
+        "path": "route/head"
+      },
+      "variant": "body",
+      "style": {
+        "color": "basic_text_secondary",
+        "fontSize": 14,
+        "fontWeight": 500
+      },
+      "maxLines": 1,
+      "weight": 1
+    },
+    {
+      "id": "route-top",
+      "component": "Row",
+      "children": [
+        "route-icon",
+        "route-head"
+      ],
+      "style": {
+        "spacing": 6
+      },
+      "align": "center"
+    },
+    {
+      "id": "route-duration",
+      "component": "Text",
+      "text": {
+        "path": "route/duration"
+      },
+      "variant": "h2",
+      "style": {
+        "color": "basic_text_primary",
+        "fontWeight": 600
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "route-main",
+      "component": "Row",
+      "children": [
+        "route-duration"
+      ],
+      "style": {
+        "spacing": 10
+      },
+      "align": "end"
+    },
+    {
+      "id": "route-leave",
+      "component": "Text",
+      "text": {
+        "path": "route/leaveBy"
+      },
+      "variant": "h5",
+      "style": {
+        "color": "basic_function_orange",
+        "fontSize": 16,
+        "fontWeight": 600
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "route-leave-visible",
+      "component": "Visibility",
+      "value": {
+        "path": "route/hasLeaveBy"
+      },
+      "child": "route-leave"
+    },
+    {
+      "id": "route-foot",
+      "component": "Row",
+      "children": [
+        "route-leave-visible"
+      ],
+      "align": "end",
+      "justify": "spaceBetween"
+    },
+    {
+      "id": "route-body",
+      "component": "Column",
+      "children": [
+        "route-top",
+        "route-main",
+        "route-foot"
+      ],
+      "style": {
+        "spacing": 10
+      }
+    },
+    {
+      "id": "route-card",
+      "component": "Card",
+      "child": "route-body",
+      "style": {
+        "padding": 14,
+        "containerColor": "basic_container_secondary",
+        "shape": 12
+      }
+    },
+    {
+      "id": "route-module",
+      "component": "Column",
+      "children": [
+        "route-card"
+      ],
+      "style": {
+        "padding": {
+          "top": 16
+        },
+        "spacing": 10
+      }
+    },
+    {
+      "id": "route-visible",
+      "component": "Visibility",
+      "value": {
+        "path": "hasRoute"
+      },
+      "child": "route-module"
+    },
+    {
+      "id": "wx-icon",
+      "component": "Image",
+      "url": {
+        "path": "weather/icon"
+      },
+      "fit": "cover",
+      "style": {
+        "height": 48,
+        "shape": 0,
+        "width": 48
+      }
+    },
+    {
+      "id": "wx-big",
+      "component": "Text",
+      "text": {
+        "path": "weather/big"
+      },
+      "variant": "h2",
+      "style": {
+        "color": "basic_text_primary",
+        "fontWeight": 600
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "wx-line",
+      "component": "Text",
+      "text": {
+        "path": "weather/line"
+      },
+      "variant": "h5",
+      "style": {
+        "color": "basic_text_secondary",
+        "fontSize": 16,
+        "fontWeight": 400
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "wx-meta",
+      "component": "Column",
+      "children": [
+        "wx-big",
+        "wx-line"
+      ],
+      "style": {
+        "spacing": 0
+      },
+      "weight": 1
+    },
+    {
+      "id": "wx-now",
+      "component": "Row",
+      "children": [
+        "wx-icon",
+        "wx-meta"
+      ],
+      "style": {
+        "spacing": 12
+      },
+      "align": "center"
+    },
+    {
+      "id": "wx-chip-label",
+      "component": "Text",
+      "text": {
+        "path": "label"
+      },
+      "variant": "body",
+      "style": {
+        "color": "basic_text_quaternary",
+        "fontSize": 14
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "wx-chip-value",
+      "component": "Text",
+      "text": {
+        "path": "value"
+      },
+      "variant": "h5",
+      "style": {
+        "color": "basic_text_primary",
+        "fontSize": 16,
+        "fontWeight": 400
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "wx-chip-body",
+      "component": "Column",
+      "children": [
+        "wx-chip-label",
+        "wx-chip-value"
+      ],
+      "style": {
+        "spacing": 0
+      },
+      "align": "center"
+    },
+    {
+      "id": "wx-chip",
+      "component": "Card",
+      "child": "wx-chip-body",
+      "weight": 1,
+      "style": {
+        "padding": {
+          "vertical": 6
+        },
+        "containerColor": "basic_container_primary",
+        "shape": 8
+      }
+    },
+    {
+      "id": "wx-chips",
+      "component": "Row",
+      "children": {
+        "path": "weather/chips",
+        "componentId": "wx-chip"
+      },
+      "style": {
+        "spacing": 6
+      },
+      "align": "start"
+    },
+    {
+      "id": "wx-chips-visible",
+      "component": "Visibility",
+      "value": {
+        "path": "weather/hasChips"
+      },
+      "child": "wx-chips"
+    },
+    {
+      "id": "day-label",
+      "component": "Text",
+      "text": {
+        "path": "label"
+      },
+      "variant": "body",
+      "style": {
+        "color": "basic_text_quaternary",
+        "fontSize": 14
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "day-icon",
+      "component": "Image",
+      "url": {
+        "path": "icon"
+      },
+      "fit": "cover",
+      "style": {
+        "height": 28,
+        "shape": 0,
+        "width": 28
+      }
+    },
+    {
+      "id": "day-temp",
+      "component": "Text",
+      "text": {
+        "path": "temp"
+      },
+      "variant": "body",
+      "style": {
+        "color": "basic_text_primary",
+        "fontSize": 14,
+        "fontWeight": 500
+      },
+      "maxLines": 1
+    },
+    {
+      "id": "day",
+      "component": "Column",
+      "children": [
+        "day-label",
+        "day-icon",
+        "day-temp"
+      ],
+      "style": {
+        "spacing": 4
+      },
+      "align": "center",
+      "weight": 1
+    },
+    {
+      "id": "wx-divider",
+      "component": "Divider",
+      "axis": "horizontal"
+    },
+    {
+      "id": "wx-days-row",
+      "component": "Row",
+      "children": {
+        "path": "weather/days",
+        "componentId": "day"
+      },
+      "style": {
+        "spacing": 4
+      },
+      "align": "start"
+    },
+    {
+      "id": "wx-days",
+      "component": "Column",
+      "children": [
+        "wx-divider",
+        "wx-days-row"
+      ],
+      "style": {
+        "spacing": 12
+      }
+    },
+    {
+      "id": "wx-days-visible",
+      "component": "Visibility",
+      "value": {
+        "path": "weather/hasDays"
+      },
+      "child": "wx-days"
+    },
+    {
+      "id": "wx-body",
+      "component": "Column",
+      "children": [
+        "wx-now",
+        "wx-chips-visible",
+        "wx-days-visible"
+      ],
+      "style": {
+        "spacing": 10
+      }
+    },
+    {
+      "id": "wx-card",
+      "component": "Card",
+      "child": "wx-body",
+      "style": {
+        "padding": 14,
+        "containerColor": "basic_container_secondary",
+        "shape": 12
+      }
+    },
+    {
+      "id": "weather-module",
+      "component": "Column",
+      "children": [
+        "wx-card"
+      ],
+      "style": {
+        "padding": {
+          "top": 16
+        },
+        "spacing": 10
+      }
+    },
+    {
+      "id": "weather-visible",
+      "component": "Visibility",
+      "value": {
+        "path": "hasWeather"
+      },
+      "child": "weather-module"
+    }
+  ]
+}

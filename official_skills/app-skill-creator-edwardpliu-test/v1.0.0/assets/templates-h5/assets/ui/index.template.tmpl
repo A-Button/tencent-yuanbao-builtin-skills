@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{APP_NAME}}</title>
+<style>
+  /* 全部样式自包含：iframe 里没有同源服务器，CSP 也会拦掉外部 CDN。 */
+  :root {
+    --bg: var(--mcp-color-background, #ffffff);
+    --fg: var(--mcp-color-text, #1f2329);
+    --muted: #8a9099;
+    --line: #e6e8eb;
+    --accent: var(--mcp-color-accent, #3370ff);
+    --danger: #d54941;
+    --card: #f7f8fa;
+  }
+  [data-theme="dark"] {
+    --bg: var(--mcp-color-background, #1a1c1f);
+    --fg: var(--mcp-color-text, #e8eaed);
+    --muted: #9aa0a6;
+    --line: #2f3236;
+    --card: #24272b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 16px;
+    padding-bottom: calc(16px + var(--safe-bottom, 0px));
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: var(--fg);
+    background: var(--bg);
+  }
+  header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; }
+  h1 { font-size: 16px; font-weight: 600; margin: 0; }
+  .count { color: var(--muted); font-size: 12px; }
+  .composer { display: flex; gap: 8px; margin-bottom: 12px; }
+  input[type="text"] {
+    flex: 1; min-width: 0; padding: 8px 10px; font: inherit; color: var(--fg);
+    background: var(--bg); border: 1px solid var(--line); border-radius: 6px;
+  }
+  input[type="text"]:focus { outline: none; border-color: var(--accent); }
+  button {
+    padding: 8px 14px; font: inherit; color: #fff; background: var(--accent);
+    border: none; border-radius: 6px; cursor: pointer;
+  }
+  button:disabled { opacity: .5; cursor: default; }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  li {
+    display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px;
+    background: var(--card); border-radius: 8px;
+  }
+  .body { flex: 1; min-width: 0; }
+  .title { font-weight: 500; word-break: break-word; }
+  .notes { margin-top: 2px; color: var(--muted); font-size: 12px; word-break: break-word; }
+  .remove {
+    padding: 4px 8px; font-size: 12px; color: var(--danger);
+    background: transparent; border: 1px solid transparent; border-radius: 4px;
+  }
+  .remove:hover { border-color: var(--danger); }
+  .empty, .error { padding: 24px 0; text-align: center; color: var(--muted); }
+  .error { color: var(--danger); }
+  /* 触屏设备上放大点击区，hover 提示无意义。 */
+  [data-touch="true"] .remove { padding: 8px 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>{{APP_NAME}}</h1>
+  <span class="count" id="count"></span>
+</header>
+
+<form class="composer" id="composer">
+  <input type="text" id="title" placeholder="输入标题后回车" autocomplete="off">
+  <button type="submit" id="submit">添加</button>
+</form>
+
+<div id="stage"><div class="empty">加载中…</div></div>
+
+<!-- MCP_BRIDGE_START -->
+<script>
+/*__MCP_BRIDGE__*/
+</script>
+<!-- MCP_BRIDGE_END -->
+
+<script>
+(function () {
+  var bridge = window.{{BRIDGE_GLOBAL}};
+  var stage = document.getElementById("stage");
+  var countEl = document.getElementById("count");
+  var composer = document.getElementById("composer");
+  var titleInput = document.getElementById("title");
+  var submitBtn = document.getElementById("submit");
+  var records = [];
+  var busy = false;
+
+  // 用户内容一律走 textContent，绝不拼进 innerHTML。
+  function el(tag, className, text) {
+    var node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text != null) node.textContent = text;
+    return node;
+  }
+
+  function applyHostContext(context) {
+    var ctx = context || {};
+    document.documentElement.dataset.theme = ctx.theme === "dark" ? "dark" : "light";
+    var caps = ctx.deviceCapabilities || {};
+    document.body.dataset.touch = caps.touch ? "true" : "false";
+    var insets = ctx.safeAreaInsets || {};
+    document.body.style.setProperty("--safe-bottom", (insets.bottom || 0) + "px");
+  }
+
+  // Agent 推来的结果和页面自己 callTool 的返回，都过这一个函数，避免两套渲染分支。
+  function normalize(payload) {
+    if (!payload) return null;
+    return payload.structuredContent || payload;
+  }
+
+  function render() {
+    stage.textContent = "";
+    countEl.textContent = records.length ? records.length + " 条" : "";
+    if (!records.length) {
+      stage.appendChild(el("div", "empty", "还没有内容"));
+      return;
+    }
+    var list = el("ul");
+    records.forEach(function (record) {
+      var row = el("li");
+      var body = el("div", "body");
+      body.appendChild(el("div", "title", record.title || "(无标题)"));
+      if (record.notes) body.appendChild(el("div", "notes", record.notes));
+      row.appendChild(body);
+
+      var remove = el("button", "remove", "删除");
+      remove.type = "button";
+      remove.addEventListener("click", function () {
+        // 破坏性操作在页面内确认，不依赖 Host 提供确认框。
+        if (!window.confirm("删除「" + (record.title || "该记录") + "」？")) return;
+        call("delete_{{ENTITY}}", { id: record.id });
+      });
+      row.appendChild(remove);
+      list.appendChild(row);
+    });
+    stage.appendChild(list);
+  }
+
+  function showError(message) {
+    stage.textContent = "";
+    stage.appendChild(el("div", "error", message));
+  }
+
+  function apply(payload) {
+    var data = normalize(payload);
+    if (!data) return;
+    if (data.phase === "error") {
+      // 已有数据时不要让一次失败清空界面。
+      if (!records.length) showError(data.message || "操作失败");
+      return;
+    }
+    if (Array.isArray(data.{{ENTITY_PLURAL}})) {
+      records = data.{{ENTITY_PLURAL}};
+      render();
+    }
+  }
+
+  // 一个操作一个 tool，所以这里直接把 tool 名交给 Host，没有 operation 参数。
+  function call(tool, args) {
+    if (busy || bridge.isPreview) return Promise.resolve();
+    busy = true;
+    submitBtn.disabled = true;
+    return bridge.callTool(tool, args || {})
+      .then(apply)
+      .catch(function (error) {
+        if (!records.length) showError(error && error.message ? error.message : "调用失败");
+      })
+      .finally(function () {
+        busy = false;
+        submitBtn.disabled = false;
+      });
+  }
+
+  composer.addEventListener("submit", function (event) {
+    event.preventDefault();
+    var title = titleInput.value.trim();
+    if (!title) return;
+    titleInput.value = "";
+    call("create_{{ENTITY}}", { title: title });
+  });
+
+  bridge.onHostContextChanged(applyHostContext);
+  bridge.onToolResult(apply);
+
+  // 首屏读取必须等 ready，此前 callTool 还没有可用的 transport。
+  bridge.ready.then(function () {
+    applyHostContext(bridge.getHostContext());
+    if (bridge.isPreview) {
+      records = [{ id: "preview-1", title: "预览数据", notes: "预览模式不连接宿主" }];
+      render();
+      return;
+    }
+    call("list_{{ENTITY_PLURAL}}");
+  });
+})();
+</script>
+</body>
+</html>

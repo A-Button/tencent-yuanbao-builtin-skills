@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "autohome-cheesybutler": {
+      "type": "streamableHttp",
+      "url": "https://caragent-mcp.autohome.com.cn/mcp",
+      "timeout": 300000
+    }
+  }
+}

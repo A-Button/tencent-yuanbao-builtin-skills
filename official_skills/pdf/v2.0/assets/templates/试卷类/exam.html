@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>标准试卷模板</title>
+<style>
+  :root{
+    --ink:#1a1a1a;
+    --gray:#555;
+    --line:#222;
+    --light:#888;
+    --accent:#1a1a1a;
+    --soft:#f4f4f4;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{
+    font-family:"Songti SC","SimSun","STSong",serif;
+    color:var(--ink);
+    font-size:10.5pt;
+    line-height:1.55;
+  }
+  /* ===== A4 页面 ===== */
+  @page{ size:A4; margin:0; }
+  .page{
+    width:210mm;
+    height:297mm;
+    padding:14mm 14mm 12mm 22mm; /* 左侧留给密封线 */
+    position:relative;
+    page-break-after:always;
+    background:#fff;
+    overflow:hidden;
+  }
+  .page:last-child{ page-break-after:auto; }
+
+  /* ===== 密封线（左侧竖排） ===== */
+  .seal{
+    position:absolute;
+    left:8mm; top:28mm; bottom:28mm;
+    width:9mm;
+    border-right:1.2pt dashed #333;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .seal-text{
+    writing-mode:vertical-rl;
+    text-orientation:upright;
+    letter-spacing:6px;
+    font-size:10pt;
+    color:#333;
+    white-space:nowrap;
+  }
+  .seal-dots{
+    position:absolute; left:8mm; top:8mm; bottom:8mm;
+    display:flex; flex-direction:column; justify-content:space-between;
+    font-size:8pt; color:#999;
+  }
+
+  /* ===== 卷头 ===== */
+  .exam-head{ text-align:center; margin-bottom:4px; }
+  .exam-school{ font-size:11pt; letter-spacing:2px; color:var(--gray); }
+  .exam-title{
+    font-size:19pt; font-weight:700; letter-spacing:3px;
+    font-family:"Heiti SC","SimHei",sans-serif;
+    margin:5px 0 3px;
+  }
+  .exam-subtitle{ font-size:12pt; letter-spacing:1px; color:#333; }
+  .exam-meta{
+    display:flex; justify-content:center; gap:26px;
+    font-size:9.5pt; color:var(--gray); margin-top:5px;
+  }
+  .rule-double{ border-top:1.6pt solid var(--line); border-bottom:0.6pt solid var(--line);
+    height:3px; margin:7px 0 5px; }
+
+  /* ===== 考生信息行 ===== */
+  .candidate{
+    display:flex; flex-wrap:wrap; gap:5px 18px;
+    font-size:9.5pt; padding:5px 0; margin-bottom:5px;
+  }
+  .candidate .f{ display:flex; align-items:flex-end; }
+  .candidate .lbl{ white-space:nowrap; }
+  .candidate .blank{ border-bottom:0.8pt solid #333; min-width:70px; display:inline-block; height:14px; }
+  .candidate .blank.sm{ min-width:46px; }
+  .candidate .blank.lg{ min-width:120px; }
+
+  /* ===== 注意事项 ===== */
+  .notice{
+    border:0.8pt solid #999; padding:6px 12px; font-size:9pt;
+    color:#333; margin-bottom:6px; line-height:1.5;
+  }
+  .notice .nt-h{ font-family:"Heiti SC","SimHei",sans-serif; font-weight:700; margin-bottom:2px; }
+  .notice ol{ padding-left:18px; }
+  .notice li{ margin-bottom:1px; }
+
+  /* ===== 得分总表 ===== */
+  .score-table{ width:100%; border-collapse:collapse; font-size:9pt; margin-bottom:8px; }
+  .score-table th,.score-table td{
+    border:0.8pt solid #333; text-align:center; padding:3px 2px; height:21px;
+  }
+  .score-table th{ background:var(--soft); font-weight:700;
+    font-family:"Heiti SC","SimHei",sans-serif; }
+  .score-table .rowlbl{ background:var(--soft); font-weight:700; white-space:nowrap; }
+
+  /* ===== 卷次标题 ===== */
+  .paper-band{
+    text-align:center; font-family:"Heiti SC","SimHei",sans-serif;
+    font-weight:700; font-size:13pt; letter-spacing:2px;
+    background:var(--soft); border:0.8pt solid #333; padding:4px 0;
+    margin:8px 0 6px;
+  }
+  .paper-note{ text-align:center; font-size:8.8pt; color:#666; margin:-3px 0 6px; }
+
+  /* ===== 大题 ===== */
+  .section{ margin-bottom:8px; }
+  .sec-head{
+    font-family:"Heiti SC","SimHei",sans-serif; font-weight:700; font-size:11.5pt;
+    border-left:4px solid #222; padding-left:8px; margin-bottom:4px;
+    overflow:hidden;
+  }
+  .sec-head .sc{ font-size:9pt; font-weight:400; color:#666;
+    font-family:"Songti SC",serif; }
+  /* 大题右侧得分小框 */
+  .sec-score{
+    float:right; border:0.8pt solid #333; font-size:8pt;
+    width:96px; margin-left:10px;
+  }
+  .sec-score table{ border-collapse:collapse; width:100%; }
+  .sec-score td{ border:0.6pt solid #333; text-align:center; height:16px; }
+
+  /* ===== 题目 ===== */
+  .q{ margin-bottom:5px; text-align:justify; }
+  .q-num{ font-weight:700; }
+  .q-pt{ color:#777; font-size:8.5pt; }
+  /* 选项 */
+  .opts{ display:flex; flex-wrap:wrap; margin-top:1px; }
+  .opts.col4 .opt{ width:25%; }
+  .opts.col2 .opt{ width:50%; }
+  .opts.col1 .opt{ width:100%; }
+  .opt{ padding:1px 0; }
+  .opt b{ font-weight:700; margin-right:4px; }
+
+  /* 填空横线 */
+  .fill{ display:inline-block; border-bottom:0.8pt solid #333;
+    min-width:90px; height:13px; vertical-align:bottom; }
+
+  /* ===== 解答题专用：整页均分布局 ===== */
+  /* 解答题页正文区：纵向 flex，把页面剩余高度按题数均分 */
+  .solve-flow{
+    display:flex; flex-direction:column;
+    height:262mm;                 /* 页面内容区可用高度（A4 减去上下 padding 与页脚） */
+  }
+  /* 单道解答题：均分容器高度，内部再纵向布局 */
+  .qbox{
+    flex:1 1 0;                   /* 关键：每题等分整页 */
+    display:flex; flex-direction:column;
+    padding-bottom:6px;
+    min-height:0;
+  }
+  .qbox + .qbox{ border-top:0.5pt dotted #ccc; padding-top:6px; }
+  .qbox .stem{ flex:0 0 auto; text-align:justify; }   /* 题干高度自适应 */
+  /* 作答区：吃掉本题剩余的所有空间 → 题干短则作答区大，题干长则略小，但两题整体仍均分 */
+  .qbox .answer-area{
+    flex:1 1 auto; min-height:90px;
+    border:0.6pt dashed #b5b5b5;
+    margin-top:6px;
+    background:repeating-linear-gradient(#fff,#fff 25px,#e8e8e8 26px);
+  }
+  .qbox .answer-area.with-grid{
+    flex:1 1 auto; display:flex; gap:8px; background:none; border:none; min-height:90px;
+  }
+  .qbox .answer-area.with-grid .lines{
+    flex:1; border:0.6pt dashed #b5b5b5;
+    background:repeating-linear-gradient(#fff,#fff 25px,#e8e8e8 26px);
+  }
+  .qbox .grid-area{
+    width:58mm; border:0.6pt solid #999; position:relative;
+    background-image:linear-gradient(#eee 1px,transparent 1px),
+      linear-gradient(90deg,#eee 1px,transparent 1px);
+    background-size:5mm 5mm;
+  }
+  .grid-area .gl{ position:absolute; top:2px; left:3px; font-size:8pt; color:#999; }
+
+  /* ===== 题目配图占位符（题干所需的图，如几何体 / 统计图 / 函数图象） ===== */
+  /* 居中独占一行的图框 */
+  .fig{
+    border:0.8pt solid #bbb; background:#fafafa;
+    margin:6px auto 4px; position:relative;
+    display:flex; align-items:center; justify-content:center;
+    flex:0 0 auto;                       /* 不参与作答区的弹性伸缩 */
+  }
+  .fig .ph{ text-align:center; color:#aaa; font-size:9pt; line-height:1.5;
+    font-family:"Heiti SC","SimHei",sans-serif; }
+  .fig .ph .ico{ font-size:18pt; display:block; margin-bottom:2px; color:#c4c4c4; }
+  .fig .cap{ position:absolute; bottom:3px; left:0; right:0; text-align:center;
+    font-size:8pt; color:#999; }
+  .fig .tag{ position:absolute; top:3px; left:5px; font-size:7.5pt; color:#bbb;
+    border:0.5pt solid #ccc; border-radius:3px; padding:0 4px; }
+  /* 题干右侧浮动小图（文字环绕，节省纵向空间） */
+  .fig-right{
+    float:right; width:46mm; height:42mm; margin:2px 0 4px 10px;
+    border:0.8pt solid #bbb; background:#fafafa; position:relative;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* 兼容旧的非均分作答区（如第2页末尾单题） */
+  .answer-area{
+    border:0.6pt dashed #b5b5b5;
+    height:165px; margin-top:5px; margin-bottom:2px;
+    background:repeating-linear-gradient(#fff,#fff 25px,#e8e8e8 26px);
+  }
+
+  .subq{ margin:3px 0 2px; }
+  .subq .sn{ font-weight:700; }
+
+  /* ===== 页眉页脚 ===== */
+  .pg-header{ position:absolute; top:6mm; left:22mm; right:14mm;
+    display:flex; justify-content:space-between; font-size:8pt; color:#888;
+    border-bottom:0.5pt solid #ccc; padding-bottom:2px; }
+  .pg-footer{ position:absolute; bottom:5mm; left:22mm; right:14mm;
+    display:flex; justify-content:space-between; font-size:8pt; color:#888;
+    border-top:0.5pt solid #ccc; padding-top:2px; }
+
+  /* ===== 答案页 ===== */
+  .ans-title{ text-align:center; font-family:"Heiti SC","SimHei",sans-serif;
+    font-weight:700; font-size:16pt; letter-spacing:2px; margin-bottom:3px; }
+  .ans-sub{ text-align:center; font-size:9.5pt; color:#666; margin-bottom:7px; }
+  .ans-sec{ font-family:"Heiti SC","SimHei",sans-serif; font-weight:700;
+    font-size:11pt; border-bottom:1pt solid #333; padding-bottom:2px; margin:7px 0 4px; }
+  .ans-obj{ font-size:10pt; line-height:1.85; }
+  .ans-obj .pair{ display:inline-block; min-width:70px; }
+  .ans-detail{ font-size:9.3pt; margin-bottom:5px; text-align:justify; line-height:1.5; }
+  .ans-detail .step{ color:#333; }
+  .pts-tag{ display:inline-block; border:0.6pt solid #888; border-radius:3px;
+    font-size:8pt; color:#555; padding:0 4px; margin-left:4px; }
+  .rubric{ width:100%; border-collapse:collapse; font-size:8.8pt; margin:4px 0 7px; }
+  .rubric th,.rubric td{ border:0.6pt solid #999; padding:3px 5px; }
+  .rubric th{ background:var(--soft); font-family:"Heiti SC",sans-serif; }
+</style>
+</head>
+<body>
+
+<!-- ================= 第 1 页 ================= -->
+<div class="page">
+  <div class="seal"><span class="seal-text">密 封 线 内 不 要 答 题</span></div>
+  <div class="seal-dots"><span>○</span><span>○</span><span>○</span><span>○</span><span>○</span></div>
+
+  <div class="pg-header"><span>晨曦中学</span><span>2025—2026 学年第二学期</span></div>
+
+  <!-- 卷头 -->
+  <div class="exam-head">
+    <div class="exam-school">晨曦中学 · 高三年级</div>
+    <div class="exam-title">高中数学学科期末考试试卷</div>
+    <div class="exam-subtitle">（满分 150 分　考试时间 120 分钟）</div>
+    <div class="exam-meta">
+      <span>命题人：教研组</span><span>审题人：王老师</span><span>试卷编号：MATH-2026-06</span>
+    </div>
+  </div>
+  <div class="rule-double"></div>
+
+  <!-- 考生信息 -->
+  <div class="candidate">
+    <div class="f"><span class="lbl">姓　名：</span><span class="blank lg"></span></div>
+    <div class="f"><span class="lbl">班　级：</span><span class="blank"></span></div>
+    <div class="f"><span class="lbl">考　号：</span><span class="blank"></span></div>
+    <div class="f"><span class="lbl">座位号：</span><span class="blank sm"></span></div>
+  </div>
+
+  <!-- 注意事项 -->
+  <div class="notice">
+    <div class="nt-h">考生须知</div>
+    <ol>
+      <li>本试卷分第Ⅰ卷（选择题）和第Ⅱ卷（非选择题）两部分，共 8 页，五道大题，21 小题。</li>
+      <li>答题前，请将姓名、班级、考号、座位号填写在密封线内的相应位置。</li>
+      <li>第Ⅰ卷选择题答案须填涂在答题卡上；第Ⅱ卷答案直接写在试卷指定区域内。</li>
+      <li>必须使用 0.5mm 黑色签字笔作答，作图时可使用 2B 铅笔，保持卷面整洁。</li>
+      <li>考试结束后，将试卷和答题卡一并交回，不得带出考场。</li>
+    </ol>
+  </div>
+
+  <!-- 得分总表 -->
+  <table class="score-table">
+    <tr>
+      <th class="rowlbl">题　号</th>
+      <th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>总分</th>
+    </tr>
+    <tr>
+      <td class="rowlbl">满　分</td>
+      <td>40</td><td>15</td><td>20</td><td>60</td><td>15</td><td>150</td>
+    </tr>
+    <tr>
+      <td class="rowlbl">得　分</td>
+      <td></td><td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td class="rowlbl">评卷人</td>
+      <td></td><td></td><td></td><td></td><td></td><td>复核：</td>
+    </tr>
+  </table>
+
+  <!-- 第Ⅰ卷 -->
+  <div class="paper-band">第Ⅰ卷　（选择题　共 55 分）</div>
+  <div class="paper-note">注意：第Ⅰ卷共两道大题，所有答案务必填涂在答题卡相应位置。</div>
+
+  <!-- 一、单项选择题 -->
+  <div class="section">
+    <div class="sec-score"><table><tr><td>得分</td><td>评卷人</td></tr><tr><td></td><td></td></tr></table></div>
+    <div class="sec-head">一、单项选择题　<span class="sc">（本大题共 8 小题，每小题 5 分，共 40 分。每小题给出的四个选项中，只有一项符合题目要求。）</span></div>
+
+    <div class="q"><span class="q-num">1．</span>已知集合 A={x | x²−3x+2≤0}，B={x | 1&lt;x&lt;3}，则 A∩B=（　　）
+      <div class="opts col4">
+        <div class="opt"><b>A．</b>(1,2)</div><div class="opt"><b>B．</b>(1,2]</div>
+        <div class="opt"><b>C．</b>[1,2]</div><div class="opt"><b>D．</b>(1,3)</div>
+      </div>
+    </div>
+    <div class="q"><span class="q-num">2．</span>若复数 z 满足 (1+i)z = 2−i，则 |z| 的值为（　　）
+      <div class="opts col4">
+        <div class="opt"><b>A．</b>√10/2</div><div class="opt"><b>B．</b>√5/2</div>
+        <div class="opt"><b>C．</b>√2</div><div class="opt"><b>D．</b>√10</div>
+      </div>
+    </div>
+    <div class="q"><span class="q-num">3．</span>函数 f(x)=ln(x²+1) 的单调递增区间是（　　）
+      <div class="opts col4">
+        <div class="opt"><b>A．</b>(−∞,0)</div><div class="opt"><b>B．</b>(0,+∞)</div>
+        <div class="opt"><b>C．</b>(−1,1)</div><div class="opt"><b>D．</b>(−∞,+∞)</div>
+      </div>
+    </div>
+    <div class="q"><span class="q-num">4．</span>已知向量 a=(2,1)，b=(−1,k)，若 a⊥b，则实数 k 的值为（　　）
+      <div class="opts col4">
+        <div class="opt"><b>A．</b>−2</div><div class="opt"><b>B．</b>2</div>
+        <div class="opt"><b>C．</b>1/2</div><div class="opt"><b>D．</b>−1/2</div>
+      </div>
+    </div>
+    <div class="q"><span class="q-num">5．</span>等差数列 {aₙ} 中，a₂+a₈=12，则其前 9 项和 S₉=（　　）
+      <div class="opts col4">
+        <div class="opt"><b>A．</b>48</div><div class="opt"><b>B．</b>54</div>
+        <div class="opt"><b>C．</b>60</div><div class="opt"><b>D．</b>72</div>
+      </div>
+    </div>
+    <div class="q"><span class="q-num">6．</span>将函数 y=sin2x 的图象向左平移 π/6 个单位，所得图象对应的函数是（　　）
+      <div class="opts col2">
+        <div class="opt"><b>A．</b>y=sin(2x+π/6)</div><div class="opt"><b>B．</b>y=sin(2x+π/3)</div>
+        <div class="opt"><b>C．</b>y=sin(2x−π/3)</div><div class="opt"><b>D．</b>y=sin(2x−π/6)</div>
+      </div>
+    </div>
+    <div class="q"><span class="q-num">7．</span>已知 tanα=2，则 (sinα+cosα)/(sinα−cosα) 的值为（　　）
+      <div class="opts col4">
+        <div class="opt"><b>A．</b>3</div><div class="opt"><b>B．</b>−3</div>
+        <div class="opt"><b>C．</b>1/3</div><div class="opt"><b>D．</b>−1/3</div>
+      </div>
+    </div>
+    <div class="q"><span class="q-num">8．</span>双曲线 x²/4 − y²/5 = 1 的离心率 e 等于（　　）
+      <div class="opts col4">
+        <div class="opt"><b>A．</b>3/2</div><div class="opt"><b>B．</b>2/3</div>
+        <div class="opt"><b>C．</b>√5/2</div><div class="opt"><b>D．</b>3/√5</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pg-footer"><span>高三数学试卷</span><span>第 1 页　共 8 页</span></div>
+</div>
+
+<!-- ================= 第 2 页 ================= -->
+<div class="page">
+  <div class="seal"><span class="seal-text">密 封 线 内 不 要 答 题</span></div>
+  <div class="pg-header"><span>高三数学试卷</span><span>第Ⅰ卷　选择题 / 第Ⅱ卷 填空题</span></div>
+
+  <!-- 二、多项选择题 -->
+  <div class="section">
+    <div class="sec-score"><table><tr><td>得分</td><td>评卷人</td></tr><tr><td></td><td></td></tr></table></div>
+    <div class="sec-head">二、多项选择题　<span class="sc">（本大题共 3 小题，每小题 5 分，共 15 分。全部选对得 5 分，部分选对得 2 分，有错选得 0 分。）</span></div>
+
+    <div class="q"><span class="q-num">9．</span>下列关于函数 f(x)=x³−3x 的说法中，正确的有（　　）
+      <div class="opts col2">
+        <div class="opt"><b>A．</b>f(x) 是奇函数</div>
+        <div class="opt"><b>B．</b>f(x) 在 (−1,1) 上单调递减</div>
+        <div class="opt"><b>C．</b>f(x) 的极大值为 2</div>
+        <div class="opt"><b>D．</b>f(x) 有三个零点</div>
+      </div>
+    </div>
+    <div class="q"><span class="q-num">10．</span>已知正方体 ABCD−A₁B₁C₁D₁，下列结论正确的有（　　）
+      <div class="opts col1">
+        <div class="opt"><b>A．</b>直线 AC₁ 与平面 ABCD 所成角的正切值为 √2</div>
+        <div class="opt"><b>B．</b>BD₁ ⊥ 平面 A₁C₁D</div>
+        <div class="opt"><b>C．</b>异面直线 AD₁ 与 BC₁ 所成角为 60°</div>
+        <div class="opt"><b>D．</b>平面 AB₁C 与平面 ABCD 所成二面角为 45°</div>
+      </div>
+    </div>
+    <div class="q"><span class="q-num">11．</span>已知函数 f(x)=2sin(ωx+φ)（ω&gt;0，|φ|&lt;π/2）的最小正周期为 π，且图象关于直线 x=π/6 对称，则（　　）
+      <div class="opts col2">
+        <div class="opt"><b>A．</b>ω=2</div>
+        <div class="opt"><b>B．</b>φ=π/6</div>
+        <div class="opt"><b>C．</b>f(x) 在 [0,π/6] 上单调递增</div>
+        <div class="opt"><b>D．</b>f(0)=1</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第Ⅱ卷 -->
+  <div class="paper-band">第Ⅱ卷　（非选择题　共 95 分）</div>
+  <div class="paper-note">注意：第Ⅱ卷各题答案直接写在试卷相应位置，超出答题区域的部分无效。</div>
+
+  <!-- 三、填空题 -->
+  <div class="section">
+    <div class="sec-score"><table><tr><td>得分</td><td>评卷人</td></tr><tr><td></td><td></td></tr></table></div>
+    <div class="sec-head">三、填空题　<span class="sc">（本大题共 4 小题，每小题 5 分，共 20 分。请将答案直接写在横线上。）</span></div>
+
+    <div class="q"><span class="q-num">12．</span>已知二项式 (2x − 1/x)⁶ 的展开式中常数项为 <span class="fill"></span>。</div>
+    <div class="q"><span class="q-num">13．</span>若实数 x、y 满足约束条件 x≥0，y≥0，x+2y≤4，则 z=3x+y 的最大值为 <span class="fill"></span>。</div>
+    <div class="q"><span class="q-num">14．</span>已知圆 C：(x−1)²+(y+2)²=9，则圆心到直线 3x−4y+5=0 的距离为 <span class="fill"></span>。</div>
+    <div class="q"><span class="q-num">15．</span>从 5 名男生和 3 名女生中选出 3 人参加志愿服务，要求至少有 1 名女生，则不同的选法共有 <span class="fill"></span> 种。</div>
+  </div>
+
+  <!-- 四、解答题（开始） -->
+  <div class="section">
+    <div class="sec-score"><table><tr><td>得分</td><td>评卷人</td></tr><tr><td></td><td></td></tr></table></div>
+    <div class="sec-head">四、解答题　<span class="sc">（本大题共 6 小题，共 75 分。解答应写出文字说明、证明过程或演算步骤。）</span></div>
+
+    <div class="q"><span class="q-num">16．</span><span class="q-pt">（本小题满分 10 分）</span>在 △ABC 中，角 A、B、C 的对边分别为 a、b、c，已知 a=2，b=√3，B=π/3。
+      <div class="subq"><span class="sn">（1）</span>求角 A 的大小；</div>
+      <div class="subq"><span class="sn">（2）</span>求 △ABC 的面积 S。</div>
+      <div class="answer-area" style="height:118mm;"></div>
+    </div>
+  </div>
+
+  <div class="pg-footer"><span>高三数学试卷</span><span>第 2 页　共 8 页</span></div>
+</div>
+
+<!-- ================= 第 3 页 ================= -->
+<div class="page">
+  <div class="seal"><span class="seal-text">密 封 线 内 不 要 答 题</span></div>
+  <div class="pg-header"><span>高三数学试卷</span><span>第Ⅱ卷　解答题</span></div>
+
+  <div class="solve-flow">
+    <div class="qbox">
+      <div class="stem"><span class="q-num">17．</span><span class="q-pt">（本小题满分 12 分）</span>已知等比数列 {aₙ} 的首项 a₁=1，公比 q&gt;0，且 a₂、a₃+1、a₄ 成等差数列。
+        <div class="subq"><span class="sn">（1）</span>求数列 {aₙ} 的通项公式；</div>
+        <div class="subq"><span class="sn">（2）</span>设 bₙ = n·aₙ，求数列 {bₙ} 的前 n 项和 Tₙ。</div>
+      </div>
+      <div class="answer-area"></div>
+    </div>
+
+    <div class="qbox">
+      <div class="stem"><span class="q-num">18．</span><span class="q-pt">（本小题满分 12 分）</span>某校为了解学生每日体育锻炼时间，随机抽取 100 名学生进行调查，得到锻炼时间（单位：分钟）的频率分布直方图（如图所示）。
+        <div class="fig" style="width:108mm; height:40mm;">
+          <span class="tag">图 18</span>
+          <span class="ph"><span class="ico">▥</span>此处插入频率分布直方图<br><span style="font-size:8pt;">横轴：锻炼时间 / 分钟　纵轴：频率 / 组距</span></span>
+          <span class="cap">图 18　学生每日锻炼时间频率分布直方图</span>
+        </div>
+        <div class="subq"><span class="sn">（1）</span>求样本数据的平均数与中位数的估计值；</div>
+        <div class="subq"><span class="sn">（2）</span>从锻炼时间不少于 60 分钟的学生中按分层抽样抽取 5 人，再从中任选 2 人，求这 2 人锻炼时间均在 [60,75) 内的概率。</div>
+      </div>
+      <div class="answer-area"></div>
+    </div>
+  </div>
+
+  <div class="pg-footer"><span>高三数学试卷</span><span>第 3 页　共 8 页</span></div>
+</div>
+
+<!-- ================= 第 4 页 ================= -->
+<div class="page">
+  <div class="seal"><span class="seal-text">密 封 线 内 不 要 答 题</span></div>
+  <div class="pg-header"><span>高三数学试卷</span><span>第Ⅱ卷　解答题</span></div>
+
+  <div class="solve-flow">
+    <div class="qbox">
+      <div class="stem"><span class="q-num">19．</span><span class="q-pt">（本小题满分 12 分）</span>
+        <div class="fig-right">
+          <span class="tag">图 19</span>
+          <span class="ph"><span class="ico">◇</span>四棱锥 P−ABCD<br><span style="font-size:8pt;">（立体图）</span></span>
+          <span class="cap">图 19</span>
+        </div>
+        如图，在四棱锥 P−ABCD 中，底面 ABCD 为正方形，PA⊥底面 ABCD，PA=AB=2，E 为 PD 的中点。
+        <div class="subq"><span class="sn">（1）</span>求证：PB ∥ 平面 ACE；</div>
+        <div class="subq"><span class="sn">（2）</span>求二面角 E−AC−D 的余弦值。</div>
+      </div>
+      <div class="answer-area with-grid">
+        <div class="lines"></div>
+        <div class="grid-area"><span class="gl">学生作图区</span></div>
+      </div>
+    </div>
+
+    <div class="qbox">
+      <div class="stem"><span class="q-num">20．</span><span class="q-pt">（本小题满分 12 分）</span>已知函数 f(x)=eˣ − ax − 1（a∈R）。
+        <div class="subq"><span class="sn">（1）</span>当 a=1 时，求 f(x) 的最小值；</div>
+        <div class="subq"><span class="sn">（2）</span>若 f(x)≥0 对任意 x≥0 恒成立，求实数 a 的取值范围。</div>
+      </div>
+      <div class="answer-area"></div>
+    </div>
+  </div>
+
+  <div class="pg-footer"><span>高三数学试卷</span><span>第 4 页　共 8 页</span></div>
+</div>
+
+<!-- ================= 第 5 页 ================= -->
+<div class="page">
+  <div class="seal"><span class="seal-text">密 封 线 内 不 要 答 题</span></div>
+  <div class="pg-header"><span>高三数学试卷</span><span>第Ⅱ卷　解答题</span></div>
+
+  <div class="solve-flow">
+    <div class="qbox">
+      <div class="stem"><span class="q-num">21．</span><span class="q-pt">（本小题满分 12 分）</span>
+        <div class="fig-right">
+          <span class="tag">图 21</span>
+          <span class="ph"><span class="ico">◉</span>椭圆 C 与直线 l<br><span style="font-size:8pt;">（坐标系示意）</span></span>
+          <span class="cap">图 21</span>
+        </div>
+        已知椭圆 C：x²/a² + y²/b² = 1（a&gt;b&gt;0）的离心率为 √2/2，且过点 (√2,1)，如图所示。
+        <div class="subq"><span class="sn">（1）</span>求椭圆 C 的标准方程；</div>
+        <div class="subq"><span class="sn">（2）</span>过点 M(0,1) 的直线 l 与椭圆交于 A、B 两点，求 △OAB 面积的最大值（O 为坐标原点）。</div>
+      </div>
+      <div class="answer-area with-grid">
+        <div class="lines"></div>
+        <div class="grid-area"><span class="gl">学生作图区</span></div>
+      </div>
+    </div>
+
+    <!-- 五、附加题（标题行，不参与均分） -->
+    <div style="flex:0 0 auto; margin-top:4px;">
+      <div class="sec-score"><table><tr><td>得分</td><td>评卷人</td></tr><tr><td></td><td></td></tr></table></div>
+      <div class="sec-head">五、附加题（选做）　<span class="sc">（本大题共 1 小题，满分 15 分，计入总分上限 150 分内。）</span></div>
+    </div>
+
+    <div class="qbox" style="border-top:none; padding-top:2px;">
+      <div class="stem"><span class="q-num">22．</span><span class="q-pt">（本小题满分 15 分）</span>已知数列 {aₙ} 满足 a₁=1，aₙ₊₁ = 2aₙ + 1。
+        <div class="subq"><span class="sn">（1）</span>求证：{aₙ+1} 为等比数列，并求 {aₙ} 的通项公式；</div>
+        <div class="subq"><span class="sn">（2）</span>设 Sₙ 为数列 {aₙ} 的前 n 项和，求 Sₙ。</div>
+      </div>
+      <div class="answer-area"></div>
+    </div>
+  </div>
+
+  <div class="pg-footer"><span>高三数学试卷</span><span>第 5 页　共 8 页</span></div>
+</div>
+
+<!-- ================= 第 6 页：草稿纸 ================= -->
+<div class="page">
+  <div class="pg-header"><span>高三数学试卷</span><span>草稿区</span></div>
+  <div class="ans-title" style="font-size:14pt;">草　稿　纸</div>
+  <div class="ans-sub">本页用于演算，不作为评分依据，请勿在此书写最终答案。</div>
+  <div style="height:235mm; border:0.6pt dashed #b5b5b5;
+    background:repeating-linear-gradient(#fff,#fff 25px,#eee 26px);"></div>
+  <div class="pg-footer"><span>高三数学试卷</span><span>第 6 页　共 8 页</span></div>
+</div>
+
+<!-- ================= 第 7 页：参考答案 ================= -->
+<div class="page">
+  <div class="pg-header"><span>高三数学试卷</span><span>参考答案与评分标准</span></div>
+
+  <div class="ans-title">参考答案与评分标准</div>
+  <div class="ans-sub">高中数学学科期末考试　·　满分 150 分　·　仅供阅卷教师使用</div>
+
+  <div class="ans-sec">一、单项选择题（每小题 5 分，共 40 分）</div>
+  <div class="ans-obj">
+    <span class="pair">1．B</span><span class="pair">2．A</span><span class="pair">3．B</span><span class="pair">4．B</span>
+    <span class="pair">5．B</span><span class="pair">6．B</span><span class="pair">7．A</span><span class="pair">8．A</span>
+  </div>
+
+  <div class="ans-sec">二、多项选择题（每小题 5 分，共 15 分）</div>
+  <div class="ans-obj">
+    <span class="pair">9．ABD</span><span class="pair">10．ABC</span><span class="pair">11．ACD</span>
+  </div>
+
+  <div class="ans-sec">三、填空题（每小题 5 分，共 20 分）</div>
+  <div class="ans-obj">
+    <span class="pair" style="min-width:110px;">12．−160</span>
+    <span class="pair" style="min-width:110px;">13．12</span>
+    <span class="pair" style="min-width:110px;">14．12/5</span>
+    <span class="pair" style="min-width:130px;">15．46</span>
+  </div>
+
+  <div class="ans-sec">四、解答题（共 75 分）</div>
+  <div class="ans-detail">
+    <b>16．</b><span class="pts-tag">10 分</span><br>
+    <span class="step">（1）由正弦定理 a/sinA = b/sinB，得 sinA = a·sinB/b = 2×(√3/2)/√3 = 1 ……（3分）</span><br>
+    <span class="step">又 0&lt;A&lt;π，故 A = π/2 ……（5分）</span><br>
+    <span class="step">（2）由 A=π/2 知 △ABC 为直角三角形，c = √(a²−b²)=1 ……（8分）</span><br>
+    <span class="step">所以 S = ½·b·c = ½×√3×1 = √3/2 ……（10分）</span>
+  </div>
+  <div class="ans-detail">
+    <b>17．</b><span class="pts-tag">12 分</span><br>
+    <span class="step">（1）由 2(a₃+1)=a₂+a₄，代入 aₙ=qⁿ⁻¹ 得 2(q²+1)=q+q³，解得 q=2 ……（4分），故 aₙ = 2ⁿ⁻¹ ……（6分）</span><br>
+    <span class="step">（2）bₙ = n·2ⁿ⁻¹，用错位相减法：Tₙ = (n−1)·2ⁿ + 1 ……（12分）</span>
+  </div>
+  <div class="ans-detail">
+    <b>18．</b><span class="pts-tag">12 分</span><br>
+    <span class="step">（1）平均数 = Σ(组中值×频率) ≈ 52.5 分钟，中位数 ≈ 51.7 分钟 ……（6分）</span><br>
+    <span class="step">（2）分层抽样得 [60,75) 内 3 人、[75,90) 内 2 人，所求概率 P = C(3,2)/C(5,2) = 3/10 ……（12分）</span>
+  </div>
+  <div class="ans-detail">
+    <b>19．</b><span class="pts-tag">12 分</span><br>
+    <span class="step">（1）连 BD 交 AC 于 O，连 OE，O、E 分别为 BD、PD 中点，故 OE∥PB，由线面平行判定得 PB∥平面 ACE ……（6分）</span><br>
+    <span class="step">（2）以 A 为原点建系，求得平面 EAC 法向量与平面 ACD 法向量夹角，余弦值为 √6/3 ……（12分）</span>
+  </div>
+  <div class="ans-detail">
+    <b>20．</b><span class="pts-tag">12 分</span><br>
+    <span class="step">（1）a=1 时 f′(x)=eˣ−1，x=0 处取极小值 f(0)=0，故最小值为 0 ……（5分）</span><br>
+    <span class="step">（2）由 f(x)≥0 恒成立分离参数 a≤(eˣ−1)/x，结合 g(x) 单调性得 a≤1 ……（12分）</span>
+  </div>
+  <div class="ans-detail">
+    <b>21．</b><span class="pts-tag">12 分</span><br>
+    <span class="step">（1）由 e=c/a=√2/2 及过点条件解得 a²=4，b²=2，椭圆方程 x²/4+y²/2=1 ……（5分）</span><br>
+    <span class="step">（2）设直线 l：y=kx+1，联立椭圆消元，由弦长与点到直线距离表示面积，求导得 S 最大值为 √2/2 ……（12分）</span>
+  </div>
+
+  <div class="pg-footer"><span>高三数学试卷</span><span>第 7 页　共 8 页</span></div>
+</div>
+
+<!-- ================= 第 8 页：附加题答案 + 评分细则 ================= -->
+<div class="page">
+  <div class="pg-header"><span>高三数学试卷</span><span>参考答案与评分标准</span></div>
+
+  <div class="ans-sec">五、附加题（满分 15 分）</div>
+  <div class="ans-detail">
+    <b>22．</b><span class="pts-tag">15 分</span><br>
+    <span class="step">（1）由 aₙ₊₁=2aₙ+1 得 aₙ₊₁+1 = 2(aₙ+1)，且 a₁+1=2，故 {aₙ+1} 是首项为 2、公比为 2 的等比数列 ……（4分）</span><br>
+    <span class="step">所以 aₙ+1 = 2ⁿ，即 aₙ = 2ⁿ−1 ……（8分）</span><br>
+    <span class="step">（2）Sₙ = Σ(2ᵏ−1) = (2ⁿ⁺¹−2) − n = 2ⁿ⁺¹ − n − 2 ……（15分）</span>
+  </div>
+
+  <div class="ans-sec">评分细则（解答题通用）</div>
+  <table class="rubric">
+    <tr><th style="width:18%;">评分项</th><th style="width:14%;">分值占比</th><th>说明</th></tr>
+    <tr><td>关键步骤</td><td>60%</td><td>列出正确的定理、公式与方程，每个关键节点按步给分。</td></tr>
+    <tr><td>逻辑推理</td><td>25%</td><td>推理过程完整、严谨，文字说明清晰。</td></tr>
+    <tr><td>最终结果</td><td>15%</td><td>结果正确且形式规范；仅结果正确而无过程者酌情扣分。</td></tr>
+  </table>
+  <div class="ans-detail" style="color:#666;">
+    说明：考生若采用其它正确解法，可参照本评分标准酌情给分；计算结果错误但方法正确者，按步骤给分。各小题给分点（如「……（n分）」）为累计分值，阅卷时以最近的得分点为准。
+  </div>
+
+  <div class="ans-sec" style="margin-top:14px;">题型分值结构总览</div>
+  <table class="rubric">
+    <tr><th>题型</th><th>题号</th><th>小题数</th><th>每题分值</th><th>合计</th></tr>
+    <tr><td>单项选择题</td><td>1–8</td><td>8</td><td>5</td><td>40</td></tr>
+    <tr><td>多项选择题</td><td>9–11</td><td>3</td><td>5</td><td>15</td></tr>
+    <tr><td>填空题</td><td>12–15</td><td>4</td><td>5</td><td>20</td></tr>
+    <tr><td>解答题</td><td>16–21</td><td>6</td><td>10–12</td><td>70</td></tr>
+    <tr><td>附加题</td><td>22</td><td>1</td><td>15</td><td>15</td></tr>
+    <tr><td style="font-weight:700;">总计</td><td>—</td><td style="font-weight:700;">22</td><td>—</td><td style="font-weight:700;">150</td></tr>
+  </table>
+
+  <div class="pg-footer"><span>高三数学试卷</span><span>第 8 页　共 8 页（答案页）</span></div>
+</div>
+
+</body>
+</html>

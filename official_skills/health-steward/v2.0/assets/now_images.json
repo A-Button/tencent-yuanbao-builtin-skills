@@ -1,0 +1,14 @@
+{
+  "meals": {
+    "breakfast": "https://cdn-pro.yuanbao.tencent.com/public/pro/OTkwZjJlNmUtZDFlOS00ZWQzLWFiYzgtZWQ5NGE4YjljNjk2_compress.webp?width=1224&height=1133",
+    "lunch": "https://cdn-pro.yuanbao.tencent.com/public/pro/MTAzZDk0YTctYjE1ZS00ODk2LWJlOGEtZGI5MTc3OTU1NmZi_compress.webp?width=1538&height=1464",
+    "dinner": "https://cdn-pro.yuanbao.tencent.com/public/pro/NjFkMWY4NmYtYTU1Zi00MGI5LTlmODYtMDJjNDcyN2VkNWQ4_compress.webp?width=1562&height=1462"
+  },
+  "covers": {
+    "daily": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg/500px-Good_Food_Display_-_NCI_Visuals_Online.jpg",
+    "weekly": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Banana-Single.jpg/250px-Banana-Single.jpg"
+  },
+  "exercises": {
+    "default": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Push-up.jpg/250px-Push-up.jpg"
+  }
+}

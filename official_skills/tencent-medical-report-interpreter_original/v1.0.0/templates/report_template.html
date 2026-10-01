@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="{{META_DESC}}">
+<meta name="format-detection" content="telephone=no">
+<meta name="color-scheme" content="light">
+<meta name="robots" content="noindex, nofollow">
+<title>腾讯健康 · 体检报告解读 · {{REPORT_DATE}}</title>
+<style>
+  :root {
+    --bg:#fff; --soft:#f7f7f5; --soft2:#f1efe8;
+    --tx:#1c1c1a; --tx2:#5f5e5a; --tx3:#888780;
+    --line:#e2e0d9;
+    --red:#a32d2d; --redbg:#fcebeb; --redln:#f09595;
+    --amb:#854f0b; --ambbg:#faeeda; --ambln:#ef9f27;
+    --blu:#185fa5; --blubg:#e6f1fb; --bluln:#85b7eb;
+    --grn:#3b6d11; --grnbg:#eaf3de; --grnln:#97c459;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;padding:28px 18px 64px;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+       font-size:14.5px;line-height:1.75;color:var(--tx);background:var(--soft)}
+  .wrap{max-width:880px;margin:0 auto}
+
+  /* ============ 顶部信息 ============ */
+  .head{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:18px}
+  .head h1{font-size:21px;font-weight:600;margin:0 0 8px}
+  .meta{font-size:12.5px;color:var(--tx3)}
+  .meta span+span::before{content:" · "}
+  .rd{margin-top:15px;padding:13px 15px;background:var(--soft);
+      border-left:3px solid var(--blu);border-radius:0 8px 8px 0;
+      font-size:13.5px;line-height:1.75;color:var(--tx2)}
+  .rd-t{font-weight:600;color:var(--blu);margin-bottom:5px;font-size:14px}
+  .rd b{color:var(--tx)}
+  /* 目录导航：转发后便于跳转 */
+  .toc{margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+  .toc-t{font-size:12px;color:var(--tx3);margin-bottom:8px;letter-spacing:.5px}
+  .toc-l{display:flex;flex-wrap:wrap;gap:7px}
+  .toc-l a{display:inline-flex;align-items:center;gap:5px;
+           padding:5px 11px 5px 8px;border-radius:7px;background:var(--soft);
+           font-size:13px;color:var(--tx2);text-decoration:none;line-height:1.3}
+  .toc-l a b{font-size:11.5px;color:var(--tx3);font-weight:600;
+             font-variant-numeric:tabular-nums}
+  .toc-l a:hover{background:var(--soft2);color:var(--tx)}
+  /* 锚点跳转时留出顶部余量 */
+  .sec,.disc{scroll-margin-top:14px}
+
+  /* ============ 大标题（章节）============ */
+  .sec{background:var(--bg);border:1px solid var(--line);border-radius:14px;margin-bottom:18px;overflow:hidden}
+  .sec-hd{display:flex;align-items:center;gap:13px;padding:16px 22px;
+          background:var(--soft);border-bottom:1px solid var(--line);
+          border-left:4px solid var(--tx)}
+  .sec-hd .no{display:inline-flex;align-items:center;justify-content:center;
+              min-width:34px;height:28px;padding:0 8px;border-radius:7px;
+              background:var(--tx);color:#fff;
+              font-size:14.5px;font-weight:600;font-variant-numeric:tabular-nums;
+              letter-spacing:.5px;flex-shrink:0}
+  .sec-hd .ttl{font-size:18.5px;font-weight:600;letter-spacing:.4px}
+  .sec-bd{padding:20px 22px}
+
+  /* ============ 小标题 ============ */
+  h3.sub{font-size:15.5px;font-weight:600;margin:26px 0 12px;padding:0 0 8px 11px;
+         border-left:4px solid var(--blu);border-bottom:1px solid var(--line);line-height:1.4}
+  h3.sub:first-child{margin-top:0}
+  h3.sub.r{border-left-color:var(--red)}
+  h3.sub.a{border-left-color:var(--ambln)}
+  h3.sub.g{border-left-color:var(--grnln)}
+  h3.sub .n2{color:var(--tx3);font-weight:500;margin-right:6px;font-variant-numeric:tabular-nums}
+  h4.sub2{font-size:14.5px;font-weight:600;margin:19px 0 9px;padding-left:11px;
+          border-left:2px solid var(--line);line-height:1.4}
+  h4.sub2 .n3{color:var(--tx3);font-weight:500;margin-right:6px;font-variant-numeric:tabular-nums}
+  /* 检查项目归属 */
+  .src{font-size:12.5px;color:var(--tx2);margin:-4px 0 11px;padding-left:11px}
+  .src b{color:var(--tx);font-weight:600}
+  .pb-src{font-size:12.5px;color:var(--tx2);margin-top:6px}
+  .pb-src b{color:var(--tx);font-weight:600}
+
+  /* ============ 问题卡（核心改动）============ */
+  .pb{border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden}
+  .pb-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+         padding:14px 16px 13px;flex-wrap:wrap}
+  .pb-name{font-size:16.5px;font-weight:600;line-height:1.45}
+  .pb-name .qual{font-weight:400;font-size:14px;opacity:.82}
+  .pb-ev{font-size:12.5px;color:var(--tx3);margin-top:5px;font-variant-numeric:tabular-nums}
+  .pb-bd{padding:0 16px 15px;border-top:1px dashed var(--line);margin-top:0;padding-top:13px}
+  .pb.r{border-left:4px solid var(--red)}    .pb.r .pb-name{color:var(--red)}
+  .pb.a{border-left:4px solid var(--ambln)}  .pb.a .pb-name{color:var(--amb)}
+  .pb.b{border-left:4px solid var(--bluln)}  .pb.b .pb-name{color:var(--blu)}
+  .pb.g{border-left:4px solid var(--grnln)}  .pb.g .pb-name{color:var(--grn)}
+
+  .badge{display:inline-block;font-size:11.5px;padding:3px 10px;border-radius:6px;
+         white-space:nowrap;font-weight:500;flex-shrink:0}
+  .b-r{color:var(--red);background:var(--redbg)}
+  .b-a{color:var(--amb);background:var(--ambbg)}
+  .b-b{color:var(--blu);background:var(--blubg)}
+  .b-g{color:var(--grn);background:var(--grnbg)}
+
+  dl.kv{display:grid;grid-template-columns:auto 1fr;gap:7px 15px;margin:0;font-size:13.5px}
+  dl.kv dt{color:var(--tx3);white-space:nowrap}
+  dl.kv dd{margin:0}
+
+  /* 三档层次：p.tx 纯文本 → .ln 左边线 → .note 底色块（仅关键处） */
+  p.tx{margin:11px 0;font-size:14px;line-height:1.8}
+  p.tx.sm{font-size:13.5px;color:var(--tx2)}
+  .ln{margin:12px 0;padding:2px 0 2px 13px;border-left:2px solid var(--line);
+      font-size:13.5px;line-height:1.75;color:var(--tx2)}
+  .ln b{color:var(--tx);font-weight:600}
+  .ln.b{border-left-color:var(--bluln)}
+  .ln.a{border-left-color:var(--ambln)}
+  .ln.g{border-left-color:var(--grnln)}
+  .ln.r{border-left-color:var(--redln)}
+  .note{background:var(--ambbg);border:1px solid var(--ambln);border-radius:9px;
+        padding:12px 15px;font-size:13.5px;margin:13px 0;color:#412402;line-height:1.75}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0}
+  th,td{text-align:left;padding:10px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--tx3);font-weight:500;background:transparent;font-size:12.5px;
+     border-bottom:1.5px solid var(--line)}
+  .up{color:var(--red);font-weight:500} .dn{color:var(--blu);font-weight:500} .ok{color:var(--grn)}
+
+  .lay{margin:10px 0;padding:2px 0 2px 13px;border-left:2px solid var(--line);
+       font-size:13.5px;line-height:1.75;color:var(--tx2)}
+  .lay b{font-weight:600;color:var(--tx)}
+  ul.t{margin:7px 0;padding-left:21px} ul.t li{margin:7px 0}
+  ul.nb{list-style:none;padding-left:0}
+  .mk{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:5px;
+      font-weight:500;margin-right:7px;white-space:nowrap;vertical-align:1px}
+  .mk-y{background:var(--grnbg);color:var(--grn)}
+  .mk-q{background:var(--ambbg);color:var(--amb)}
+  .chart{margin:12px 0 4px}
+
+  .disc{background:var(--bg);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:14px;padding:18px 22px;font-size:13px;color:var(--tx2)}
+  .disc .dh{font-size:16px;font-weight:600;color:var(--red);margin-bottom:9px;display:flex;align-items:center;gap:9px}
+  .disc .dh .no{display:inline-flex;align-items:center;justify-content:center;
+                min-width:34px;height:28px;padding:0 8px;
+                border-radius:7px;background:var(--red);color:#fff;
+                font-size:14.5px;font-weight:600;letter-spacing:.5px}
+  .foot{text-align:center;font-size:12px;color:var(--tx3);margin-top:20px;line-height:1.8}
+  @media print{
+    body{background:#fff;padding:0;font-size:11.5pt}
+    .wrap{max-width:100%}
+    .sec,.disc{break-inside:avoid;border-color:#bbb;box-shadow:none}
+    .sec-hd{background:#f4f2ec !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .note,.badge,.mk{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .toc{display:none}          /* 打印时目录无用 */
+    .tw{overflow:visible}
+    .tw table{min-width:0}
+    table{font-size:10pt}
+    a{text-decoration:none;color:inherit}
+    h3.sub,h4.sub2{break-after:avoid}
+    .pb{break-inside:avoid}
+  }
+
+  /* 手机适配：转发给家人时多在手机上阅读 */
+  @media (max-width:640px){
+    body{padding:14px 10px 40px;font-size:15px}
+    .wrap{max-width:100%}
+    .head,.sec,.disc{border-radius:11px}
+    .head{padding:17px 16px}
+    .sec-hd{padding:13px 15px;gap:10px}
+    .sec-hd .ttl{font-size:17px}
+    .sec-bd{padding:16px 15px}
+    h3.sub{font-size:15px;margin:22px 0 10px}
+    .pb-hd{padding:12px 13px 11px}
+    .pb-bd{padding:11px 13px 13px}
+    .pb-name{font-size:15.5px}
+    .disc{padding:16px}
+    /* 窄屏表格：允许横向滚动而非挤压变形 */
+    .tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:6px -15px;padding:0 15px}
+    .tw table{min-width:520px}
+    table{font-size:13px}
+    th,td{padding:9px 8px}
+    dl.kv{grid-template-columns:1fr;gap:2px 0}
+    dl.kv dt{margin-top:7px;font-size:12.5px}
+    .ln,.lay{font-size:13.5px;padding-left:11px}
+  }
+</style>
+<!--
+  ╔══════════════════════════════════════════════════════════════════════════╗
+  ║  医疗报告解读 · HTML 模板（唯一版本，不区分自用/转发）                    ║
+  ╚══════════════════════════════════════════════════════════════════════════╝
+
+  【七条硬性要求 · 生成后必须逐条自检】
+   1. 零外部依赖 —— 不引入任何 CDN、外链字体、外部图片
+   2. 零 script 标签 —— 部分邮件客户端与微信会剥离脚本
+   3. 趋势图用内联 SVG —— 由 scripts/make_trend_svg.py 生成
+   4. 锁定浅色 —— <meta name="color-scheme" content="light"> 已在 head 中
+   5. 表格全部包 .tw 容器 —— 窄屏可横滑，避免数字错位误读
+   6. 无开发痕迹 —— 不出现「示例」「模板」「TODO」「占位」等字样
+   7. 无身份信息 —— 只写「男 · 55 岁」，不写姓名/身份证/门诊号
+
+  【命名约束】
+   · 章节标题格式：两位序号 + 空格 + 文字（如「01 报告总结」），禁用 emoji
+   · 二级标题 <h3 class="sub"><span class="n2">3.1</span>标题</h3>
+   · 三级标题 <h4 class="sub2"><span class="n3">3.1.1</span>标题</h4>
+   · 标题调性：4~8 字名词短语，不用疑问句、不用第二人称
+   · 档位一律用「需立即就医 / 两周内专科就诊 / 一至三个月复查 / 年度随访」，
+     禁止输出 L1~L4 内部代号
+   · 术语保留但须配人话解释，格式：术语（人话解释）
+   详见 references/plain_language.md
+
+  【三档视觉层次 · 不靠底色堆叠】
+   · <div class="note">        琥珀底色块，必须打断阅读的关键提示，全篇 ≤5 处
+   · <div class="ln a|b|g|r">  2px 左边线，补充说明 / 机制解释 / 推理链条
+   · <p class="tx">            纯文本段落，正常叙述
+   层次主要由「小标题色条 + 左边线 + 字重 + 留白」承担。
+
+  【风险色语义】此处红 = 风险高，绿 = 正常。医疗场景不适用股市涨红跌绿。
+
+  【占位符清单】
+   {{REPORT_DATE}}    报告日期
+   {{META_DESC}}      分享摘要（一句话，含问题数与主要建议）
+   {{PATIENT_META}}   男 · 55 岁 / 套餐名 / 报告日期（不含姓名）
+   {{TOC_ITEMS}}      目录项，格式 <a href="#s01"><b>01</b>报告总结</a>
+   {{S01_BODY}}  ~  {{S09_BODY}}    各段正文
+   {{S07_SECTION}}    整段趋势（单份报告时整块删除，后续序号不重排）
+   {{S10_BODY}}       参考指南（只列本次实际用到的，禁止全表照搬）
+   {{GEN_TIME}}       生成时间
+-->
+<div class="wrap">
+
+<div class="head">
+  <h1>腾讯健康 · 体检报告解读</h1>
+  <div class="meta">{{PATIENT_META}}</div>
+  <div class="rd">
+    <div class="rd-t">怎么读这份报告</div>
+    这是一份 AI 辅助整理的体检报告说明，<b>不是医院出具的诊断</b>。
+    时间有限的话，看 <b>01 报告总结</b> 和 <b>08 下一步</b> 两段就够了 ——
+    前者说明有哪些问题，后者说明该去哪个科、查什么。
+    其余章节是详细依据，可按需查阅；<b>10 参考指南</b>列出了所有判定标准的出处，可拿去与医生核对。
+  </div>
+  <nav class="toc">
+    <div class="toc-t">目录</div>
+    <div class="toc-l">{{TOC_ITEMS}}</div>
+  </nav>
+</div>
+
+<!-- ============ 01 报告总结 ============
+     结构：需优先处理（问题卡片）/ 整体性问题 / 易被忽略的信号
+     问题卡片必须用「问题层」命名，不是指标名：
+     <div class="pb a">
+       <div class="pb-hd">
+         <div>
+           <div class="pb-name">血糖升高<span class="qual">（糖尿病可能）</span></div>
+           <div class="pb-ev">空腹血糖 7.4 mmol/L，已达诊断线 7.0</div>
+           <div class="pb-src"><b>检查项目</b>：生化全项 · 血糖</div>
+         </div>
+         <span class="badge b-a">两周内专科</span>
+       </div>
+     </div>
+     pb 的修饰类：r 红（最紧急）/ a 琥珀 / b 蓝 / g 绿（正常项）
+     命名铁律：达阈值写「XX 可能」，未达阈值只写现象不提疾病名，「可能」二字不可省
+-->
+<div class="sec" id="s01">
+  <div class="sec-hd"><span class="no">01</span><span class="ttl">报告总结</span></div>
+  <div class="sec-bd">{{S01_BODY}}</div>
+</div>
+
+<!-- ============ 02 处理优先级 ============
+     四个小标题按档位分组，用措辞不用代号：
+       2.1 需立即就医 · 数小时内
+       2.2 两周内专科就诊 · N 项
+       2.3 一至三个月复查 · N 项
+       2.4 年度随访
+     无对应项时写 <p class="tx sm">本次没有需要立即就医的问题。</p>
+-->
+<div class="sec" id="s02">
+  <div class="sec-hd"><span class="no">02</span><span class="ttl">处理优先级</span></div>
+  <div class="sec-bd">{{S02_BODY}}</div>
+</div>
+
+<!-- ============ 03 异常指标详细解读 ============
+     每个问题一个二级标题（3.1、3.2…），标题用问题名。
+     指标表统一表头（五列，缺一列渲染会错位）：
+     <tr><th style="width:20%">所属项目</th><th style="width:22%">指标</th>
+         <th style="width:15%">你的值</th><th style="width:16%">正常范围</th><th>说明</th></tr>
+     指标小注写在指标名下方：<br><span style="font-size:12px;color:var(--tx3)">说明</span>
+     可能性分层用三级标题 3.x.1「可能是什么」，列出最可能 / 需排除 / 不太可能各附依据。
+     数值状态类：class="up" 偏高 / class="dn" 偏低 / class="ok" 正常
+-->
+<div class="sec" id="s03">
+  <div class="sec-hd"><span class="no">03</span><span class="ttl">异常指标详细解读</span></div>
+  <div class="sec-bd">{{S03_BODY}}</div>
+</div>
+
+<!-- ============ 04 关联性分析 ============
+     三部分：命中的组合诊断标准（表格，含「所属项目」列）
+             问题之间的因果关系（<div class="lay"> 内用 <pre> 或缩进箭头）
+             由此触发的处置调整
+     注意：原名「异常指标综合分析」已废弃 —— 与 03 前四字重复，扫读易混。
+           也不要用「交叉模式发现」——那是内部推理方法名。
+-->
+<div class="sec" id="s04">
+  <div class="sec-hd"><span class="no">04</span><span class="ttl">关联性分析</span></div>
+  <div class="sec-bd">{{S04_BODY}}</div>
+</div>
+
+<!-- ============ 05 干扰因素排查 ============
+     三组：已排除 / 待排除·需补充确认 / 信息缺口
+     列表项用文字标签而非符号：
+       <li><span class="mk mk-y">已排除</span> 内容</li>
+       <li><span class="mk mk-q">待确认</span> 内容</li>
+     这两组 <ul> 加 nb 类去掉圆点：<ul class="t nb">
+-->
+<div class="sec" id="s05">
+  <div class="sec-hd"><span class="no">05</span><span class="ttl">干扰因素排查</span></div>
+  <div class="sec-bd">{{S05_BODY}}</div>
+</div>
+
+<!-- ============ 06 风险预测 ============
+     ASCVD 双模型必须并列呈现，并说明为何以 China-PAR 定档：
+       China-PAR（中国人群模型）  8.72%  中危  ← 按此定档
+       ACC/AHA PCE（美国，对照）  14.18% 高危
+     其他量化项：eGFR / FIB-4 / AIP / BMI+腰高比，每项配人话小注。
+     全部数值来自 scripts/calc.py，禁止心算估算。
+-->
+<div class="sec" id="s06">
+  <div class="sec-hd"><span class="no">06</span><span class="ttl">风险预测</span></div>
+  <div class="sec-bd">{{S06_BODY}}</div>
+</div>
+
+<!-- ============ 07 趋势变化 ============
+     仅在提供多份报告时输出。单份报告时把整个 <div class="sec" id="s07">…</div> 删掉，
+     并同步删除目录中对应 <a>，但 08~11 序号不重排。
+     趋势图用 scripts/make_trend_svg.py 生成内联 SVG（相对增幅百分比口径，
+     因各指标单位不同无法共用 Y 轴）。禁止引入 Chart.js 等外部库。
+-->
+{{S07_SECTION}}
+
+<!-- ============ 08 下一步 ============
+     按时间窗分小节，每节标明科室与复查项目。
+     必须含 8.x「就诊准备」与三级标题「跟医生怎么说」对照表 ——
+     按检查项目说（「血脂四项里坏胆固醇 3.2」）比只报指标名（「我 LDL 高」）有效。
+-->
+<div class="sec" id="s08">
+  <div class="sec-hd"><span class="no">08</span><span class="ttl">下一步</span></div>
+  <div class="sec-bd">{{S08_BODY}}</div>
+</div>
+
+<!-- ============ 09 生活指导 ============
+     按因果链的上游优先级排序，开头点明性价比最高的一件事。
+     表格三列：项目 / 具体执行方案 / 预期效果，量化到克数、步数、时长。
+     末尾必须有一处 note 说明生活方式不能代替就医。
+-->
+<div class="sec" id="s09">
+  <div class="sec-hd"><span class="no">09</span><span class="ttl">生活指导</span></div>
+  <div class="sec-bd">{{S09_BODY}}</div>
+</div>
+
+<!-- ============ 10 参考指南 ============
+     三小节：10.1 本次判读用到的指南（名称/发布方/本次用于判定什么）
+             10.2 关键数值的出处（判定/数值/来源）
+             10.3 使用这些标准时的说明（中国标准优先/模型局限/报告区间优先/时效）
+     铁律：只列本次真正用到的。references/guidelines.md 收录 40 余部，严禁全表照搬 ——
+           那是用权威感掩盖不确定性，反而降低可信度。
+     10.1 第三列「本次用于判定什么」必填，没有它这张表就退化成书单。
+     10.3 要用具体反例（如中国腰围线 90 vs 国际 94），不要写「依据中国指南」这类空话。
+     详见 references/guidelines.md 第七章。
+-->
+<div class="sec" id="s10">
+  <div class="sec-hd"><span class="no">10</span><span class="ttl">参考指南</span></div>
+  <div class="sec-bd">{{S10_BODY}}</div>
+</div>
+
+<!-- ============ 11 重要提醒 ============ 固定文案，不可删减或改写 -->
+<div class="disc" id="s11">
+  <div class="dh"><span class="no">11</span><span>重要提醒</span></div>
+  本报告为基于所提供检验数据的健康信息解读，<b style="color:var(--red)">不是医疗诊断，不能替代医生面诊</b>。
+  所有指标判读均需结合症状、体征、既往病史与用药情况，由执业医师综合判断。
+  报告中的问题命名（如「糖尿病可能」）仅表示<b>需要进一步检查以明确</b>，不代表已确诊。
+  分级、概率区间与随访建议仅供参考，具体诊疗方案请遵医嘱。
+  <div style="margin-top:9px">若出现症状加重或新发不适，请不要等待建议的复查时间，立即就医。</div>
+  <div style="margin-top:9px;color:var(--tx2)">本解读全程在本地完成，健康数据未上传任何第三方服务。</div>
+</div>
+
+<div class="foot">
+  单个网页文件，可保存、打印或转发；不联网，也不含姓名等身份信息<br>
+  <span style="opacity:.85">生成时间 {{GEN_TIME}} · 判定标准出处见 10 参考指南 · 不替代医生诊断</span>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,4 @@
+interface:
+  display_name: "XCard Page Generator"
+  short_description: "从需求、截图或业务数据生成并校验 XCard A2UI 页面"
+  default_prompt: "Use $xcard-page-generator to generate and validate an XCard A2UI v1.0 page from my requirements."

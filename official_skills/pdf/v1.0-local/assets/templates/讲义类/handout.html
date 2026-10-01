@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>课程讲义模板 · Axis（蓝色科技风）</title>
+<style>
+  /* ============ 设计系统 · Axis（白底·蓝绿撞色）============ */
+  /* —— 文字层级规范（pt，已整体缩小，更精致）——
+     封面主标题 27 / 副标题 11.5
+     章节标题 H1 15 / 章节眉标 7.5
+     二级标题 H2 11.5 / 三级标题 H3 9.8
+     正文 body 9.2 / 引导句 lead 9.4
+     表格/卡片正文 8.6 / 图注·辅助 7.8
+     行高：正文 1.58，标题 1.2 */
+  :root{
+    --ink:        #0e1726;   /* 主文字 近黑 */
+    --ink-soft:   #4a5568;   /* 次级文字 */
+    --ink-faint:  #939db0;   /* 辅助灰 */
+    --line:       #e7ebf2;   /* 分隔线 */
+    --paper:      #ffffff;
+    --wash:       #f5f8fc;   /* 极浅冷灰底 */
+
+    --primary:    #2f5cf6;   /* 蓝紫 主色（撞色之蓝）*/
+    --primary-d:  #0a0c12;   /* 纯黑（深色块底）*/
+    --primary-m:  #1f3a8f;   /* 中蓝 */
+    --primary-l:  #ecf0ff;   /* 蓝色浅底 */
+    --accent:     #18c98a;   /* 翠绿 强调（撞色之绿）*/
+    --accent-d:   #0a8f60;   /* 深绿 文字用 */
+    --accent-l:   #e4faf1;   /* 绿色浅底 */
+    --ink-black:  #000000;   /* 纯黑 */
+    --grad:       linear-gradient(120deg,#2f5cf6 0%,#1fb6c9 52%,#18c98a 100%); /* 蓝→青→绿 撞色渐变 */
+    --sky:        #2f5cf6;
+    --sky-l:      #ecf0ff;
+
+    --r:          11px;
+    /* 全部可商用开源字体：思源黑/宋(Noto SC, OFL) + Inter(OFL) + JetBrains Mono(Apache2.0) */
+    --serif: "Noto Serif SC","Source Han Serif SC",serif;
+    --sans: "Noto Sans SC","Source Han Sans SC","Inter",sans-serif;
+    --mono: "JetBrains Mono","Source Code Pro",monospace;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  body{font-family:var(--sans);color:var(--ink);background:#ffffff;font-size:9.2pt;line-height:1.58;}
+
+  /* ============ A4 页面 ============ */
+  .page{
+    width:210mm;height:297mm;background:var(--paper);
+    margin:0;position:relative;
+    padding:17mm 16mm 20mm 28mm;   /* 底部留 20mm 安全区，杜绝与页脚重叠 */
+    page-break-after:always;overflow:hidden;
+  }
+  .page:last-child{page-break-after:auto;}
+
+  /* 左侧轴线（止于页脚安全区上方）*/
+  .axis{position:absolute;left:17mm;top:0;bottom:18mm;width:2px;background:var(--grad);opacity:.55;}
+
+  /* 页眉 */
+  .runhead{position:absolute;top:10mm;left:28mm;right:16mm;display:flex;justify-content:space-between;align-items:center;font-size:7.5pt;color:var(--ink-faint);letter-spacing:.06em;border-bottom:1px solid var(--line);padding-bottom:4px;}
+  .runhead .rh-l{font-weight:700;color:var(--primary);text-transform:uppercase;}
+  /* 页脚（固定在底部安全区内）*/
+  .runfoot{position:absolute;bottom:11mm;left:28mm;right:16mm;display:flex;justify-content:space-between;align-items:center;font-size:7.5pt;color:var(--ink-faint);border-top:1px solid var(--line);padding-top:4px;}
+  .runfoot .pg{font-weight:700;color:var(--primary);}
+
+  /* ============ 封面 ============ */
+  .cover{padding:0;display:flex;flex-direction:column;}
+  .cover .axis{display:none;}
+  .cover-top{background:#000000;color:#fff;padding:28mm 20mm 22mm;position:relative;overflow:hidden;}
+  /* 纯黑底 —— 仅右下角一团高饱和蓝绿晕染渐变 */
+  .cover-top::before{content:"";position:absolute;right:-26mm;bottom:-40mm;width:118mm;height:118mm;border-radius:50%;
+    background:radial-gradient(circle at 50% 50%,
+      rgba(24,230,160,.95) 0%,
+      rgba(20,200,180,.78) 22%,
+      rgba(40,110,250,.55) 46%,
+      rgba(40,110,250,.18) 64%,
+      transparent 76%);
+    filter:blur(2px);z-index:1;}
+  .c-kicker{display:inline-flex;align-items:center;gap:8px;font-size:8pt;letter-spacing:.18em;text-transform:uppercase;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:5px 13px;border-radius:30px;position:relative;z-index:2;}
+  .c-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+  .c-title{font-size:27pt;font-weight:800;line-height:1.14;margin:20px 0 8px;letter-spacing:-.01em;position:relative;z-index:2;}
+  .c-title .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+  .c-sub{font-size:11.5pt;font-weight:400;color:rgba(255,255,255,.78);max-width:118mm;line-height:1.5;position:relative;z-index:2;}
+  .c-rule{width:56px;height:4px;background:var(--grad);border-radius:3px;margin:18px 0 0;position:relative;z-index:2;}
+
+  .cover-meta{padding:12mm 20mm;display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid var(--line);}
+  .cm-item{padding:9px 15px;border-left:3px solid var(--accent);}
+  .cm-item:nth-child(odd){border-left-color:var(--primary);}
+  .cm-k{font-size:7.5pt;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;}
+  .cm-v{font-size:10.5pt;font-weight:600;color:var(--ink);margin-top:3px;}
+
+  .cover-abs{padding:9mm 20mm;}
+  .ca-title{font-size:9.5pt;font-weight:800;color:var(--primary);letter-spacing:.04em;margin-bottom:7px;display:flex;align-items:center;gap:8px;}
+  .ca-title::before{content:"";width:16px;height:2.5px;background:var(--accent);border-radius:2px;}
+  .ca-text{font-size:9.6pt;color:var(--ink-soft);line-height:1.76;text-align:justify;}
+  .cover-foot{margin-top:auto;padding:7mm 20mm;background:var(--wash);display:flex;justify-content:space-between;align-items:center;font-size:8pt;color:var(--ink-faint);}
+  .cover-foot strong{color:var(--primary);}
+
+  /* ============ 章节标题 ============ */
+  .chapter{display:flex;align-items:flex-start;gap:12px;margin:0 0 11px;}
+  .chap-num{flex-shrink:0;width:36px;height:36px;background:var(--grad);color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14pt;font-weight:800;}
+  .chap-meta{flex:1;padding-top:1px;}
+  .chap-eyebrow{font-size:7.5pt;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-d);font-weight:800;}
+  .chap-title{font-size:15pt;font-weight:800;color:var(--ink);line-height:1.2;margin-top:2px;}
+  .chap-rule{height:3px;background:var(--grad);border-radius:3px;margin-top:6px;}
+
+  /* 二级标题（轴锚点） */
+  .h2{position:relative;font-size:11.5pt;font-weight:800;color:var(--ink);margin:13px 0 6px;padding-left:2px;}
+  .h2::before{content:"";position:absolute;left:-11mm;top:50%;transform:translateY(-50%);width:11px;height:11px;border-radius:50%;background:var(--accent);border:2.5px solid var(--primary);}
+  .h2 .num{color:var(--primary);font-weight:800;margin-right:6px;}
+
+  .h3{font-size:9.8pt;font-weight:700;color:var(--primary);margin:10px 0 4px;display:flex;align-items:center;gap:7px;}
+  .h3::before{content:"";width:5px;height:5px;background:var(--accent);transform:rotate(45deg);}
+
+  p{margin:0 0 6px;text-align:justify;color:var(--ink-soft);}
+  p strong, li strong{color:var(--ink);font-weight:700;}
+  .lead{font-size:9.4pt;color:var(--ink);border-left:3px solid var(--accent);padding-left:11px;margin:3px 0 10px;line-height:1.62;}
+
+  ul,ol{margin:3px 0 7px;padding-left:0;list-style:none;}
+  ul li{position:relative;padding-left:17px;margin-bottom:4px;color:var(--ink-soft);}
+  ul li::before{content:"";position:absolute;left:2px;top:7px;width:5px;height:5px;border-radius:50%;background:var(--accent);}
+  ol{counter-reset:ol;}
+  ol li{position:relative;padding-left:23px;margin-bottom:4px;color:var(--ink-soft);counter-increment:ol;}
+  ol li::before{content:counter(ol);position:absolute;left:0;top:1px;width:16px;height:16px;background:var(--primary-l);color:var(--primary);border-radius:50%;font-size:8pt;font-weight:800;display:flex;align-items:center;justify-content:center;}
+
+  /* ============ 学习目标卡 ============ */
+  .objectives{background:var(--wash);border-radius:var(--r);padding:12px 15px;margin:10px 0;border:1px solid var(--line);border-left:3px solid var(--accent);}
+  .obj-head{display:flex;align-items:center;gap:8px;font-size:9.8pt;font-weight:800;color:var(--primary);margin-bottom:7px;}
+  .obj-ico{width:22px;height:22px;background:var(--grad);color:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11pt;}
+  .obj-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;}
+  .obj-item{display:flex;gap:7px;font-size:8.8pt;color:var(--ink);line-height:1.45;}
+  .obj-item .chk{flex-shrink:0;width:15px;height:15px;border:1.5px solid var(--accent);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--accent-d);font-size:8.5pt;font-weight:900;margin-top:1px;}
+
+  /* ============ 概念框 ============ */
+  .concept{background:#fff;border:1px solid var(--line);border-left:3px solid var(--primary);border-radius:var(--r);padding:11px 14px;margin:8px 0;}
+  .concept-tag{display:inline-block;font-size:7.5pt;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-d);background:var(--accent-l);padding:3px 8px;border-radius:5px;margin-bottom:6px;}
+  .concept .term{font-size:10.5pt;font-weight:800;color:var(--ink);}
+  .concept .def{font-size:9.2pt;color:var(--ink-soft);margin-top:4px;}
+
+  /* ============ 提示框 ============ */
+  .callout{display:flex;gap:11px;padding:10px 14px;border-radius:var(--r);margin:8px 0;}
+  .callout .c-ico{flex-shrink:0;width:27px;height:27px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13pt;color:#fff;}
+  .callout .c-body{flex:1;}
+  .callout .c-label{font-size:8.4pt;font-weight:800;letter-spacing:.04em;margin-bottom:2px;}
+  .callout .c-text{font-size:8.8pt;line-height:1.55;}
+  /* 提示=绿系，警示=深墨蓝系，备注=蓝系；全程仅黑白蓝绿 */
+  .tip{background:var(--accent-l);border:1px solid #c4f0dd;}
+  .tip .c-ico{background:var(--accent);} .tip .c-label{color:var(--accent-d);} .tip .c-text{color:#0a6e4a;}
+  .warn{background:var(--primary-l);border:1px solid #cdd8ff;border-left:3px solid var(--primary-d);}
+  .warn .c-ico{background:var(--primary-d);} .warn .c-label{color:var(--primary-d);} .warn .c-text{color:var(--primary-d);}
+  .note{background:var(--primary-l);border:1px solid #cdd8ff;}
+  .note .c-ico{background:var(--primary);} .note .c-label{color:var(--primary);} .note .c-text{color:#1f3a8f;}
+
+  /* ============ 双栏 ============ */
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:8px 0;}
+
+  /* ============ 案例卡 ============ */
+  .example{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin:7px 0;}
+  .ex-head{background:var(--primary-d);color:#fff;padding:7px 14px;font-size:9pt;font-weight:700;display:flex;align-items:center;gap:8px;}
+  .ex-head .badge{background:var(--accent);color:#06351f;font-size:7pt;font-weight:900;padding:2px 7px;border-radius:4px;letter-spacing:.05em;}
+  .ex-body{padding:10px 14px;background:#fff;}
+  .ex-body .step{font-size:8.8pt;color:var(--ink-soft);}
+
+  /* ============ 代码块 ============ */
+  .code{background:#0e1726;border-radius:9px;padding:10px 14px;margin:7px 0;font-family:var(--mono);font-size:8.2pt;line-height:1.58;color:#e2e8f5;overflow:hidden;}
+  .code .cm{color:#8a93a8;} .code .kw{color:#5fe0a8;} .code .st{color:#7fd6c5;} .code .fn{color:#7fa8ff;}
+
+  /* ============ 表格 ============ */
+  table{width:100%;border-collapse:collapse;margin:7px 0;font-size:8.6pt;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);}
+  thead th{background:var(--primary-d);color:#fff;font-weight:700;text-align:left;padding:6px 12px;font-size:8.6pt;letter-spacing:.02em;}
+  tbody td{padding:5px 12px;border-bottom:1px solid var(--line);color:var(--ink-soft);}
+  tbody tr:nth-child(even){background:var(--wash);}
+  tbody tr:last-child td{border-bottom:none;}
+  td .mono{font-family:var(--mono);color:var(--accent-d);font-weight:600;}
+
+  /* ============ 关键公式 ============ */
+  .formula{background:var(--wash);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:10px 16px;margin:8px 0;text-align:center;}
+  .formula .eq{font-family:var(--serif);font-size:12pt;color:var(--ink);font-style:italic;}
+  .formula .cap{font-size:7.8pt;color:var(--ink-faint);margin-top:4px;}
+
+  /* ============ 重点摘要条 ============ */
+  .keypoint{display:flex;gap:0;margin:8px 0;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);}
+  .kp-side{background:var(--grad);color:#fff;writing-mode:vertical-rl;text-orientation:upright;padding:9px 5px;font-size:8pt;font-weight:800;letter-spacing:.25em;display:flex;align-items:center;justify-content:center;}
+  .kp-main{flex:1;background:var(--accent-l);padding:11px 15px;font-size:9pt;color:#0a5e42;line-height:1.6;}
+
+  /* ============ 小结卡 ============ */
+  .summary{background:#000000;color:#fff;border-radius:13px;padding:12px 17px;margin:7px 0 0;position:relative;overflow:hidden;}
+  .summary::after{content:"";position:absolute;right:-30px;top:-34px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(24,201,138,.50),transparent 66%);}
+  .summary::before{content:"";position:absolute;left:30%;bottom:-44px;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle,rgba(47,92,246,.46),transparent 66%);}
+  .sum-head{font-size:10pt;font-weight:800;margin-bottom:7px;display:flex;align-items:center;gap:8px;position:relative;z-index:2;}
+  .sum-head .ico{width:22px;height:22px;background:var(--grad);color:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11pt;}
+  .sum-list{display:grid;grid-template-columns:1fr 1fr;gap:5px 16px;position:relative;z-index:2;}
+  .sum-item{display:flex;gap:7px;font-size:8.6pt;line-height:1.42;color:rgba(255,255,255,.90);}
+  .sum-item .n{flex-shrink:0;color:#3ee0a0;font-weight:900;}
+
+  /* ============ 练习题 ============ */
+  .exercises{border:1.5px dashed #aec0e8;border-radius:var(--r);padding:13px 16px;margin:10px 0;background:var(--wash);}
+  .ex-title{font-size:10pt;font-weight:800;color:var(--primary);display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+  .ex-title .ico{width:23px;height:23px;background:var(--grad);color:#fff;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11pt;}
+  .q{margin-bottom:9px;padding-bottom:9px;border-bottom:1px dotted var(--line);}
+  .q:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .q-num{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:var(--primary);color:#fff;border-radius:5px;font-size:8pt;font-weight:800;margin-right:7px;}
+  .q-text{font-size:9pt;color:var(--ink);font-weight:600;}
+  .q-opts{margin:6px 0 0 25px;display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;}
+  .q-opts div{font-size:8.6pt;color:var(--ink-soft);}
+  .q-line{margin:6px 0 0 25px;height:1px;border-bottom:1px solid var(--line);}
+  .q-tag{font-size:7pt;font-weight:800;color:var(--accent-d);background:var(--accent-l);padding:2px 7px;border-radius:4px;margin-left:8px;letter-spacing:.04em;}
+
+  /* 占位说明（模板提示用） */
+  .ph{background:var(--wash);border:1px dashed #c2d2ec;border-radius:8px;padding:9px 13px;font-size:8pt;color:var(--ink-faint);margin:7px 0;}
+  .ph b{color:var(--primary);}
+</style>
+</head>
+<body>
+
+<!-- ===================== 封面 ===================== -->
+<section class="page cover">
+  <div class="cover-top">
+    <span class="c-kicker"><span class="c-dot"></span>计算机科学基础 · 模块 04</span>
+    <h1 class="c-title">哈希表与<br><span class="grad">散列原理</span></h1>
+    <p class="c-sub">从键值映射到冲突解决，理解现代程序中最常用的高效数据结构</p>
+    <div class="c-rule"></div>
+  </div>
+
+  <div class="cover-meta">
+    <div class="cm-item"><div class="cm-k">课程编号</div><div class="cm-v">CS-204 · 数据结构</div></div>
+    <div class="cm-item"><div class="cm-k">课时安排</div><div class="cm-v">2 课时（90 分钟）</div></div>
+    <div class="cm-item"><div class="cm-k">授课对象</div><div class="cm-v">计算机专业二年级</div></div>
+    <div class="cm-item"><div class="cm-k">难度等级</div><div class="cm-v">★★★☆☆ 中等</div></div>
+    <div class="cm-item"><div class="cm-k">主讲教师</div><div class="cm-v">［教师姓名］</div></div>
+    <div class="cm-item"><div class="cm-k">编制日期</div><div class="cm-v">2026 春季学期</div></div>
+  </div>
+
+  <div class="cover-abs">
+    <div class="ca-title">本讲概要</div>
+    <p class="ca-text">哈希表是一种以"近乎常数时间"完成查找、插入与删除的关键数据结构，广泛应用于数据库索引、缓存系统、编译器符号表等场景。本讲将从哈希函数的设计原理出发，系统讲解负载因子、冲突解决策略（链地址法与开放寻址法）以及动态扩容机制，并通过电话簿、单词计数等真实案例帮助学生建立从理论到工程实践的完整认知。</p>
+  </div>
+
+  <div class="cover-foot">
+    <span>讲义模板 · <strong>Axis Design System</strong></span>
+    <span>第 1 页 / 共 4 页</span>
+  </div>
+</section>
+
+<!-- ===================== 正文 P1 ===================== -->
+<section class="page">
+  <div class="axis"></div>
+  <div class="runhead"><span class="rh-l">CS-204 数据结构</span><span>模块 04 · 哈希表与散列原理</span></div>
+
+  <div class="chapter">
+    <div class="chap-num">01</div>
+    <div class="chap-meta">
+      <div class="chap-eyebrow">Section One · 基础认知</div>
+      <div class="chap-title">为什么需要哈希表</div>
+      <div class="chap-rule"></div>
+    </div>
+  </div>
+
+  <p class="lead">想象在一本 10 万人的电话簿中查找某个人——若逐页翻找需要遍历全部记录；哈希表让我们"直接翻到那一页"，把查找时间从线性降到接近常数。</p>
+
+  <div class="objectives">
+    <div class="obj-head"><span class="obj-ico">◎</span>本讲学习目标</div>
+    <div class="obj-grid">
+      <div class="obj-item"><span class="chk">✓</span>理解哈希表的核心思想与时间复杂度优势</div>
+      <div class="obj-item"><span class="chk">✓</span>掌握哈希函数的设计原则与常见方法</div>
+      <div class="obj-item"><span class="chk">✓</span>区分链地址法与开放寻址法两类冲突策略</div>
+      <div class="obj-item"><span class="chk">✓</span>计算负载因子并解释动态扩容的必要性</div>
+      <div class="obj-item"><span class="chk">✓</span>能在真实编程问题中正确选用哈希结构</div>
+      <div class="obj-item"><span class="chk">✓</span>了解哈希在工程系统中的典型应用场景</div>
+    </div>
+  </div>
+
+  <div class="h2"><span class="num">1.1</span>核心思想：键到地址的映射</div>
+  <p>不同于数组通过<strong>下标</strong>访问、链表通过<strong>遍历</strong>访问，哈希表引入<strong>哈希函数</strong>，把任意键（key）转换为数组中的存储位置（index），实现"通过键直接定位值"。</p>
+
+  <div class="concept">
+    <span class="concept-tag">核心定义</span>
+    <div class="term">哈希表（Hash Table）</div>
+    <div class="def">一种基于<strong>键值对（key-value）</strong>存储的数据结构，借助哈希函数将键映射到底层数组的索引位置，平均情况下以 O(1) 完成查找、插入与删除。</div>
+  </div>
+
+  <div class="formula">
+    <div class="eq">index = hash(key) mod N</div>
+    <div class="cap">哈希函数将键映射为 [0, N-1] 区间内的数组下标，N 为底层数组容量</div>
+  </div>
+
+  <div class="h2"><span class="num">1.2</span>时间复杂度对比</div>
+  <p>下表对比哈希表与其他常见结构的平均时间复杂度，可直观看出其在查找密集型场景中的优势：</p>
+
+  <table>
+    <thead><tr><th>数据结构</th><th>查找</th><th>插入</th><th>删除</th><th>有序性</th></tr></thead>
+    <tbody>
+      <tr><td>无序数组</td><td><span class="mono">O(n)</span></td><td><span class="mono">O(1)</span></td><td><span class="mono">O(n)</span></td><td>否</td></tr>
+      <tr><td>有序数组</td><td><span class="mono">O(log n)</span></td><td><span class="mono">O(n)</span></td><td><span class="mono">O(n)</span></td><td>是</td></tr>
+      <tr><td>链表</td><td><span class="mono">O(n)</span></td><td><span class="mono">O(1)</span></td><td><span class="mono">O(n)</span></td><td>否</td></tr>
+      <tr><td>平衡二叉树</td><td><span class="mono">O(log n)</span></td><td><span class="mono">O(log n)</span></td><td><span class="mono">O(log n)</span></td><td>是</td></tr>
+      <tr><td><strong>哈希表</strong></td><td><span class="mono">O(1)*</span></td><td><span class="mono">O(1)*</span></td><td><span class="mono">O(1)*</span></td><td>否</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout note">
+    <span class="c-ico">!</span>
+    <div class="c-body">
+      <div class="c-label">注意</div>
+      <div class="c-text">表中 <strong>O(1)*</strong> 表示"平均情况"，哈希冲突严重时会退化到 O(n)，因此哈希函数质量与负载因子控制至关重要。</div>
+    </div>
+  </div>
+
+  <div class="keypoint" style="margin-bottom:0">
+    <div class="kp-side">记忆</div>
+    <div class="kp-main"><strong>一句话记忆：</strong>哈希表用"空间换时间"——通过哈希函数把查找摊薄成一次计算，实现接近常数的访问。</div>
+  </div>
+
+  <div class="runfoot"><span>Axis Design System · 课程讲义模板</span><span>第 <span class="pg">2</span> 页</span></div>
+</section>
+
+<!-- ===================== 正文 P2 ===================== -->
+<section class="page">
+  <div class="axis"></div>
+  <div class="runhead"><span class="rh-l">CS-204 数据结构</span><span>模块 04 · 哈希表与散列原理</span></div>
+
+  <div class="chapter">
+    <div class="chap-num">02</div>
+    <div class="chap-meta">
+      <div class="chap-eyebrow">Section Two · 核心机制</div>
+      <div class="chap-title">哈希函数与冲突解决</div>
+      <div class="chap-rule"></div>
+    </div>
+  </div>
+
+  <div class="h2"><span class="num">2.1</span>好的哈希函数应具备什么</div>
+  <p>哈希函数的目标是把键"均匀且确定地"散布到数组中。一个优秀的哈希函数应满足以下性质：</p>
+  <ol>
+    <li><strong>确定性：</strong>相同的键必须始终映射到相同的索引，否则无法再次找到数据。</li>
+    <li><strong>均匀分布：</strong>不同的键应尽可能均匀地分散，避免大量键挤在同一位置。</li>
+    <li><strong>高效计算：</strong>函数本身的计算开销应足够低，否则会抵消查找速度的优势。</li>
+    <li><strong>雪崩效应：</strong>输入的微小变化应导致输出的显著不同，减少规律性冲突。</li>
+  </ol>
+
+  <div class="cols">
+    <div>
+      <div class="h3">除留余数法</div>
+      <p>最常见的方法，取键对容量 N 取模。建议 N 选用<strong>质数</strong>以减少周期性冲突。</p>
+      <div class="code"><span class="cm"># 除留余数法</span><br>idx = <span class="fn">key</span> % N<br><span class="cm"># N 取质数效果更好</span></div>
+    </div>
+    <div>
+      <div class="h3">乘法散列法</div>
+      <p>用键乘以常数 A（0&lt;A&lt;1）取小数部分，再乘以 N，对 N 的取值不敏感。</p>
+      <div class="code"><span class="cm"># 乘法散列</span><br>idx = floor(N * (<span class="fn">key</span>*A % 1))<br><span class="cm"># A≈0.618 黄金比</span></div>
+    </div>
+  </div>
+
+  <div class="h2"><span class="num">2.2</span>冲突：当两个键撞在一起</div>
+  <p>由于键空间通常远大于数组容量，<strong>不同的键映射到相同索引</strong>不可避免，这种现象称为<strong>哈希冲突（collision）</strong>。如何优雅地解决冲突，是哈希表设计的核心。</p>
+
+  <div class="h3">方案一 · 链地址法（Separate Chaining）</div>
+  <p>每个数组槽位存储一个链表，冲突的元素依次挂在同一链表上。查找时先定位槽位，再在链表中线性比较。实现简单、扩容友好，是 Java HashMap 等主流实现采用的策略。</p>
+
+  <div class="callout tip">
+    <span class="c-ico">✓</span>
+    <div class="c-body">
+      <div class="c-label">优点</div>
+      <div class="c-text">删除操作简单，负载因子可大于 1；当链表过长时（如超过 8 个节点）可转换为红黑树，把最坏查找从 O(n) 优化到 O(log n)。</div>
+    </div>
+  </div>
+
+  <div class="h3">方案二 · 开放寻址法（Open Addressing）</div>
+  <p>所有元素都存放在数组内部，发生冲突时按某种探测序列寻找下一个空槽。常见探测方式有线性探测、二次探测与双重哈希。</p>
+
+  <table>
+    <thead><tr><th>探测方式</th><th>探测公式（第 i 次）</th><th>主要问题</th></tr></thead>
+    <tbody>
+      <tr><td>线性探测</td><td><span class="mono">(h + i) mod N</span></td><td>易产生连续聚集</td></tr>
+      <tr><td>二次探测</td><td><span class="mono">(h + i²) mod N</span></td><td>缓解一次聚集</td></tr>
+      <tr><td>双重哈希</td><td><span class="mono">(h₁ + i·h₂) mod N</span></td><td>分布最均匀</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <span class="c-ico">⚠</span>
+    <div class="c-body">
+      <div class="c-label">常见误区</div>
+      <div class="c-text">开放寻址法中<strong>不能简单地把删除的槽位置空</strong>，否则会中断探测链。正确做法是使用"墓碑标记（tombstone）"标识已删除位置。</div>
+    </div>
+  </div>
+
+  <div class="runfoot"><span>Axis Design System · 课程讲义模板</span><span>第 <span class="pg">3</span> 页</span></div>
+</section>
+
+<!-- ===================== 正文 P3 ===================== -->
+<section class="page">
+  <div class="axis"></div>
+  <div class="runhead"><span class="rh-l">CS-204 数据结构</span><span>模块 04 · 哈希表与散列原理</span></div>
+
+  <div class="chapter">
+    <div class="chap-num">03</div>
+    <div class="chap-meta">
+      <div class="chap-eyebrow">Section Three · 实践应用</div>
+      <div class="chap-title">负载因子、扩容与案例</div>
+      <div class="chap-rule"></div>
+    </div>
+  </div>
+
+  <div class="h2"><span class="num">3.1</span>负载因子与动态扩容</div>
+  <p>负载因子（Load Factor）衡量哈希表的"拥挤程度"，是决定何时扩容的关键指标：</p>
+
+  <div class="formula">
+    <div class="eq">α = n / N</div>
+    <div class="cap">n 为已存元素个数，N 为数组容量；α 越大冲突概率越高</div>
+  </div>
+
+  <p>当 α 超过预设阈值（链地址法常取 0.75，开放寻址法常取 0.5），就触发<strong>扩容（rehashing）</strong>：分配更大数组（通常翻倍）并重新哈希所有元素。扩容单次代价 O(n)，但分摊到每次插入仍是 O(1)。</p>
+
+  <div class="keypoint">
+    <div class="kp-side">重点</div>
+    <div class="kp-main"><strong>权衡关系：</strong>负载因子越小，冲突越少、查找越快，但空间浪费越多；越大则空间利用率越高，但冲突风险上升。0.75 是时间与空间的经典折中。</div>
+  </div>
+
+  <div class="h2"><span class="num">3.2</span>实战案例</div>
+
+  <div class="example">
+    <div class="ex-head"><span class="badge">案例 A</span>用哈希表统计单词频率</div>
+    <div class="ex-body">
+      <p class="step"><strong>问题：</strong>给定一篇文章，统计每个单词出现的次数。</p>
+      <p class="step"><strong>思路：</strong>以单词为键、出现次数为值。遍历文本，键已存在则计数 +1，否则插入置 1。</p>
+      <div class="code"><span class="kw">for</span> word <span class="kw">in</span> text.split():<br>&nbsp;&nbsp;counts[word] = counts.<span class="fn">get</span>(word, <span class="st">0</span>) + <span class="st">1</span></div>
+      <p class="step"><strong>复杂度：</strong>遍历 O(m)，每次哈希操作平均 O(1)，总体 <span class="mono" style="color:var(--primary-d);font-weight:700">O(m)</span>，m 为单词总数。</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="ex-head"><span class="badge">案例 B</span>两数之和（LeetCode 经典题）</div>
+    <div class="ex-body">
+      <p class="step"><strong>问题：</strong>在数组中找出两个数，使其和等于目标值 target。</p>
+      <p class="step"><strong>思路：</strong>遍历数组，对每个 x 在哈希表中查找 target−x，把"嵌套循环 O(n²)"优化为"一次遍历 O(n)"。</p>
+      <div class="code"><span class="kw">for</span> i, x <span class="kw">in</span> enumerate(nums):<br>&nbsp;&nbsp;<span class="kw">if</span> target-x <span class="kw">in</span> seen: <span class="kw">return</span> [seen[target-x], i]<br>&nbsp;&nbsp;seen[x] = i</div>
+    </div>
+  </div>
+
+  <div class="h2"><span class="num">3.3</span>工程中的应用场景</div>
+  <div class="cols" style="margin-bottom:6px">
+    <div>
+      <ul style="margin-bottom:0">
+        <li><strong>数据库索引：</strong>等值查询的快速定位</li>
+        <li><strong>缓存系统：</strong>Redis、Memcached 键值存储</li>
+      </ul>
+    </div>
+    <div>
+      <ul style="margin-bottom:0">
+        <li><strong>编译器：</strong>符号表管理变量与函数名</li>
+        <li><strong>去重与集合：</strong>HashSet 的 O(1) 判断</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div class="sum-head"><span class="ico">∑</span>本讲小结</div>
+    <div class="sum-list">
+      <div class="sum-item"><span class="n">01</span>哈希函数实现键到地址的直接映射，平均 O(1) 增删查</div>
+      <div class="sum-item"><span class="n">02</span>优秀哈希函数需确定、均匀、高效并具雪崩效应</div>
+      <div class="sum-item"><span class="n">03</span>链地址法与开放寻址法是两类主流冲突解决方案</div>
+      <div class="sum-item"><span class="n">04</span>负载因子控制拥挤度，超阈值触发扩容维持性能</div>
+    </div>
+  </div>
+
+  <div class="runfoot"><span>Axis Design System · 课程讲义模板</span><span>第 <span class="pg">4</span> 页</span></div>
+</section>
+
+<!-- ===================== 练习页 P4 ===================== -->
+<section class="page">
+  <div class="axis"></div>
+  <div class="runhead"><span class="rh-l">CS-204 数据结构</span><span>模块 04 · 课后练习</span></div>
+
+  <div class="chapter">
+    <div class="chap-num">04</div>
+    <div class="chap-meta">
+      <div class="chap-eyebrow">Section Four · 巩固训练</div>
+      <div class="chap-title">课后练习与思考</div>
+      <div class="chap-rule"></div>
+    </div>
+  </div>
+
+  <div class="exercises">
+    <div class="ex-title"><span class="ico">?</span>一、选择题<span class="q-tag">每题 5 分</span></div>
+    <div class="q">
+      <div><span class="q-num">1</span><span class="q-text">哈希表在平均情况下，查找操作的时间复杂度为？</span></div>
+      <div class="q-opts">
+        <div>A. O(n)</div><div>B. O(log n)</div>
+        <div>C. O(1)</div><div>D. O(n²)</div>
+      </div>
+    </div>
+    <div class="q">
+      <div><span class="q-num">2</span><span class="q-text">下列关于负载因子 α 的说法，正确的是？</span></div>
+      <div class="q-opts">
+        <div>A. α 越大查找越快</div><div>B. α = n / N</div>
+        <div>C. α 与冲突无关</div><div>D. α 恒等于 1</div>
+      </div>
+    </div>
+    <div class="q">
+      <div><span class="q-num">3</span><span class="q-text">开放寻址法删除元素时，正确的处理方式是？</span></div>
+      <div class="q-opts">
+        <div>A. 直接置空</div><div>B. 使用墓碑标记</div>
+        <div>C. 移动后续元素</div><div>D. 无需处理</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exercises">
+    <div class="ex-title"><span class="ico">✎</span>二、简答题<span class="q-tag">每题 10 分</span></div>
+    <div class="q">
+      <div><span class="q-num">4</span><span class="q-text">请说明链地址法与开放寻址法各自的优缺点，并举例说明适用场景。</span></div>
+      <div class="q-line"></div><div class="q-line"></div><div class="q-line"></div>
+    </div>
+    <div class="q">
+      <div><span class="q-num">5</span><span class="q-text">为什么扩容操作单次代价为 O(n)，但分摊到每次插入仍可视为 O(1)？</span></div>
+      <div class="q-line"></div><div class="q-line"></div><div class="q-line"></div>
+    </div>
+  </div>
+
+  <div class="exercises">
+    <div class="ex-title"><span class="ico">★</span>三、编程实践<span class="q-tag">附加题</span></div>
+    <div class="q">
+      <div><span class="q-num">6</span><span class="q-text">用你熟悉的语言实现一个支持自动扩容的哈希表（链地址法），并编写测试验证其增删查功能。要求负载因子超过 0.75 时自动翻倍扩容。</span></div>
+    </div>
+  </div>
+
+  <div class="objectives" style="margin-top:14px">
+    <div class="obj-head"><span class="obj-ico">✓</span>学习自测清单（完成后请打勾）</div>
+    <div class="obj-grid">
+      <div class="obj-item"><span class="chk"></span>我能说出哈希表平均 O(1) 的原因</div>
+      <div class="obj-item"><span class="chk"></span>我能写出至少两种哈希函数方法</div>
+      <div class="obj-item"><span class="chk"></span>我能区分链地址法与开放寻址法</div>
+      <div class="obj-item"><span class="chk"></span>我理解墓碑标记的作用</div>
+      <div class="obj-item"><span class="chk"></span>我会计算负载因子并判断扩容时机</div>
+      <div class="obj-item"><span class="chk"></span>我能举出三个哈希的工程应用</div>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div class="callout tip" style="margin:0">
+      <span class="c-ico">→</span>
+      <div class="c-body">
+        <div class="c-label">下讲预告</div>
+        <div class="c-text">模块 05《图的表示与遍历》——邻接矩阵、邻接表，以及 DFS 与 BFS 两大遍历算法。</div>
+      </div>
+    </div>
+    <div class="callout note" style="margin:0">
+      <span class="c-ico">▤</span>
+      <div class="c-body">
+        <div class="c-label">延伸阅读</div>
+        <div class="c-text">《算法导论》第 11 章 · 散列表；《数据结构与算法分析》第 5 章。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ph"><b>模板说明：</b>本页所有版块（选择题 / 简答题 / 编程实践 / 自测清单 / 预告）均可按需替换文字、增删题目。复制任意版块代码即可在其他课程讲义中复用。</div>
+
+  <div class="runfoot"><span>Axis Design System · 课程讲义模板</span><span>第 <span class="pg">5</span> 页</span></div>
+</section>
+
+</body>
+</html>

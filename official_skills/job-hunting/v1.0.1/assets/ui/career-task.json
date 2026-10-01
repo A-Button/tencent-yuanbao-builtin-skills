@@ -1,0 +1,511 @@
+{
+  "components": [
+    {
+      "id": "root",
+      "component": "Card",
+      "child": "body",
+      "style": {
+        "padding": {
+          "horizontal": 16,
+          "vertical": 14
+        },
+        "containerColor": "basic_container_primary",
+        "shape": 24
+      }
+    },
+    {
+      "id": "body",
+      "component": "Column",
+      "children": [
+        "header-block",
+        "goal-card",
+        "stats-row",
+        "section-title",
+        "todo-list",
+        "action-row"
+      ],
+      "align": "stretch",
+      "style": {
+        "spacing": 0
+      }
+    },
+    {
+      "id": "header-block",
+      "component": "Column",
+      "children": [
+        "source-row",
+        "title"
+      ],
+      "align": "stretch",
+      "style": {
+        "spacing": 6,
+        "padding": {
+          "bottom": 10
+        }
+      }
+    },
+    {
+      "id": "source-row",
+      "component": "Row",
+      "children": [
+        "source-icon",
+        "source-label"
+      ],
+      "align": "center",
+      "style": {
+        "spacing": 4
+      }
+    },
+    {
+      "id": "source-icon",
+      "component": "Text",
+      "text": "✓",
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_function_blue",
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "source-label",
+      "component": "Text",
+      "text": {
+        "path": "/source_label"
+      },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_function_blue",
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "title",
+      "component": "Text",
+      "text": {
+        "path": "/title"
+      },
+      "variant": "h3",
+      "maxLines": 2,
+      "style": {
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "goal-card",
+      "component": "Card",
+      "child": "goal-body",
+      "style": {
+        "padding": {
+          "horizontal": 12,
+          "vertical": 10
+        },
+        "containerColor": "basic_bg_secondary",
+        "shape": 14
+      }
+    },
+    {
+      "id": "goal-body",
+      "component": "Column",
+      "children": [
+        "goal-row",
+        "goal-summary"
+      ],
+      "align": "stretch",
+      "style": {
+        "spacing": 4
+      }
+    },
+    {
+      "id": "goal-row",
+      "component": "Row",
+      "children": [
+        "goal-title",
+        "task-status"
+      ],
+      "justify": "spaceBetween",
+      "align": "center",
+      "style": {
+        "spacing": 8
+      }
+    },
+    {
+      "id": "goal-title",
+      "component": "Text",
+      "text": {
+        "path": "/goal_title"
+      },
+      "variant": "h5",
+      "maxLines": 2,
+      "weight": 1,
+      "style": {
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "task-status",
+      "component": "Text",
+      "text": {
+        "path": "/task_status"
+      },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_function_blue",
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "goal-summary",
+      "component": "Text",
+      "text": {
+        "path": "/goal_summary"
+      },
+      "variant": "caption",
+      "maxLines": 2,
+      "style": {
+        "color": "basic_text_quinary"
+      }
+    },
+    {
+      "id": "stats-row",
+      "component": "Row",
+      "children": [
+        "completed-card",
+        "pending-card",
+        "progress-card"
+      ],
+      "align": "stretch",
+      "style": {
+        "spacing": 6,
+        "padding": {
+          "top": 6
+        }
+      }
+    },
+    {
+      "id": "completed-card",
+      "component": "Card",
+      "child": "completed-block",
+      "weight": 1,
+      "style": {
+        "padding": {
+          "vertical": 10
+        },
+        "containerColor": "basic_bg_secondary",
+        "shape": 14
+      }
+    },
+    {
+      "id": "completed-block",
+      "component": "Column",
+      "children": [
+        "completed-value",
+        "completed-label"
+      ],
+      "align": "center",
+      "style": {
+        "spacing": 2
+      }
+    },
+    {
+      "id": "completed-value",
+      "component": "Text",
+      "text": {
+        "path": "/completed_count"
+      },
+      "variant": "h3",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_function_green",
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "completed-label",
+      "component": "Text",
+      "text": "已完成",
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_text_quinary"
+      }
+    },
+    {
+      "id": "pending-card",
+      "component": "Card",
+      "child": "pending-block",
+      "weight": 1,
+      "style": {
+        "padding": {
+          "vertical": 10
+        },
+        "containerColor": "basic_bg_secondary",
+        "shape": 14
+      }
+    },
+    {
+      "id": "pending-block",
+      "component": "Column",
+      "children": [
+        "pending-value",
+        "pending-label"
+      ],
+      "align": "center",
+      "style": {
+        "spacing": 2
+      }
+    },
+    {
+      "id": "pending-value",
+      "component": "Text",
+      "text": {
+        "path": "/pending_count"
+      },
+      "variant": "h3",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_function_orange",
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "pending-label",
+      "component": "Text",
+      "text": "待准备",
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_text_quinary"
+      }
+    },
+    {
+      "id": "progress-card",
+      "component": "Card",
+      "child": "progress-block",
+      "weight": 1,
+      "style": {
+        "padding": {
+          "vertical": 10
+        },
+        "containerColor": "basic_bg_secondary",
+        "shape": 14
+      }
+    },
+    {
+      "id": "progress-block",
+      "component": "Column",
+      "children": [
+        "progress-value",
+        "progress-label"
+      ],
+      "align": "center",
+      "style": {
+        "spacing": 2
+      }
+    },
+    {
+      "id": "progress-value",
+      "component": "Text",
+      "text": {
+        "path": "/progress"
+      },
+      "variant": "h3",
+      "maxLines": 1,
+      "style": {
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "progress-label",
+      "component": "Text",
+      "text": "完成度 %",
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_text_quinary"
+      }
+    },
+    {
+      "id": "section-title",
+      "component": "Text",
+      "text": {
+        "path": "/section_title"
+      },
+      "variant": "h4",
+      "maxLines": 1,
+      "style": {
+        "fontWeight": 600,
+        "padding": {
+          "top": 12
+        }
+      }
+    },
+    {
+      "id": "todo-list",
+      "component": "Column",
+      "align": "stretch",
+      "children": {
+        "path": "/todos",
+        "componentId": "todo-item"
+      },
+      "style": {
+        "spacing": 6,
+        "padding": {
+          "top": 6
+        }
+      }
+    },
+    {
+      "id": "todo-item",
+      "component": "Card",
+      "child": "todo-body",
+      "style": {
+        "padding": {
+          "horizontal": 12,
+          "vertical": 10
+        },
+        "containerColor": "basic_bg_secondary",
+        "shape": 14
+      }
+    },
+    {
+      "id": "todo-body",
+      "component": "Column",
+      "children": [
+        "todo-heading",
+        "todo-detail"
+      ],
+      "align": "stretch",
+      "style": {
+        "spacing": 4
+      }
+    },
+    {
+      "id": "todo-heading",
+      "component": "Row",
+      "children": [
+        "todo-title",
+        "todo-status-label"
+      ],
+      "justify": "spaceBetween",
+      "align": "center",
+      "style": {
+        "spacing": 8
+      }
+    },
+    {
+      "id": "todo-title",
+      "component": "Text",
+      "text": {
+        "path": "title"
+      },
+      "variant": "h5",
+      "maxLines": 2,
+      "weight": 1,
+      "style": {
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "todo-status-label",
+      "component": "Text",
+      "text": {
+        "path": "label"
+      },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_text_brand",
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "todo-detail",
+      "component": "Text",
+      "text": {
+        "path": "detail"
+      },
+      "variant": "caption",
+      "maxLines": 2,
+      "style": {
+        "color": "basic_text_quinary"
+      }
+    },
+    {
+      "id": "action-row",
+      "component": "Row",
+      "children": [
+        "view-button",
+        "continue-button"
+      ],
+      "justify": "end",
+      "align": "center",
+      "style": {
+        "spacing": 4,
+        "padding": {
+          "top": 12
+        }
+      }
+    },
+    {
+      "id": "view-button",
+      "component": "Button",
+      "child": "view-label",
+      "variant": "default",
+      "style": {
+        "containerColor": "components_button_gray",
+        "shape": 18
+      },
+      "action": {
+        "functionCall": {
+          "call": "sendQuery",
+          "args": {
+            "prompt": {
+              "path": "/actions/0/prompt"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "view-label",
+      "component": "Text",
+      "text": "跟进相关岗位",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_text_primary"
+      }
+    },
+    {
+      "id": "continue-button",
+      "component": "Button",
+      "child": "continue-label",
+      "variant": "primary",
+      "style": {
+        "containerColor": "components_button_primary",
+        "shape": 18
+      },
+      "action": {
+        "functionCall": {
+          "call": "sendQuery",
+          "args": {
+            "prompt": {
+              "path": "/actions/1/prompt"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "continue-label",
+      "component": "Text",
+      "text": "去准备",
+      "maxLines": 1,
+      "style": {
+        "color": "components_button_primary_title"
+      }
+    }
+  ]
+}

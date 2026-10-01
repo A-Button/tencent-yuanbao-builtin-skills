@@ -1,0 +1,172 @@
+/* The continuous wheel with the studio's dark visual style. */
+.app .tarot-wheel{position:relative;width:100%;height:330px;isolation:isolate;overflow:hidden;touch-action:pan-y;user-select:none;cursor:grab;mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)}
+.app .tarot-wheel[data-dragging=true]{cursor:grabbing}
+.tarot-wheel::before{content:'';position:absolute;inset:45% 12% 8%;background:radial-gradient(ellipse,#0005,transparent 68%);filter:blur(16px);pointer-events:none}
+.app .wheel-card{position:absolute;top:var(--wheel-top,96px);left:50%;margin-left:calc(var(--wheel-card-width)/-2);width:var(--wheel-card-width);height:calc(var(--wheel-card-width)*1.75);padding:0;transform-origin:50% 50%;border-radius:7px;outline-offset:6px;cursor:inherit}
+.wheel-leaf{display:block;width:100%;height:100%;transform:translateY(var(--lift,0px));transition:transform .28s cubic-bezier(.18,.75,.3,1),filter .25s;box-shadow:-4px 5px 12px #0007,0 0 0 1px #c9a66370;border-radius:7px;background:var(--surface)}
+.wheel-leaf img{width:100%;height:100%;border-radius:7px;pointer-events:none}
+.app .wheel-card:not(:disabled):hover .wheel-leaf{filter:brightness(1.09)}
+.app .wheel-card:focus-visible .wheel-leaf{--lift:-15px;filter:brightness(1.1)}
+.tarot-wheel.is-busy .wheel-leaf,.tarot-wheel[data-dragging=true] .wheel-leaf{--lift:0px!important;transition-duration:.1s}
+.app .wheel-guide{display:flex;align-items:center;justify-content:center;gap:17px;margin-top:-6px;font-size:11px;letter-spacing:.12em;color:var(--muted)}
+.wheel-guide button{font:20px Georgia,serif;width:40px;height:36px;border:1px solid var(--line);border-radius:50%;opacity:.8}
+.wheel-guide button:disabled{opacity:.25}
+.app .draw-status{margin-top:14px}
+.app .draw-hint{margin-top:5px}
+.app .shuffle{margin-top:8px}
+.spread-options{display:flex;justify-content:center;gap:6px;margin:4px auto 24px}
+.spread-options button{font-size:11px;letter-spacing:.08em;color:var(--muted);padding:7px 14px;border:1px solid transparent;border-radius:20px;transition:background .2s}
+.spread-options button[aria-pressed=true]{border-color:var(--line);color:var(--fg);background:color-mix(in srgb,var(--surface) 40%,transparent)}
+.spread-options button:disabled{opacity:.55}
+.app .card-front{background:#ece1c6;padding:4px}
+.app.dark .card-front{background:#b59a69}
+.app .card-front img{object-fit:fill;border-radius:3px}
+.art-reversed{transform:rotate(180deg)}
+.app .card-caption .orientation{font-style:normal;font-size:9px;letter-spacing:.04em;font-weight:400;opacity:.7;padding:2px 5px;border:1px solid var(--line);border-radius:3px}
+.card-edge{position:absolute;top:1px;bottom:1px;left:50%;width:3px;margin-left:-1.5px;border-radius:1px;background:linear-gradient(90deg,#8f7547,#f3e7c9,#9b835a);transform:rotateY(90deg);opacity:0;transition:opacity .15s;pointer-events:none}
+.tarot-card[data-flip=edge] .card-edge{opacity:1}
+.tarot-card[data-flip]{z-index:20;will-change:transform}
+.card-table-shadow{position:absolute;left:4%;right:4%;bottom:-12px;height:22px;border-radius:50%;background:#0006;filter:blur(10px);opacity:0;pointer-events:none}
+.app .is-receiving{z-index:30}
+.app.phase-lifting .draw-area,.app.phase-revealing .draw-area{z-index:0}
+.app .spread{z-index:3}
+.app .reading-copy .reading-position{font-size:12px!important;border-left:1px solid var(--accent);padding-left:12px;line-height:1.8!important;margin-top:18px}
+.app .reading-copy .reading-source{font-size:10px!important;line-height:1.7!important;opacity:.7}
+.poster-spread h3 em{font-size:11px;font-style:normal;margin-left:6px}
+.poster.poster-single .poster-spread{display:flex;justify-content:center;margin-top:35px}
+.poster.poster-single .poster-spread>div{width:190px}
+.poster.poster-single .poster-ending{margin-top:28px}
+@media(min-width:701px){
+ .app .introduction{padding-bottom:12px}
+ .app .introduction h1{font-size:44px}
+ .app .spread-caption{display:none}
+ .app:not(.is-complete) .slot{width:156px}
+ .app.single-spread:not(.is-complete) .slot{width:165px}
+ .app.single-spread.is-complete .slot{width:214px}
+ .app .position-label{display:flex;justify-content:center;font-size:12px;margin-bottom:10px}
+ .app .card-caption{min-height:64px;font-size:13px;padding-top:11px}
+ .app .card-caption button{font-size:19px}
+ .app .card-caption p{font-size:11px}
+ .app .draw-area{margin-top:3px}
+ .app .experience{min-height:0}
+ .app .footer{margin-top:12px}
+ .app .is-complete .spread-options{margin-bottom:25px}
+}
+@media(max-width:700px){
+ .app .introduction{padding-top:18px;padding-bottom:12px}
+ .app .spread-caption{display:none}
+ .app .spread-options{margin:1px auto 18px;gap:2px}
+ .spread-options button{padding:6px 11px;font-size:10px}
+ .app .position-label{display:flex;justify-content:center;font-size:11px;margin-bottom:10px}
+ .app .card-caption button{font-size:15px;gap:4px;flex-wrap:wrap;justify-content:center}
+ .app .card-caption .position-inline{display:none}
+ .app .card-caption .orientation{font-size:8px;padding:1px 3px}
+ .app .card-caption p{font-size:9px;letter-spacing:0}
+ .app .card-caption{min-height:62px}
+ .app.single-spread .slot{width:115px}
+ .app.single-spread.is-complete .slot{width:142px}
+ .app .draw-area{margin-top:0}
+ .app .wheel-guide{font-size:10px;gap:10px;margin-top:-6px}
+ .app .wheel-guide button{width:34px;height:30px}
+ .app .draw-status{gap:12px}
+ .app .draw-status p{font-size:12px}
+ .app .draw-status strong{font-size:18px}
+ .app .draw-hint{font-size:10px}
+ .app .footer{margin-top:12px}
+}
+@media(prefers-reduced-motion:reduce){.wheel-leaf{transition:none!important}}
+
+.app .question-context{max-width:680px;margin:12px auto 0;color:var(--muted);font-size:12px;line-height:1.7;letter-spacing:.06em;overflow-wrap:anywhere}
+.app .completion-actions{flex-wrap:wrap}
+.app .completion-actions .text-button:last-child{font-size:12px}
+.app .handoff-manual{flex-basis:100%;margin-top:16px;color:var(--muted);font-size:12px;line-height:1.6}
+.app .handoff-manual textarea{display:block;width:min(680px,100%);min-height:110px;margin:8px auto 0;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--fg);font:inherit;resize:vertical}
+@media(max-width:700px){.app .question-context{max-width:340px;padding:0 18px;font-size:10px}.app .completion-actions{justify-content:center}}
+
+@media(min-width:701px) and (max-height:849px){
+ .app:not(.is-complete) .introduction h1{font-size:32px}
+ .app:not(.is-complete) .ornament{margin:5px auto}
+ .app:not(.is-complete) .subtitle{font-size:13px}
+ .app:not(.is-complete) .spread-options{margin-bottom:12px}
+ .app:not(.is-complete) .slot{width:108px}
+ .app:not(.is-complete) .card-caption{min-height:42px;padding-top:7px}
+ .app:not(.is-complete) .card-caption button{font-size:15px}
+ .app:not(.is-complete) .card-caption p{font-size:9px;margin-top:4px}
+ .app:not(.is-complete) .position-inline{display:none}
+ .app:not(.is-complete) .draw-status{margin-top:7px}
+ .app:not(.is-complete) .footer{padding-block:10px}
+}
+
+/* Preserve the draw-stage backdrop instead of recropping it for the result. */
+.app .scene-background{height:var(--draw-scene-height,100%)}
+.app .atmosphere{height:var(--draw-scene-height,100%);bottom:auto}
+.app.is-complete{min-height:max(100dvh,var(--draw-scene-height,100dvh))}
+@media(min-width:701px){}
+
+/* Dark three-card flow, with space for the full shuffle and result copy. */
+.app .topbar{height:78px}
+.app{--slot-width:clamp(150px,13.4vw,190px)}
+.app .experience{display:flex;flex-direction:column;min-height:calc(100svh - 78px)!important;padding:4px 0 24px}
+.app .experience>.introduction,.app .experience>.spread{flex-shrink:0}
+.app .result-guidance.is-placeholder{visibility:hidden}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.app .introduction{padding:10px 20px 28px}
+.app .experience .introduction h1{font-size:clamp(28px,3vw,38px);font-weight:400;letter-spacing:.05em}
+.app .question-context{margin-top:12px}
+.app .result-guidance{margin-top:14px;font-size:13px;line-height:1.8;letter-spacing:.08em;color:var(--muted)}
+.app .spread{gap:clamp(14px,4vw,52px);margin-top:0}
+.app .spread .slot{width:var(--slot-width)}
+.app .empty-card span,.app .empty-card:after{display:none}
+.app .card-caption{min-height:40px;padding-top:10px}
+.app .card-caption button{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:17px;letter-spacing:.03em}
+.app .card-reading{margin:10px 0 0;text-align:left;font-size:14px;line-height:1.9;letter-spacing:.03em;color:var(--muted);overflow-wrap:anywhere}
+.app .draw-area{margin-top:auto;padding-top:16px;flex-shrink:0}
+.app .draw-area>.shuffle{margin:12px auto 0;min-height:44px;padding:10px 20px;font-size:12px;border:1px solid var(--line);border-radius:24px;justify-content:center}
+.app .draw-area>.shuffle:disabled{opacity:.45}
+.app .draw-status{margin-top:7px}
+.app .draw-status p{min-width:0;font-size:13px}
+.app .draw-status strong{font-size:19px}
+.app .shuffle{margin-top:8px}
+.app .completion{justify-content:center;margin:32px auto 0;padding-top:23px;max-width:660px;flex-wrap:wrap}
+.app .completion-actions{justify-content:center;gap:16px;margin:0}
+.app .completion-actions .primary{gap:12px}
+.app .completion-actions .text-button{font-size:13px}
+.app.is-complete .experience{min-height:0}
+.app .share-modal[open]{display:flex;flex-direction:column;align-items:stretch;gap:0;width:min(680px,calc(100% - 28px));max-width:680px;max-height:88dvh;padding:28px;border-radius:24px;overflow:hidden}
+.app .share-modal h2{font-size:23px;font-weight:500;margin:0 30px 8px 0;flex-shrink:0}
+.app .share-hint{font-size:14px;line-height:1.7;color:var(--muted);margin:0 0 18px;flex-shrink:0}
+.app .share-preview{width:100%;height:auto;min-height:0;overflow:auto;overscroll-behavior:contain;border-radius:12px;box-shadow:none;background:#10120f}
+.app .share-preview:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.app .share-preview .generated-poster{display:block;width:100%;height:auto;object-fit:contain;border-radius:12px}
+.app .share-actions{display:flex;justify-content:flex-end;align-items:center;gap:12px;flex-wrap:wrap;width:100%;margin-top:20px;flex-shrink:0}
+.app .share-actions button,.app .share-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;font-size:14px;font-weight:500;line-height:1.4;letter-spacing:0;padding:11px 19px;border-radius:12px}
+.app .share-actions .secondary{background:#252820;color:var(--fg)}
+.app .share-actions .primary{background:var(--button);color:var(--button-fg)}
+.result-poster{width:720px;min-height:1000px;height:auto;padding:52px 52px 60px;background:#10120f;color:#e9d4ae;text-align:center;border:1px solid #b99a6259}
+.result-poster-brand{display:flex;align-items:baseline;justify-content:space-between;font-size:26px;letter-spacing:.12em}
+.result-poster-brand span{font:12px Georgia,serif;letter-spacing:.2em}
+.result-poster h2{margin:60px 0 44px;font-size:36px;font-weight:400;letter-spacing:.05em}
+.result-poster-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.result-poster-cards img{width:100%;aspect-ratio:4/7;object-fit:fill;border:4px solid #b59a69;border-radius:5px}
+.result-poster-cards h3{margin-top:22px;font-size:24px;font-weight:400;white-space:nowrap}
+.result-poster-cards p{margin-top:8px;color:#b9a98e;font-size:15px}
+.result-poster-cards .poster-reading{margin-top:24px;text-align:left;font-size:18px;line-height:1.9;overflow-wrap:anywhere}
+@media(max-width:700px){
+ .app .topbar{height:64px;padding:14px 20px;align-items:center}
+ .app .experience{min-height:calc(100svh - 64px)!important;padding-bottom:22px}
+ .app .introduction{padding:8px 18px 24px}
+ .app .experience .introduction h1{font-size:clamp(23px,6vw,29px);letter-spacing:.02em}
+ .app .result-guidance{font-size:11px;margin-top:10px}
+ .app .spread{gap:12px;padding:0 18px}
+ .app .spread .slot{width:calc((100% - 24px)/3)}
+ .app .card-caption{min-height:50px;padding-top:9px}
+ .app .card-caption button{font-size:14px;flex-wrap:wrap;gap:4px}
+ .app .card-reading{font-size:12px;line-height:1.85;letter-spacing:0;margin-top:5px}
+ .app .completion{margin:26px 22px 0;padding-top:22px}
+ .app .completion-actions{flex-direction:row;gap:12px}
+ .app .completion-actions .primary{width:auto}
+ .app .share-modal[open]{padding:23px;max-width:680px}
+ .app .share-hint{font-size:12px}
+}
+
+@media(min-width:701px) and (max-height:849px){.app{--slot-width:118px}.app .introduction{padding-top:0;padding-bottom:18px}.app .experience .introduction h1{font-size:30px}.app .result-guidance{margin-top:8px;font-size:12px}}

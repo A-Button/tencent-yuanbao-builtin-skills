@@ -1,0 +1,59 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "desc": {
+            "type": "string"
+          },
+          "badge": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1
+              },
+              "tone": {
+                "type": "integer",
+                "enum": [
+                  1,
+                  2
+                ]
+              }
+            },
+            "required": [
+              "text",
+              "tone"
+            ]
+          }
+        },
+        "required": [
+          "item_id",
+          "title"
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 20
+    },
+    "footnote": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "items"
+  ]
+}

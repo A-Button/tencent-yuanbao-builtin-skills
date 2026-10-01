@@ -1,0 +1,750 @@
+{
+  "origin": [
+    {
+      "name": "get_thing",
+      "description": "获取当前用户的 Thing，不限会话。有 thing_id 时读取指定 Thing 及 Todo 完整详情，返回单个 Thing；否则按 keyword 模糊搜索 title、goal，keyword 省略或为空时列出用户的 Thing，返回数组。limit 默认 10；结果可能受服务端上限截断，未找到不能证明不存在，不编造分页参数。修改前读取最新 version、Todo 完整字段与 rule_ids；多个候选不明确时先确认，不默认取第一项。用户身份由运行环境提供。created_at/updated_at 为 unix 秒时间戳（JSON 数字字符串），不是 RFC 3339。Todo 上的 is_agent_updating、agent_update_failed 是服务维护标记：前者表示前端编辑待 Agent 写回，后者表示上次写回失败或超时且主字段仍是修改前原文；它们变为 false 不证明 Trigger 已同步。is_recommended=true 是推荐占位不是库内 Todo，不要对其 write_todos。按 RPC/工具错误及业务回包判断成功，HTTP 200 本身不代表业务成功。",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "thing_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "实际 Thing 查询或创建回包中的 thing_id，不自行生成。"
+          },
+          "keyword": {
+            "type": "string",
+            "description": "按事情的标题、目标搜索；省略或空字符串表示不过滤。"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "列表或搜索的返回数量，默认 10；非正数或超出 int32 范围时使用 10。传 thing_id 时忽略。",
+            "default": 10
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "name": "create_thing",
+      "description": "在当前会话创建一个空 Thing；成功回包 data.thing 是完整 Thing，含真实 thing_id、version 和 todos=[]。同会话可创建多个 Thing，按用户意图确认是否需要新目标；Todo 后续由 write_todos 批量写入。本接口没有 request_id 去重或 deduplicated 回包；创建结果不确定时先按标题、目标搜索核对，不盲目重试，否则可能创建另一件 Thing。",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "description": "事情的简短目标名称。"
+          },
+          "goal": {
+            "type": "string",
+            "description": "持续目标、范围与硬约束；无需补充时可省略。"
+          },
+          "mcp_app_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "有明确关联用途时填写实际已知的应用 ID；无此用途则省略，不为本流程额外创建应用或 Widget。"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      }
+    },
+    {
+      "name": "update_thing",
+      "description": "按 thing_id 和最新 expected_version 修改 Thing 元信息，仅提交要变更的 patch 字段；不修改 Todo 或 Trigger。未传字段不变，goal=\"\" 清空目标。成功回包 data.thing 为更新后的完整 Thing，使用其中的新 version；版本冲突或结果不确定时先重读核对，再合并仍需执行的改动。本接口没有 request_id 或 deduplicated。",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "thing_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "实际 Thing 查询或创建回包中的 thing_id，不自行生成。"
+          },
+          "expected_version": {
+            "type": "string",
+            "description": "最新 Thing 回包的 version，保留整数或数字字符串的原类型；版本冲突后重读 Thing、合并本次改动，再用新版本重试。"
+          },
+          "patch": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "description": "新的事情名称。"
+              },
+              "goal": {
+                "type": "string",
+                "description": "更新目标、范围或硬约束；省略不修改，空字符串清空。"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "CREATING",
+                  "ACTIVE",
+                  "INACTIVE"
+                ],
+                "description": "Thing 状态；修改状态不自动修改 Todo 状态或 Trigger 开关。"
+              },
+              "mcp_app_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": "实际已知的关联应用 ID 非空列表，提供时整组替换；省略不修改。",
+                "minItems": 1
+              }
+            },
+            "description": "仅包含本次要修改的元信息，未传字段保持不变。"
+          }
+        },
+        "required": [
+          "thing_id",
+          "expected_version",
+          "patch"
+        ]
+      }
+    },
+    {
+      "name": "write_todos",
+      "description": "批量写入指定 Thing 的完整 Todo 可写快照，每条不是字段补丁。可更新 title、description、schedule_info 和 status；保留未修改的可写字段及 rule_ids。merge=true 按 todo_id 合并并保留未提交的 Todo；false 替换整表，配合 todos=[] 清空。成功回包 data.thing 为完整 Thing，使用其中的新 version；版本冲突或结果不确定时重读核对后补做未完成修改，不依赖请求去重标记。Todo 更新后，Agent 检查关联 Trigger，按事项变化更新受影响的提示词、条件、取数参数、调度或启用状态。",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "thing_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "实际 Thing 查询或创建回包中的 thing_id，不自行生成。"
+          },
+          "expected_version": {
+            "type": "string",
+            "description": "最新 Thing 回包的 version，保留整数或数字字符串的原类型；版本冲突后重读 Thing、合并本次改动，再用新版本重试。"
+          },
+          "merge": {
+            "type": "boolean",
+            "default": true,
+            "description": "true：按当前 Thing 内的 todo_id 新增或替换提交的完整条目，保留其他条目；false：用 todos 替换整表，遗漏条目会被移除。"
+          },
+          "todos": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "需要推进的具体事项名称；修改后检查关联规则的名称和工作指令是否也需调整。"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "PENDING",
+                    "IN_PROGRESS",
+                    "DONE",
+                    "PAUSED",
+                    "PENDING_CONFIRMING"
+                  ],
+                  "description": "事项进展，未修改时保留已有状态。暂停或完成 Todo 后，Agent 检查并停用不再需要运行的关联规则；用户仍要求的后续动作按需保留。提醒发出或规则命中不等于 DONE；PENDING_CONFIRMING 保留服务已有语义。"
+                },
+                "action": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "label": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "待办动作的展示文案。"
+                    },
+                    "prompt": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "该待办动作对应的工作指令，按用户委托填写；与 Trigger 到点或命中后的投递指令分别维护。"
+                    }
+                  },
+                  "required": [
+                    "label",
+                    "prompt"
+                  ],
+                  "description": "待办完成后的按钮，包含展示文案 label 和点击后发送给模型的 prompt；完整快照更新时保留未修改的配置，省略表示无按钮。"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "供用户查看的事项说明；MONITOR 类型的自然语言监测目标也写在这里。修改后检查关联 Trigger 的判断条件、取数参数和投递内容是否仍符合事项。"
+                },
+                "todo_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "在本 Thing 内预设且不冲突的稳定 ID，与先创建的 Trigger.todo_id 一致；同一创建意图重试复用。使用 (thing_id, todo_id) 联合定位，不假定 todo_id 全局唯一。"
+                },
+                "rule_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "description": "该 Todo 关联的真实 trigger_id 列表，来自 Trigger 创建或查询回包；无规则用 []。保留其他规则引用，仅在对应规则确认取消后移除其 ID。"
+                },
+                "cover_url": {
+                  "type": "string",
+                  "description": "可写封面 URL，未修改时保留回包值。"
+                },
+                "schedule_info": {
+                  "type": "object",
+                  "description": "事项本身的日期、时间或监测安排，可随 Todo 写入；已有安排未修改时必须带回完整配置，清空安排时在该 Todo 完整快照中省略此字段。TIME 填 time，MONITOR 不填 time，监测目标写在 Todo.description。实际提醒或执行时间配置在关联 Trigger；改期或清空安排后，按用户要求同步受影响的规则。",
+                  "additionalProperties": false,
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "TIME",
+                        "MONITOR"
+                      ],
+                      "description": "TIME 为日期或周期安排；MONITOR 为条件监测。"
+                    },
+                    "time": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "cycle": {
+                          "type": "string",
+                          "enum": [
+                            "ONCE",
+                            "DAILY",
+                            "WORKDAY",
+                            "WEEKLY",
+                            "MONTHLY"
+                          ],
+                          "description": "事项安排的周期：单次、每日、工作日、每周或每月；与 Trigger 的提醒周期分别设置。"
+                        },
+                        "time_of_day": {
+                          "type": "string",
+                          "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$",
+                          "description": "本地 24 小时时间 HH:MM，各周期均填写；例如事项是 07:00，提前半小时提醒的 Trigger 为 06:30。"
+                        },
+                        "date": {
+                          "type": "string",
+                          "description": "YYYY-MM-DD；仅 ONCE 填具体日期。MONTHLY 使用 month_days。"
+                        },
+                        "weekdays": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 7
+                          },
+                          "description": "WEEKLY 填周几，周一为 1、周日为 7；WORKDAY 可填写，省略时默认周一至周五。"
+                        },
+                        "timezone": {
+                          "type": "string",
+                          "description": "IANA 时区，如 Asia/Shanghai；空值使用用户或服务端默认时区。"
+                        },
+                        "month_days": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 31
+                          },
+                          "minItems": 1,
+                          "uniqueItems": true,
+                          "description": "仅 MONTHLY：每月哪几天，1–31，升序去重；当月没有该日则跳过。例如 [1,15,31]。"
+                        }
+                      },
+                      "required": [
+                        "cycle",
+                        "time_of_day"
+                      ],
+                      "allOf": [
+                        {
+                          "if": {
+                            "properties": {
+                              "cycle": {
+                                "const": "MONTHLY"
+                              }
+                            },
+                            "required": [
+                              "cycle"
+                            ]
+                          },
+                          "then": {
+                            "required": [
+                              "month_days"
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ],
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "kind": {
+                          "const": "TIME"
+                        }
+                      },
+                      "required": [
+                        "time"
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "kind": {
+                          "const": "MONITOR"
+                        }
+                      },
+                      "not": {
+                        "required": [
+                          "time"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "todo_id",
+                "title",
+                "status",
+                "rule_ids"
+              ]
+            },
+            "description": "本批 Todo 的完整可写快照，最多 100 条；merge=false 且为空数组时清空整表。保留未修改的 title、description、schedule_info、status、cover_url、action 和 rule_ids；单条快照中漏传 schedule_info 会清空其展示安排，不会继承旧值。删除 Todo 前先取消关联 Trigger。不传服务维护的 owner_id、conversation_id、is_agent_updating 或时间戳。"
+          }
+        },
+        "required": [
+          "thing_id",
+          "expected_version",
+          "merge",
+          "todos"
+        ]
+      }
+    },
+    {
+      "name": "trigger/create_trigger",
+      "description": "为指定 Thing 和预设 Todo 创建一条从首次持久化起即停用的 Trigger；Todo 允许尚未落库。无条件规则使用 instruction，条件监测使用 judge。成功返回真实 trigger_id、目标关联、当前配置及状态，将 trigger_id 原样写入 Todo.rule_ids。创建结果不确定时先按 Thing/Todo 查询核对，避免重复创建；需待 Todo 关联和实际依赖授权就绪后再启用。",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "instruction": {
+            "type": "string",
+            "description": "无 judge 时为非空的到点工作指令；有 judge 时必须为空字符串，改用 judge.prompt。仅本次投递动作依赖某个 Skill 的工具时，写明先加载实际已知的准确 Skill 名称再执行；纯提醒不加加载要求。写清目标及必要上下文，不依赖“刚才那个”等历史指代。"
+          },
+          "timezone": {
+            "type": "string",
+            "minLength": 1,
+            "default": "Asia/Shanghai",
+            "description": "IANA 时区名，例如 Asia/Shanghai；run_at、dtstart 按此本地时区解释，不在时间字符串中附加 Z 或偏移量。"
+          },
+          "trigger_kind": {
+            "type": "string",
+            "enum": [
+              "once",
+              "rrule"
+            ],
+            "description": "once 为单次调度，使用 run_at，rrule、dtstart 填空字符串；rrule 为周期调度，使用 rrule 和 dtstart，run_at 填空字符串。"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "description": "规则的简短名称，便于查询和核对。"
+          },
+          "run_at": {
+            "type": "string",
+            "description": "单次调度时刻，格式 YYYYMMDDTHHMMSS，例如 20260911T063000；周期规则填空字符串。按当前真实时间解析相对日期，不静默创建过去的单次时刻。"
+          },
+          "rrule": {
+            "type": "string",
+            "description": "周期规则，不带 RRULE: 前缀；已确认 FREQ=HOURLY/DAILY/WEEKLY/MONTHLY/YEARLY，及 INTERVAL、COUNT 或 UNTIL（二选一）、BYMONTH、BYMONTHDAY、BYDAY。时分秒由 dtstart 承载，不加 BYHOUR/BYMINUTE/BYSECOND；单次规则填空字符串。每小时写 FREQ=HOURLY，每 N 小时加 INTERVAL。分钟重复尚未确认，不承诺支持，也不以大量单次规则模拟。"
+          },
+          "dtstart": {
+            "type": "string",
+            "description": "周期规则的首次候选触发时刻，格式 YYYYMMDDTHHMMSS；其时分秒用于后续周期。单次规则填空字符串。"
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "创建时显式传 false，从创建起保持停用；Todo 写入及依赖准备完成后用 update_trigger 启用。不能先启用再补停用。"
+          },
+          "thing_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "实际 Thing 查询或创建回包中的 thing_id，不自行生成。"
+          },
+          "todo_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "本 Thing 内预设且重试稳定的 Todo ID，允许 Todo 尚未落库；后续 write_todos 必须保存同一 ID。"
+          },
+          "judge": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "condition": {
+                "type": "string",
+                "minLength": 1,
+                "description": "根据取数结果判断是否命中的自然语言条件，写清对象、阈值及必要口径；调用失败、超时或异常结果不等于条件未命中。"
+              },
+              "prompt": {
+                "type": "string",
+                "minLength": 1,
+                "description": "条件命中后向会话投递的工作指令。仅本次投递动作依赖某个 Skill 的工具时，写明先加载实际已知的准确 Skill 名称再执行；纯提醒不加加载要求。写清目标及必要上下文，不依赖“刚才那个”等历史指代。"
+              },
+              "tool_call": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "tool_name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "从已加载场景 Skill 提供的实际工具定义中选择准确名称；不需 tool search，不猜造名称。"
+                  },
+                  "tool_arguments": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "description": "符合该工具实际参数 Schema 的 JSON 对象，不是 JSON 字符串；使用明确、可重用的取数参数，不含凭据。"
+                  }
+                },
+                "required": [
+                  "tool_name",
+                  "tool_arguments"
+                ],
+                "description": "单次取数调用，不把发送邮件等业务写操作用作周期探测；无人值守运行时也必须能解析此工具并使用有效授权。"
+              }
+            },
+            "required": [
+              "condition",
+              "prompt",
+              "tool_call"
+            ],
+            "description": "条件监测：按规则时间调用一次 tool_call，用其结果判断 condition，仅命中时投递 prompt。重复规则通过周期取数轮询，不表示实时事件订阅；持续命中的去重或冷却策略尚未承诺，不保证只通知一次。"
+          }
+        },
+        "required": [
+          "instruction",
+          "trigger_kind",
+          "title",
+          "run_at",
+          "rrule",
+          "dtstart",
+          "enabled",
+          "thing_id",
+          "todo_id",
+          "timezone"
+        ],
+        "allOf": [
+          {
+            "properties": {
+              "enabled": {
+                "const": false
+              }
+            }
+          }
+        ],
+        "oneOf": [
+          {
+            "required": [
+              "judge"
+            ],
+            "properties": {
+              "instruction": {
+                "const": ""
+              }
+            }
+          },
+          {
+            "not": {
+              "required": [
+                "judge"
+              ]
+            },
+            "properties": {
+              "instruction": {
+                "minLength": 1
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "trigger/list_triggers",
+      "description": "查询指定 Thing，可进一步限定 Todo；用于定位真实规则和核对失败后的状态。返回 trigger_id、目标关联、当前配置及状态。恢复创建时包含停用规则；结果达到 limit 时不能视为全部，查询更多仅使用实际返回的分页能力，不编造分页参数。",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "enabled_only": {
+            "type": "boolean",
+            "default": false,
+            "description": "false 同时查询启用及停用规则，用于创建恢复；true 只查启用规则，不能据此认定停用规则不存在。"
+          },
+          "limit": {
+            "type": "integer",
+            "default": 30,
+            "minimum": 1,
+            "maximum": 100,
+            "description": "本次最多返回条数，默认 30，范围 1–100；达到上限时可能还有更多规则。"
+          },
+          "thing_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "实际 Thing 查询或创建回包中的 thing_id，不自行生成。"
+          },
+          "todo_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "可选，限定到该 Thing 内的 Todo。"
+          }
+        },
+        "required": [
+          "thing_id"
+        ]
+      }
+    },
+    {
+      "name": "trigger/update_trigger",
+      "description": "按真实 trigger_id 修改一条 Trigger，未传字段不变，不改绑 Thing/Todo。enabled=false 暂停，true 启用。judge 对象整体替换，null 清除，须同步填写匹配的 instruction；切换 trigger_kind 时一并提交对应时间字段并清空旧类型字段。成功返回 trigger_id、目标关联、当前配置和状态；以真实回包确认修改结果。 Todo 的内容、安排或状态改变后，用本工具同步受影响的规则；保留无关规则及未改动配置。",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "trigger_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "实际创建或查询回包中的 trigger_id，先核对其 Thing/Todo 关联。"
+          },
+          "instruction": {
+            "type": "string",
+            "description": "保持无 judge 或移除 judge 时使用非空到点工作指令；设置或替换 judge 时同次传空字符串，使用 judge.prompt。只改投递内容时也须与现有 judge 配置一致。仅本次投递动作依赖某个 Skill 的工具时，写明先加载实际已知的准确 Skill 名称再执行；纯提醒不加加载要求。写清目标及必要上下文，不依赖“刚才那个”等历史指代。"
+          },
+          "timezone": {
+            "type": "string",
+            "minLength": 1,
+            "default": "Asia/Shanghai",
+            "description": "IANA 时区名，例如 Asia/Shanghai；run_at、dtstart 按此本地时区解释，不在时间字符串中附加 Z 或偏移量。"
+          },
+          "trigger_kind": {
+            "type": "string",
+            "enum": [
+              "once",
+              "rrule"
+            ],
+            "description": "once 为单次调度，使用 run_at，rrule、dtstart 填空字符串；rrule 为周期调度，使用 rrule 和 dtstart，run_at 填空字符串。"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "description": "规则的简短名称，便于查询和核对。"
+          },
+          "run_at": {
+            "type": "string",
+            "description": "单次调度时刻，格式 YYYYMMDDTHHMMSS，例如 20260911T063000；周期规则填空字符串。按当前真实时间解析相对日期，不静默创建过去的单次时刻。"
+          },
+          "rrule": {
+            "type": "string",
+            "description": "周期规则，不带 RRULE: 前缀；已确认 FREQ=HOURLY/DAILY/WEEKLY/MONTHLY/YEARLY，及 INTERVAL、COUNT 或 UNTIL（二选一）、BYMONTH、BYMONTHDAY、BYDAY。时分秒由 dtstart 承载，不加 BYHOUR/BYMINUTE/BYSECOND；单次规则填空字符串。每小时写 FREQ=HOURLY，每 N 小时加 INTERVAL。分钟重复尚未确认，不承诺支持，也不以大量单次规则模拟。"
+          },
+          "dtstart": {
+            "type": "string",
+            "description": "周期规则的首次候选触发时刻，格式 YYYYMMDDTHHMMSS；其时分秒用于后续周期。单次规则填空字符串。"
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "false 停用规则，true 启用规则。Todo 暂停或完成时按该规则是否仍需运行决定停用；恢复 Todo 时仅启用本次需要恢复的规则。启用前确认目标 Todo 已保存、rule_ids 关联正确及所需授权就绪。"
+          },
+          "judge": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "condition": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "根据取数结果判断是否命中的自然语言条件，写清对象、阈值及必要口径；调用失败、超时或异常结果不等于条件未命中。"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "条件命中后向会话投递的工作指令。仅本次投递动作依赖某个 Skill 的工具时，写明先加载实际已知的准确 Skill 名称再执行；纯提醒不加加载要求。写清目标及必要上下文，不依赖“刚才那个”等历史指代。"
+                  },
+                  "tool_call": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "tool_name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "从已加载场景 Skill 提供的实际工具定义中选择准确名称；不需 tool search，不猜造名称。"
+                      },
+                      "tool_arguments": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "description": "符合该工具实际参数 Schema 的 JSON 对象，不是 JSON 字符串；使用明确、可重用的取数参数，不含凭据。"
+                      }
+                    },
+                    "required": [
+                      "tool_name",
+                      "tool_arguments"
+                    ],
+                    "description": "单次取数调用，不把发送邮件等业务写操作用作周期探测；无人值守运行时也必须能解析此工具并使用有效授权。"
+                  }
+                },
+                "required": [
+                  "condition",
+                  "prompt",
+                  "tool_call"
+                ],
+                "description": "条件监测：按规则时间调用一次 tool_call，用其结果判断 condition，仅命中时投递 prompt。重复规则通过周期取数轮询，不表示实时事件订阅；持续命中的去重或冷却策略尚未承诺，不保证只通知一次。"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "不传则保持；传对象整体替换并同次传 instruction=\"\"；传 null 清除判断并同次传非空 instruction。"
+          }
+        },
+        "required": [
+          "trigger_id"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "judge"
+              ],
+              "properties": {
+                "judge": {
+                  "type": "object"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "instruction"
+              ],
+              "properties": {
+                "instruction": {
+                  "const": ""
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "judge"
+              ],
+              "properties": {
+                "judge": {
+                  "type": "null"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "instruction"
+              ],
+              "properties": {
+                "instruction": {
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "trigger/delete_trigger",
+      "description": "按真实 trigger_id 取消一条 Trigger。仅在工具明确成功后，用 write_todos 从对应 Todo.rule_ids 移除该 ID，保留其他引用；结果不确定时先查询核对，不能宣称已取消。临时暂停使用 update_trigger(enabled=false)。",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "trigger_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "实际创建或查询回包中的 trigger_id，先核对目标 Thing/Todo，避免取消其他规则。"
+          }
+        },
+        "required": [
+          "trigger_id"
+        ]
+      }
+    },
+    {
+      "name": "show_widget",
+      "description": "Publish a Now card using card_type, title, common fields and data. Read make-things references. User and conversation come from trusted context. Returns now_id. Creation is not idempotent; do not retry an uncertain result automatically.",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "thingId": {
+            "type": "string",
+            "description": "关联的真实 Thing ID，可选。"
+          },
+          "todoId": {
+            "type": "string",
+            "description": "关联的真实 Todo ID；填写时同时提供 thingId。"
+          },
+          "card_type": {
+            "type": "string",
+            "enum": [
+              "image_text",
+              "recommend_list",
+              "todo_remind",
+              "todo_choice",
+              "stock"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object",
+            "description": "来源：{label}。"
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "按钮：{action_id,label,tap}，格式见 Reference。"
+          },
+          "tap": {
+            "type": "object",
+            "description": "整卡点击落地，格式见 Reference。"
+          },
+          "data": {
+            "type": "object",
+            "description": "卡片正文。调用前阅读 make-things 中 card_type 对应的 Reference。"
+          }
+        },
+        "required": [
+          "card_type",
+          "title",
+          "data"
+        ]
+      }
+    }
+  ]
+}

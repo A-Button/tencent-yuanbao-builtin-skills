@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.pyo
+
+# 业务数据不入 git（每个部署实例独立）
+data/db/
+data/reports/

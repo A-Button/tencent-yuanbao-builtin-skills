@@ -1,0 +1,16 @@
+{
+  "name": "ark-novel-to-tuiwen",
+  "slug": "ark-novel-to-tuiwen",
+  "version": "2.0.0",
+  "description": "【最终版】小说章节爆改抖音爆款小说推文神器。输入：小说原文（任意章节/多章节）；输出：第一人称口播文案+人物卡+场景卡+追更钩子。完全符合抖音小说推广节奏：短句+强画面+强冲突+强代入+钩子结尾。",
+  "author": "你的名字",
+  "tags": ["小说推文", "抖音", "内容创作", "文案生成", "爆款文案"],
+  "category": "content-creation",
+  "compatibility": {
+    "openclaw": ">=2026.1.0",
+    "platforms": ["windows", "macos", "linux"]
+  },
+  "homepage": "",
+  "repository": "",
+  "license": "MIT"
+}

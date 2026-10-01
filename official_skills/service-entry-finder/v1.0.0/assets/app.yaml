@@ -1,0 +1,59 @@
+id: service-entry-finder
+name: 小程序入口
+version: v1.0.0
+description: 核对匹配后交付一个小程序首页入口。
+resources:
+  - uri: ai_apps.skills.service_entry_entry_res
+    name: 小程序入口
+    description: 单个小程序首页入口。
+    path: assets/ui/card.json
+    mimeType: application/a2ui+json
+    dataMode: keep_latest
+tools:
+  - name: build_card
+    title: 交付小程序入口
+    description: 仅接收已经核对匹配的一个候选的三个身份字段。固定打开首页，不接受额外跳转参数；结构化事件交给客户端，模型只接收名称和交付状态。
+    inputSchema:
+      type: object
+      required: [basic_info]
+      additionalProperties: false
+      properties:
+        basic_info:
+          type: object
+          required: [username, nickname]
+          additionalProperties: false
+          properties:
+            username:
+              type: string
+              pattern: '^gh_[A-Za-z0-9_]{1,64}$'
+            nickname:
+              type: string
+              minLength: 1
+              maxLength: 100
+            head_img_url:
+              type: string
+              maxLength: 2048
+              description: 原样复制召回结果的微信图标地址；缺失时省略。
+    outputSchema:
+      oneOf:
+        - type: object
+          additionalProperties: false
+          required: [ok, result, name]
+          properties:
+            ok: {type: boolean, const: true}
+            result: {type: string, const: card_emitted}
+            name: {type: string}
+        - type: object
+          additionalProperties: false
+          required: [ok, result, message]
+          properties:
+            ok: {type: boolean, const: false}
+            result: {type: string, const: not_emitted}
+            message: {type: string}
+    handler:
+      type: script
+      path: scripts/_run.py
+    _meta:
+      ui:
+        resourceUri: ai_apps.skills.service_entry_entry_res
+        visibility: [model, app]

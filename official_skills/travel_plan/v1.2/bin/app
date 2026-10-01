@@ -1,0 +1,648 @@
+#!/usr/bin/env python3
+"""OneAgent 统一 App Skill CLI。
+
+用法：
+    app <skill> toollist
+    app <skill> describe
+    app <skill> <tool> '<json>'
+
+环境变量：
+    ONEAGENT_SKILLS_ROOT   skill 根目录，默认本仓库根；沙箱可设为 /data/skills
+    ONEAGENT_APP_CALLER    model | app；未设置则不按身份拦截
+
+handler.type=script（默认）：执行脚本，stdout 为完整业务 JSON。
+handler.type=python：独立 worker 调用与 tool.name 同名的同步函数，可用 handler.function 覆盖。
+stdout 给模型，返回值给 UI。
+"""
+
+from __future__ import annotations
+
+import importlib.util
+import inspect
+import json
+import keyword
+import os
+import subprocess
+import sys
+import tempfile
+import traceback
+import uuid
+from pathlib import Path
+from typing import Any
+
+APP_RESULT_MARKER = "__ONEAGENT_APP_RESULT__"
+RESERVED = {"toollist", "describe"}
+CALLERS = {"model", "app"}
+
+# stdout 预算：沙箱 runtime 会截断过长的 stdout，截断后 sentinel 行解析不出来，
+# 整条 app.data 链路就断了。超预算时把完整信封落盘，stdout 只回预览 + 文件路径。
+MAX_STDOUT_CHARS = 30000
+RESULT_DIR = "/data/workspace/.app_result"
+TRUNCATE_NOTE = "\n... [已省略 {omitted} 字符，完整结果见 {path}]"
+
+
+class CLIError(Exception):
+    def __init__(self, code: str, message: str) -> None:
+        super().__init__(message)
+        self.code = code
+        self.message = message
+
+
+class SchemaError(ValueError):
+    def __init__(self, path: str, message: str) -> None:
+        self.path = path
+        detail = f"{path}: {message}" if path else message
+        super().__init__(detail)
+
+
+def skills_root() -> Path:
+    raw = (os.environ.get("ONEAGENT_SKILLS_ROOT") or "").strip()
+    if raw:
+        return Path(raw)
+    return Path(__file__).resolve().parent.parent
+
+
+def caller_identity() -> str:
+    return (os.environ.get("ONEAGENT_APP_CALLER") or "").strip()
+
+
+def emit_error(code: str, message: str) -> int:
+    print(json.dumps(
+        {"phase": "error", "code": code, "message": message},
+        ensure_ascii=False,
+        separators=(",", ":"),
+    ))
+    return 2
+
+
+def dump(payload: Any) -> None:
+    print(json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
+
+
+def find_skill_dir(name: str) -> Path:
+    root = skills_root() / name
+    if not root.is_dir():
+        raise CLIError("SKILL_NOT_FOUND", f"找不到 skill 目录：{name}")
+    return root
+
+
+def find_app_yaml(skill_dir: Path) -> Path:
+    for candidate in (skill_dir / "assets" / "app.yaml", skill_dir / "app.yaml"):
+        if candidate.is_file():
+            return candidate
+    raise CLIError("NO_APP_YAML", "app.yaml not found")
+
+
+def load_manifest(path: Path) -> dict[str, Any]:
+    try:
+        import yaml  # type: ignore
+    except ImportError as exc:
+        raise CLIError("BAD_APP_YAML", "sandbox 缺少 PyYAML，无法解析 app.yaml") from exc
+    try:
+        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    except (OSError, UnicodeError) as exc:
+        raise CLIError("BAD_APP_YAML", f"无法读取 app.yaml：{exc}") from exc
+    except Exception as exc:  # yaml.YAMLError
+        raise CLIError("BAD_APP_YAML", f"app.yaml 解析失败：{exc}") from exc
+    if not isinstance(data, dict):
+        raise CLIError("BAD_APP_YAML", "app.yaml 根节点必须是对象")
+    return data
+
+
+def tool_handler_path(tool: dict[str, Any]) -> str:
+    handler = tool.get("handler") or {}
+    if isinstance(handler, dict) and handler.get("path"):
+        return str(handler["path"])
+    return str(tool.get("path") or "")
+
+
+def tool_handler_type(tool: dict[str, Any]) -> str:
+    handler = tool.get("handler") or {}
+    if not isinstance(handler, dict):
+        raise CLIError("INVALID_HANDLER", "handler 必须是对象")
+    kind = handler.get("type") or "script"
+    if kind not in ("script", "python"):
+        raise CLIError("INVALID_HANDLER", "handler.type 只支持 script 或 python")
+    if kind == "python" and "entrypoint" in handler:
+        raise CLIError("INVALID_HANDLER", "请使用 handler.function 指定函数，不支持 entrypoint")
+    return kind
+
+
+def tool_handler_function(tool: dict[str, Any]) -> str:
+    """仅缺省时使用工具名；显式空值或错误配置不能偷偷回退。"""
+    handler = tool.get("handler") or {}
+    function_name = handler["function"] if "function" in handler else tool.get("name")
+    if not isinstance(function_name, str) or not function_name.isidentifier() or keyword.iskeyword(function_name):
+        raise CLIError(
+            "INVALID_HANDLER",
+            "python handler 的函数名必须是非关键字的 Python 简单标识符；"
+            "默认使用 tool.name，名称不合法时请通过 handler.function 指定有效函数名",
+        )
+    return function_name
+
+
+def tool_visibility(tool: dict[str, Any]) -> list[str]:
+    raw = tool.get("visibility")
+    if not raw:
+        meta = tool.get("_meta") if isinstance(tool.get("_meta"), dict) else {}
+        ui = meta.get("ui") if isinstance(meta, dict) else {}
+        raw = ui.get("visibility") if isinstance(ui, dict) else None
+    if isinstance(raw, str):
+        return [raw]
+    if isinstance(raw, list) and raw:
+        return [str(item) for item in raw]
+    return ["model", "app"]
+
+
+def tool_resource_uri(tool: dict[str, Any]) -> str:
+    if tool.get("resourceUri"):
+        return str(tool["resourceUri"])
+    meta = tool.get("_meta") if isinstance(tool.get("_meta"), dict) else {}
+    ui = meta.get("ui") if isinstance(meta, dict) else {}
+    if isinstance(ui, dict) and ui.get("resourceUri"):
+        return str(ui["resourceUri"])
+    return ""
+
+
+def iter_tools(manifest: dict[str, Any]) -> list[dict[str, Any]]:
+    tools: list[dict[str, Any]] = []
+    for item in manifest.get("tools") or []:
+        if isinstance(item, dict) and item.get("name"):
+            tools.append(item)
+    if tools:
+        return tools
+    for item in manifest.get("scripts") or []:
+        if isinstance(item, dict) and item.get("name"):
+            tools.append(item)
+    return tools
+
+
+def resolve_tool(manifest: dict[str, Any], name: str) -> dict[str, Any]:
+    for tool in iter_tools(manifest):
+        if tool.get("name") == name:
+            return tool
+    raise CLIError("UNKNOWN_TOOL", f"不支持的工具：{name}")
+
+
+def resolve_resource(manifest: dict[str, Any], uri: str) -> dict[str, Any] | None:
+    if not uri:
+        return None
+    for item in manifest.get("resources") or []:
+        if isinstance(item, dict) and item.get("uri") == uri:
+            out: dict[str, Any] = {"uri": uri}
+            for key in ("name", "mimeType", "description", "dataMode"):
+                if item.get(key):
+                    out[key] = item[key]
+            if isinstance(item.get("_meta"), dict):
+                out["_meta"] = item["_meta"]
+            return out
+    return {"uri": uri}
+
+
+def visible_to_caller(tool: dict[str, Any]) -> bool:
+    caller = caller_identity()
+    if not caller:
+        return True
+    if caller not in CALLERS:
+        raise CLIError("INVALID_ARGUMENT", f"ONEAGENT_APP_CALLER 必须是 {sorted(CALLERS)} 之一")
+    return caller in tool_visibility(tool)
+
+
+def public_tool(tool: dict[str, Any]) -> dict[str, Any]:
+    out: dict[str, Any] = {"name": tool["name"]}
+    for key in ("title", "description", "inputSchema"):
+        if tool.get(key) is not None:
+            out[key] = tool[key]
+    out["visibility"] = tool_visibility(tool)
+    return out
+
+
+def join_path(base: str, key: str | int) -> str:
+    if isinstance(key, int):
+        return f"{base}[{key}]" if base else f"[{key}]"
+    return f"{base}.{key}" if base else str(key)
+
+
+def type_names(expected: Any) -> list[str]:
+    if isinstance(expected, list):
+        return [str(item) for item in expected]
+    if expected is None:
+        return []
+    return [str(expected)]
+
+
+def matches_type(value: Any, expected: str) -> bool:
+    if expected == "string":
+        return isinstance(value, str)
+    if expected == "integer":
+        return isinstance(value, int) and not isinstance(value, bool)
+    if expected == "number":
+        return isinstance(value, (int, float)) and not isinstance(value, bool)
+    if expected == "boolean":
+        return isinstance(value, bool)
+    if expected == "object":
+        return isinstance(value, dict)
+    if expected == "array":
+        return isinstance(value, list)
+    if expected == "null":
+        return value is None
+    return True
+
+
+def validate_schema(instance: Any, schema: Any, path: str = "") -> None:
+    if not isinstance(schema, dict):
+        return
+    expected_types = type_names(schema.get("type"))
+    if expected_types and not any(matches_type(instance, item) for item in expected_types):
+        raise SchemaError(path or "value", f"必须是 {' | '.join(expected_types)}")
+    if "enum" in schema and instance not in schema["enum"]:
+        raise SchemaError(path or "value", f"必须是 {schema['enum']} 之一")
+    if "const" in schema and instance != schema["const"]:
+        raise SchemaError(path or "value", f"必须等于 {schema['const']!r}")
+    if isinstance(instance, str):
+        if "minLength" in schema and len(instance) < int(schema["minLength"]):
+            raise SchemaError(path or "value", f"长度至少 {schema['minLength']}")
+        if "maxLength" in schema and len(instance) > int(schema["maxLength"]):
+            raise SchemaError(path or "value", f"长度至多 {schema['maxLength']}")
+    if isinstance(instance, (int, float)) and not isinstance(instance, bool):
+        if "minimum" in schema and instance < schema["minimum"]:
+            raise SchemaError(path or "value", f"不能小于 {schema['minimum']}")
+        if "maximum" in schema and instance > schema["maximum"]:
+            raise SchemaError(path or "value", f"不能大于 {schema['maximum']}")
+        if "exclusiveMinimum" in schema and instance <= schema["exclusiveMinimum"]:
+            raise SchemaError(path or "value", f"必须大于 {schema['exclusiveMinimum']}")
+        if "exclusiveMaximum" in schema and instance >= schema["exclusiveMaximum"]:
+            raise SchemaError(path or "value", f"必须小于 {schema['exclusiveMaximum']}")
+    if isinstance(instance, dict):
+        validate_object(instance, schema, path)
+    if isinstance(instance, list):
+        validate_array(instance, schema, path)
+
+
+def validate_object(instance: dict[str, Any], schema: dict[str, Any], path: str) -> None:
+    props = schema.get("properties") if isinstance(schema.get("properties"), dict) else {}
+    for key in schema.get("required") or []:
+        if key not in instance:
+            raise SchemaError(join_path(path, str(key)), "缺少必填字段")
+    additional = schema.get("additionalProperties", True)
+    for key, value in instance.items():
+        if key in props:
+            validate_schema(value, props[key], join_path(path, key))
+        elif additional is False:
+            raise SchemaError(join_path(path, key), "不在 schema 中")
+        elif isinstance(additional, dict):
+            validate_schema(value, additional, join_path(path, key))
+
+
+def validate_array(instance: list[Any], schema: dict[str, Any], path: str) -> None:
+    if "minItems" in schema and len(instance) < int(schema["minItems"]):
+        raise SchemaError(path or "value", f"至少 {schema['minItems']} 项")
+    if "maxItems" in schema and len(instance) > int(schema["maxItems"]):
+        raise SchemaError(path or "value", f"至多 {schema['maxItems']} 项")
+    items = schema.get("items")
+    if isinstance(items, dict):
+        for index, value in enumerate(instance):
+            validate_schema(value, items, join_path(path, index))
+
+
+def parse_args_json(raw: str) -> dict[str, Any]:
+    try:
+        payload = json.loads(raw or "{}")
+    except json.JSONDecodeError as exc:
+        raise CLIError("INVALID_ARGUMENT", "参数必须是合法 JSON") from exc
+    if not isinstance(payload, dict):
+        raise CLIError("INVALID_ARGUMENT", "参数必须是对象")
+    return payload
+
+
+def validate_call_args(tool: dict[str, Any], args: dict[str, Any]) -> None:
+    if not visible_to_caller(tool):
+        raise CLIError("FORBIDDEN", f"当前 caller 不能调用工具：{tool.get('name')}")
+    schema = tool.get("inputSchema")
+    if schema is None:
+        return
+    try:
+        validate_schema(args, schema)
+    except SchemaError as exc:
+        raise CLIError("INVALID_ARGUMENT", str(exc)) from exc
+
+
+def listed_tools(manifest: dict[str, Any]) -> list[dict[str, Any]]:
+    return [public_tool(tool) for tool in iter_tools(manifest) if visible_to_caller(tool)]
+
+
+def app_identity(manifest: dict[str, Any], skill: str) -> dict[str, str]:
+    app_id = str(manifest.get("id") or skill)
+    identity = {
+        "id": app_id,
+        "name": str(manifest.get("name") or app_id),
+        "version": str(manifest.get("version") or ""),
+    }
+    if manifest.get("description"):
+        identity["description"] = str(manifest["description"])
+    return identity
+
+
+def cmd_toollist(skill: str, manifest: dict[str, Any]) -> int:
+    dump({"app": app_identity(manifest, skill), "tools": listed_tools(manifest)})
+    return 0
+
+
+def cmd_describe(skill: str, manifest: dict[str, Any]) -> int:
+    tools = listed_tools(manifest)
+    example = tools[0]["name"] if tools else "<tool>"
+    dump({
+        "app": app_identity(manifest, skill),
+        "invocation": f"app {skill} {example} '<json>'",
+        "describe": f"app {skill} describe",
+        "toollist": f"app {skill} toollist",
+        "tools": tools,
+    })
+    return 0
+
+
+def build_result_record(
+    *,
+    skill: str,
+    manifest: dict[str, Any],
+    tool: dict[str, Any],
+    arguments: dict[str, Any],
+    structured: dict[str, Any],
+) -> dict[str, Any]:
+    record: dict[str, Any] = {
+        "source": "skill",
+        "app": app_identity(manifest, skill),
+        "toolName": str(tool.get("name") or ""),
+        "arguments": arguments,
+        "status": "error" if structured.get("phase") == "error" else "success",
+        "structuredContent": structured,
+        "content": [],
+    }
+    uri = tool_resource_uri(tool)
+    if uri:
+        record["resourceUri"] = uri
+        resource = resolve_resource(manifest, uri)
+        if resource:
+            record["resource"] = resource
+    return record
+
+
+def handler_error(code: str, message: str) -> dict[str, Any]:
+    return {"phase": "error", "code": code, "message": message, "retryable": False}
+
+
+def python_worker(script_path: str, function_name: str, result_path: str, raw_args: str) -> int:
+    """内部子进程入口。stdout/stderr 留给业务，返回值走私有文件。
+
+    Worker 随单文件 CLI 安装；它不是 skill 需要依赖或调用的 SDK。
+    父进程只在子进程结束后读取文件，TemporaryDirectory 负责隔离和清理。
+    """
+    result_file = Path(result_path).resolve()
+    try:
+        script = Path(script_path).resolve()
+        args = json.loads(raw_args)
+        sys.path[:0] = [str(script.parent), str(Path.cwd())]
+        sys.argv = [str(script)]
+        name = "_oneagent_app_handler"
+        spec = importlib.util.spec_from_file_location(name, script)
+        if spec is None or spec.loader is None:
+            raise CLIError("INVALID_HANDLER", "无法加载 Python handler 模块")
+        module = importlib.util.module_from_spec(spec)
+        # dataclasses 等库会通过 __module__ 查找模块。
+        sys.modules[name] = module
+        spec.loader.exec_module(module)
+        function = getattr(module, function_name, None)
+        if not callable(function):
+            raise CLIError("HANDLER_FUNCTION_MISSING", f"Python handler 中没有可调用的函数：{function_name}")
+        if inspect.iscoroutinefunction(function) or inspect.isasyncgenfunction(function):
+            raise CLIError("INVALID_HANDLER_RESULT", f"{function_name}(args) 必须是同步函数")
+        structured = function(args)
+        if structured is not None and not isinstance(structured, dict):
+            if inspect.iscoroutine(structured):
+                structured.close()
+            raise CLIError("INVALID_HANDLER_RESULT", f"{function_name}(args) 必须返回 JSON 对象或 None")
+        try:
+            serialized = json.dumps(
+                {"ok": True, "structuredContent": structured},
+                ensure_ascii=False, allow_nan=False, separators=(",", ":"),
+            )
+        except (TypeError, ValueError, OverflowError, RecursionError) as exc:
+            raise CLIError("INVALID_HANDLER_RESULT", f"{function_name}(args) 的返回值必须可序列化为合法 JSON") from exc
+        result_file.write_text(serialized, encoding="utf-8")
+        return 0
+    except (Exception, SystemExit) as exc:
+        # 不把业务异常原文或堆栈塞进模型/UI 载荷。
+        traceback.print_exc(file=sys.stderr)
+        error = handler_error(
+            exc.code if isinstance(exc, CLIError) else "HANDLER_EXECUTION_FAILED",
+            exc.message if isinstance(exc, CLIError) else "业务脚本未正常完成，请查看诊断日志。",
+        )
+        try:
+            result_file.write_text(json.dumps({"ok": False, "error": error}, ensure_ascii=False), encoding="utf-8")
+        except OSError:
+            traceback.print_exc(file=sys.stderr)
+        return 1
+
+
+def escape_handler_markers(output: str) -> str:
+    """业务文本不是控制记录，即使 stdout/stderr 最终被宿主合并也不能伪造事件。"""
+    return "".join(
+        "[handler] " + line if line.startswith(APP_RESULT_MARKER) else line
+        for line in output.splitlines(keepends=True)
+    )
+
+
+def run_python_handler(script: Path, skill_dir: Path, function_name: str, args_json: str) -> tuple[str, dict[str, Any] | None, int]:
+    """在独立 worker 中调用函数；不从 stdout 猜测/提取 UI 数据。"""
+    with tempfile.TemporaryDirectory(prefix="app-worker-") as temporary:
+        result_file = Path(temporary) / "result.json"
+        env = os.environ.copy()
+        env["PYTHONIOENCODING"] = "utf-8"
+        completed = subprocess.run(
+            [sys.executable, str(Path(__file__).resolve()), "--_python-worker",
+             str(script), function_name, str(result_file), args_json],
+            capture_output=True, text=True, encoding="utf-8", errors="replace",
+            check=False, cwd=str(skill_dir), env=env,
+        )
+        if completed.stderr:
+            sys.stderr.write(escape_handler_markers(completed.stderr))
+        model_output = escape_handler_markers(completed.stdout)
+        try:
+            payload = json.loads(result_file.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            payload = {"ok": False, "error": handler_error(
+                "HANDLER_RESULT_MISSING", "未收到有效的函数执行结果；操作是否已生效需先查询确认。",
+            )}
+        if completed.returncode == 0 and payload.get("ok") is True:
+            return model_output, payload["structuredContent"], 0
+        error = payload.get("error") or handler_error(
+            "HANDLER_EXECUTION_FAILED", "业务脚本进程异常退出；操作是否已生效需先查询确认。",
+        )
+        # 错误放在前面，不能被后续的模型输出预算截掉。
+        output = json.dumps(error, ensure_ascii=False, separators=(",", ":")) + "\n" + model_output
+        return output, error, 1
+
+
+def cmd_call(skill: str, skill_dir: Path, manifest: dict[str, Any], tool_name: str, raw_args: str) -> int:
+    tool = resolve_tool(manifest, tool_name)
+    args = parse_args_json(raw_args)
+    validate_call_args(tool, args)
+    kind = tool_handler_type(tool)
+    function_name = tool_handler_function(tool) if kind == "python" else ""
+    rel = tool_handler_path(tool)
+    if not rel:
+        raise CLIError("SCRIPT_MISSING", f"工具未声明 handler.path：{tool_name}")
+    script = (skill_dir / rel).resolve()
+    if not script.is_file():
+        raise CLIError("SCRIPT_MISSING", f"脚本不存在：{rel}")
+    args_json = json.dumps(args, ensure_ascii=False, separators=(",", ":"))
+    if kind == "python":
+        output, structured, exit_code = run_python_handler(script, skill_dir, function_name, args_json)
+        if structured is None:
+            sys.stdout.write(model_preview(output, MAX_STDOUT_CHARS))
+        else:
+            emit_call_result(output, build_result_record(
+                skill=skill, manifest=manifest, tool=tool, arguments=args, structured=structured,
+            ), separate_model_output=True)
+        return exit_code
+    completed = subprocess.run(
+        [sys.executable, str(script), args_json],
+        capture_output=True,
+        text=True,
+        check=False,
+        cwd=str(skill_dir),
+        env=os.environ.copy(),
+    )
+    if completed.stderr:
+        sys.stderr.write(completed.stderr)
+    output = completed.stdout.strip()
+    try:
+        structured = json.loads(output)
+    except json.JSONDecodeError:
+        print(output)
+        return completed.returncode or 1
+    if not isinstance(structured, dict):
+        print(output)
+        return completed.returncode or 1
+    emit_call_result(output, build_result_record(
+        skill=skill,
+        manifest=manifest,
+        tool=tool,
+        arguments=args,
+        structured=structured,
+    ))
+    return completed.returncode
+
+
+def sentinel_line(record: dict[str, Any]) -> str:
+    return APP_RESULT_MARKER + " " + json.dumps(
+        record, ensure_ascii=False, separators=(",", ":")
+    )
+
+
+def write_result_file(record: dict[str, Any]) -> str:
+    """把完整信封写进 RESULT_DIR，返回文件路径；失败返回空串。"""
+    try:
+        directory = Path(RESULT_DIR)
+        directory.mkdir(parents=True, exist_ok=True)
+        path = directory / f"{uuid.uuid4().hex}.json"
+        path.write_text(
+            json.dumps(record, ensure_ascii=False, separators=(",", ":")),
+            encoding="utf-8",
+        )
+        return str(path)
+    except OSError as exc:
+        sys.stderr.write(f"结果落盘失败：{exc}\n")
+        return ""
+
+
+def model_preview(output: str, budget: int) -> str:
+    """新协议只截断模型文本；不引导模型读取完整 UI 信封。"""
+    if len(output) <= budget:
+        return output
+    note = "\n... [模型输出已截断]\n"
+    return output[:max(0, budget - len(note))] + note[:budget]
+
+
+def emit_python_result(output: str, record: dict[str, Any]) -> None:
+    line = sentinel_line(record)
+    if len(output) + len(line) + 2 > MAX_STDOUT_CHARS:
+        path = write_result_file(record)
+        if not path:
+            # 不回退成超预算的 UI JSON：那会让 sentinel 被截断并混入模型文本。
+            raise CLIError("RESULT_WRITE_FAILED", "UI 结果保存失败；操作可能已完成，请先查询确认。")
+        line = sentinel_line({
+            "app": {"id": record["app"]["id"]},
+            "toolName": record["toolName"],
+            "resultFile": path,
+        })
+    preview = model_preview(output, max(0, MAX_STDOUT_CHARS - len(line) - 2))
+    sys.stdout.write(preview)
+    if preview and not preview.endswith("\n"):
+        sys.stdout.write("\n")
+    print(line)
+
+
+def emit_call_result(output: str, record: dict[str, Any], *, separate_model_output: bool = False) -> None:
+    """打印业务 stdout + sentinel。
+
+    两段之和在预算内就照常内联；超预算则把完整信封落盘，sentinel 去掉
+    structuredContent 换成 resultFile，业务段截成预览。落盘失败退回内联。
+    """
+    if separate_model_output:
+        emit_python_result(output, record)
+        return
+    inline = sentinel_line(record)
+    # 两个 print 各带一个换行
+    if len(output) + len(inline) + 2 <= MAX_STDOUT_CHARS:
+        print(output)
+        print(inline)
+        return
+
+    path = write_result_file(record)
+    if not path:
+        print(output)
+        print(inline)
+        return
+
+    slim = {key: value for key, value in record.items() if key != "structuredContent"}
+    slim["resultFile"] = path
+    slim_line = sentinel_line(slim)
+    # 先用 omitted 的长度上界算预算，再用真实 omitted 渲染提示：note 只会更短，
+    # 所以总量恒不超预算，且不必迭代收敛。
+    note_upper = TRUNCATE_NOTE.format(omitted=len(output), path=path)
+    budget = max(0, MAX_STDOUT_CHARS - len(slim_line) - len(note_upper) - 2)
+    print(output[:budget] + TRUNCATE_NOTE.format(omitted=len(output) - budget, path=path))
+    print(slim_line)
+
+
+def usage() -> str:
+    return "用法：app <skill> toollist | describe | <tool> '<json>'"
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = list(sys.argv[1:] if argv is None else argv)
+    if args and args[0] == "--_python-worker":
+        if len(args) != 5:
+            return 2
+        return python_worker(args[1], args[2], args[3], args[4])
+    if not args or args[0] in {"-h", "--help"}:
+        print(usage())
+        return 0 if args else 2
+    if len(args) < 2:
+        return emit_error("INVALID_ARGUMENT", usage())
+    skill, command = args[0], args[1]
+    try:
+        skill_dir = find_skill_dir(skill)
+        manifest = load_manifest(find_app_yaml(skill_dir))
+        if command == "toollist":
+            return cmd_toollist(skill, manifest)
+        if command == "describe":
+            return cmd_describe(skill, manifest)
+        return cmd_call(skill, skill_dir, manifest, command, args[2] if len(args) > 2 else "{}")
+    except CLIError as exc:
+        return emit_error(exc.code, exc.message)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

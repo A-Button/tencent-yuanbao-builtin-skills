@@ -1,0 +1,114 @@
+id: {{APP_ID}}
+name: {{APP_NAME}}
+version: {{VERSION}}
+description: {{APP_DESCRIPTION}}
+
+resources:
+  - uri: {{RESOURCE_URI}}
+    name: {{APP_NAME}}
+    description: {{APP_DESCRIPTION}}
+    path: assets/ui/index.html
+    mimeType: text/html;profile=mcp-app
+
+# 一个操作一个 tool。不要合成一个 {{APP_ID}}_api 再用 operation 参数分派动作：
+# 那样 inputSchema 只能取所有操作字段的并集，required 退化成只能要求 operation、
+# additionalProperties 也拦不住「delete 传了 title」，条件必填又没法写（CLI 的
+# 校验器不实现 if/then、oneOf），校验只能整块塞回 handler。拆开之后每个 tool
+# 各自声明字段，CLI 就能替你拦住绝大多数错误入参，模型选动作也更准。
+tools:
+  - name: list_{{ENTITY_PLURAL}}
+    title: 查看{{APP_NAME}}
+    description: 列出全部{{APP_NAME}}记录，并把结果显示在卡片上。
+    inputSchema:
+      type: object
+      properties: {}
+      additionalProperties: false
+    outputSchema:
+      type: object
+      additionalProperties: true
+    handler:
+      type: python
+      path: scripts/list_{{ENTITY_PLURAL}}.py
+    _meta:
+      ui:
+        resourceUri: {{RESOURCE_URI}}
+        visibility: [model, app]
+
+  - name: create_{{ENTITY}}
+    title: 新建{{APP_NAME}}
+    description: 新建一条{{APP_NAME}}记录。
+    inputSchema:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          description: 标题
+        notes:
+          type: string
+          description: 备注，可不填
+      required: [title]
+      additionalProperties: false
+    outputSchema:
+      type: object
+      additionalProperties: true
+    handler:
+      type: python
+      path: scripts/create_{{ENTITY}}.py
+    _meta:
+      ui:
+        resourceUri: {{RESOURCE_URI}}
+        visibility: [model, app]
+
+  - name: update_{{ENTITY}}
+    title: 更新{{APP_NAME}}
+    description: 更新一条{{APP_NAME}}记录，只改传进来的字段。
+    inputSchema:
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 1
+          description: 记录 id，须复用工具返回值里的 id，不要自己编
+        title:
+          type: string
+          minLength: 1
+          description: 新标题，不改就别传
+        notes:
+          type: string
+          description: 新备注，传空字符串表示清空
+      required: [id]
+      additionalProperties: false
+    outputSchema:
+      type: object
+      additionalProperties: true
+    handler:
+      type: python
+      path: scripts/update_{{ENTITY}}.py
+    _meta:
+      ui:
+        resourceUri: {{RESOURCE_URI}}
+        visibility: [model, app]
+
+  - name: delete_{{ENTITY}}
+    title: 删除{{APP_NAME}}
+    description: 删除一条{{APP_NAME}}记录。
+    inputSchema:
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 1
+          description: 记录 id，须复用工具返回值里的 id，不要自己编
+      required: [id]
+      additionalProperties: false
+    outputSchema:
+      type: object
+      additionalProperties: true
+    handler:
+      type: python
+      path: scripts/delete_{{ENTITY}}.py
+    _meta:
+      ui:
+        resourceUri: {{RESOURCE_URI}}
+        visibility: [model, app]

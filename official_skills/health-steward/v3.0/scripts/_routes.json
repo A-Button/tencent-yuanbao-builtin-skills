@@ -1,0 +1,404 @@
+{
+  "app": {
+    "id": "health-steward",
+    "name": "健康管家",
+    "version": "v1.0"
+  },
+  "resources": {
+    "ai_apps.skills.diet_assistant_res": {
+      "uri": "ai_apps.skills.diet_assistant_res",
+      "name": "今日饮食记录",
+      "mimeType": "application/a2ui+json",
+      "dataMode": "keep_latest"
+    }
+  },
+  "tools": {
+    "diet_record": {
+      "handler": "scripts/diet/record_meal.py",
+      "resourceUri": "ai_apps.skills.diet_assistant_res",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "diet",
+      "aliases": [
+        "record_meal"
+      ],
+      "usage": "diet_record {items:[{name,portion,kcal,protein_g,fat_g,carb_g,sodium_mg}], photoUrl?:str, eatenAt?:str, eatenAtSource?:photo|upload|user, mealType?:breakfast|beverage|lunch|afternoon_tea|dinner|midnight, beverageOnly?:bool}",
+      "summary": "落库一餐并出饮食卡。"
+    },
+    "diet_estimate": {
+      "handler": "scripts/diet/estimate_meal.py",
+      "resourceUri": "ai_apps.skills.diet_assistant_res",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "diet",
+      "aliases": [
+        "estimate_meal"
+      ],
+      "usage": "diet_estimate {items:[{name,portion,kcal,protein_g,fat_g,carb_g,sodium_mg}], photoUrl?:str}",
+      "summary": "只算营养、不落库，卡片照出。"
+    },
+    "diet_day": {
+      "handler": "scripts/diet/get_day.py",
+      "resourceUri": "ai_apps.skills.diet_assistant_res",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "diet",
+      "aliases": [
+        "get_day"
+      ],
+      "usage": "diet_day {date?:str}",
+      "summary": "看某一天吃了什么：每餐的时间、食物、热量与宏量，以及跳过的餐次。"
+    },
+    "diet_skip": {
+      "handler": "scripts/diet/skip_meal.py",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "diet",
+      "aliases": [
+        "skip_meal"
+      ],
+      "usage": "diet_skip {mealType:breakfast|lunch|dinner, date?:str}",
+      "summary": "把早/午/晚某一餐标成跳过，不进热量合计。"
+    },
+    "diet_stats": {
+      "handler": "scripts/diet/get_stats.py",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "diet",
+      "aliases": [
+        "get_stats"
+      ],
+      "usage": "diet_stats {period?:day|week, date?:str}",
+      "summary": "近 1 天或 7 天的饮食统计：日均热量与宏量、规律性评分。"
+    },
+    "diet_update": {
+      "handler": "scripts/diet/update_meal.py",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "diet",
+      "aliases": [
+        "update_meal"
+      ],
+      "usage": "diet_update {mealId:str, patch:{eaten_at?,eaten_at_source?,meal_type?,title?,items?,photo_url?,is_favorited?}}",
+      "summary": "改已落库那条记错的地方；items 改了会重算合计。"
+    },
+    "diet_delete": {
+      "handler": "scripts/diet/delete_meal.py",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "diet",
+      "aliases": [
+        "delete_meal"
+      ],
+      "usage": "diet_delete {mealId:str}",
+      "summary": "软删一条记录。"
+    },
+    "diet_meal": {
+      "handler": "scripts/diet/get_meal.py",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "diet",
+      "aliases": [
+        "get_meal"
+      ],
+      "hidden": true,
+      "usage": "diet_meal {mealId:str}",
+      "summary": "按 meal_id 取单条记录。"
+    },
+    "workout_today": {
+      "handler": "scripts/training/get_today.py",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "workout",
+      "aliases": [
+        "get_today"
+      ],
+      "usage": "workout_today {date?:str}",
+      "summary": "看当天的身体状态、训练排期与完成进度。"
+    },
+    "workout_readiness": {
+      "handler": "scripts/training/log_readiness.py",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "workout",
+      "aliases": [
+        "log_readiness"
+      ],
+      "usage": "workout_readiness {fatigue:int, date?:str, soreness?:[{part,level?}]}",
+      "summary": "记录当天疲劳与酸痛，返回训练建议（normal / reduced / rest）。"
+    },
+    "workout_plan": {
+      "handler": "scripts/training/plan_session.py",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "workout",
+      "aliases": [
+        "plan_session"
+      ],
+      "usage": "workout_plan {exercises:[{exercise_key,name?,sets?,reps?,load_text?}], date?:str, plan_name?:str, cycle_index?:int, cycle_size?:int}",
+      "summary": "给某天排训练。"
+    },
+    "workout_done": {
+      "handler": "scripts/training/complete_exercise.py",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "workout",
+      "aliases": [
+        "complete_exercise"
+      ],
+      "usage": "workout_done {names?:[str], positions?:[int], date?:str}",
+      "summary": "把动作标成已完成，一次可以多个。"
+    },
+    "workout_adjust": {
+      "handler": "scripts/training/update_exercise_setting.py",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "workout",
+      "aliases": [
+        "update_exercise_setting"
+      ],
+      "usage": "workout_adjust {name?:str, position?:int, sets?:int, reps?:int, load_text?:str, date?:str}",
+      "summary": "改某个动作的组数、次数或负重。"
+    },
+    "workout_detail": {
+      "handler": "scripts/training/get_exercise_detail.py",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "workout",
+      "aliases": [
+        "get_exercise_detail"
+      ],
+      "usage": "workout_detail {position?:int, name?:str, exercise_key?:str}",
+      "summary": "动作要领：主要肌群、呼吸、难度、常见错误，以及它在今天这场里的设置。"
+    },
+    "workout_month": {
+      "handler": "scripts/training/get_month.py",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "workout",
+      "aliases": [
+        "get_month"
+      ],
+      "usage": "workout_month {month:str}",
+      "summary": "某个月每天排了什么、练完没有。"
+    },
+    "workout_add": {
+      "handler": "scripts/training/add_exercise.py",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "workout",
+      "aliases": [
+        "add_exercise"
+      ],
+      "hidden": true,
+      "usage": "workout_add {exercises:[{exercise_key,name?,sets?,reps?,load_text?}], date?:str}",
+      "summary": "往当天已有的那场末尾追加动作；当天没排过会报 SESSION_NOT_FOUND。"
+    },
+    "workout_finish": {
+      "handler": "scripts/training/complete_session.py",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "workout",
+      "aliases": [
+        "complete_session"
+      ],
+      "hidden": true,
+      "usage": "workout_finish {date?:str}",
+      "summary": "把当天整场训练及全部动作标记为完成。"
+    },
+    "body_log": {
+      "handler": "scripts/training/log_measurement.py",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "workout",
+      "aliases": [
+        "log_measurement"
+      ],
+      "usage": "body_log {date?:str, waist_cm?:num, hip_cm?:num, thigh_cm?:num, weight_kg?:num}",
+      "summary": "记当天的体重或腰围、臀围、大腿围，至少一项。"
+    },
+    "body_trend": {
+      "handler": "scripts/training/get_measurement_trend.py",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "workout",
+      "aliases": [
+        "get_measurement_trend"
+      ],
+      "usage": "body_trend {part:waist|hip|thigh|weight, weeks?:int}",
+      "summary": "某一项（waist / hip / thigh / weight）最近若干个记录点的趋势。"
+    },
+    "body_profile_set": {
+      "handler": "scripts/training/set_body_profile.py",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "workout",
+      "aliases": [
+        "set_body_profile"
+      ],
+      "usage": "body_profile_set {sex:male|female, height_cm:num, age:int, activity_level:sedentary|light|moderate}",
+      "summary": "设置性别、身高、年龄、日常活动量，用来算基础代谢。"
+    },
+    "body_profile": {
+      "handler": "scripts/training/get_body_profile.py",
+      "visibility": [
+        "model",
+        "app"
+      ],
+      "runtime": "workout",
+      "aliases": [
+        "get_body_profile"
+      ],
+      "usage": "body_profile {}",
+      "summary": "看身体档案和基础代谢；缺档案或缺体重时在 missing 里说明。"
+    },
+    "body_expenditure": {
+      "handler": "scripts/training/get_expenditure.py",
+      "visibility": [
+        "model"
+      ],
+      "runtime": "workout",
+      "aliases": [
+        "get_expenditure"
+      ],
+      "usage": "body_expenditure {date?:str}",
+      "summary": "算某天的能量消耗：基础代谢 + 日常活动 + 训练。"
+    },
+    "nutrition_summary": {
+      "handler": "scripts/diet/get_nutrition_summary.py",
+      "visibility": [
+        "model"
+      ],
+      "runtime": "workout",
+      "aliases": [
+        "get_nutrition_summary"
+      ],
+      "usage": "nutrition_summary {date?:str, kcal?:num, carb_g?:num, protein_g?:num, fat_g?:num, fiber_g?:num}",
+      "summary": "按推荐区间给当天摄入打分，并返回推荐区间。"
+    },
+    "nutrition_target": {
+      "handler": "scripts/diet/set_nutrition_target.py",
+      "visibility": [
+        "model"
+      ],
+      "runtime": "workout",
+      "aliases": [
+        "set_nutrition_target"
+      ],
+      "usage": "nutrition_target {kcal?:{min,max}, carb_g?:{min,max}, protein_g?:{min,max}, fat_g?:{min,max}, fiber_g?:{min,max}}",
+      "summary": "设置每日营养推荐区间（kcal / 碳水 / 蛋白 / 脂肪 / 纤维），不传的项保持原值。"
+    },
+    "report_daily": {
+      "handler": "scripts/report/get_daily_report.py",
+      "visibility": [
+        "model"
+      ],
+      "runtime": "workout",
+      "aliases": [
+        "get_daily_report"
+      ],
+      "usage": "report_daily {date?:str, day_complete_confirmed?:bool}",
+      "summary": "生成当天的健康日报 HTML（工作区产物）。"
+    },
+    "report_weekly": {
+      "handler": "scripts/report/get_weekly_report.py",
+      "visibility": [
+        "model"
+      ],
+      "runtime": "workout",
+      "aliases": [
+        "get_weekly_report"
+      ],
+      "usage": "report_weekly {date?:str, week_start?:str}",
+      "summary": "生成本周的健康周报 HTML。"
+    },
+    "now_card": {
+      "handler": "scripts/now/now_card.py",
+      "visibility": [
+        "model"
+      ],
+      "runtime": "workout",
+      "aliases": [],
+      "usage": "now_card {scene:s1|s2|s3|s4|created, thing_id?:str, todo_id?:str, date?:str, slot?:breakfast|lunch|dinner, day_complete_confirmed?:bool, week_start?:str}",
+      "summary": "判断这一轮提醒发不发。"
+    },
+    "now_setup": {
+      "handler": "scripts/now/now_setup.py",
+      "visibility": [
+        "model"
+      ],
+      "runtime": "workout",
+      "aliases": [],
+      "usage": "now_setup {scenes?:[str], times?:{breakfast?,lunch?,dinner?,train?,daily?,weekly?}, thing_id?:str}",
+      "summary": "整套提醒时算出每条线的本地时刻和到点 prompt。"
+    }
+  },
+  "aliases": {
+    "record_meal": "diet_record",
+    "estimate_meal": "diet_estimate",
+    "get_day": "diet_day",
+    "skip_meal": "diet_skip",
+    "get_stats": "diet_stats",
+    "update_meal": "diet_update",
+    "delete_meal": "diet_delete",
+    "get_meal": "diet_meal",
+    "get_today": "workout_today",
+    "log_readiness": "workout_readiness",
+    "plan_session": "workout_plan",
+    "complete_exercise": "workout_done",
+    "update_exercise_setting": "workout_adjust",
+    "get_exercise_detail": "workout_detail",
+    "get_month": "workout_month",
+    "add_exercise": "workout_add",
+    "complete_session": "workout_finish",
+    "log_measurement": "body_log",
+    "get_measurement_trend": "body_trend",
+    "set_body_profile": "body_profile_set",
+    "get_body_profile": "body_profile",
+    "get_expenditure": "body_expenditure",
+    "get_nutrition_summary": "nutrition_summary",
+    "set_nutrition_target": "nutrition_target",
+    "get_daily_report": "report_daily",
+    "get_weekly_report": "report_weekly"
+  }
+}

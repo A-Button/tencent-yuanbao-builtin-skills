@@ -1,0 +1,16 @@
+{
+  "serverName": "rollinggo-hotel",
+  "transport": "streamable_http",
+  "url": "https://mcp.rollinggo.cn/mcp/hotel",
+  "authentication": {
+    "type": "bearer",
+    "delivery": "platform_secret_injection",
+    "note": "Platform gateway automatically injects bearer token."
+  },
+  "timeouts": {
+    "connectSeconds": 10,
+    "callSeconds": 30
+  },
+  "businessOwner": "RollingGo",
+  "platformOwner": "yuanbao"
+}

@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "open_platform_mcp": {
+      "type": "streamableHttp",
+      "url": "https://mcp.meeting.tencent.com/mcp/wemeet-open/v1",
+      "headers": {
+        "X-Tencent-Meeting-Token": "{静默授权颁发的访问令牌}",
+        "RequestSource": "mcp-yuanbao-oneid",
+        "OpenId": "{静默授权获得的用户 openid}",
+      },
+      "timeout": 30000
+    }
+  }
+}

@@ -1,0 +1,225 @@
+[
+  {
+    "name": "haier-smart-home-assistant/search_knowledge_base",
+    "description": "检索海尔企业知识库，覆盖产品说明、使用方法、售后政策和常见问题。每次触发海尔智家助手时先调用一次；不得在 query 中携带手机号、身份证、序列号、订单号、工单号或详细地址。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "从用户原话提取的直接相关问题，不添加用户未表达的事实或敏感标识。"
+        },
+        "topK": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "可选返回条数，最多 10。"
+        }
+      },
+      "required": ["query"]
+    }
+  },
+  {
+    "name": "haier-smart-home-assistant/search_web",
+    "description": "联网查询公开资料。只在知识库返回 EMPTY、内容完全不相关或 UNAVAILABLE 时使用；联网结果不是海尔官方结论。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "公开信息查询词，不得包含手机号、身份证、序列号、订单号、工单号或详细地址。"
+        }
+      },
+      "required": ["query"]
+    }
+  },
+  {
+    "name": "haier-smart-home-assistant/query_product_recommend",
+    "description": "根据家电品类及可选需求槽位推荐海尔、卡萨帝或统帅产品。识别到品类即可调用；用户明确要几款时传 topN。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "definitions": {
+        "Dimension": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "min": {"type": "number"},
+            "max": {"type": "number"}
+          }
+        }
+      },
+      "properties": {
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "category": {
+              "type": "string",
+              "enum": ["冰箱", "冷柜", "波轮洗衣机", "滚筒洗衣机", "电热水器", "太阳能热水器", "燃气热水器", "平板电视", "家中机", "挂机", "柜机", "烤箱", "洗碗机", "吸排油烟机", "燃气灶"]
+            },
+            "categorySlots": {
+              "type": "array",
+              "description": "按模块规则映射的需求槽位；没有命中时传空数组。",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "slotName": {"type": "string"},
+                  "numMin": {"type": "number"},
+                  "numMax": {"type": "number"},
+                  "single": {"type": "boolean"},
+                  "tags": {"type": "array", "items": {"type": "string"}},
+                  "width": {"$ref": "#/definitions/Dimension"},
+                  "depth": {"$ref": "#/definitions/Dimension"},
+                  "height": {"$ref": "#/definitions/Dimension"},
+                  "source": {"type": "string", "enum": ["USER_EXPLICIT", "INFERRED"]}
+                },
+                "required": ["slotName"]
+              }
+            },
+            "userTags": {"type": "array", "items": {"type": "string"}},
+            "includeReason": {"type": "boolean"},
+            "topN": {"type": "integer", "minimum": 1},
+            "excludeProductNames": {"type": "array", "items": {"type": "string"}}
+          },
+          "required": ["category"]
+        }
+      },
+      "required": ["request"]
+    }
+  },
+  {
+    "name": "haier-smart-home-assistant/query_product_comparison",
+    "description": "按产品型号列表查询相同参数与差异参数，最多比较 5 个型号；用户点名参数时才传 attributeNames。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "productNames": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 5,
+              "items": {"type": "string"}
+            },
+            "attributeNames": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          },
+          "required": ["productNames"]
+        }
+      },
+      "required": ["request"]
+    }
+  },
+  {
+    "name": "haier-smart-home-assistant/query_product_attribute",
+    "description": "按具体产品名称或型号查询参数、价格和功能。attributeNames 为空或省略时返回全量参数。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "productName": {"type": "string"},
+            "attributeNames": {
+              "type": "array",
+              "maxItems": 10,
+              "items": {"type": "string"}
+            }
+          },
+          "required": ["productName"]
+        }
+      },
+      "required": ["request"]
+    }
+  },
+  {
+    "name": "haier-smart-home-assistant/query_product_attribute_by_category",
+    "description": "按家电品类查询销量 TOP3 型号的参数、价格和功能。attributeNames 为空或省略时返回全量参数。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "category": {
+              "type": "string",
+              "enum": ["冰箱", "冷柜", "波轮洗衣机", "滚筒洗衣机", "电热水器", "太阳能热水器", "燃气热水器", "平板电视", "家中机", "挂机", "柜机", "烤箱", "洗碗机", "吸排油烟机", "燃气灶"]
+            },
+            "attributeNames": {
+              "type": "array",
+              "maxItems": 10,
+              "items": {"type": "string"}
+            }
+          },
+          "required": ["category"]
+        }
+      },
+      "required": ["request"]
+    }
+  },
+  {
+    "name": "haier-smart-home-assistant/query_product_sale_channel",
+    "description": "根据产品型号及可选意向渠道查询在售渠道，并返回服务端场景类型用于线上或线下分流。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "productName": {"type": "string"},
+            "intentChannels": {
+              "type": "array",
+              "items": {"type": "string", "enum": ["抖音", "快手", "拼多多", "天猫", "京东", "小红书", "视频号", "线下"]}
+            },
+            "excludeChannels": {
+              "type": "array",
+              "items": {"type": "string", "enum": ["抖音", "快手", "拼多多", "天猫", "京东", "小红书", "视频号", "线下"]}
+            }
+          },
+          "required": ["productName"]
+        }
+      },
+      "required": ["request"]
+    }
+  },
+  {
+    "name": "haier-smart-home-assistant/query_store",
+    "description": "按用户指定的省、市、区或地址查询海尔门店，最多查询 10 家、面向用户最多展示 5 家。返回的是本次查询命中的门店，不是该区域门店总量：只说“为您找到 N 家”，不要说“共 N 家”“只有 N 家”“全部为您列出”。不接收模型提供的经纬度。没有地点时先追问，不要空调用。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "country": {"type": "string"},
+            "province": {"type": "string"},
+            "city": {"type": "string"},
+            "district": {"type": "string"},
+            "address": {"type": "string"},
+            "size": {"type": "integer", "minimum": 1, "maximum": 10},
+            "excludeStoreNames": {"type": "array", "items": {"type": "string"}},
+            "radius": {"type": "integer", "minimum": 1}
+          }
+        }
+      },
+      "required": ["request"]
+    }
+  }
+]

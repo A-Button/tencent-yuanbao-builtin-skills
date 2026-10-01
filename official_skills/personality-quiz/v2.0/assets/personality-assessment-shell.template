@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; frame-src 'self' about:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>MBTI 性格测试</title>
+<style>/*{{ASSESSMENT_CSS}}*/</style>
+</head>
+<body>
+<main class="app" data-assessment-build="ready">
+<p id="runtimeNotice" class="runtime-notice" role="alert">正在准备测评。如果长时间未显示题目，请在支持脚本的浏览器中打开此文件。</p>
+<noscript><p class="runtime-notice">此测评需要 JavaScript，请在支持交互的浏览器中打开。</p></noscript>
+<section id="questionScreen" class="question-screen" aria-label="人格测评答题">
+  <div class="quiz-card">
+    <h1 class="sr-only">MBTI 人格测评</h1>
+    <header class="quiz-header">
+      <div class="quiz-topline"><button id="previousPage" class="quiz-back" type="button" hidden><span class="back-chevron" aria-hidden="true"></span>上一页</button><div class="quiz-header-status"><button id="resumeQuiz" class="quiz-resume" type="button" hidden>继续答题</button><span id="answerCount"></span></div></div>
+      <div class="progress-track" role="progressbar" aria-label="答题进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progressBar"></span></div>
+    </header>
+    <div id="questions"></div>
+  </div>
+</section>
+<section id="resultScreen" hidden aria-label="人格倾向报告">
+  <div id="reportCapture" class="report-capture">
+    <article id="report" class="report-card"></article>
+    <div id="resultTools" class="result-tools"></div>
+    <p class="report-note">报告说明：基于 IPIP 大五人格题目推算倾向，非官方 MBTI 测评，仅供自我观察。</p>
+  </div>
+<div id="reportImageMount" style="max-width:760px;margin:0 auto"></div>
+</section>
+</main>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<dialog id="copyDialog" class="utility-dialog" aria-labelledby="copyTitle"><h2 id="copyTitle">手动复制结果</h2><p>以下是复制回对话的完整内容。需要手动复制时，请选中下方文本后使用系统复制。</p><textarea id="copyFallback" readonly aria-label="完整测评结果"></textarea><div class="dialog-actions"><button type="button" class="button secondary" data-close="copyDialog">关闭</button><button id="selectCopy" type="button" class="button primary">全选内容</button></div></dialog>
+<dialog id="restartDialog" class="utility-dialog" aria-labelledby="restartTitle"><h2 id="restartTitle">重新开始测试？</h2><p>当前答案将被清除。想调整部分答案，可以使用“回看答案”。</p><div class="dialog-actions"><button type="button" class="button secondary" data-close="restartDialog">保留结果</button><button type="button" class="button primary" id="confirmRestart">重新开始</button></div></dialog>
+<script id="assessment-data" type="application/json">/*{{ASSESSMENT_PAYLOAD}}*/</script>
+<script>/*{{SCORING_CORE}}*/</script>
+<script>/*{{REPORT_MODEL}}*/</script>
+<script>/*{{STATE_CORE}}*/</script>
+<script>/*{{RESULT_IMAGE}}*/</script>
+<script>/*{{POSTER_VENDOR}}*/</script>
+<script>/*{{ASSESSMENT_APP}}*/</script>
+</body>
+</html>

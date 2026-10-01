@@ -1,0 +1,153 @@
+[
+  {
+    "name": "wiki/ingest_entry",
+    "description": "将一条内容结构化入库到个人知识库 /data/library，并（可选）用模板渲染展示 body。这是 wiki 唯一的入库入口。render_type 必填，不可省略：留空字符串时 body 由你直接给；content_digest 时 body 由模板从判断字段渲染（keyInsights 逐字进 body），此时不要传 body。返回纯文本：首行 [ok] true/false，随后是入库回执字段，最后 [body] 后面是渲染好的展示正文；把 [body] 后面的内容【原样】发给用户，不要重写。入库失败（[ok] false）也会带上已渲染的 [body]。【参数格式铁律】①数组参数（topicTags/keyInsights/advisoryNotes）必须传原生 JSON 数组，禁止序列化成字符串（错误：\"[...]\"，正确：[...]）；②对象参数（readGuide/recommendation）必须传原生 JSON 对象，禁止序列化成字符串（错误：\"{...}\"，正确：{...}）；③字符串值内的引号一律用中文引号「」替代英文双引号，避免 JSON 转义错误。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "条目标题"
+        },
+        "category": {
+          "type": "string",
+          "description": "wiki §3.1 的 7 类单词枚举，选最贴切一个（健康/学习/关系/事业/生活/资讯/其他）"
+        },
+        "topicTags": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "主题标签 2-4 个，优先复用已有标签，不造近义重复"
+        },
+        "summary": {
+          "type": "string",
+          "description": "一句话摘要，1-2 句只讲本篇，不复述标题、不出对比措辞"
+        },
+        "keyInsights": {
+          "type": "array",
+          "description": "结构化要点数组；每条 text 会逐字进 body，不要在别处重写",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "text": {
+                "type": "string",
+                "description": "一句自包含要点；点睛处在 text 内自行 **加粗**"
+              },
+              "diff": {
+                "type": "string",
+                "enum": ["added", "repeated", "contradicted", ""],
+                "default": "",
+                "description": "与库内历史的关系；首篇/无同主题历史留空"
+              },
+              "ref": {
+                "type": "string",
+                "default": "",
+                "description": "repeated/contradicted 必填的历史条目 ent_id；来自召回命中，不编造"
+              },
+              "group": {
+                "type": "string",
+                "default": "",
+                "description": "可选分组小标题（长文/多主题分组渲染用）；单组或短文留空"
+              }
+            },
+            "required": ["text"]
+          }
+        },
+        "content": {
+          "type": "string",
+          "default": "",
+          "description": "解析后的原始正文，写入 raw/<id>/content.md。仅上传文件类需要留正文时传入，禁止用占位符代替"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["article", "file", "image", "video", "other"],
+          "default": "article",
+          "description": "内容形态"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["parsed", "source_only"],
+          "default": "parsed"
+        },
+        "source_kind": {
+          "type": "string",
+          "enum": ["upload", "url", "artifact"],
+          "default": "url"
+        },
+        "source_raw": {
+          "type": "string",
+          "default": "",
+          "description": "原始来源定位，含义随 source_kind 变：url 类直接填 URL（链接类必填）；上传类留空，工具会在拷贝原件后自动写入相对路径"
+        },
+        "source_file": {
+          "type": "string",
+          "default": "",
+          "description": "用户上传文件类的二进制原件沙箱绝对路径（如 /data/inputs/x.pdf），会被拷贝进 raw/<id>/source.<ext> 留底，并自动改写 source_raw；链接类留空"
+        },
+        "render_type": {
+          "type": "string",
+          "enum": ["", "content_digest"],
+          "description": "body 渲染方式：留空=用你传的 body；content_digest=用单篇解读模板从判断字段渲染。必须显式传入，不可省略"
+        },
+        "body": {
+          "type": "string",
+          "default": "",
+          "description": "知识层正文。render_type 留空时必填、由你写；render_type=content_digest 时不要传（由模板渲染）"
+        },
+        "advisoryNotes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [],
+          "description": "【仅 content_digest 渲染用，不落库】风险提示，默认 []、最多 1 条 ≤约30字；只在照着做可能受伤/被误导时出"
+        },
+        "readGuide": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "【仅 content_digest 渲染用，不落库】开篇条",
+          "properties": {
+            "referenceRecordId": {
+              "type": "string",
+              "default": "",
+              "description": "锚定历史 ent_id（单条、不是标题）；非空=对比态，空=新知态。只来自召回命中"
+            },
+            "diff": {
+              "type": "string",
+              "enum": ["added", "repeated", "contradicted", ""],
+              "default": ""
+            },
+            "readSuggestion": {
+              "type": "string",
+              "enum": ["full", "skim", "skip", ""],
+              "default": ""
+            },
+            "note": {
+              "type": "string",
+              "description": "开篇条整句（你直接产完整一句）；前端只加显性标不拼句"
+            }
+          },
+          "required": ["note"]
+        },
+        "recommendation": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "【仅 content_digest 渲染用，不落库】用处判断",
+          "properties": {
+            "verdict": {
+              "type": "string",
+              "enum": ["useful", "not_useful"],
+              "description": "not_useful 不出用处段"
+            },
+            "reason": {
+              "type": "string",
+              "default": "",
+              "description": "useful 时一句具体用处 ≤约30字；not_useful 填空串"
+            }
+          },
+          "required": ["verdict"]
+        }
+      },
+      "required": ["title", "category", "topicTags", "summary", "keyInsights", "render_type"]
+    }
+  }
+]

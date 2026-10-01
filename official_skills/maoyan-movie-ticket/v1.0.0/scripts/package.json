@@ -1,0 +1,22 @@
+{
+  "name": "yuanbao-movie-ticket-scripts",
+  "version": "1.0.0",
+  "description": "元宝猫眼影讯查询本地脚本（影片 / 影院 / 排片 / 工具）",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/run.js"
+  },
+  "dependencies": {
+    "@sec/cliguard": "^1.4.2",
+    "uuid": "^14.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "@types/uuid": "^10.0.0",
+    "typescript": "^5.7.0"
+  },
+  "bundleDependencies": [
+    "@sec/cliguard"
+  ]
+}

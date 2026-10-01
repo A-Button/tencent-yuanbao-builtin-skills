@@ -1,0 +1,56 @@
+[
+  {
+    "name": "stock_market_data",
+    "description": "查询 CN/HK/US 市场中可精确识别的上市个股及部分指数/ETF行情数据。不支持加密货币、期货/期权、外汇、商品现货、未上市公司、其他市场标的或板块概念；不得猜代码或静默替换代理标的。空卡时保留原回答，不编造点位。支持：1. 实时/最新交易日价格数据（现价、开高低收、市值、涨跌幅、振幅、换手率、成交额）；2. 指定时间窗口的历史走势（区间涨跌幅、期间最高/最低、最大涨幅、最大回撤）；3. 技术面指标（MA、MACD、RSI、布林带、支撑位、压力位）。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "用户明确指定的正式标的名称或精确代码。指数/ETF仅使用用户提供或权威材料确认的身份；禁止把板块概念映射成主题ETF，禁止改查ADR、杠杆/反向产品等代理标的。无法确定时禁止猜测。"
+        },
+        "period": {
+          "type": "string",
+          "description": "K线粒度：周线→week，月线→month，日线或未说明→day，当日/盘中/实时→minute；默认day。",
+          "enum": [
+            "minute",
+            "day",
+            "week",
+            "month"
+          ]
+        },
+        "range": {
+          "type": "string",
+          "description": "时间窗口：今天1d、一周5d、一月1m、三月3m、半年6m、一年1y、三年3y、五年5y、全部max。未指定或未来预测默认1y。",
+          "enum": [
+            "1d",
+            "5d",
+            "1m",
+            "3m",
+            "6m",
+            "1y",
+            "3y",
+            "5y",
+            "max"
+          ]
+        },
+        "market": {
+          "type": "string",
+          "description": "CN=A股，HK=港股，US=美股；多市场用逗号串，如US,HK；无法判断时不填。"
+        },
+        "show_chart": {
+          "type": "integer",
+          "description": "单标的行情/走势/技术指标查询传1；多标的对比、综合主观分析或资讯且主诉求非行情传0。",
+          "enum": [
+            0,
+            1
+          ]
+        }
+      },
+      "required": [
+        "query",
+        "show_chart"
+      ]
+    }
+  }
+]

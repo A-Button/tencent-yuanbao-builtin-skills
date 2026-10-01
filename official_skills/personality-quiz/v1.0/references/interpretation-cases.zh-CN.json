@@ -1,0 +1,518 @@
+{
+  "schemaVersion": "1.0.0",
+  "contentVersion": "1.1.0",
+  "tradition": "韦特—史密斯体系",
+  "language": "简体中文",
+  "editorialNotice": "以下内容是团队根据已登记牌义编写的情境参考，不是古典著作中的真实个案，也不是对现实结果的预测。",
+  "cases": [
+    {
+      "caseId": "case-career-strength-obstacle-001",
+      "caseType": "单牌位次案例",
+      "question": {
+        "topic": "事业",
+        "subtopics": ["岗位变化", "能力信心", "长期承压"],
+        "normalizedPattern": "想调整岗位，但担心自己没有能力应对变化",
+        "keywords": ["转岗", "升职", "自我怀疑", "压力", "信心"]
+      },
+      "spreadId": "three-card-issue",
+      "cards": [
+        {"cardId": "rws-major-08", "name": "力量", "orientation": "逆位", "reversalMode": "受阻", "position": "障碍"}
+      ],
+      "relations": [],
+      "candidateInterpretations": [
+        {
+          "claim": "阻力可能不是完全缺少能力，而是持续承压后难以稳定调用已经具备的能力。",
+          "evidence": ["力量｜逆位｜障碍"],
+          "fitConditions": ["近期已有高负荷或反复自我否定", "过去有可验证的胜任经验"],
+          "counterSignals": ["现实门槛明确要求尚未具备的资格或资源"],
+          "calibrationQuestion": "当前卡点更像能力缺口，还是长期消耗后不敢使用已有能力？"
+        }
+      ],
+      "safeActions": ["把已验证能力与仍需补证的条件分成两栏，各选一项小范围验证"],
+      "source": {"type": "团队编写", "sourceRefs": ["TAROT-RWS-WAITE-1911", "TAROT-RWS-EDITORIAL-ZH-01"], "license": "内部使用"},
+      "quality": {"reviewStatus": "团队初审", "specificity": 0.88, "barnumRisk": 0.12},
+      "safetyTags": []
+    },
+    {
+      "caseId": "case-career-magician-advice-002",
+      "caseType": "单牌位次案例",
+      "question": {
+        "topic": "事业",
+        "subtopics": ["项目启动", "资源整合", "主动沟通"],
+        "normalizedPattern": "有一个新想法，但迟迟没有开始",
+        "keywords": ["项目", "创业", "开始", "资源", "执行"]
+      },
+      "spreadId": "three-card-issue",
+      "cards": [
+        {"cardId": "rws-major-01", "name": "魔术师", "orientation": "正位", "reversalMode": null, "position": "建议"}
+      ],
+      "relations": [],
+      "candidateInterpretations": [
+        {
+          "claim": "建议把注意力从继续等待完美条件，转向盘点手上已有资源并完成一次可展示的最小行动。",
+          "evidence": ["魔术师｜正位｜建议"],
+          "fitConditions": ["基本工具或信息已经具备", "拖延主要来自启动门槛过高"],
+          "counterSignals": ["尚缺法律许可、安全条件或关键授权"],
+          "calibrationQuestion": "如果只能用现有资源在一周内做出一个可验证成果，它会是什么？"
+        }
+      ],
+      "safeActions": ["列出四项现有资源，选一项做二十分钟的原型或沟通"],
+      "source": {"type": "团队编写", "sourceRefs": ["TAROT-RWS-WAITE-1911", "TAROT-RWS-EDITORIAL-ZH-01"], "license": "内部使用"},
+      "quality": {"reviewStatus": "团队初审", "specificity": 0.86, "barnumRisk": 0.14},
+      "safetyTags": []
+    },
+    {
+      "caseId": "case-work-three-pentacles-situation-003",
+      "caseType": "单牌情境案例",
+      "question": {
+        "topic": "事业",
+        "subtopics": ["团队协作", "专业反馈", "工作质量"],
+        "normalizedPattern": "项目推进不顺，想知道问题出在哪里",
+        "keywords": ["团队", "同事", "合作", "反馈", "质量"]
+      },
+      "spreadId": "three-card-issue",
+      "cards": [
+        {"cardId": "rws-pentacles-03", "name": "星币三", "orientation": "正位", "reversalMode": null, "position": "情况"}
+      ],
+      "relations": [],
+      "candidateInterpretations": [
+        {
+          "claim": "当前重点可能落在协作接口和质量标准，而不只是某个人是否足够努力。",
+          "evidence": ["星币三｜正位｜情况"],
+          "fitConditions": ["任务依赖多人交接", "不同成员对完成标准理解不一"],
+          "counterSignals": ["任务完全由一人独立完成且标准已经明确"],
+          "calibrationQuestion": "团队最容易在哪个交接点对“完成”产生不同理解？"
+        }
+      ],
+      "safeActions": ["把一个争议任务改写成可观察的验收标准，并邀请相关成员确认"],
+      "source": {"type": "团队编写", "sourceRefs": ["TAROT-RWS-EDITORIAL-ZH-01"], "license": "内部使用"},
+      "quality": {"reviewStatus": "团队初审", "specificity": 0.9, "barnumRisk": 0.1},
+      "safetyTags": []
+    },
+    {
+      "caseId": "case-study-eight-pentacles-advice-004",
+      "caseType": "单牌位次案例",
+      "question": {
+        "topic": "学习",
+        "subtopics": ["技能训练", "稳定练习", "复盘"],
+        "normalizedPattern": "学了很久仍觉得没有明显进步",
+        "keywords": ["考试", "学习", "练习", "技能", "进步"]
+      },
+      "spreadId": "three-card-issue",
+      "cards": [
+        {"cardId": "rws-pentacles-08", "name": "星币八", "orientation": "正位", "reversalMode": null, "position": "建议"}
+      ],
+      "relations": [],
+      "candidateInterpretations": [
+        {
+          "claim": "建议把笼统的努力改成可重复、可反馈的刻意练习，并用作品或错题观察变化。",
+          "evidence": ["星币八｜正位｜建议"],
+          "fitConditions": ["目标技能可以拆成小单元", "目前投入不少但反馈周期过长"],
+          "counterSignals": ["主要障碍是没有基本学习资源或身体需要休息"],
+          "calibrationQuestion": "哪一个最小技能可以在三次练习后看见具体差异？"
+        }
+      ],
+      "safeActions": ["设计一次二十五分钟练习，记录目标、错误和下一次修正点"],
+      "source": {"type": "团队编写", "sourceRefs": ["TAROT-RWS-EDITORIAL-ZH-01"], "license": "内部使用"},
+      "quality": {"reviewStatus": "团队初审", "specificity": 0.92, "barnumRisk": 0.08},
+      "safetyTags": []
+    },
+    {
+      "caseId": "case-decision-two-swords-obstacle-005",
+      "caseType": "单牌位次案例",
+      "question": {
+        "topic": "选择",
+        "subtopics": ["信息回避", "决策僵局", "事实核对"],
+        "normalizedPattern": "两个方案都不满意，所以一直没有决定",
+        "keywords": ["选择", "纠结", "决定", "回避", "信息"]
+      },
+      "spreadId": "three-card-issue",
+      "cards": [
+        {"cardId": "rws-swords-02", "name": "宝剑二", "orientation": "逆位", "reversalMode": "正在松动", "position": "障碍"}
+      ],
+      "relations": [],
+      "candidateInterpretations": [
+        {
+          "claim": "僵局可能已经开始松动，但被回避的事实一旦浮现，也会迫使你承认某些取舍无法两全。",
+          "evidence": ["宝剑二｜逆位｜障碍"],
+          "fitConditions": ["已有新信息出现", "迟迟不决定是为了避免承担损失"],
+          "counterSignals": ["关键数据确实尚未到达，等待有明确期限"],
+          "calibrationQuestion": "你最不愿写进比较表的那个代价是什么？"
+        }
+      ],
+      "safeActions": ["写下两个方案各自不可避免的一项代价，并设一个重新评估日期"],
+      "source": {"type": "团队编写", "sourceRefs": ["TAROT-RWS-EDITORIAL-ZH-01"], "license": "内部使用"},
+      "quality": {"reviewStatus": "团队初审", "specificity": 0.89, "barnumRisk": 0.11},
+      "safetyTags": []
+    },
+    {
+      "caseId": "case-relationship-lovers-core-006",
+      "caseType": "单牌情境案例",
+      "question": {
+        "topic": "关系",
+        "subtopics": ["价值一致", "共同选择", "承诺"],
+        "normalizedPattern": "关系正在靠近，但双方对下一步没有说清楚",
+        "keywords": ["感情", "伴侣", "承诺", "价值观", "选择"]
+      },
+      "spreadId": "single",
+      "cards": [
+        {"cardId": "rws-major-06", "name": "恋人", "orientation": "正位", "reversalMode": null, "position": "核心"}
+      ],
+      "relations": [],
+      "candidateInterpretations": [
+        {
+          "claim": "这张牌不只谈吸引，也把重点放在双方是否愿意就重要价值和下一步作出清楚选择。",
+          "evidence": ["恋人｜正位｜核心"],
+          "fitConditions": ["彼此有真实吸引和互动", "关系下一步需要共同决定"],
+          "counterSignals": ["只有单方面想象，没有可验证的交流或行动"],
+          "calibrationQuestion": "除了喜欢，你们最需要确认的一项共同价值或现实安排是什么？"
+        }
+      ],
+      "safeActions": ["用开放问题讨论一项现实期待，不替对方预设答案"],
+      "source": {"type": "团队编写", "sourceRefs": ["TAROT-RWS-WAITE-1911", "TAROT-RWS-EDITORIAL-ZH-01"], "license": "内部使用"},
+      "quality": {"reviewStatus": "团队初审", "specificity": 0.85, "barnumRisk": 0.15},
+      "safetyTags": ["不推断第三方内心"]
+    },
+    {
+      "caseId": "case-relationship-two-cups-obstacle-007",
+      "caseType": "单牌位次案例",
+      "question": {
+        "topic": "关系",
+        "subtopics": ["互惠失衡", "沟通断层", "边界"],
+        "normalizedPattern": "关系里一方持续付出，另一方回应很少",
+        "keywords": ["感情", "付出", "回应", "失衡", "沟通"]
+      },
+      "spreadId": "three-card-issue",
+      "cards": [
+        {"cardId": "rws-cups-02", "name": "圣杯二", "orientation": "逆位", "reversalMode": "受阻", "position": "障碍"}
+      ],
+      "relations": [],
+      "candidateInterpretations": [
+        {
+          "claim": "障碍可能在于互惠和期待没有对齐，而不是这张牌能够证明对方是否爱你。",
+          "evidence": ["圣杯二｜逆位｜障碍"],
+          "fitConditions": ["互动频率或投入明显不对称", "双方没有明确谈过需求"],
+          "counterSignals": ["短期不对称由已说明的客观事件造成，并有恢复计划"],
+          "calibrationQuestion": "你需要的回应能否被描述成一个具体、可观察的行为？"
+        }
+      ],
+      "safeActions": ["陈述一个具体需求和自己的边界，观察对方实际回应"],
+      "source": {"type": "团队编写", "sourceRefs": ["TAROT-RWS-EDITORIAL-ZH-01"], "license": "内部使用"},
+      "quality": {"reviewStatus": "团队初审", "specificity": 0.91, "barnumRisk": 0.09},
+      "safetyTags": ["不推断第三方内心"]
+    },
+    {
+      "caseId": "case-relationship-moon-situation-008",
+      "caseType": "单牌位次案例",
+      "question": {
+        "topic": "关系",
+        "subtopics": ["信息模糊", "投射", "不安全感"],
+        "normalizedPattern": "对方态度不明确，自己不断猜测关系走向",
+        "keywords": ["暧昧", "猜测", "不安", "隐瞒", "真相"]
+      },
+      "spreadId": "three-card-issue",
+      "cards": [
+        {"cardId": "rws-major-18", "name": "月亮", "orientation": "正位", "reversalMode": null, "position": "情况"}
+      ],
+      "relations": [],
+      "candidateInterpretations": [
+        {
+          "claim": "当前信息不足，情绪与想象可能正在填补空白；这张牌提醒核对事实，不证明存在欺骗。",
+          "evidence": ["月亮｜正位｜情况"],
+          "fitConditions": ["交流含糊或断续", "许多判断来自语气和间接线索"],
+          "counterSignals": ["已有直接、可验证且相互一致的事实"],
+          "calibrationQuestion": "哪些是你亲自确认的事实，哪些是为了填补空白形成的解释？"
+        }
+      ],
+      "safeActions": ["把事实、感受和猜测分成三栏，再决定是否需要直接询问"],
+      "source": {"type": "团队编写", "sourceRefs": ["TAROT-RWS-WAITE-1911", "TAROT-RWS-EDITORIAL-ZH-01"], "license": "内部使用"},
+      "quality": {"reviewStatus": "团队初审", "specificity": 0.93, "barnumRisk": 0.07},
+      "safetyTags": ["不推断第三方秘密"]
+    },
+    {
+      "caseId": "case-family-empress-advice-009",
+      "caseType": "单牌位次案例",
+      "question": {
+        "topic": "家庭",
+        "subtopics": ["照料", "家庭氛围", "自我忽视"],
+        "normalizedPattern": "一直照顾家人，自己已经很疲惫",
+        "keywords": ["家庭", "照顾", "父母", "孩子", "疲惫"]
+      },
+      "spreadId": "three-card-issue",
+      "cards": [
+        {"cardId": "rws-major-03", "name": "皇后", "orientation": "正位", "reversalMode": null, "position": "建议"}
+      ],
+      "relations": [],
+      "candidateInterpretations": [
+        {
+          "claim": "建议恢复可持续的照料循环：滋养关系也包括照顾自己的身体、空间和创造力。",
+          "evidence": ["皇后｜正位｜建议"],
+          "fitConditions": ["照料责任长期集中在你身上", "疲惫已经影响耐心或身体状态"],
+          "counterSignals": ["眼前存在需要立即处理的安全事件"],
+          "calibrationQuestion": "哪一项照料工作可以被分担，而不必由你独自维持？"
+        }
+      ],
+      "safeActions": ["提出一次具体分工，给自己保留一段不承担照料职责的时间"],
+      "source": {"type": "团队编写", "sourceRefs": ["TAROT-RWS-EDITORIAL-ZH-01"], "license": "内部使用"},
+      "quality": {"reviewStatus": "团队初审", "specificity": 0.89, "barnumRisk": 0.11},
+      "safetyTags": []
+    },
+    {
+      "caseId": "case-family-emperor-obstacle-010",
+      "caseType": "单牌位次案例",
+      "question": {
+        "topic": "家庭",
+        "subtopics": ["控制", "规则僵化", "权责"],
+        "normalizedPattern": "家庭规则很多，但成员之间越来越紧张",
+        "keywords": ["家庭", "控制", "规则", "边界", "权威"]
+      },
+      "spreadId": "three-card-issue",
+      "cards": [
+        {"cardId": "rws-major-04", "name": "皇帝", "orientation": "逆位", "reversalMode": "过量", "position": "障碍"}
+      ],
+      "relations": [],
+      "candidateInterpretations": [
+        {
+          "claim": "障碍可能是原本用于提供安全感的规则变得过度僵硬，权力与责任没有一起被讨论。",
+          "evidence": ["皇帝｜逆位｜障碍"],
+          "fitConditions": ["规则主要由一方单向制定", "成员只能服从却很少参与修订"],
+          "counterSignals": ["边界是为应对明确安全风险而临时设立"],
+          "calibrationQuestion": "这条规则保护了什么，又让谁承担了没有发言权的代价？"
+        }
+      ],
+      "safeActions": ["选一条低风险规则，讨论目的、期限和共同修订方式"],
+      "source": {"type": "团队编写", "sourceRefs": ["TAROT-RWS-EDITORIAL-ZH-01"], "license": "内部使用"},
+      "quality": {"reviewStatus": "团队初审", "specificity": 0.9, "barnumRisk": 0.1},
+      "safetyTags": []
+    },
+    {
+      "caseId": "case-resources-six-pentacles-situation-011",
+      "caseType": "单牌情境案例",
+      "question": {
+        "topic": "资源",
+        "subtopics": ["给予接受", "交换公平", "求助"],
+        "normalizedPattern": "资源紧张，不确定是否应该接受别人的帮助",
+        "keywords": ["金钱", "帮助", "借钱", "资源", "公平"]
+      },
+      "spreadId": "single",
+      "cards": [
+        {"cardId": "rws-pentacles-06", "name": "星币六", "orientation": "正位", "reversalMode": null, "position": "核心"}
+      ],
+      "relations": [],
+      "candidateInterpretations": [
+        {
+          "claim": "重点在于帮助的条件、权力差异和可持续交换，而不是简单把接受帮助等同于软弱。",
+          "evidence": ["星币六｜正位｜核心"],
+          "fitConditions": ["帮助条件可以被说清楚", "双方可以自由同意或拒绝"],
+          "counterSignals": ["帮助附带隐蔽控制、违法要求或无法承受的债务"],
+          "calibrationQuestion": "这份帮助的条件、期限和双方期待是否足够透明？"
+        }
+      ],
+      "safeActions": ["把金额、期限、回报和退出条件写清楚；必要时寻求合格专业意见"],
+      "source": {"type": "团队编写", "sourceRefs": ["TAROT-RWS-EDITORIAL-ZH-01"], "license": "内部使用"},
+      "quality": {"reviewStatus": "团队初审", "specificity": 0.91, "barnumRisk": 0.09},
+      "safetyTags": ["不提供投资或借贷指令"]
+    },
+    {
+      "caseId": "case-resources-four-pentacles-advice-012",
+      "caseType": "单牌位次案例",
+      "question": {
+        "topic": "资源",
+        "subtopics": ["安全感", "控制", "适度开放"],
+        "normalizedPattern": "害怕失去现有稳定，所以不敢投入任何新机会",
+        "keywords": ["稳定", "存款", "机会", "害怕失去", "控制"]
+      },
+      "spreadId": "three-card-issue",
+      "cards": [
+        {"cardId": "rws-pentacles-04", "name": "星币四", "orientation": "逆位", "reversalMode": "正在松动", "position": "建议"}
+      ],
+      "relations": [],
+      "candidateInterpretations": [
+        {
+          "claim": "建议区分必要的安全边界与因恐惧形成的僵硬控制，尝试小规模、可退出的开放。",
+          "evidence": ["星币四｜逆位｜建议"],
+          "fitConditions": ["基本安全垫已经存在", "完全不行动也在产生机会成本"],
+          "counterSignals": ["现实现金流或身体安全确实脆弱"],
+          "calibrationQuestion": "哪一部分必须守住，哪一部分可以用很小的成本试一次？"
+        }
+      ],
+      "safeActions": ["为探索设定明确上限和退出条件，不根据牌面作投资决定"],
+      "source": {"type": "团队编写", "sourceRefs": ["TAROT-RWS-EDITORIAL-ZH-01"], "license": "内部使用"},
+      "quality": {"reviewStatus": "团队初审", "specificity": 0.9, "barnumRisk": 0.1},
+      "safetyTags": ["不提供投资指令"]
+    },
+    {
+      "caseId": "case-growth-hermit-advice-013",
+      "caseType": "单牌位次案例",
+      "question": {
+        "topic": "自我成长",
+        "subtopics": ["内省", "外界噪音", "独处"],
+        "normalizedPattern": "听了很多建议，反而越来越不知道自己想要什么",
+        "keywords": ["迷茫", "自己", "方向", "独处", "建议"]
+      },
+      "spreadId": "three-card-issue",
+      "cards": [
+        {"cardId": "rws-major-09", "name": "隐者", "orientation": "正位", "reversalMode": null, "position": "建议"}
+      ],
+      "relations": [],
+      "candidateInterpretations": [
+        {
+          "claim": "建议暂时降低外界意见的音量，用有期限的独处整理自己的问题，而不是无限退出关系。",
+          "evidence": ["隐者｜正位｜建议"],
+          "fitConditions": ["外界意见相互冲突", "你仍能维持基本支持和日常功能"],
+          "counterSignals": ["独处已经变成长期隔离或明显加重痛苦"],
+          "calibrationQuestion": "拿掉别人对你的期待后，你最想先确认哪一个问题？"
+        }
+      ],
+      "safeActions": ["安排一段有开始和结束时间的独处，写下一个问题和三条自己的观察"],
+      "source": {"type": "团队编写", "sourceRefs": ["TAROT-RWS-WAITE-1911", "TAROT-RWS-EDITORIAL-ZH-01"], "license": "内部使用"},
+      "quality": {"reviewStatus": "团队初审", "specificity": 0.87, "barnumRisk": 0.13},
+      "safetyTags": []
+    },
+    {
+      "caseId": "case-growth-death-direction-014",
+      "caseType": "单牌情境案例",
+      "question": {
+        "topic": "自我成长",
+        "subtopics": ["结束", "身份转变", "放手"],
+        "normalizedPattern": "旧阶段已经结束，但仍不习惯新的生活方式",
+        "keywords": ["结束", "离开", "改变", "转型", "放下"]
+      },
+      "spreadId": "three-card",
+      "cards": [
+        {"cardId": "rws-major-13", "name": "死神", "orientation": "正位", "reversalMode": null, "position": "未来"}
+      ],
+      "relations": [],
+      "candidateInterpretations": [
+        {
+          "claim": "若当前趋势延续，重点是旧身份或旧做法进一步退场，为新结构腾出空间；它不表示字面死亡。",
+          "evidence": ["死神｜正位｜未来"],
+          "fitConditions": ["某个阶段已有清楚的结束信号", "继续维持旧方式成本不断增加"],
+          "counterSignals": ["变化只是短期中断，原结构仍有明确恢复条件"],
+          "calibrationQuestion": "你真正舍不得的是那件事本身，还是它曾经代表的身份与安全感？"
+        }
+      ],
+      "safeActions": ["为已经结束的部分做一次具体收尾，同时保留可调整的新尝试"],
+      "source": {"type": "团队编写", "sourceRefs": ["TAROT-RWS-WAITE-1911", "TAROT-RWS-EDITORIAL-ZH-01"], "license": "内部使用"},
+      "quality": {"reviewStatus": "团队初审", "specificity": 0.9, "barnumRisk": 0.1},
+      "safetyTags": ["不作字面死亡解释"]
+    },
+    {
+      "caseId": "case-growth-tower-star-relation-015",
+      "caseType": "两牌关系案例",
+      "question": {
+        "topic": "自我成长",
+        "subtopics": ["突发变化", "恢复", "重新建立信任"],
+        "normalizedPattern": "原计划突然失败，正在寻找接下来怎样恢复",
+        "keywords": ["失败", "突发", "崩塌", "恢复", "希望"]
+      },
+      "spreadId": "three-card",
+      "cards": [
+        {"cardId": "rws-major-16", "name": "高塔", "orientation": "正位", "reversalMode": null, "position": "过去"},
+        {"cardId": "rws-major-17", "name": "星星", "orientation": "正位", "reversalMode": null, "position": "现在"}
+      ],
+      "relations": ["转向", "修复"],
+      "candidateInterpretations": [
+        {
+          "claim": "组合从旧结构被打破转向缓慢恢复；希望来自承认损失后的重新校准，而不是假装冲击没有发生。",
+          "evidence": ["高塔｜正位｜过去", "星星｜正位｜现在", "高塔转向星星"],
+          "fitConditions": ["原有假设已被事实推翻", "现在开始出现支持、透明度或恢复空间"],
+          "counterSignals": ["危机仍在持续且基本安全尚未恢复"],
+          "calibrationQuestion": "冲击之后，哪一个更真实、更简单的期待仍值得保留？"
+        }
+      ],
+      "safeActions": ["先确认基本安全与现实支持，再写下一个可恢复的最小目标"],
+      "source": {"type": "团队编写", "sourceRefs": ["TAROT-RWS-WAITE-1911", "TAROT-RWS-EDITORIAL-ZH-01"], "license": "内部使用"},
+      "quality": {"reviewStatus": "团队初审", "specificity": 0.94, "barnumRisk": 0.06},
+      "safetyTags": []
+    },
+    {
+      "caseId": "case-career-chariot-temperance-relation-016",
+      "caseType": "两牌关系案例",
+      "question": {
+        "topic": "事业",
+        "subtopics": ["推进速度", "节奏调整", "资源协调"],
+        "normalizedPattern": "项目必须推进，但团队已经出现明显疲劳",
+        "keywords": ["项目", "速度", "赶工", "团队", "疲劳"]
+      },
+      "spreadId": "three-card-issue",
+      "cards": [
+        {"cardId": "rws-major-07", "name": "战车", "orientation": "正位", "reversalMode": null, "position": "情况"},
+        {"cardId": "rws-major-14", "name": "节制", "orientation": "正位", "reversalMode": null, "position": "建议"}
+      ],
+      "relations": ["补偿", "节奏校准"],
+      "candidateInterpretations": [
+        {
+          "claim": "战车强调方向和推进，节制则限制盲目加速；建议用协调节奏保护持续性，而不是在前进与休息之间二选一。",
+          "evidence": ["战车｜正位｜情况", "节制｜正位｜建议", "节制补偿战车"],
+          "fitConditions": ["目标仍然重要且方向基本明确", "当前风险来自节奏失衡而非完全无路可走"],
+          "counterSignals": ["项目本身已失去合法性、安全性或基本资源"],
+          "calibrationQuestion": "保持方向不变时，哪一段速度最需要主动降下来？"
+        }
+      ],
+      "safeActions": ["标出必须快、可以慢和应该停止的任务，各调整一项"],
+      "source": {"type": "团队编写", "sourceRefs": ["TAROT-RWS-EDITORIAL-ZH-01"], "license": "内部使用"},
+      "quality": {"reviewStatus": "团队初审", "specificity": 0.94, "barnumRisk": 0.06},
+      "safetyTags": []
+    },
+    {
+      "caseId": "case-growth-devil-eight-swords-relation-017",
+      "caseType": "两牌关系案例",
+      "question": {
+        "topic": "自我成长",
+        "subtopics": ["习惯束缚", "自我限制", "可用选择"],
+        "normalizedPattern": "知道一个习惯让自己受困，却觉得完全没有办法改变",
+        "keywords": ["习惯", "依赖", "受困", "无力", "改变"]
+      },
+      "spreadId": "three-card-issue",
+      "cards": [
+        {"cardId": "rws-major-15", "name": "恶魔", "orientation": "正位", "reversalMode": null, "position": "情况"},
+        {"cardId": "rws-swords-08", "name": "宝剑八", "orientation": "正位", "reversalMode": null, "position": "障碍"}
+      ],
+      "relations": ["加强", "自我束缚"],
+      "candidateInterpretations": [
+        {
+          "claim": "两张牌共同放大束缚感，但也提醒区分真实限制与已经内化的“我没有选择”；不能据此把成瘾或心理状况当作诊断。",
+          "evidence": ["恶魔｜正位｜情况", "宝剑八｜正位｜障碍", "两牌共同加强束缚主题"],
+          "fitConditions": ["某种短期缓解不断换来长期代价", "至少存在一个小范围可选动作"],
+          "counterSignals": ["存在暴力控制、急性成瘾风险或需要专业介入的危机"],
+          "calibrationQuestion": "哪些限制是外部事实，哪些是尚未测试过的假设？"
+        }
+      ],
+      "safeActions": ["只选择一个低风险触发点做记录；若涉及成瘾或安全风险，寻求合格专业支持"],
+      "source": {"type": "团队编写", "sourceRefs": ["TAROT-RWS-EDITORIAL-ZH-01"], "license": "内部使用"},
+      "quality": {"reviewStatus": "团队初审", "specificity": 0.95, "barnumRisk": 0.05},
+      "safetyTags": ["不作心理诊断", "危机时转介专业支持"]
+    },
+    {
+      "caseId": "case-learning-full-018",
+      "caseType": "完整三牌案例",
+      "question": {
+        "topic": "学习",
+        "subtopics": ["新技能", "进度焦虑", "练习系统"],
+        "normalizedPattern": "刚开始学习新技能，投入不少却因进展缓慢想放弃",
+        "keywords": ["学习", "技能", "焦虑", "进度", "放弃"]
+      },
+      "spreadId": "three-card-issue",
+      "cards": [
+        {"cardId": "rws-pentacles-11", "name": "星币侍者", "orientation": "正位", "reversalMode": null, "position": "情况"},
+        {"cardId": "rws-pentacles-07", "name": "星币七", "orientation": "逆位", "reversalMode": "延迟", "position": "障碍"},
+        {"cardId": "rws-pentacles-08", "name": "星币八", "orientation": "正位", "reversalMode": null, "position": "建议"}
+      ],
+      "relations": ["同花色递进", "从评估回到练习"],
+      "candidateInterpretations": [
+        {
+          "claim": "三张星币把问题集中在实际学习过程：起点真实，障碍是用过早的成果评估否定积累，建议回到有反馈的重复练习。",
+          "evidence": ["星币侍者｜正位｜情况", "星币七｜逆位｜障碍", "星币八｜正位｜建议", "三张星币形成技能积累序列"],
+          "fitConditions": ["学习时间仍处于早期", "目前缺少短周期反馈指标"],
+          "counterSignals": ["方法已经持续验证无效，或目标并非自己真正想学"],
+          "calibrationQuestion": "你是在评估技能本身的进步，还是只用最终结果判断自己？"
+        }
+      ],
+      "safeActions": ["设定一个两周练习周期，只跟踪一个技能指标和一次外部反馈"],
+      "source": {"type": "团队编写", "sourceRefs": ["TAROT-RWS-EDITORIAL-ZH-01"], "license": "内部使用"},
+      "quality": {"reviewStatus": "团队初审", "specificity": 0.96, "barnumRisk": 0.04},
+      "safetyTags": []
+    }
+  ]
+}

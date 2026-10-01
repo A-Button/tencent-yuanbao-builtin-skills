@@ -1,0 +1,355 @@
+{
+  "components": [
+    {
+      "id": "root",
+      "component": "Card",
+      "child": "body",
+      "style": {
+        "padding": {
+          "horizontal": 16,
+          "vertical": 14
+        },
+        "containerColor": "basic_container_primary",
+        "shape": 24
+      }
+    },
+    {
+      "id": "body",
+      "component": "Column",
+      "children": [
+        "query-block",
+        "job-list",
+        "action-row"
+      ],
+      "align": "stretch",
+      "style": {
+        "spacing": 0
+      }
+    },
+    {
+      "id": "query-block",
+      "component": "Column",
+      "children": [
+        "source-row",
+        "title",
+        "filter-list"
+      ],
+      "align": "stretch",
+      "style": {
+        "spacing": 6,
+        "padding": {
+          "bottom": 10
+        }
+      }
+    },
+    {
+      "id": "source-row",
+      "component": "Row",
+      "children": [
+        "source-icon",
+        "source-label"
+      ],
+      "align": "center",
+      "style": {
+        "spacing": 4
+      }
+    },
+    {
+      "id": "source-icon",
+      "component": "Text",
+      "text": "⌕",
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_function_blue",
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "source-label",
+      "component": "Text",
+      "text": "已理解为筛选条件 · 结合档案排序",
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_function_blue",
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "title",
+      "component": "Text",
+      "text": {
+        "path": "/title"
+      },
+      "variant": "h3",
+      "maxLines": 2,
+      "style": {
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "filter-list",
+      "component": "List",
+      "direction": "horizontal",
+      "align": "center",
+      "children": {
+        "path": "/filters",
+        "componentId": "filter-chip"
+      },
+      "style": {
+        "spacing": 6,
+        "padding": {
+          "top": 2
+        }
+      }
+    },
+    {
+      "id": "filter-chip",
+      "component": "Card",
+      "child": "filter-label",
+      "style": {
+        "padding": {
+          "horizontal": 9,
+          "vertical": 5
+        },
+        "containerColor": "basic_bg_secondary",
+        "shape": 15
+      }
+    },
+    {
+      "id": "filter-label",
+      "component": "Text",
+      "text": {
+        "path": "label"
+      },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_text_secondary",
+        "fontWeight": 500
+      }
+    },
+    {
+      "id": "job-list",
+      "component": "Column",
+      "align": "stretch",
+      "children": {
+        "path": "/jobs",
+        "componentId": "job-item"
+      },
+      "style": {
+        "spacing": 6
+      }
+    },
+    {
+      "id": "job-item",
+      "component": "Card",
+      "child": "job-body",
+      "style": {
+        "padding": {
+          "horizontal": 12,
+          "vertical": 10
+        },
+        "containerColor": "basic_bg_secondary",
+        "shape": 14
+      }
+    },
+    {
+      "id": "job-body",
+      "component": "Column",
+      "children": [
+        "job-title",
+        "job-company",
+        "job-footer"
+      ],
+      "align": "stretch",
+      "style": {
+        "spacing": 4
+      }
+    },
+    {
+      "id": "job-title",
+      "component": "Text",
+      "text": {
+        "path": "title"
+      },
+      "variant": "h5",
+      "maxLines": 2,
+      "style": {
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "job-company",
+      "component": "Text",
+      "text": {
+        "path": "company"
+      },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_text_tertiary"
+      }
+    },
+    {
+      "id": "job-footer",
+      "component": "Row",
+      "children": [
+        "job-meta-row",
+        "job-cta-slot"
+      ],
+      "justify": "spaceBetween",
+      "align": "center",
+      "style": {
+        "spacing": 8
+      }
+    },
+    {
+      "id": "job-cta-slot",
+      "component": "Column",
+      "children": [
+        "job-cta"
+      ],
+      "align": "end",
+      "style": {
+        "width": 64
+      }
+    },
+    {
+      "id": "job-meta-row",
+      "component": "Row",
+      "children": [
+        "job-salary",
+        "job-meta"
+      ],
+      "align": "center",
+      "weight": 1,
+      "style": {
+        "spacing": 6
+      }
+    },
+    {
+      "id": "job-salary",
+      "component": "Text",
+      "text": {
+        "path": "salary"
+      },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_function_orange",
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "job-meta",
+      "component": "Text",
+      "text": {
+        "path": "meta"
+      },
+      "variant": "caption",
+      "maxLines": 1,
+      "weight": 1,
+      "style": {
+        "color": "basic_text_quinary"
+      }
+    },
+    {
+      "id": "job-cta",
+      "component": "Clickable",
+      "child": "job-cta-label",
+      "action": {
+        "functionCall": {
+          "call": "openUrl",
+          "args": {
+            "url": {
+              "path": "source_url"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "job-cta-label",
+      "component": "Text",
+      "text": "去投递",
+      "variant": "caption",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_function_blue",
+        "fontWeight": 600
+      }
+    },
+    {
+      "id": "action-row",
+      "component": "Row",
+      "children": [
+        "more-jobs-button",
+        "tailor-resume-button"
+      ],
+      "justify": "end",
+      "align": "center",
+      "style": {
+        "spacing": 4,
+        "padding": {
+          "top": 12
+        }
+      }
+    },
+    {
+      "id": "more-jobs-button",
+      "component": "Button",
+      "child": "more-jobs-label",
+      "variant": "default",
+      "style": {
+        "containerColor": "components_button_gray",
+        "shape": 18
+      },
+      "action": {
+        "functionCall": {
+          "call": "sendQuery",
+          "args": {
+            "prompt": "请按当前筛选条件持续关注新岗位，先问我推送频率。"
+          }
+        }
+      }
+    },
+    {
+      "id": "more-jobs-label",
+      "component": "Text",
+      "text": "持续关注",
+      "maxLines": 1,
+      "style": {
+        "color": "basic_text_primary"
+      }
+    },
+    {
+      "id": "tailor-resume-button",
+      "component": "Button",
+      "child": "tailor-resume-label",
+      "variant": "primary",
+      "style": {
+        "containerColor": "components_button_primary",
+        "shape": 18
+      },
+      "action": {
+        "functionCall": {
+          "call": "sendQuery",
+          "args": {
+            "prompt": "请根据这些岗位要求帮我修改简历。"
+          }
+        }
+      }
+    },
+    {
+      "id": "tailor-resume-label",
+      "component": "Text",
+      "text": "按岗位改简历",
+      "maxLines": 1,
+      "style": {
+        "color": "components_button_primary_title"
+      }
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "success": true,
+  "code": 2000,
+  "message": "酒店搜索成功",
+  "hotelInformationList": [
+    {
+      "hotelId": 478250,
+      "name": "忆泊酒店(杭州西湖店)",
+      "nameEn": "EBO Hotel (Hangzhou West Lake)",
+      "brand": "当地连锁",
+      "address": "凤起路435号 (地铁1、2号线凤起路站D3出口旁)",
+      "destinationId": "6084457",
+      "latitude": 30.263669,
+      "longitude": 120.164306,
+      "starRating": 4.0,
+      "price": {
+        "lowestPrice": 409.0,
+        "currency": "CNY",
+        "hasPrice": true,
+        "message": "查价成功。1晚总价：409CNY（约409CNY/晚）"
+      },
+      "areaCode": "CN",
+      "imageUrl": "https://image-cdn.rollinggo.cn/v2/478250/hotel/default/14/image/0204x120008ccif4h0031_R_960_660_R5_D.jpg-t",
+      "miniProgramInfo": {
+        "type": "APP_TO_MINIAPP",
+        "url": "weixin://dl/business/?appid=wxbbc0e05a351fccb3&path=pages/hotel/detail/index&query=id%3D478250%26checkInDate%3D2026-10-08%26checkOutDate%3D2026-10-09%26roomCount%3D1%26adultCount%3D2%26childCount%3D0%26childAgeDetails%3D%26utm_source%3Dyuanbaoskill"
+      },
+      "tags": [
+        "临近商场",
+        "提供会议设施",
+        "免费WiFi",
+        "备有拖鞋",
+        "备有热水壶",
+        "客房备有吹风机",
+        "免费停车场",
+        "24小时前台",
+        "支持支付宝/微信"
+      ]
+    }
+  ]
+}

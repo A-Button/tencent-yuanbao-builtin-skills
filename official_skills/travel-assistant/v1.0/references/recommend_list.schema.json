@@ -1,0 +1,142 @@
+{
+  "$comment": "目录：items 数组；条目标识与文案；可选图片；agent_chat、h5、mini_program 三种可选 tap。",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "desc": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^https://"
+          },
+          "tap": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "type": "integer",
+                    "enum": [
+                      1
+                    ]
+                  },
+                  "agent_chat": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "send_prompt": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": []
+                  }
+                },
+                "required": [
+                  "type",
+                  "agent_chat"
+                ]
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "type": "integer",
+                    "enum": [
+                      2
+                    ]
+                  },
+                  "h5": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "^https://"
+                      }
+                    },
+                    "required": [
+                      "url"
+                    ]
+                  }
+                },
+                "required": [
+                  "type",
+                  "h5"
+                ]
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "type": "integer",
+                    "enum": [
+                      3
+                    ]
+                  },
+                  "mini_program": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "pattern": "^gh_.+"
+                      },
+                      "path": {
+                        "type": "string"
+                      },
+                      "mp_type": {
+                        "type": "integer",
+                        "enum": [
+                          0,
+                          1,
+                          2
+                        ]
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ]
+                  }
+                },
+                "required": [
+                  "type",
+                  "mini_program"
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "item_id",
+          "title"
+        ]
+      },
+      "minItems": 3,
+      "maxItems": 5
+    }
+  },
+  "required": [
+    "items"
+  ]
+}

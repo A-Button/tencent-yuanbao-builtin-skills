@@ -1,0 +1,13 @@
+{
+  "name": "event-crafter",
+  "version": "1.0.0",
+  "description": "专业活动策划方案撰写助手，覆盖年会、发布会、团建、展览、庆典、研讨会、路演等各类活动场景。提供完整方案框架、创意灵感、预算模板和执行清单。",
+  "author": "event-crafter-creator",
+  "tags": ["event-planning", "proposal", "creative", "template", "marketing", "productivity"],
+  "minOpenclawVersion": "0.20.0",
+  "entry": "SKILL.md",
+  "created": "2026-07-15",
+  "license": "MIT",
+  "repository": "",
+  "homepage": ""
+}

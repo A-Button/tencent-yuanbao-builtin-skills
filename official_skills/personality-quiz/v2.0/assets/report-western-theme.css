@@ -1,0 +1,8 @@
+    body.report-western { --page:#f3f4ef; --paper:#fffdf8; --ink:#29392f; --muted:#647267; --line:#dde4d9; --accent:#5d7964; background:radial-gradient(ellipse at 12% 0%,#e5ece1 0,transparent 55%),var(--page); font-family:"Avenir Next","PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Microsoft YaHei",sans-serif; -webkit-font-smoothing:antialiased; }
+    .report-western .report-shell { border-radius:24px; padding:clamp(28px,5vw,60px); box-shadow:0 12px 40px rgba(52,72,53,.035); }
+    .report-western h1,.report-western h2,.report-western h3 { font-family:"Songti SC","STSong","Noto Serif CJK SC",serif; font-weight:600; }
+    .report-western p,.report-western li { color:#405045; }
+    .report-western strong { color:var(--ink); font-weight:700; text-decoration-color:rgba(93,121,100,.26); }
+    .report-western code { background:#eaf0e7; }
+    .report-western .disclaimer { color:var(--muted); font-size:14px; }
+    @media (max-width:640px) { .report-western .report-shell { width:calc(100% - 28px); margin:20px auto; border:1px solid var(--line); padding:26px 20px 32px; font-size:17px; } }

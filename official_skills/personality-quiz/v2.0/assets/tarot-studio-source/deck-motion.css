@@ -1,0 +1,20 @@
+/* Keep the fan in one plane so a lifted card preserves its exact size and angle. */
+@media(min-width:701px){.app.dark .deck{transform:none;height:250px;--card-width:128px}}
+.app .deck-card{transition:translate .32s cubic-bezier(.2,.8,.2,1),filter .25s,opacity .15s,box-shadow .3s;outline-offset:4px}
+.app .deck-card:not(:disabled):hover,.app .deck-card:focus-visible{translate:0 -28px;filter:brightness(1.12);box-shadow:0 18px 35px #0007,0 0 0 1px #d8b678,0 0 22px #d8b67835}
+.app .deck-card:disabled:not(.is-used){filter:none}
+.app .deck.is-busy .deck-card{translate:none;pointer-events:none}
+.app .deck-card.is-used{visibility:hidden}
+.app .deck-card:not(:disabled):active{translate:0 -34px}
+.slot-face::after{content:'';position:absolute;inset:-5px;border:1px solid var(--accent);border-radius:12px;opacity:0;pointer-events:none;box-shadow:0 0 28px #c9a35f28;transition:opacity .4s,transform .7s;transform:scale(.97)}
+.is-next .slot-face::after{opacity:.28;transform:scale(1)}
+.is-receiving .slot-face::after{opacity:.72;transform:scale(1.025)}
+.phase-revealing .is-receiving .slot-face::after{opacity:0;transform:scale(1.12)}
+.app .card-flipper{transition:transform .88s cubic-bezier(.38,.05,.18,1)}
+.app .tarot-card:disabled{cursor:default}
+.app .has-card .card-caption button,.app .has-card .card-caption p{animation:caption-reveal .55s .4s both}
+.flying-card{transform-origin:center;will-change:transform;box-shadow:0 28px 55px #0008,0 0 0 1px #c5a56880;backface-visibility:hidden}
+@keyframes caption-reveal{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:700px){.app .deck-card:not(:disabled):hover{translate:0 -18px}.app .deck-card:not(:disabled):active{translate:0 -24px}.slot-face::after{inset:-3px;border-radius:8px}}
+@media(hover:none){.app .deck-card:not(:disabled):hover{translate:none;filter:none;box-shadow:inherit}}
+.app.reduce-motion .slot-face::after{transition:none}.app.reduce-motion .card-caption *{animation-delay:0s!important}

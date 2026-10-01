@@ -1,0 +1,68 @@
+html{scrollbar-gutter:auto}
+body{min-width:0}
+#viewport-probe{position:fixed;left:0;top:0;width:100%;height:100vh;height:100dvh;box-sizing:border-box;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);visibility:hidden;pointer-events:none;contain:strict}
+.app.viewport-layout{box-sizing:content-box;width:var(--table-width);min-height:var(--table-height);padding:var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);overflow:hidden;--slot-width:var(--table-slot)}
+.app.viewport-layout .scene-background,.app.viewport-layout .atmosphere{position:fixed;inset:0;width:100%;height:100vh;height:100dvh}
+.app.viewport-layout .topbar{height:var(--table-header);padding:4px 24px;align-items:center}
+.app.viewport-layout .reset{min-height:44px}
+.app.viewport-layout .experience{min-height:calc(var(--table-height) - var(--table-header))!important;padding:var(--table-leading) 0 8px;display:flex;flex-direction:column;gap:0}
+.app.viewport-layout .introduction{height:var(--table-intro);padding:4px 16px 6px;flex-shrink:0}
+.app.viewport-layout .experience .introduction h1{font-size:30px;line-height:1.4;letter-spacing:.03em}
+.app.viewport-layout .result-guidance{margin-top:6px;font-size:12px;line-height:20px}
+.app.viewport-layout .question-context{display:block;max-width:min(640px,100%);margin:5px auto 0;padding:0;font-size:12px;line-height:22px;min-height:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted);text-align:center;text-decoration:underline;text-underline-offset:3px}
+.app.viewport-layout .spread{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:min(860px,calc(100% - 32px));padding:0;margin:0 auto;gap:16px;flex-shrink:0}
+.app.viewport-layout .spread .slot{width:var(--table-slot);justify-self:center;min-width:0}
+.app.viewport-layout .spread .card-caption{height:44px;min-height:44px;padding:0}
+.app.viewport-layout .card-caption button{min-height:44px;display:flex;width:100%;justify-content:center;align-items:center;gap:3px;flex-direction:column;flex-wrap:nowrap;font-size:14px;line-height:1.3;letter-spacing:0;white-space:nowrap}
+.app.viewport-layout .card-caption .orientation{font-size:10px;padding:1px 4px}
+.app.viewport-layout .draw-area{width:var(--wheel-width);margin:8px auto 0;padding:0;flex-shrink:0}
+.app.viewport-layout .draw-area>.shuffle{height:44px;min-height:44px;margin:0 auto 8px;padding:8px 20px}
+.app.viewport-layout .completion{width:min(860px,calc(100% - 32px));max-width:none;margin:16px auto 0;padding:0}
+.app.viewport-layout .card-readings{width:min(860px,calc(100% - 32px));margin:10px auto 0;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.app.viewport-layout .card-reading{font-size:14px;line-height:1.8}
+.app.viewport-layout .completion-actions .result-button{min-height:44px}
+.app.viewport-layout .question-modal p{white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:700px){
+ .app.viewport-layout .topbar{padding-inline:16px}
+ .app.viewport-layout .experience .introduction h1{font-size:21px}
+ .app.viewport-layout .spread{width:calc(100% - 24px);gap:8px}
+ .app.viewport-layout .card-caption button{font-size:12px}
+ .app.viewport-layout .draw-area>.shuffle{min-width:144px;font-size:14px}
+ .app.viewport-layout.is-complete .card-readings{grid-template-columns:minmax(0,1fr);max-width:520px;gap:12px;margin-top:14px}
+ .app.viewport-layout.is-complete .card-reading{font-size:15px;line-height:1.85}
+ .app.viewport-layout.is-complete .completion{max-width:520px;margin-top:20px}
+ .app.viewport-layout.is-complete .completion-actions .result-button{min-height:48px}
+}
+
+.app.viewport-layout.landscape-table:not(.is-complete) .experience{display:grid;grid-template-columns:minmax(0,1fr) var(--wheel-width);grid-template-rows:var(--table-intro) auto;align-content:start;column-gap:8px}
+.app.viewport-layout.landscape-table:not(.is-complete) .introduction{grid-column:1/-1}
+.app.viewport-layout.landscape-table:not(.is-complete) .spread{width:calc(100% - 16px);gap:4px;align-self:center}
+.app.viewport-layout.landscape-table:not(.is-complete) .draw-area{margin:0;align-self:start}
+@media(orientation:landscape) and (max-height:500px) and (pointer:coarse){
+ .app.viewport-layout.is-complete .card-readings{grid-template-columns:minmax(0,1fr);max-width:520px}
+}
+
+.app.viewport-layout.landscape-table .topbar{padding-block:0}
+.app.viewport-layout.landscape-table .introduction{padding-block:4px}
+.app.viewport-layout.landscape-table .experience .introduction h1{font-size:20px;line-height:26px}
+.app.viewport-layout.landscape-table .result-guidance{font-size:11px;line-height:16px;margin-top:2px}
+.app.viewport-layout.landscape-table .question-context{font-size:11px;line-height:16px;min-height:16px;margin-top:2px}
+
+/* One lower region prevents scroll-height collapse when the final card settles. */
+.app.viewport-layout{overflow-anchor:none}
+.app.viewport-layout .lower-stage{width:100%;min-width:0;min-height:var(--lower-height);margin:8px auto 0;flex-shrink:0}
+.app.viewport-layout .lower-stage .draw-area{display:flex;flex-direction:column;align-items:center;margin:0 auto;padding:0}
+.app.viewport-layout .lower-stage .draw-area>.shuffle{display:flex;flex-shrink:0}
+.app.viewport-layout .lower-stage .card-readings{margin-top:0}
+.app.viewport-layout .completion{animation:none}
+.app.viewport-layout .result-stage{animation:result-opacity .28s ease-out both}
+.app.viewport-layout .spread .slot-face{height:calc(var(--table-slot)*1.75);min-height:0}
+.app.viewport-layout .shuffle svg,.app.viewport-layout .reset svg{animation:none!important;transform:none!important}
+@keyframes result-opacity{from{opacity:0}to{opacity:1}}
+@media(max-width:700px){
+ .app.viewport-layout .result-stage{min-height:0}
+}
+.app.viewport-layout.landscape-table:not(.is-complete) .lower-stage{width:var(--wheel-width);margin:0;align-self:start}
+@media(orientation:landscape) and (max-height:500px) and (pointer:coarse){
+ .app.viewport-layout .result-stage{min-height:0}
+}

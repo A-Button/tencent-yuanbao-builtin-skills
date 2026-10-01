@@ -1,0 +1,327 @@
+id: travel_assistant
+name: 出行助手
+version: v1.0
+description: 获取出行数据，处理机票火车票酒店、吃喝玩乐、行程和提醒；对话 XCard 展示机票、火车票、天气和打车时间。已确定的本人航班或高铁可创建行前 Todo，出发前 1–2 小时核实信息并展示 NOW 卡片。
+
+# show_panel 的对话 XCard，展示机票、火车票、天气和打车时间。
+resources:
+  - uri: ai_apps.skills.travel_assistant_card_res
+    name: 出行信息面板
+    description: 对话流里的票务、天气和打车时间卡片
+    path: assets/ui/card.json
+    mimeType: application/a2ui+json
+
+tools:
+  - name: show_panel
+    title: 在对话里展示信息面板
+    description: >
+      把这一轮要讲的结构化内容渲染成对话流卡片，代替堆一段 markdown。
+      纯展示、不写任何数据，和 NOW 完全解耦：NOW 卡片是 Trigger 到点投递的推送，
+      这个只在当前这一轮的对话里出现。只渲染机票/火车票 tickets、weather 和 mode=taxi 的 route；
+      美食、景点、酒店、演出、清单和选择等内容仍可查询或处理，但不进入这张 XCard。
+      缺少一块就省略该块；都没有时不要调用本工具，改在会话正文呈现。
+      机票仅在有真实航班号时展示；火车票支持已知车次、按条件挑选和 pending 待定状态。字段见 references/tools.md。
+    inputSchema:
+      type: object
+      required: [panel]
+      properties:
+        scene:
+          type: string
+          description: 兼容旧调用；不控制 XCard 模块。
+        panel:
+          type: object
+          additionalProperties: true
+      additionalProperties: false
+    handler: {type: python, path: scripts/show_panel.py}
+    _meta:
+      ui:
+        resourceUri: ai_apps.skills.travel_assistant_card_res
+        visibility: [model, app]
+  - name: check_ticket
+    title: 行前复查航班或高铁班次
+    description: >
+      按已知航班号/车次、日期和线路复查同程静态出发时刻与出发机场/车站。
+      火车必须传用户实际的上车站；结果不含个人座位、检票口、站台、登机口或实时运行状态。
+      供行前一次性 Trigger 命中后的执行轮调用，不用于 judge 轮询。
+    inputSchema:
+      type: object
+      required: [kind, no, date, depCity, arrCity]
+      properties:
+        kind: {type: string, enum: [flight, train]}
+        no: {type: string}
+        date: {type: string, description: YYYY-MM-DD}
+        depCity: {type: string}
+        arrCity: {type: string}
+        depStation: {type: string, description: 火车必填，用户实际的上车站}
+      additionalProperties: false
+    handler: {type: script, path: scripts/check_ticket.py}
+    _meta:
+      ui:
+        visibility: [model]
+  - name: check_weather
+    title: 查询天气是否适合户外
+    description: >
+      按坐标或城市查询天气，并给出是否适合户外的粗判。无副作用，可重复调用。
+      预报只覆盖当天加未来 3 天；超出射程时 outdoorSuitable 为 unknown。
+      供 Trigger judge.tool_call 使用。
+    inputSchema:
+      type: object
+      properties:
+        location:
+          type: string
+          description: 纬度,经度
+        city:
+          type: string
+          description: 城市名，无坐标时用
+        date:
+          type: string
+          description: YYYY-MM-DD，缺省按当天
+        type:
+          type: string
+          enum: [now, future]
+      additionalProperties: false
+    handler: {type: script, path: scripts/check_weather.py}
+    _meta:
+      ui:
+        visibility: [model]
+
+  - name: check_route_eta
+    title: 查询含路况的预计时长
+    description: >
+      查询两点驾车预计时长、距离、打车预估与限行。无副作用，可重复调用。
+      路况没有定性字段，拥堵判断由距离与时长反算。供 Trigger judge.tool_call 使用。
+    inputSchema:
+      type: object
+      required: [from, to]
+      properties:
+        from:
+          type: string
+          description: 起点坐标，格式为 纬度,经度
+        to:
+          type: string
+          description: 终点坐标，格式为 纬度,经度
+        mode:
+          type: string
+          enum: [driving, walking, transit]
+      additionalProperties: false
+    handler: {type: script, path: scripts/check_route_eta.py}
+    _meta:
+      ui:
+        visibility: [model]
+
+  - name: find_nearby
+    title: 查询锚点周边地点
+    description: >
+      以行程站点或用户给出的地点坐标为锚点，搜索周边餐饮、纪念品店或便利店。无副作用。
+      不返回评分、人均或图片。仅将结果描述为「XX 附近」。
+    inputSchema:
+      type: object
+      required: [near, kind]
+      properties:
+        near:
+          type: string
+          description: 锚点坐标，格式为 纬度,经度
+        kind:
+          type: string
+          enum: [dining, souvenir, convenience]
+        keyword:
+          type: string
+        radius:
+          type: integer
+          minimum: 100
+          maximum: 5000
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 10
+      additionalProperties: false
+    handler: {type: script, path: scripts/find_nearby.py}
+    _meta:
+      ui:
+        visibility: [model]
+
+  - name: get_trip_context
+    title: 读取已有行程
+    description: 读取 travel_plan 沙箱行程。读不到时返回 found=false，不要当成错误。
+    inputSchema:
+      type: object
+      properties: {}
+      additionalProperties: false
+    handler: {type: script, path: scripts/get_trip_context.py}
+    _meta:
+      ui:
+        visibility: [model]
+
+  - name: get_place_media
+    title: 取景点真实配图
+    description: >
+      按城市批量查同程收录的景点/酒店配图，用于卡片主图与列表项缩略图。
+      一次最多 8 个名称，一个请求查完。返回 HTTPS 图片地址；
+      未收录或没有图片的名称进入 missing；对其改用 picture_search 或省略图片。
+      仅查询景区与酒店，不要查询餐厅或小店。
+    inputSchema:
+      type: object
+      required: [city, names]
+      properties:
+        city:
+          type: string
+          description: 景点所在城市
+        names:
+          type: array
+          minItems: 1
+          maxItems: 8
+          items: {type: string}
+          description: 景点或酒店名称，用真实名称不要用泛称
+      additionalProperties: false
+    handler: {type: script, path: scripts/get_place_media.py}
+    _meta:
+      ui:
+        visibility: [model]
+
+  - name: check_proximity
+    title: 算到行程地点的距离
+    description: >
+      算当前位置到各个目标的大圆距离、方位，并标出哪些进了围栏，用于按距离触发的规则。
+      位置本身由 geo-location Connector 的 get_geo_location 提供，
+      本工具只接收已经拿到的 lat/lng。
+      不传 targets 时自动读 travel_plan 行程里带坐标的站点。
+      半径建议：赶飞机赶火车 5 公里、下一程景点 3 公里、吃饭商圈 1 公里、酒店 2 公里。
+      命中不等于要发卡——还要看这一程提醒过没有，见 references/trigger-instruction.md。
+    inputSchema:
+      type: object
+      required: [lat, lng]
+      properties:
+        lat: {type: number, description: 当前位置纬度，gcj02}
+        lng: {type: number, description: 当前位置经度，gcj02}
+        radius_km:
+          type: number
+          description: 统一围栏半径（公里），默认 3；目标可各自覆盖
+        targets:
+          type: array
+          maxItems: 20
+          description: 省略则自动读行程站点
+          items:
+            type: object
+            required: [name, lat, lng]
+            properties:
+              name: {type: string}
+              lat: {type: number}
+              lng: {type: number}
+              radius_km: {type: number, description: 该目标专属半径，覆盖全局值}
+      additionalProperties: false
+    handler: {type: script, path: scripts/check_proximity.py}
+    _meta:
+      ui:
+        visibility: [model]
+
+  - name: plan_geofence
+    title: 生成地理围栏的判断条件
+    description: >
+      把行程站点的围栏换算成经纬度区间，生成可以原样填进 Trigger judge.condition 的条件文本，
+      配合 judge.tool_call=get_geo_location，就能在后台轮询位置、只有进了围栏才投递 prompt。
+      不需要当前位置。不传 targets 时自动读 travel_plan 行程里带坐标的站点；
+      exclude 放已提醒过的站点名，命中后用它重新生成条件替换掉旧的 judge。
+    inputSchema:
+      type: object
+      properties:
+        radius_km:
+          type: number
+          description: 统一围栏半径（公里），默认 3；目标可各自覆盖
+        targets:
+          type: array
+          maxItems: 20
+          description: 省略则自动读行程站点；生成的条件最多容纳 5 个未提醒站点
+          items:
+            type: object
+            required: [name, lat, lng]
+            properties:
+              name: {type: string}
+              lat: {type: number}
+              lng: {type: number}
+              radius_km: {type: number, description: 该目标专属半径，覆盖全局值}
+        exclude:
+          type: array
+          items: {type: string}
+          description: 已经提醒过、不再监测的站点名
+      additionalProperties: false
+    handler: {type: script, path: scripts/plan_geofence.py}
+    _meta:
+      ui:
+        visibility: [model]
+
+  - name: prepare_landing
+    title: 生成卡片的落地目标
+    description: >
+      生成 NOW 卡片可直接使用的 tap。
+      map 走腾讯地图 POI，scenery/hotel 走同程，food 走美团，ticket 走猫眼，
+      navigate 走各家地图自己托管的唤端页（type=2，无需自建页面）。
+      行程详情点击回原会话；page 仅兼容已保存的旧 Trigger，返回 agent_chat，不生成页面。
+      提供 city 和 name 时自动查询腾讯 POI 与同程景点并补全 ID；
+      查不到就失败或降级为关键词页，绝不编造 ID 与路径。
+    inputSchema:
+      type: object
+      required: [kind]
+      properties:
+        kind:
+          type: string
+          enum: [page, map, scenery, hotel, food, ticket, navigate]
+          description: page 仅兼容旧 Trigger，新调用请选择其他 kind；行程卡回原会话无需调用本工具。
+        page:
+          type: object
+          description: 仅兼容已保存的旧调用；页面内容会被忽略，点击回原会话。新规则不要使用 page。
+        name:
+          type: string
+          description: 地点或景点名称；map、scenery 用它查 ID
+        keyword:
+          type: string
+          description: food 与 ticket 的搜索词。food 写店名或「区域 品类」，城市放 city；ticket 只写片名或演出名
+        provider:
+          type: string
+          enum: [qqmap, amap, baidu, apple]
+          description: navigate 用哪家地图的唤端页；省略为腾讯
+        poi_id:
+          type: string
+          description: 腾讯 POI ID；不给且有 city 时自动查
+        lat: {type: number}
+        lng: {type: number}
+        sid:
+          type: string
+          description: 同程景点 sid；不给时按 city 加 name 查，查不到会失败而不是猜
+        wxrefid: {type: string}
+        city: {type: string}
+        keyword:
+          type: string
+          description: 酒店列表的搜索词
+        indate:
+          type: string
+          description: YYYY-MM-DD
+        outdate:
+          type: string
+          description: YYYY-MM-DD
+      additionalProperties: false
+    handler: {type: script, path: scripts/prepare_landing.py}
+    _meta:
+      ui:
+        visibility: [model]
+
+  - name: prepare_card
+    title: 校验 NOW 卡片
+    description: >
+      按需根据 make-things show_widget 协议预校验卡片参数。
+      校验通过后原样返回 card；仅在 show_widget 拒绝卡片或使用不熟悉的卡型时调用。
+      card_type 是字符串：image_text / recommend_list / todo_remind / todo_choice，不传数字。
+      正文放扁平 data，不要包一层同名子对象；归属 ID 用 camelCase 的 thingId / todoId。
+      data 与 tap 内部的嵌套字段一律 snake_case，枚举用数字；小程序 name 必须是 gh_ 原始 id。
+      不要下发 image_preview，也不要传 conversation_id。
+    inputSchema:
+      type: object
+      required: [card]
+      properties:
+        card:
+          type: object
+          additionalProperties: true
+      additionalProperties: false
+    handler: {type: script, path: scripts/prepare_card.py}
+    _meta:
+      ui:
+        visibility: [model]

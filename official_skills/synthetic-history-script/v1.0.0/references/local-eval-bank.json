@@ -1,0 +1,9 @@
+{
+  "schema": "synthetic-history-local-bank-settings@1",
+  "root": "/Users/reyna/Documents/Longterm Memory/memory-eval-bank",
+  "scope": "本机用户已确认的统一题库位置；其他环境需重新确认",
+  "require_explicit_user_admission": true,
+  "preserve_source_directory": true,
+  "overwrite_admitted_version": false,
+  "run_memory_or_judge_on_admission": false
+}

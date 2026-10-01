@@ -1,0 +1,27 @@
+{
+  "components": [
+    {
+      "id": "root", "component": "Clickable", "child": "card",
+      "action": {"functionCall": {"call": "openWechatMiniProgram", "args": {
+        "userName": {"path": "/wxUserName"}, "path": {"path": "/wxPath"}
+      }}}
+    },
+    {
+      "id": "card", "component": "Card", "child": "card-row",
+      "style": {"width": "100%", "padding": 12, "containerColor": "basic_container_primary", "shape": 12}
+    },
+    {
+      "id": "card-row", "component": "Row", "children": ["cover", "info"],
+      "align": "center", "justify": "start", "style": {"width": "100%", "spacing": 12}
+    },
+    {
+      "id": "cover", "component": "Image", "url": {"path": "/coverUrl"},
+      "description": {"path": "/name"}, "fit": "cover", "style": {"width": 48, "height": 48, "shape": 8}
+    },
+    {"id": "info", "component": "Column", "children": ["name"], "align": "start", "weight": 1},
+    {
+      "id": "name", "component": "Text", "text": {"path": "/name"}, "variant": "h5",
+      "maxLines": 1, "style": {"fontWeight": 600}
+    }
+  ]
+}

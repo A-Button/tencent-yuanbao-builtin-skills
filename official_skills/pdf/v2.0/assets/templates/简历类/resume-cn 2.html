@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>个人简历</title>
+<style>
+  :root{
+    --ink:#000000;        /* 主文字 纯黑 */
+    --ink2:#333333;       /* 次文字 */
+    --muted:#8a8a8a;      /* 弱文字 */
+    --line:#e8e8e8;       /* 分隔线 */
+    --side:#000000;       /* 侧栏底色 纯黑 */
+    --side2:#000000;      /* 纯色无渐变 */
+    --accent:#ff6a00;     /* 点缀色 高饱和橙 */
+    --accent2:#ff6a00;    /* 同色，去渐变 */
+    --accent-soft:#fff0e3;
+    --side-text:#ececec;
+    --side-muted:#8f8f8f;
+  }
+  /* ===== 可商用开源字体（内嵌）：中文思源黑体 Noto Sans SC + 英文/数字 Inter + 等宽 JetBrains Mono ===== */
+  @font-face{ font-family:"Noto Sans SC"; font-weight:400; src:url("fonts/NotoSansSC-Regular.otf") format("opentype"); }
+  @font-face{ font-family:"Noto Sans SC"; font-weight:700; src:url("fonts/NotoSansSC-Bold.otf") format("opentype"); }
+  @font-face{ font-family:"Inter"; font-weight:400; src:url("fonts/Inter-Regular.ttf") format("truetype"); }
+  @font-face{ font-family:"Inter"; font-weight:500; src:url("fonts/Inter-Medium.ttf") format("truetype"); }
+  @font-face{ font-family:"Inter"; font-weight:600; src:url("fonts/Inter-SemiBold.ttf") format("truetype"); }
+  @font-face{ font-family:"Inter"; font-weight:700; src:url("fonts/Inter-Bold.ttf") format("truetype"); }
+  @font-face{ font-family:"JetBrains Mono"; font-weight:400; src:url("fonts/JetBrainsMono-Regular.ttf") format("truetype"); }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  @page{ size:A4; margin:0; }
+  /* 中文用思源黑体，英文/数字优先用 Inter（Latin 子集匹配），其余回落系统无衬线 */
+  html,body{ font-family:"Inter","Noto Sans SC",sans-serif; color:var(--ink); -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{ background:#fff; }
+
+  .page{
+    width:210mm; height:297mm;
+    margin:0 auto; background:#fff;
+    display:flex; position:relative; overflow:hidden;
+  }
+
+  /* ============ 侧边栏 ============ */
+  .side{
+    width:68mm; flex:0 0 68mm;
+    background:#000000;
+    color:var(--side-text);
+    padding:13mm 9mm 13mm;
+    display:flex; flex-direction:column; justify-content:space-between;
+  }
+  /* 各小节均匀撑满纵向空间，首块贴顶、末块贴底，与主栏底部齐平 */
+  .side > *{ flex:0 0 auto; }
+  .avatar{
+    width:32mm; height:32mm; border-radius:50%;
+    margin:0 auto 6mm; background:rgba(255,255,255,.08);
+    border:2px solid rgba(255,255,255,.25);
+    display:flex; align-items:center; justify-content:center;
+    font-size:11pt; color:var(--side-muted); text-align:center; line-height:1.4;
+  }
+  .side-block{ margin-bottom:0; }
+  .side-h{
+    font-size:11.5pt; font-weight:700; letter-spacing:2px;
+    color:#fff; margin-bottom:4mm; position:relative; padding-bottom:2.5mm;
+  }
+  .side-h::after{ content:""; position:absolute; left:0; bottom:0; width:14mm; height:2.5px; border-radius:2px; background:var(--accent); }
+  .side-h .en{ display:block; font-size:7pt; font-weight:400; letter-spacing:1px; color:var(--side-muted); margin-top:1mm; }
+
+  .contact-item{ display:flex; align-items:flex-start; gap:3mm; font-size:9pt; color:var(--side-text); margin-bottom:3mm; line-height:1.4; }
+  .contact-item .ic{ flex:0 0 4.5mm; height:4.5mm; border-radius:6px; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:6.5pt; color:#000; margin-top:.4mm; }
+
+  .skill{ margin-bottom:3.2mm; }
+  .skill .row{ display:flex; justify-content:space-between; font-size:9pt; margin-bottom:1.6mm; color:var(--side-text); }
+  .skill .row .lv{ color:var(--side-muted); font-size:8pt; }
+  .bar{ height:4px; background:rgba(255,255,255,.12); border-radius:3px; overflow:hidden; }
+  .bar > i{ display:block; height:100%; background:var(--accent); border-radius:3px; }
+
+  .tag-wrap{ display:flex; flex-wrap:wrap; gap:2mm; }
+  .tag{ font-size:8pt; padding:1.2mm 2.8mm; border:1px solid rgba(255,106,0,.6); border-radius:10px; color:var(--side-text); background:rgba(255,106,0,.14); }
+
+  .lang-item{ display:flex; justify-content:space-between; font-size:9pt; margin-bottom:3mm; color:var(--side-text); }
+  .lang-item .dots{ letter-spacing:1px; color:var(--accent); }
+  .lang-item .dots .o{ color:rgba(255,255,255,.2); }
+
+  /* ============ 主栏 ============ */
+  .main{ flex:1; padding:13mm 12mm 11mm; }
+  .name{ font-size:25pt; font-weight:700; letter-spacing:1px; line-height:1; }
+  .name .en{ display:block; font-size:10pt; font-weight:400; color:var(--muted); letter-spacing:3px; margin-top:2.5mm; text-transform:uppercase; }
+  .title-line{ font-size:11.5pt; color:var(--accent); font-weight:600; margin-top:4mm; letter-spacing:.5px; }
+  .intro{ font-size:9.5pt; color:var(--ink2); line-height:1.65; margin-top:4mm; padding-top:4mm; border-top:1px solid var(--line); text-align:justify; }
+
+  .sec{ margin-top:6mm; }
+  .sec-h{ display:flex; align-items:center; gap:3.5mm; margin-bottom:4mm; }
+  .sec-h .num{ width:8mm; height:8mm; flex:0 0 8mm; background:var(--accent); color:#000; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:11pt; font-weight:700; }
+  .sec-h .tt{ font-size:13pt; font-weight:700; color:var(--ink); letter-spacing:.5px; }
+  .sec-h .tt .en{ font-size:7.5pt; font-weight:400; color:var(--muted); letter-spacing:1.5px; display:block; margin-top:.5mm; text-transform:uppercase; }
+
+  .item{ position:relative; padding-left:7mm; padding-bottom:4.5mm; }
+  .item::before{ content:""; position:absolute; left:0; top:1.5mm; width:7px; height:7px; border-radius:50%; background:#fff; border:2px solid var(--accent); z-index:2; }
+  .item::after{ content:""; position:absolute; left:3px; top:1.5mm; bottom:-1mm; width:1px; background:var(--line); }
+  .item:last-child::after{ display:none; }
+  .item .top{ display:flex; justify-content:space-between; align-items:baseline; gap:4mm; }
+  .item .role{ font-size:11pt; font-weight:700; color:var(--ink); }
+  .item .org{ font-size:9.5pt; color:var(--accent); font-weight:600; margin-top:.8mm; }
+  .item .date{ font-size:8.5pt; color:var(--muted); white-space:nowrap; background:var(--accent-soft); padding:.8mm 2.5mm; border-radius:8px; }
+  .item ul{ margin:2.5mm 0 0; padding-left:4mm; }
+  .item ul li{ font-size:9pt; color:var(--ink2); line-height:1.55; margin-bottom:1mm; text-align:justify; }
+  .item ul li::marker{ color:var(--accent); }
+
+  .edu .top{ align-items:baseline; }
+  .edu .deg{ font-size:9pt; color:var(--ink2); margin-top:.8mm; }
+
+  .footer{ margin-top:4mm; padding-top:3mm; border-top:1px solid var(--line); font-size:7.5pt; color:var(--muted); text-align:center; letter-spacing:.5px; }
+
+  .hint{ background:#fff7e6; border:1px dashed #e0b050; color:#8a6400; font-size:7.5pt; padding:1mm 2mm; border-radius:4px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ================= 侧边栏 ================= -->
+  <aside class="side">
+    <div class="avatar">照片<br>PHOTO</div>
+
+    <div class="side-block">
+      <div class="side-h">联系方式<span class="en">CONTACT</span></div>
+      <div class="contact-item"><span class="ic">电</span><span>138-0000-0000</span></div>
+      <div class="contact-item"><span class="ic">@</span><span>your.name@email.com</span></div>
+      <div class="contact-item"><span class="ic">位</span><span>北京市 · 朝阳区</span></div>
+      <div class="contact-item"><span class="ic">网</span><span>github.com/yourname</span></div>
+    </div>
+
+    <div class="side-block">
+      <div class="side-h">专业技能<span class="en">SKILLS</span></div>
+      <div class="skill">
+        <div class="row"><span>数据分析</span><span class="lv">精通</span></div>
+        <div class="bar"><i style="width:92%"></i></div>
+      </div>
+      <div class="skill">
+        <div class="row"><span>项目管理</span><span class="lv">熟练</span></div>
+        <div class="bar"><i style="width:85%"></i></div>
+      </div>
+      <div class="skill">
+        <div class="row"><span>团队协作</span><span class="lv">熟练</span></div>
+        <div class="bar"><i style="width:88%"></i></div>
+      </div>
+      <div class="skill">
+        <div class="row"><span>文案撰写</span><span class="lv">良好</span></div>
+        <div class="bar"><i style="width:75%"></i></div>
+      </div>
+    </div>
+
+    <div class="side-block">
+      <div class="side-h">工具栈<span class="en">TOOLS</span></div>
+      <div class="tag-wrap">
+        <span class="tag">Excel</span>
+        <span class="tag">SQL</span>
+        <span class="tag">Python</span>
+        <span class="tag">Tableau</span>
+        <span class="tag">PowerPoint</span>
+        <span class="tag">Figma</span>
+        <span class="tag">Jira</span>
+      </div>
+    </div>
+
+    <div class="side-block">
+      <div class="side-h">语言能力<span class="en">LANGUAGES</span></div>
+      <div class="lang-item"><span>普通话</span><span class="dots">●●●●●</span></div>
+      <div class="lang-item"><span>英语 (CET-6)</span><span class="dots">●●●●<span class="o">●</span></span></div>
+      <div class="lang-item"><span>日语 (N2)</span><span class="dots">●●●<span class="o">●●</span></span></div>
+    </div>
+
+    <div class="side-block">
+      <div class="side-h">证书荣誉<span class="en">HONORS</span></div>
+      <div class="contact-item"><span class="ic">★</span><span>PMP 项目管理认证</span></div>
+      <div class="contact-item"><span class="ic">★</span><span>校级优秀毕业生</span></div>
+      <div class="contact-item"><span class="ic">★</span><span>年度优秀员工 ×2</span></div>
+    </div>
+  </aside>
+
+  <!-- ================= 主栏 ================= -->
+  <main class="main">
+    <div class="name">张三<span class="en">Zhang San</span></div>
+    <div class="title-line">高级运营经理 / 数据驱动增长</div>
+    <p class="intro">
+      8 年互联网运营与增长经验，擅长以数据驱动决策，主导过用户规模从 10 万到 500 万的增长项目。具备完整的用户生命周期管理、活动策划与跨部门协作能力，曾带领 12 人团队达成年度 GMV 增长 60%。注重结果导向，善于在资源有限的条件下找到高 ROI 的增长路径。
+    </p>
+
+    <!-- 工作经历 -->
+    <section class="sec">
+      <div class="sec-h">
+        <span class="num">1</span>
+        <span class="tt">工作经历<span class="en">WORK EXPERIENCE</span></span>
+      </div>
+
+      <div class="item">
+        <div class="top">
+          <div>
+            <div class="role">高级运营经理</div>
+            <div class="org">某某科技有限公司</div>
+          </div>
+          <span class="date">2021.06 - 至今</span>
+        </div>
+        <ul>
+          <li>统筹用户增长与留存体系，通过精细化分层运营将月活从 180 万提升至 500 万，6 个月留存率提升 14 个百分点。</li>
+          <li>主导设计会员积分与权益体系，付费会员渗透率从 5% 提升至 18%，带动年度营收增长约 3200 万元。</li>
+          <li>搭建 A/B 测试与数据看板体系，将活动决策周期从 2 周缩短至 3 天，团队迭代效率提升 40%。</li>
+        </ul>
+      </div>
+
+      <div class="item">
+        <div class="top">
+          <div>
+            <div class="role">运营主管</div>
+            <div class="org">某某网络科技</div>
+          </div>
+          <span class="date">2018.03 - 2021.05</span>
+        </div>
+        <ul>
+          <li>负责核心品类日常运营，策划大促活动单场 GMV 突破 1500 万元，同比增长 65%。</li>
+          <li>从 0 到 1 搭建内容运营团队（5 人），自有内容贡献流量占比从 0 提升至 30%。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 项目经验 -->
+    <section class="sec">
+      <div class="sec-h">
+        <span class="num">2</span>
+        <span class="tt">项目经验<span class="en">KEY PROJECTS</span></span>
+      </div>
+
+      <div class="item">
+        <div class="top">
+          <div>
+            <div class="role">用户增长中台项目</div>
+            <div class="org">项目负责人</div>
+          </div>
+          <span class="date">2022.01 - 2022.09</span>
+        </div>
+        <ul>
+          <li>牵头跨 4 个部门搭建增长中台，沉淀可复用的活动与触达组件，新活动上线周期缩短 50%。</li>
+          <li>项目上线后单季度自动化触达覆盖 800 万用户，人力成本降低约 35%。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 教育背景 -->
+    <section class="sec">
+      <div class="sec-h">
+        <span class="num">3</span>
+        <span class="tt">教育背景<span class="en">EDUCATION</span></span>
+      </div>
+      <div class="item edu">
+        <div class="top">
+          <div>
+            <div class="role">某某大学</div>
+            <div class="deg">市场营销 · 本科 / 学士学位</div>
+          </div>
+          <span class="date">2014.09 - 2018.06</span>
+        </div>
+        <ul>
+          <li>主修课程：市场营销、消费者行为学、统计学、数据分析。</li>
+          <li>连续三年获校级一等奖学金，担任学生会实践部部长。</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

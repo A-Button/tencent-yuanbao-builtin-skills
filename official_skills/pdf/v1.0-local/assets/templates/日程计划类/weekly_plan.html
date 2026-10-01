@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root{
+    --ink:#0A0E0C;        /* 主文字 近黑 */
+    --indigo:#0A0E0C;     /* 主黑(替原靛蓝) */
+    --indigo-soft:#3A453F;/* 灰黑 */
+    --coral:#00E676;      /* 荧光绿(替原珊瑚 强调色) */
+    --coral-soft:#D7FBE8; /* 浅绿底 */
+    --amber:#00C853;      /* 深荧光绿(替原琥珀) */
+    --teal:#16A34A;       /* 草绿(替原青) */
+    --line:#DDE3DF;       /* 细分割线 偏冷灰 */
+    --paper:#FFFFFF;
+    --mist:#F2F6F3;       /* 浅灰绿底块 */
+    --mute:#7E8A82;       /* 次要文字 灰绿 */
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);}
+  @page{size:A4;margin:0;}
+  .page{
+    width:210mm;height:297mm;background:var(--paper);
+    padding:12mm 13mm 9mm;position:relative;margin:0 auto;
+    display:flex;flex-direction:column;overflow:hidden;
+  }
+  .page + .page{page-break-before:always;}
+
+  /* ============ 顶部标题区 ============ */
+  .masthead{
+    display:flex;align-items:stretch;border-radius:14px;overflow:hidden;
+    margin-bottom:6mm;
+  }
+  .mast-left{
+    background:#0A0E0C;
+    color:#fff;padding:7mm 8mm;flex:1;position:relative;overflow:hidden;
+  }
+  .mast-left::after{
+    content:"";position:absolute;right:-20px;top:-24px;width:120px;height:120px;
+    background:rgba(0,230,118,.10);transform:rotate(45deg);
+  }
+  .mast-left::before{
+    content:"";position:absolute;right:34px;bottom:-30px;width:80px;height:80px;
+    background:rgba(0,230,118,.16);
+  }
+  .kicker{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:#00E676;font-weight:700;}
+  .title{font-size:30px;font-weight:800;letter-spacing:1px;margin-top:3px;line-height:1.1;color:#00E676;}
+  .title em{font-style:normal;color:#fff;}
+  .subtitle{font-size:11px;color:rgba(255,255,255,.72);margin-top:6px;font-weight:400;}
+  .mast-right{
+    background:var(--coral);color:#0A0E0C;width:56mm;padding:6mm 6mm;
+    display:flex;flex-direction:column;justify-content:center;gap:7px;
+  }
+  .meta-row{display:flex;align-items:center;gap:8px;font-size:10.5px;}
+  .meta-row b{font-size:9px;letter-spacing:1px;opacity:.9;width:42px;display:inline-block;font-weight:800;}
+  .meta-fill{flex:1;border-bottom:1px dashed rgba(10,14,12,.5);min-height:13px;}
+
+  /* ============ 区块标题 ============ */
+  .sec-head{display:flex;align-items:center;gap:9px;margin:0 0 4mm;}
+  .sec-bar{width:5px;height:17px;border-radius:3px;background:var(--coral);}
+  .sec-bar.bl{background:var(--indigo);}
+  .sec-bar.tl{background:var(--teal);}
+  .sec-bar.am{background:var(--amber);}
+  .sec-title{font-size:14px;font-weight:800;letter-spacing:.5px;}
+  .sec-en{font-size:8.5px;color:var(--mute);letter-spacing:2px;text-transform:uppercase;font-weight:600;margin-left:2px;}
+  .sec-line{flex:1;height:1px;background:var(--line);}
+
+  /* ============ 核心目标 ============ */
+  .goals{display:grid;grid-template-columns:repeat(3,1fr);gap:5mm;margin-bottom:5.5mm;}
+  .goal{
+    border:1px solid var(--line);border-radius:12px;padding:5mm 5mm 4mm;position:relative;
+    background:linear-gradient(180deg,#fff 0%,var(--mist) 100%);
+  }
+  .goal-no{
+    position:absolute;top:-11px;left:14px;width:24px;height:24px;border-radius:7px;
+    background:var(--indigo);color:#fff;font-size:12px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .goal:nth-child(2) .goal-no{background:var(--coral);color:#0A0E0C;}
+  .goal:nth-child(3) .goal-no{background:var(--teal);}
+  .goal-cat{font-size:8.5px;color:var(--mute);letter-spacing:1px;font-weight:700;margin-top:3px;}
+  .goal-fill{border-bottom:1px solid var(--line);height:13px;margin-top:7px;}
+  .goal-fill.sm{height:11px;}
+  .goal-prog{display:flex;align-items:center;gap:6px;margin-top:9px;}
+  .goal-prog .bar{flex:1;height:6px;border-radius:4px;background:#E9ECF4;overflow:hidden;}
+  .goal-prog .bar span{display:block;height:100%;width:0;background:var(--coral);}
+  .goal-prog small{font-size:8px;color:var(--mute);font-weight:700;}
+
+  /* ============ 每日计划网格 ============ */
+  .days{display:flex;flex-direction:column;gap:2.3mm;margin-bottom:4mm;}
+  .day{
+    display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;
+    min-height:16.5mm;
+  }
+  .day-tab{
+    width:21mm;background:var(--mist);display:flex;flex-direction:column;
+    align-items:center;justify-content:center;border-right:2px solid var(--coral);gap:2px;
+  }
+  .day-tab .dw{font-size:13px;font-weight:800;color:var(--indigo);}
+  .day-tab .de{font-size:7.5px;color:var(--mute);letter-spacing:1px;font-weight:600;}
+  .day-tab .dd{font-size:8px;color:var(--mute);border-top:1px solid var(--line);padding-top:2px;margin-top:1px;width:74%;text-align:center;}
+  .day.weekend .day-tab{border-right-color:var(--indigo-soft);background:#EEF1F8;}
+  .day-body{flex:1;display:flex;flex-direction:column;padding:3mm 4mm;justify-content:center;gap:3.2mm;}
+  .task-line{display:flex;align-items:center;gap:7px;}
+  .chk{width:12px;height:12px;border:1.5px solid var(--indigo-soft);border-radius:4px;flex-shrink:0;}
+  .task-fill{flex:1;border-bottom:1px solid var(--line);height:11px;}
+  .pill{font-size:7.5px;font-weight:700;padding:2px 7px;border-radius:20px;flex-shrink:0;}
+  .pill.hi{background:#0A0E0C;color:#00E676;}
+  .pill.md{background:var(--coral-soft);color:#0B7A42;}
+  .pill.lo{background:var(--mist);color:#3A453F;}
+
+  /* ============ 第二页 ============ */
+  /* 重点任务追踪表 */
+  .track{width:100%;border-collapse:collapse;margin-bottom:7mm;border-radius:10px;overflow:hidden;
+    border:1px solid var(--line);}
+  .track th{
+    background:var(--indigo);color:#fff;font-size:9px;font-weight:700;letter-spacing:.5px;
+    padding:8px 9px;text-align:left;
+  }
+  .track td{padding:0;border-bottom:1px solid var(--line);border-right:1px solid var(--line);height:11mm;vertical-align:middle;}
+  .track td:last-child{border-right:none;}
+  .track tr:last-child td{border-bottom:none;}
+  .track tr:nth-child(even) td{background:var(--mist);}
+  .cell-pad{padding:5px 9px;}
+  .cell-dot{display:flex;align-items:center;gap:6px;}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--coral);flex-shrink:0;}
+  .dot.t{background:var(--teal);}.dot.a{background:var(--amber);}.dot.i{background:var(--indigo);}
+  .stat-tag{font-size:8px;font-weight:700;padding:3px 8px;border-radius:5px;display:inline-block;}
+  .stat-tag.todo{background:var(--coral-soft);color:#0B7A42;}
+  .col-no{width:9mm;text-align:center;}
+  .col-no .cell-pad{text-align:center;font-weight:800;color:var(--indigo-soft);}
+
+  /* 时间/精力管理 + 笔记 双栏 */
+  .two-col{display:grid;grid-template-columns:1.15fr 1fr;gap:6mm;margin-bottom:7mm;}
+  .panel{border:1px solid var(--line);border-radius:12px;padding:5mm;}
+  .energy-row{display:flex;align-items:center;gap:9px;margin-bottom:3.5mm;}
+  .energy-row:last-child{margin-bottom:0;}
+  .energy-row .lab{font-size:9.5px;font-weight:700;width:50px;color:var(--ink);}
+  .energy-row . co{font-size:8px;color:var(--mute);width:40px;}
+  .blocks{display:flex;gap:4px;flex:1;}
+  .blk{flex:1;height:13px;border-radius:3px;background:#EBEEF5;border:1px solid #E0E4EE;}
+  .legend{display:flex;gap:14px;margin-top:5mm;padding-top:4mm;border-top:1px dashed var(--line);}
+  .legend span{font-size:8px;color:var(--mute);display:flex;align-items:center;gap:5px;}
+  .legend i{width:10px;height:10px;border-radius:3px;display:inline-block;}
+
+  .note-line{border-bottom:1px solid var(--line);height:9mm;}
+  .note-line:last-child{border-bottom:none;}
+
+  /* 周度复盘 */
+  .review{display:grid;grid-template-columns:repeat(2,1fr);gap:5mm;margin-bottom:6mm;}
+  .rev-card{border:1px solid var(--line);border-radius:12px;padding:4.5mm 5mm;position:relative;}
+  .rev-card .rc-head{display:flex;align-items:center;gap:7px;margin-bottom:3mm;}
+  .rc-ico{width:22px;height:22px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+    font-size:12px;color:#fff;font-weight:800;}
+  .rc-ico.win{background:var(--teal);}
+  .rc-ico.gap{background:var(--coral);color:#0A0E0C;}
+  .rc-ico.learn{background:var(--amber);color:#0A0E0C;}
+  .rc-ico.next{background:var(--indigo);}
+  .rc-title{font-size:11px;font-weight:800;}
+  .rc-sub{font-size:7.5px;color:var(--mute);font-weight:600;}
+  .rev-line{border-bottom:1px solid var(--line);height:8mm;}
+  .rev-line:last-child{border-bottom:none;}
+
+  /* 评分条 */
+  .score{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;
+    padding:4mm 6mm;background:linear-gradient(135deg,var(--mist),#fff);}
+  .score .sl{font-size:11px;font-weight:800;}
+  .score .stars{display:flex;gap:5px;flex:1;}
+  .score .stars i{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--indigo-soft);}
+  .score .nm{font-size:8.5px;color:var(--mute);}
+
+  /* 页脚 */
+  .footer{margin-top:auto;padding-top:5mm;display:flex;justify-content:space-between;align-items:center;
+    border-top:1px solid var(--line);font-size:8px;color:var(--mute);letter-spacing:.5px;}
+  .footer b{color:var(--indigo);font-weight:800;letter-spacing:2px;}
+  .footer .brand-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--coral);margin-right:5px;}
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1 ==================== -->
+<div class="page">
+  <div class="masthead">
+    <div class="mast-left">
+      <div class="kicker">Weekly Operating Plan</div>
+      <div class="title">工作周计划 · <em>PULSE</em></div>
+      <div class="subtitle">以目标为锚，以节奏为驱动 —— 让每一周都有清晰的起点与可衡量的终点</div>
+    </div>
+    <div class="mast-right">
+      <div class="meta-row"><b>周次</b><span class="meta-fill"></span></div>
+      <div class="meta-row"><b>起止</b><span class="meta-fill"></span></div>
+      <div class="meta-row"><b>负责人</b><span class="meta-fill"></span></div>
+      <div class="meta-row"><b>部门</b><span class="meta-fill"></span></div>
+    </div>
+  </div>
+
+  <!-- 核心目标 -->
+  <div class="sec-head">
+    <span class="sec-bar"></span>
+    <span class="sec-title">本周核心目标</span>
+    <span class="sec-en">Top 3 Objectives</span>
+    <span class="sec-line"></span>
+  </div>
+  <div class="goals">
+    <div class="goal">
+      <div class="goal-no">1</div>
+      <div class="goal-cat">最高优先级 · 必达</div>
+      <div class="goal-fill"></div><div class="goal-fill sm"></div>
+      <div class="goal-prog"><div class="bar"><span style="width:0%"></span></div><small>0%</small></div>
+    </div>
+    <div class="goal">
+      <div class="goal-no">2</div>
+      <div class="goal-cat">关键推进 · 应达</div>
+      <div class="goal-fill"></div><div class="goal-fill sm"></div>
+      <div class="goal-prog"><div class="bar"><span style="width:0%;background:var(--coral)"></span></div><small>0%</small></div>
+    </div>
+    <div class="goal">
+      <div class="goal-no">3</div>
+      <div class="goal-cat">支撑事项 · 争取</div>
+      <div class="goal-fill"></div><div class="goal-fill sm"></div>
+      <div class="goal-prog"><div class="bar"><span style="width:0%;background:var(--teal)"></span></div><small>0%</small></div>
+    </div>
+  </div>
+
+  <!-- 每日计划 -->
+  <div class="sec-head">
+    <span class="sec-bar bl"></span>
+    <span class="sec-title">每日任务安排</span>
+    <span class="sec-en">Daily Schedule</span>
+    <span class="sec-line"></span>
+  </div>
+  <div class="days">
+    <!-- 工作日模板：3任务行 + 优先级标签 -->
+    <div class="day">
+      <div class="day-tab"><div class="dw">周一</div><div class="de">MON</div><div class="dd">__/__</div></div>
+      <div class="day-body">
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill hi">重要紧急</span></div>
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill md">常规推进</span></div>
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill lo">机动安排</span></div>
+      </div>
+    </div>
+    <div class="day">
+      <div class="day-tab"><div class="dw">周二</div><div class="de">TUE</div><div class="dd">__/__</div></div>
+      <div class="day-body">
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill hi">重要紧急</span></div>
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill md">常规推进</span></div>
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill lo">机动安排</span></div>
+      </div>
+    </div>
+    <div class="day">
+      <div class="day-tab"><div class="dw">周三</div><div class="de">WED</div><div class="dd">__/__</div></div>
+      <div class="day-body">
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill hi">重要紧急</span></div>
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill md">常规推进</span></div>
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill lo">机动安排</span></div>
+      </div>
+    </div>
+    <div class="day">
+      <div class="day-tab"><div class="dw">周四</div><div class="de">THU</div><div class="dd">__/__</div></div>
+      <div class="day-body">
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill hi">重要紧急</span></div>
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill md">常规推进</span></div>
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill lo">机动安排</span></div>
+      </div>
+    </div>
+    <div class="day">
+      <div class="day-tab"><div class="dw">周五</div><div class="de">FRI</div><div class="dd">__/__</div></div>
+      <div class="day-body">
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill hi">重要紧急</span></div>
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill md">常规推进</span></div>
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill lo">周度收尾</span></div>
+      </div>
+    </div>
+    <div class="day weekend">
+      <div class="day-tab"><div class="dw">周六</div><div class="de">SAT</div><div class="dd">__/__</div></div>
+      <div class="day-body">
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill lo">弹性 / 充电</span></div>
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill md">个人提升</span></div>
+      </div>
+    </div>
+    <div class="day weekend">
+      <div class="day-tab"><div class="dw">周日</div><div class="de">SUN</div><div class="dd">__/__</div></div>
+      <div class="day-body">
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill lo">休整 / 复盘</span></div>
+        <div class="task-line"><span class="chk"></span><span class="task-fill"></span><span class="pill md">下周预排</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span><span class="brand-dot"></span>PULSE WEEKLY · 让计划有节奏</span>
+    <span><b>P.01</b> / 02 &nbsp; 目标与日程</span>
+  </div>
+</div>
+
+<!-- ==================== PAGE 2 ==================== -->
+<div class="page">
+  <!-- 重点任务追踪 -->
+  <div class="sec-head">
+    <span class="sec-bar am"></span>
+    <span class="sec-title">重点任务追踪</span>
+    <span class="sec-en">Key Task Tracker</span>
+    <span class="sec-line"></span>
+  </div>
+  <table class="track">
+    <thead>
+      <tr>
+        <th class="col-no">No.</th>
+        <th style="width:34%">任务事项</th>
+        <th style="width:14%">负责人</th>
+        <th style="width:13%">截止日</th>
+        <th style="width:13%">优先级</th>
+        <th>状态</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="col-no"><div class="cell-pad">1</div></td><td><div class="cell-pad cell-dot"><span class="dot i"></span></div></td><td><div class="cell-pad"></div></td><td><div class="cell-pad"></div></td><td><div class="cell-pad"></div></td><td><div class="cell-pad"><span class="stat-tag todo">待开始</span></div></td></tr>
+      <tr><td class="col-no"><div class="cell-pad">2</div></td><td><div class="cell-pad cell-dot"><span class="dot"></span></div></td><td><div class="cell-pad"></div></td><td><div class="cell-pad"></div></td><td><div class="cell-pad"></div></td><td><div class="cell-pad"><span class="stat-tag todo">待开始</span></div></td></tr>
+      <tr><td class="col-no"><div class="cell-pad">3</div></td><td><div class="cell-pad cell-dot"><span class="dot t"></span></div></td><td><div class="cell-pad"></div></td><td><div class="cell-pad"></div></td><td><div class="cell-pad"></div></td><td><div class="cell-pad"><span class="stat-tag todo">待开始</span></div></td></tr>
+      <tr><td class="col-no"><div class="cell-pad">4</div></td><td><div class="cell-pad cell-dot"><span class="dot a"></span></div></td><td><div class="cell-pad"></div></td><td><div class="cell-pad"></div></td><td><div class="cell-pad"></div></td><td><div class="cell-pad"><span class="stat-tag todo">待开始</span></div></td></tr>
+      <tr><td class="col-no"><div class="cell-pad">5</div></td><td><div class="cell-pad cell-dot"><span class="dot i"></span></div></td><td><div class="cell-pad"></div></td><td><div class="cell-pad"></div></td><td><div class="cell-pad"></div></td><td><div class="cell-pad"><span class="stat-tag todo">待开始</span></div></td></tr>
+      <tr><td class="col-no"><div class="cell-pad">6</div></td><td><div class="cell-pad cell-dot"><span class="dot"></span></div></td><td><div class="cell-pad"></div></td><td><div class="cell-pad"></div></td><td><div class="cell-pad"></div></td><td><div class="cell-pad"><span class="stat-tag todo">待开始</span></div></td></tr>
+    </tbody>
+  </table>
+
+  <!-- 精力管理 + 备忘 -->
+  <div class="two-col">
+    <div class="panel">
+      <div class="sec-head" style="margin-bottom:4mm">
+        <span class="sec-bar tl"></span>
+        <span class="sec-title" style="font-size:12px">精力 · 时间分配</span>
+      </div>
+      <div class="energy-row"><span class="lab">深度专注</span><span class="co">上午</span><div class="blocks"><i class="blk"></i><i class="blk"></i><i class="blk"></i><i class="blk"></i><i class="blk"></i></div></div>
+      <div class="energy-row"><span class="lab">协作沟通</span><span class="co">午间</span><div class="blocks"><i class="blk"></i><i class="blk"></i><i class="blk"></i><i class="blk"></i><i class="blk"></i></div></div>
+      <div class="energy-row"><span class="lab">执行推进</span><span class="co">下午</span><div class="blocks"><i class="blk"></i><i class="blk"></i><i class="blk"></i><i class="blk"></i><i class="blk"></i></div></div>
+      <div class="energy-row"><span class="lab">复盘学习</span><span class="co">傍晚</span><div class="blocks"><i class="blk"></i><i class="blk"></i><i class="blk"></i><i class="blk"></i><i class="blk"></i></div></div>
+      <div class="legend">
+        <span><i style="background:var(--teal)"></i>高效时段</span>
+        <span><i style="background:var(--amber)"></i>一般时段</span>
+        <span><i style="background:#EBEEF5"></i>留白缓冲</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="sec-head" style="margin-bottom:4mm">
+        <span class="sec-bar bl"></span>
+        <span class="sec-title" style="font-size:12px">备忘 · 待跟进</span>
+      </div>
+      <div class="note-line"></div>
+      <div class="note-line"></div>
+      <div class="note-line"></div>
+      <div class="note-line"></div>
+      <div class="note-line"></div>
+    </div>
+  </div>
+
+  <!-- 周度复盘 -->
+  <div class="sec-head">
+    <span class="sec-bar"></span>
+    <span class="sec-title">周度复盘</span>
+    <span class="sec-en">Weekly Review</span>
+    <span class="sec-line"></span>
+  </div>
+  <div class="review">
+    <div class="rev-card">
+      <div class="rc-head"><div class="rc-ico win">✓</div><div><div class="rc-title">本周亮点</div><div class="rc-sub">WHAT WENT WELL</div></div></div>
+      <div class="rev-line"></div><div class="rev-line"></div><div class="rev-line"></div>
+    </div>
+    <div class="rev-card">
+      <div class="rc-head"><div class="rc-ico gap">!</div><div><div class="rc-title">不足与卡点</div><div class="rc-sub">GAPS & BLOCKERS</div></div></div>
+      <div class="rev-line"></div><div class="rev-line"></div><div class="rev-line"></div>
+    </div>
+    <div class="rev-card">
+      <div class="rc-head"><div class="rc-ico learn">★</div><div><div class="rc-title">收获与心得</div><div class="rc-sub">LEARNINGS</div></div></div>
+      <div class="rev-line"></div><div class="rev-line"></div><div class="rev-line"></div>
+    </div>
+    <div class="rev-card">
+      <div class="rc-head"><div class="rc-ico next">→</div><div><div class="rc-title">下周改进</div><div class="rc-sub">NEXT ACTIONS</div></div></div>
+      <div class="rev-line"></div><div class="rev-line"></div><div class="rev-line"></div>
+    </div>
+  </div>
+
+  <!-- 评分 -->
+  <div class="score">
+    <span class="sl">本周整体满意度</span>
+    <div class="stars"><i></i><i></i><i></i><i></i><i></i></div>
+    <span class="nm">（涂满圆点为本周自评 · 1—5 分）</span>
+  </div>
+
+  <div class="footer">
+    <span><span class="brand-dot"></span>PULSE WEEKLY · 复盘让下一周更好</span>
+    <span><b>P.02</b> / 02 &nbsp; 追踪与复盘</span>
+  </div>
+</div>
+
+</body>
+</html>

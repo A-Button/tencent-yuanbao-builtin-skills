@@ -1,0 +1,11 @@
+{
+  "name": "yuanbao-skill-docx",
+  "private": true,
+  "version": "0.0.0",
+  "engines": {
+    "node": "20.19.5"
+  },
+  "dependencies": {
+    "docx": "9.7.1"
+  }
+}

@@ -1,0 +1,276 @@
+#!/usr/bin/env python3
+"""{{APP_NAME}}的存储层，供 scripts/ 下各个 tool 脚本共用。
+
+它自己不是 tool，不出现在 app.yaml 里。模板为每个 tool 生成独立脚本（create_{{ENTITY}}.py、
+list_{{ENTITY_PLURAL}}.py …）；也可以把各入口函数放在同一个模块中。锁、落盘、错误信封和
+全量快照都由这里兜住。
+
+存储路径 ``{{STORE_PATH}}``。沙箱里选它而不是 ``~/``，是因为 Agent 沙箱与 App 沙箱是
+两个沙箱、各有各的 home，但挂的是同一份 ``/data/user``；写在 home 下会导致
+「Agent 建的记录 UI 看不到」。本地跑没有这个挂载，退到 ``~/.one-agent/data/``——本地
+模式下不存在双沙箱，共用一个 home 反而是对的。
+
+写盘顺序：临时文件 → flush + ``os.fsync`` → ``os.replace`` → 目录 fsync。fsync 不能省：
+持久卷是 COS fuse，只 rename 不落盘时若中途崩溃，会留下截断的半份 JSON。
+读-改-写整体在 flock 内，锁文件放本地 ``/tmp``（COS fuse 不支持文件锁）。
+"""
+
+from __future__ import annotations
+
+import contextlib
+import fcntl
+import hashlib
+import json
+import os
+import time
+import uuid
+from datetime import datetime, timezone
+from pathlib import Path
+
+DEFAULT_DATA_DIR = "/data/user"
+LOCAL_DATA_DIR = "~/.one-agent/data"
+STORE_FILENAME = "{{STORE_FILE}}"
+COLLECTION = "{{ENTITY_PLURAL}}"
+_LOCK_DIR = os.environ.get("{{ENV_PREFIX}}_LOCK_DIR", "/tmp")
+_LOCK_TIMEOUT = float(os.environ.get("{{ENV_PREFIX}}_LOCK_TIMEOUT", "30"))
+
+
+class ActionError(RuntimeError):
+    def __init__(self, code: str, message: str):
+        self.code = code
+        self.message = message
+        super().__init__(f"{code}: {message}")
+
+
+def _now_iso() -> str:
+    return datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
+
+
+def _resolve_store_path(environ: dict[str, str] | None = None) -> Path:
+    """显式文件 > 环境变量指定的数据根 > 持久卷 /data/user > 本地 ~/.one-agent/data。
+
+    环境变量仅供测试与特殊部署，正常运行两条真实分支就够：沙箱里 ``/data/user``
+    是按用户挂载的持久卷，本地跑没有这个挂载，退到用户目录。判断的是挂载点本身
+    存在与否，而不是 ``<app-id>`` 子目录——子目录首次写入时才建。
+    """
+    env = os.environ if environ is None else environ
+    explicit = (env.get("{{ENV_PREFIX}}_STORE") or "").strip()
+    if explicit:
+        return Path(explicit)
+    override = (
+        env.get("{{ENV_PREFIX}}_DATA_DIR") or env.get("ONEAGENT_APP_DATA_DIR") or ""
+    ).strip()
+    root = Path(override) if override else _data_root()
+    return root / "{{APP_ID}}" / STORE_FILENAME
+
+
+def _data_root() -> Path:
+    # 挂载点不在就退到本地：此时创建 /data/user 只会写进容器本地盘，数据不持久，
+    # 还不如落在用户目录里。
+    persistent = Path(DEFAULT_DATA_DIR)
+    if persistent.is_dir():
+        return persistent
+    return Path(LOCAL_DATA_DIR).expanduser()
+
+
+def _lock_path(store_path: Path) -> Path:
+    # 按库路径哈希命名：同一份数据的所有进程抢同一把锁，不同库互不阻塞。
+    digest = hashlib.md5(str(store_path).encode("utf-8")).hexdigest()
+    return Path(_LOCK_DIR) / f"{{APP_ID}}-{digest}.lock"
+
+
+@contextlib.contextmanager
+def _store_lock(store_path: Path):
+    lock_path = _lock_path(store_path)
+    try:
+        lock_path.parent.mkdir(parents=True, exist_ok=True)
+        fd = os.open(str(lock_path), os.O_CREAT | os.O_RDWR, 0o644)
+    except OSError as exc:
+        raise ActionError("STORE_BUSY", "无法创建锁文件，请稍后重试。") from exc
+    try:
+        deadline = time.monotonic() + _LOCK_TIMEOUT
+        while True:
+            try:
+                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except OSError as exc:
+                if time.monotonic() > deadline:
+                    raise ActionError("STORE_BUSY", "数据被占用，超时未获锁，请稍后重试。") from exc
+                time.sleep(0.05)
+        yield
+    finally:
+        with contextlib.suppress(OSError):
+            fcntl.flock(fd, fcntl.LOCK_UN)
+        os.close(fd)
+
+
+def _backup_path(path: Path) -> Path:
+    return path.with_suffix(path.suffix + ".bak")
+
+
+def _read_records(path: Path) -> list[dict]:
+    raw = path.read_text(encoding="utf-8")
+    data = json.loads(raw) if raw.strip() else {}
+    records = data.get(COLLECTION) if isinstance(data, dict) else None
+    if records is None and isinstance(data, list):
+        records = data
+    if not isinstance(records, list):
+        raise ValueError("store payload is not a list")
+    return [item for item in records if isinstance(item, dict)]
+
+
+def _load(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    try:
+        return _read_records(path)
+    except (OSError, UnicodeError, ValueError, json.JSONDecodeError):
+        backup = _backup_path(path)
+        if backup.exists():
+            try:
+                return _read_records(backup)
+            except (OSError, UnicodeError, ValueError, json.JSONDecodeError):
+                pass
+        raise ActionError("STORE_CORRUPTED", "本地数据已损坏且无可用备份。")
+
+
+def _save(path: Path, records: list[dict]) -> None:
+    payload = json.dumps({COLLECTION: records}, ensure_ascii=False, indent=2)
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        # 先备份上一份完好数据，替换失败时可回滚。
+        if path.exists():
+            with contextlib.suppress(OSError):
+                _backup_path(path).write_bytes(path.read_bytes())
+        tmp = path.with_suffix(path.suffix + f".tmp-{uuid.uuid4().hex}")
+        with open(tmp, "w", encoding="utf-8") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(tmp, path)
+        dir_fd = os.open(str(path.parent), os.O_RDONLY)
+        try:
+            os.fsync(dir_fd)
+        finally:
+            os.close(dir_fd)
+    except OSError as exc:
+        raise ActionError("STORE_WRITE_FAILED", f"写入失败：{exc}") from exc
+
+    # 读回校验：COS fuse 上写一半也可能不报错，这里发现问题立刻回滚。
+    try:
+        _read_records(path)
+    except (OSError, UnicodeError, ValueError, json.JSONDecodeError) as exc:
+        backup = _backup_path(path)
+        if backup.exists():
+            with contextlib.suppress(OSError):
+                os.replace(backup, path)
+        raise ActionError("STORE_WRITE_FAILED", "写入后校验失败，已回滚。") from exc
+
+
+class Store:
+    """一次调用期间的数据视图，整份读入、变更后整份写回。
+
+    ``all()`` 任何时候都是最新的全量记录，``execute()`` 用它给每次调用补快照。
+    """
+
+    def __init__(self, path: Path):
+        self._path = path
+        self._records = _load(path)
+
+    def all(self) -> list[dict]:
+        return self._records
+
+    def find(self, record_id: str) -> dict | None:
+        for item in self._records:
+            if item.get("id") == record_id:
+                return dict(item)
+        return None
+
+    def require(self, record_id: str) -> dict:
+        record = self.find(record_id)
+        if record is None:
+            raise ActionError("NOT_FOUND", f"未找到记录：{record_id}")
+        return record
+
+    def insert(self, record: dict) -> None:
+        self._records.append(record)
+        _save(self._path, self._records)
+
+    def replace(self, record: dict) -> None:
+        index = self._index_of(record["id"])
+        self._records[index] = record
+        _save(self._path, self._records)
+
+    def remove(self, record_id: str) -> dict:
+        removed = self._records.pop(self._index_of(record_id))
+        _save(self._path, self._records)
+        return removed
+
+    def _index_of(self, record_id: str) -> int:
+        for index, item in enumerate(self._records):
+            if item.get("id") == record_id:
+                return index
+        raise ActionError("NOT_FOUND", f"未找到记录：{record_id}")
+
+
+def new_record(**fields: object) -> dict:
+    """补上 id 与时间戳。id 由服务端生成，模型与 UI 都只能复用返回值里的那个。"""
+    now = _now_iso()
+    return {"id": uuid.uuid4().hex, "created_at": now, "updated_at": now, **fields}
+
+
+def touch(record: dict) -> dict:
+    record["updated_at"] = _now_iso()
+    return record
+
+
+def require_text(args: dict, name: str) -> str:
+    """取一个非空白的必填文本。
+
+    字段是否存在由 app.yaml 的 ``required`` 在 CLI 侧拦下；但 CLI 的校验器不支持
+    ``pattern``，``minLength: 1`` 拦不住纯空格，所以「去掉空白后不能为空」留在这里。
+    """
+    value = args.get(name)
+    if not isinstance(value, str) or not value.strip():
+        raise ActionError("INVALID_ARGUMENT", f"缺少参数：{name}")
+    return value.strip()
+
+
+def execute(handler, args: dict, store_path: str | os.PathLike | None = None) -> dict:
+    """领域调用：拿锁 → 交给 handler → 补 UI 快照，返回完整结果。
+
+    handler 形如 ``handler(args, store) -> dict``，只返回自己那部分结果，
+    ``{{ENTITY_PLURAL}}`` 与 ``count`` 由这里统一补上。
+    """
+    try:
+        if not isinstance(args, dict):
+            raise ActionError("INVALID_ARGUMENT", "请求参数必须为对象。")
+        path = Path(store_path) if store_path else _resolve_store_path()
+        # 读-改-写在同一把锁内完成，避免同沙箱内并行调用互相覆盖。
+        with _store_lock(path):
+            store = Store(path)
+            result = handler(args, store)
+            result[COLLECTION] = store.all()
+            result["count"] = len(store.all())
+    except ActionError as exc:
+        code = exc.code
+        message = exc.message
+        result = {
+            "phase": "error",
+            "code": code,
+            "message": message,
+            "retryable": code not in {"STORE_CORRUPTED"},
+        }
+    return result
+
+
+def print_model_result(result: dict, *fields: str) -> None:
+    """stdout 只输出模型需要的字段；完整快照由 tool 的入口函数返回给 UI。
+
+    查询需保留记录 ID 与明细，写操作只需本次变更对象及数量。错误同时给两个出口。
+    日志请写 stderr，不要混入模型结果。
+    """
+    model_result = result if result.get("phase") == "error" else {
+        key: result[key] for key in fields
+    }
+    print(json.dumps(model_result, ensure_ascii=False, separators=(",", ":")))

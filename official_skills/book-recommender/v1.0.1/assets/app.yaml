@@ -1,0 +1,89 @@
+id: book-recommender
+name: 图书推荐
+version: v1.0.1
+description: 基于精选书库的图书搜索与推荐，支持按关键词搜索和按类别推荐。
+
+ui:
+  defaultSize:
+    width: 520
+    height: 480
+
+resources:
+  - uri: ai_apps.skills.book_recommender_res
+    name: 图书推荐
+    description: 搜索与推荐结果的卡片视图
+    path: assets/ui/card.json
+    mimeType: application/a2ui+json
+  - uri: ui://book-recommender/workspace
+    name: 图书推荐详情
+    description: 图书搜索与推荐的全屏界面，展示搜索框、分类筛选与完整书单
+    path: assets/ui/workspace.html
+    mimeType: text/html;profile=mcp-app
+
+tools:
+  - name: list_books
+    title: 查看全部图书
+    description: 列出全部图书与可用类别，适合首次打开或浏览书库时使用。
+    inputSchema:
+      type: object
+      additionalProperties: false
+    outputSchema:
+      type: object
+      additionalProperties: true
+    handler:
+      type: script
+      path: scripts/list_books.py
+    _meta:
+      ui:
+        resourceUri: ai_apps.skills.book_recommender_res
+        visibility: [model, app]
+
+  - name: search_books
+    title: 搜索图书
+    description: 按关键词搜索图书，同时匹配书名与作者名。
+    inputSchema:
+      type: object
+      properties:
+        query:
+          type: string
+          minLength: 1
+          description: 搜索关键词，同时匹配书名和作者
+      required: [query]
+      additionalProperties: false
+    outputSchema:
+      type: object
+      additionalProperties: true
+    handler:
+      type: script
+      path: scripts/search_books.py
+    _meta:
+      ui:
+        resourceUri: ai_apps.skills.book_recommender_res
+        visibility: [model, app]
+
+  - name: recommend_books
+    title: 推荐图书
+    description: 按类别推荐高评分图书，不传 category 则全类别推荐。
+    inputSchema:
+      type: object
+      properties:
+        category:
+          type: string
+          minLength: 1
+          description: 推荐类别，如 文学、科幻、历史 等；不传则全类别推荐
+        count:
+          type: integer
+          minimum: 1
+          maximum: 20
+          description: 推荐数量，默认 5，最大 20
+      additionalProperties: false
+    outputSchema:
+      type: object
+      additionalProperties: true
+    handler:
+      type: script
+      path: scripts/recommend_books.py
+    _meta:
+      ui:
+        resourceUri: ai_apps.skills.book_recommender_res
+        visibility: [model, app]

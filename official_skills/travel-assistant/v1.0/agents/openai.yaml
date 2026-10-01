@@ -1,0 +1,4 @@
+interface:
+  display_name: "出行助手 V2"
+  short_description: "查票订票、出门时间预留、路上应变与 NOW 卡片发布"
+  default_prompt: "使用 $travel_assistant 安排明早的出门时间，并将提醒发布到 NOW。"

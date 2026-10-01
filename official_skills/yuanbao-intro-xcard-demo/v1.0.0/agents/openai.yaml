@@ -1,0 +1,3 @@
+interface:
+  display_name: "元宝介绍 XCard Demo"
+  short_description: "生成元宝自我介绍的 XCard A2UI 样例卡片，可复制改写为新卡片"

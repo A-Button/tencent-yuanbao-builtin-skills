@@ -1,0 +1,14 @@
+{
+  "meals": {
+    "breakfast": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/250px-A_small_cup_of_coffee.JPG",
+    "lunch": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg/250px-Good_Food_Display_-_NCI_Visuals_Online.jpg",
+    "dinner": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Culinary_fruits_front_view.jpg/250px-Culinary_fruits_front_view.jpg"
+  },
+  "covers": {
+    "daily": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg/500px-Good_Food_Display_-_NCI_Visuals_Online.jpg",
+    "weekly": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Banana-Single.jpg/250px-Banana-Single.jpg"
+  },
+  "exercises": {
+    "default": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Push-up.jpg/250px-Push-up.jpg"
+  }
+}

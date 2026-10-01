@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+"""更新一条{{APP_NAME}}记录。只改传进来的字段，没传的保持原样。"""
+
+from __future__ import annotations
+
+from _store import Store, require_text, execute, print_model_result, touch
+
+
+def _update_{{ENTITY}}(args: dict, store: Store) -> dict:
+    record = store.require(require_text(args, "id"))
+    if "title" in args:
+        record["title"] = require_text(args, "title")
+    if "notes" in args:
+        # 传空字符串就是清空备注，所以这里不做非空校验。
+        record["notes"] = str(args["notes"])
+    store.replace(touch(record))
+    return {"{{ENTITY}}": record}
+
+
+def update_{{ENTITY}}(args: dict) -> dict:
+    result = execute(_update_{{ENTITY}}, args)
+    print_model_result(result, "{{ENTITY}}", "count")
+    return result

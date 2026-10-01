@@ -1,0 +1,719 @@
+{
+  "$comment": "目录：公共字段与 actions；根 tap；image_text、recommend_list、todo_remind、todo_choice 四种正文。",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "card_type": {
+      "type": "string",
+      "enum": [
+        "image_text",
+        "recommend_list",
+        "todo_remind",
+        "todo_choice"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "label"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string"
+    },
+    "actions": {
+      "type": "array",
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "action_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tap": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "type": "integer",
+                    "enum": [
+                      1
+                    ]
+                  },
+                  "agent_chat": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "send_prompt": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": []
+                  }
+                },
+                "required": [
+                  "type",
+                  "agent_chat"
+                ]
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "type": "integer",
+                    "enum": [
+                      2
+                    ]
+                  },
+                  "h5": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "^https://"
+                      }
+                    },
+                    "required": [
+                      "url"
+                    ]
+                  }
+                },
+                "required": [
+                  "type",
+                  "h5"
+                ]
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "type": "integer",
+                    "enum": [
+                      3
+                    ]
+                  },
+                  "mini_program": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "pattern": "^gh_.+"
+                      },
+                      "path": {
+                        "type": "string"
+                      },
+                      "mp_type": {
+                        "type": "integer",
+                        "enum": [
+                          0,
+                          1,
+                          2
+                        ]
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ]
+                  }
+                },
+                "required": [
+                  "type",
+                  "mini_program"
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "action_id",
+          "label",
+          "tap"
+        ]
+      }
+    },
+    "tap": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "type": "integer",
+              "enum": [
+                1
+              ]
+            },
+            "agent_chat": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "send_prompt": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": []
+            }
+          },
+          "required": [
+            "type",
+            "agent_chat"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "type": "integer",
+              "enum": [
+                2
+              ]
+            },
+            "h5": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "^https://"
+                }
+              },
+              "required": [
+                "url"
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "h5"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "type": "integer",
+              "enum": [
+                3
+              ]
+            },
+            "mini_program": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "pattern": "^gh_.+"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "mp_type": {
+                  "type": "integer",
+                  "enum": [
+                    0,
+                    1,
+                    2
+                  ]
+                }
+              },
+              "required": [
+                "name"
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "mini_program"
+          ]
+        }
+      ]
+    },
+    "thingId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "todoId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "data": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "card_type",
+    "title",
+    "data"
+  ],
+  "oneOf": [
+    {
+      "properties": {
+        "card_type": {
+          "const": "image_text"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "cover": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "^https://"
+                }
+              },
+              "required": [
+                "url"
+              ]
+            }
+          }
+        }
+      },
+      "required": [
+        "card_type",
+        "data"
+      ],
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "recommend_list"
+            ]
+          },
+          {
+            "required": [
+              "todo_remind"
+            ]
+          },
+          {
+            "required": [
+              "todo_choice"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "properties": {
+        "card_type": {
+          "const": "recommend_list"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "item_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "desc": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^https://"
+                  },
+                  "tap": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                          "type": {
+                            "type": "integer",
+                            "enum": [
+                              1
+                            ]
+                          },
+                          "agent_chat": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                              "send_prompt": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "required": []
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "agent_chat"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                          "type": {
+                            "type": "integer",
+                            "enum": [
+                              2
+                            ]
+                          },
+                          "h5": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                              "url": {
+                                "type": "string",
+                                "minLength": 1,
+                                "pattern": "^https://"
+                              }
+                            },
+                            "required": [
+                              "url"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "h5"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                          "type": {
+                            "type": "integer",
+                            "enum": [
+                              3
+                            ]
+                          },
+                          "mini_program": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "pattern": "^gh_.+"
+                              },
+                              "path": {
+                                "type": "string"
+                              },
+                              "mp_type": {
+                                "type": "integer",
+                                "enum": [
+                                  0,
+                                  1,
+                                  2
+                                ]
+                              }
+                            },
+                            "required": [
+                              "name"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "mini_program"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "item_id",
+                  "title"
+                ]
+              },
+              "minItems": 3,
+              "maxItems": 5
+            }
+          },
+          "required": [
+            "items"
+          ]
+        }
+      },
+      "required": [
+        "card_type",
+        "data"
+      ],
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "image_text"
+            ]
+          },
+          {
+            "required": [
+              "todo_remind"
+            ]
+          },
+          {
+            "required": [
+              "todo_choice"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "properties": {
+        "card_type": {
+          "const": "todo_remind"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "item_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "desc": {
+                    "type": "string"
+                  },
+                  "badge": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "text": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "tone": {
+                        "type": "integer",
+                        "enum": [
+                          1,
+                          2
+                        ]
+                      }
+                    },
+                    "required": [
+                      "text",
+                      "tone"
+                    ]
+                  }
+                },
+                "required": [
+                  "item_id",
+                  "title"
+                ]
+              },
+              "minItems": 1,
+              "maxItems": 20
+            },
+            "footnote": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "items"
+          ]
+        }
+      },
+      "required": [
+        "card_type",
+        "data"
+      ],
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "image_text"
+            ]
+          },
+          {
+            "required": [
+              "recommend_list"
+            ]
+          },
+          {
+            "required": [
+              "todo_choice"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "properties": {
+        "card_type": {
+          "const": "todo_choice"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "select_mode": {
+              "type": "integer",
+              "enum": [
+                1,
+                2
+              ]
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "option_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "desc": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^https://"
+                  },
+                  "selected": {
+                    "type": "boolean"
+                  },
+                  "done": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "option_id",
+                  "title"
+                ],
+                "not": {
+                  "properties": {
+                    "selected": {
+                      "const": true
+                    },
+                    "done": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "selected",
+                    "done"
+                  ]
+                }
+              },
+              "minItems": 1,
+              "maxItems": 20
+            }
+          },
+          "required": [
+            "select_mode",
+            "options"
+          ],
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "select_mode": {
+                    "const": 1
+                  }
+                },
+                "required": [
+                  "select_mode"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "options": {
+                    "contains": {
+                      "properties": {
+                        "selected": {
+                          "const": true
+                        }
+                      },
+                      "required": [
+                        "selected"
+                      ]
+                    },
+                    "minContains": 0,
+                    "maxContains": 1
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "required": [
+        "card_type",
+        "data"
+      ],
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "image_text"
+            ]
+          },
+          {
+            "required": [
+              "recommend_list"
+            ]
+          },
+          {
+            "required": [
+              "todo_remind"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

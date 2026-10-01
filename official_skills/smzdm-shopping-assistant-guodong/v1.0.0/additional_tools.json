@@ -1,0 +1,100 @@
+[
+  {
+    "name": "haina/product_search_pro",
+    "description": "海纳全网商品搜索 Pro 服务。输入一个商品检索词，返回全网可购买商品及其基础信息（如标题、价格、商城、店铺、销量、价格标签，以及可能返回的商品详情页链接）。用于商品基础信息、在售商品查询，并为推荐、评估、对比和好价分析补充关键商品信息；仅在结果中有可确认的商品详情页链接时，才可在正文中使用文本超链接。好价搜索无结果时也可补充当前在售与参考价。每个商品检索词单独调用一次。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "product_query": {
+          "type": "string",
+          "description": "商品检索词，可带品牌、型号、平台等，例如「苹果 iPhone 16 京东」「华硕 天选 5 Pro」。商品名与配置应尽量精确，以便匹配商品详情页链接。"
+        },
+        "size": {
+          "type": "integer",
+          "description": "返回商品数量，默认 10"
+        },
+        "min_price": {
+          "type": "number",
+          "description": "最低价格过滤，可选。用于预算类查询，如「2000 元价位」"
+        },
+        "max_price": {
+          "type": "number",
+          "description": "最高价格过滤，可选。用于预算类查询，如「3000 元以内」"
+        },
+        "request_from": {
+          "type": "string",
+          "default": "yuanbao_agent_skill",
+          "description": "请求来源，固定传 yuanbao_agent_skill"
+        }
+      },
+      "required": [
+        "product_query"
+      ]
+    }
+  },
+  {
+    "name": "haina/discount_search",
+    "description": "海纳优惠好价搜索服务。输入一个商品检索词，返回该商品当前的优惠好价信息（含标题、好价链接、到手价、优惠券、活动、发布时间等）。用于实时优惠、跨平台比价、历史价格与买点判断。好价链接是活动/好价来源，不应伪装成商品详情页链接；需要商品详情页链接时配合 haina/product_search_pro。搜不到结果时应改用 haina/product_search_pro 补充。每个商品检索词单独调用一次。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "product_query": {
+          "type": "string",
+          "description": "商品检索词，去掉问句和意图词，只保留品牌、产品、型号、平台、价格等，例如「iPhone 16」「戴森吹风机」"
+        },
+        "size": {
+          "type": "integer",
+          "description": "返回好价数量，默认 10"
+        },
+        "request_from": {
+          "type": "string",
+          "default": "yuanbao_agent_skill",
+          "description": "调用方标识"
+        },
+        "question_id": {
+          "type": "string",
+          "default": "1",
+          "description": "业务侧问题 ID"
+        }
+      },
+      "required": [
+        "product_query",
+        "request_from",
+        "question_id"
+      ]
+    }
+  },
+  {
+    "name": "haina/content_search",
+    "description": "海纳内容搜索服务。输入一个内容检索词，返回与之相关的评测、选购指南、使用体验等文章列表（含标题、正文、来源、链接、发布时间），覆盖全网主流平台的消费内容。用于需求收敛、品类知识、单品评估、选购推荐和商品对比，为用户视角的决策结论提供参考；不直接输出原始文章或检索结果。每个内容检索词单独调用一次。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "内容检索词，例如「iPhone 16 评测」「游戏本 选购指南」"
+        },
+        "start_time": {
+          "type": "string",
+          "default": "",
+          "description": "检索文章的起始时间范围。传入格式为 YYYY-MM-DD HH:MM:SS；用于限制内容时效。调用时按当前时间动态计算，传当前时间往前两年的时间，不要写死固定日期"
+        },
+        "return_size": {
+          "type": "integer",
+          "description": "返回文章数量，默认 10"
+        },
+        "request_from": {
+          "type": "string",
+          "default": "yuanbao_agent_skill",
+          "description": "请求来源，固定传 yuanbao_agent_skill"
+        }
+      },
+      "required": [
+        "query"
+      ]
+    }
+  }
+]

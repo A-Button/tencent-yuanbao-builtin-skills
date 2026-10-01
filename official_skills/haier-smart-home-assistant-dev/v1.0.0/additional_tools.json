@@ -1,0 +1,612 @@
+[
+  {
+    "name": "haier-smart-home-assistant/search_knowledge_base",
+    "description": "检索海尔企业知识库，覆盖产品说明、使用方法、售后政策和常见问题。每次触发海尔智家助手时先调用一次；不得在 query 中携带手机号、身份证、序列号、订单号、工单号或详细地址。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "从用户原话提取的直接相关问题，不添加用户未表达的事实或敏感标识。"
+        },
+        "topK": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "可选返回条数，最多 10。"
+        }
+      },
+      "required": [
+        "query"
+      ]
+    }
+  },
+  {
+    "name": "haier-smart-home-assistant/search_web",
+    "description": "联网查询公开资料。只在知识库返回 EMPTY、内容完全不相关或 UNAVAILABLE 时使用；联网结果不是海尔官方结论。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "公开信息查询词，不得包含手机号、身份证、序列号、订单号、工单号或详细地址。"
+        }
+      },
+      "required": [
+        "query"
+      ]
+    }
+  },
+  {
+    "name": "haier-smart-home-assistant/query_product_recommend",
+    "description": "产品推荐接口。根据品类及可选的槽位/用户标签，为用户推荐匹配的家电产品。后端完成产品查询、排序打分与推荐理由生成。所有参数必须包在 request 对象里。**本轮最多调用一次**：无论返回什么（包括 error=2001 无结果），都不得在同一轮里第二次调用——尤其不得清空或放宽 categorySlots 重试，那会把用户的硬条件静默换掉。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "definitions": {
+        "Dimension": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "min": {
+              "type": "number",
+              "description": "维度下限，空表示无下限"
+            },
+            "max": {
+              "type": "number",
+              "description": "维度上限，空表示无上限"
+            }
+          }
+        }
+      },
+      "properties": {
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "category": {
+              "type": "string",
+              "enum": [
+                "冰箱",
+                "冷柜",
+                "波轮洗衣机",
+                "滚筒洗衣机",
+                "电热水器",
+                "太阳能热水器",
+                "燃气热水器",
+                "平板电视",
+                "家中机",
+                "挂机",
+                "柜机",
+                "烤箱",
+                "洗碗机",
+                "吸排油烟机",
+                "燃气灶"
+              ],
+              "description": "品类，必填且是唯一必填项。须为标准品类名（冰箱/冷柜/波轮洗衣机/滚筒洗衣机/电热水器/太阳能热水器/燃气热水器/平板电视/家中机/挂机/柜机/烤箱/洗碗机/吸排油烟机/燃气灶）。用户说模糊品类时取默认：洗衣机→滚筒洗衣机、热水器→电热水器、空调→挂机"
+            },
+            "categorySlots": {
+              "type": "array",
+              "description": "按模块规则映射的需求槽位；没有命中时传空数组。",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "slotName": {
+                    "type": "string",
+                    "enum": [
+                      "套系",
+                      "价格",
+                      "渠道",
+                      "品牌偏好",
+                      "容量偏好",
+                      "洗涤容量",
+                      "匹数偏好",
+                      "尺寸偏好",
+                      "门型偏好",
+                      "款式类型",
+                      "功能偏好",
+                      "能效等级",
+                      "定频/变频",
+                      "制冷方式",
+                      "噪音",
+                      "脱水噪音",
+                      "洗涤噪音",
+                      "洗净比",
+                      "筒数",
+                      "风量偏好",
+                      "气源类型",
+                      "火力大小",
+                      "灶眼数量",
+                      "加热类型",
+                      "集热类型",
+                      "辅助加热",
+                      "尺寸",
+                      "产品尺寸",
+                      "安装尺寸",
+                      "安装方式",
+                      "安装限制",
+                      "安装条件",
+                      "颜色",
+                      "颜色偏好",
+                      "产品颜色"
+                    ],
+                    "description": "**值类型速查（先按本表定这个槽位该填哪个值字段——名字对了值字段填错，条件同样静默失效）**：① **数值类 → 填 numMin / numMax（单值加 single）**：价格、容量偏好、洗涤容量、尺寸偏好（平板电视，单位英寸）、噪音、脱水噪音、洗涤噪音、洗净比、风量偏好、火力大小，以及**吸排油烟机 / 燃气灶的安装尺寸**；② **标签枚举类 → 填 tags 数组**：套系、渠道、品牌偏好、匹数偏好、门型偏好、款式类型、功能偏好、能效等级、定频/变频、制冷方式、筒数、气源类型、灶眼数量、加热类型、集热类型、辅助加热、安装方式、安装限制、安装条件、颜色、颜色偏好、产品颜色；③ **尺寸类 → 填 width / depth / height 的 {min,max}**：尺寸、产品尺寸，以及**冰箱 / 冷柜 / 烤箱 / 洗碗机的安装尺寸**。**「价格」属于数值类，4000-6000 这种区间填 numMin=4000 + numMax=6000，绝不能填进 depth**——depth 是尺寸类专用字段。实测下发过 {slotName:\"price\", depth:{min:4000,max:6000}}：槽位名用了英文、区间塞进了尺寸字段，两处皆错，价格条件整个失效，后端返回 2001 后模型又反复放宽价格、最后干脆删掉价格换成品牌，给预算 5000 的用户推了 7999 的机器。 槽位名，必填。须用槽位文档里的标准槽位名，后端据「品类+槽位名」定位过滤规则与值类型。品类槽位如 容量偏好/洗涤容量/门型偏好/能效等级/定频/变频/制冷方式/噪音/脱水噪音/洗涤噪音/洗净比/筒数/匹数偏好/风量偏好/款式类型/气源类型/火力大小/灶眼数量/功能偏好/安装方式/安装限制/安装条件/产品尺寸/安装尺寸/尺寸/颜色；通用槽位只有 套系/价格/渠道/品牌偏好 四个。**尺寸类要按品类挑对名字**：冰箱/冷柜/烤箱/洗碗机的原「尺寸」槽位已拆成「产品尺寸」与「安装尺寸」两个，这四个品类下「尺寸」不是合法槽位名——用户没提安装/嵌入/橱柜/预留（含开孔/全嵌/零嵌/半嵌/齐平）时填「产品尺寸」，提了填「安装尺寸」；波轮/滚筒洗衣机仍是「尺寸」，吸排油烟机/燃气灶只有「安装尺寸」，平板电视是「尺寸偏好」。**门型条件的槽位名是「门型偏好」**，不是「门体结构」「箱门结构」（那是参数库字段名，实测下发 slot_name=门体结构 让门型条件整个丢失）。**燃气热水器的升数/热水产出率槽位名就是「容量偏好」**（单位 L/min），不存在「升数偏好」这个槽位名。**金额条件的槽位名是「价格」，没有「预算」槽位**——用户说「预算5000」也填 slotName=价格。**「家庭人数」「家庭信息」「使用场景」「价格预期」都不是槽位**：它们是推断输入，必须先换成真正的槽位再下发（三口之家 + 冰箱 → 容量偏好 300-400L，见 trigger_dict.json 的 household.capacity_by_household），直接下发这些名字后端匹配不到、条件静默失效"
+                  },
+                  "numMin": {
+                    "type": "number",
+                    "description": "【数值类】数值下限，**价格、容量等一切数值型区间都用本字段 + numMax 表达**（如 4000-6000 → numMin=4000、numMax=6000），不要改用 width/depth/height 的 {min,max}；单值输入时只填本字段并置 single=true。"
+                  },
+                  "numMax": {
+                    "type": "number",
+                    "description": "【数值类】数值上限"
+                  },
+                  "single": {
+                    "type": "boolean",
+                    "description": "【数值类】是否为单值输入。true 时后端将 numMin 扩展为检索区间(如 [v, v+50])"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "【多标签/枚举类】标签或枚举值列表，命中任意一个即保留。如 功能偏好[\"变频\",\"除菌\"]、安装方式[\"嵌入式\"]、颜色[\"灰色\"]、渠道[\"线下\",\"京东\"]、品牌偏好[\"卡萨帝\"]。**填的是标准枚举值，不是用户原话**——值写错和槽位名写错一样会静默筛不出产品，两个高频错处：① **能效等级的值写法按品类分两套**：冰箱/冷柜/波轮洗衣机/滚筒洗衣机填「数值（阿拉伯数字）+级」如 [\"1级\"]，挂机/柜机/家中机/电热水器/燃气热水器填「数值（阿拉伯数字）+级能效」如 [\"1级能效\"]；只看品类不看用户原话带不带「能效」二字（「一级能效的冰箱」→[\"1级\"]、「一级的挂机」→[\"1级能效\"]），节能/省电这类无数值的模糊描述取最高等级（1级 / 1级能效）。② **门型偏好要把关键词推断成固定标签**：冰箱 单门/单开门→单门、两门/双门/**双开门**→双门、对开门→对开门、三门/**三开门**/3门/3开门→三门、法式/多门/F+→多门、**T型/十字/T型双开门/四门/四开门/4门/4开门→T型**（「十字门冰箱」「四开门冰箱」都填 [\"T型\"]；「三开门冰箱」填 [\"三门\"] 而不是 [\"三开门\"]；**四门/四开门归 T型 不归多门，冰箱门数最高只到四门**）；注意冰箱下「双开门」（按门数→双门）与「对开门」（左右对开柜体→对开门）是两个不同标签，关键词按最长匹配（「T型双开门」→T型，不是双门）；冷柜只有 单门/双门/多门 三个标签，对开门/双开门→双门、三门/三开门/法式/多门/四门/四开门→多门（冷柜没有 T型 标签）。完整口径见 trigger_dict.json 的 energy_efficiency 与 door_type"
+                  },
+                  "width": {
+                    "$ref": "#/definitions/Dimension",
+                    "description": "**仅限尺寸类槽位（尺寸 / 产品尺寸，以及冰箱、冷柜、烤箱、洗碗机的安装尺寸）使用。**slotName 是价格、容量偏好、噪音等**数值类**槽位时本字段非法——区间要填 numMin + numMax，不是 {min,max}。实测下发过 {slotName:\"价格\", depth:{min:6000,max:8000}}：名字对了但值填进尺寸字段，价格条件同样整个失效。 【尺寸类】宽度区间，含 min/max，单位毫米，可只填其一。"
+                  },
+                  "depth": {
+                    "$ref": "#/definitions/Dimension",
+                    "description": "**仅限尺寸类槽位（尺寸 / 产品尺寸，以及冰箱、冷柜、烤箱、洗碗机的安装尺寸）使用。**slotName 是价格、容量偏好、噪音等**数值类**槽位时本字段非法——区间要填 numMin + numMax，不是 {min,max}。实测下发过 {slotName:\"价格\", depth:{min:6000,max:8000}}：名字对了但值填进尺寸字段，价格条件同样整个失效。 【尺寸类】深度区间，含 min/max，单位毫米，可只填其一。"
+                  },
+                  "height": {
+                    "$ref": "#/definitions/Dimension",
+                    "description": "**仅限尺寸类槽位（尺寸 / 产品尺寸，以及冰箱、冷柜、烤箱、洗碗机的安装尺寸）使用。**slotName 是价格、容量偏好、噪音等**数值类**槽位时本字段非法——区间要填 numMin + numMax，不是 {min,max}。实测下发过 {slotName:\"价格\", depth:{min:6000,max:8000}}：名字对了但值填进尺寸字段，价格条件同样整个失效。 【尺寸类】高度区间，含 min/max，单位毫米，可只填其一。"
+                  },
+                  "source": {
+                    "type": "string",
+                    "enum": [
+                      "USER_EXPLICIT",
+                      "INFERRED"
+                    ],
+                    "description": "槽位值来源：USER_EXPLICIT=用户明确指定，INFERRED=由家庭人口/使用场景等推断得出"
+                  }
+                },
+                "required": [
+                  "slotName"
+                ],
+                "anyOf": [
+                  {
+                    "title": "数值类槽位：只能用 numMin / numMax / single，禁止 tags 与 width/depth/height",
+                    "properties": {
+                      "slotName": {
+                        "enum": [
+                          "价格",
+                          "容量偏好",
+                          "洗涤容量",
+                          "尺寸偏好",
+                          "噪音",
+                          "脱水噪音",
+                          "洗涤噪音",
+                          "洗净比",
+                          "风量偏好",
+                          "火力大小",
+                          "安装尺寸"
+                        ]
+                      },
+                      "numMin": {
+                        "type": "number"
+                      },
+                      "numMax": {
+                        "type": "number"
+                      },
+                      "single": {
+                        "type": "boolean"
+                      },
+                      "source": {
+                        "type": "string",
+                        "enum": [
+                          "USER_EXPLICIT",
+                          "INFERRED"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "slotName"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "title": "标签枚举类槽位：只能用 tags，禁止 numMin/numMax 与 width/depth/height",
+                    "properties": {
+                      "slotName": {
+                        "enum": [
+                          "套系",
+                          "渠道",
+                          "品牌偏好",
+                          "匹数偏好",
+                          "门型偏好",
+                          "款式类型",
+                          "功能偏好",
+                          "能效等级",
+                          "定频/变频",
+                          "制冷方式",
+                          "筒数",
+                          "气源类型",
+                          "灶眼数量",
+                          "加热类型",
+                          "集热类型",
+                          "辅助加热",
+                          "安装方式",
+                          "安装限制",
+                          "安装条件",
+                          "颜色",
+                          "颜色偏好",
+                          "产品颜色"
+                        ]
+                      },
+                      "tags": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "source": {
+                        "type": "string",
+                        "enum": [
+                          "USER_EXPLICIT",
+                          "INFERRED"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "slotName"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "title": "尺寸类槽位：只能用 width / depth / height，禁止 numMin/numMax 与 tags",
+                    "properties": {
+                      "slotName": {
+                        "enum": [
+                          "尺寸",
+                          "产品尺寸",
+                          "安装尺寸"
+                        ]
+                      },
+                      "width": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                          "min": {
+                            "type": "number"
+                          },
+                          "max": {
+                            "type": "number"
+                          }
+                        }
+                      },
+                      "depth": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                          "min": {
+                            "type": "number"
+                          },
+                          "max": {
+                            "type": "number"
+                          }
+                        }
+                      },
+                      "height": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                          "min": {
+                            "type": "number"
+                          },
+                          "max": {
+                            "type": "number"
+                          }
+                        }
+                      },
+                      "source": {
+                        "type": "string",
+                        "enum": [
+                          "USER_EXPLICIT",
+                          "INFERRED"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "slotName"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "userTags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "用户标签列表，可空"
+            },
+            "includeReason": {
+              "type": "boolean",
+              "description": "是否返回推荐理由，可空，默认不返回"
+            },
+            "topN": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "推荐数量，正整数。**用户在话语里说了要几款就必须填**，触发词与数字识别见 assets/trigger_dict.json 的 top_n：「推荐一台冰箱」「推荐一个卡萨帝冰箱」「来一款」「就要一个」「一台就够」→ topN=1；「来两款」「推荐3台」→ topN=2/3；量词 个/款/台/件/种/样 都算，数量词在品类前后都算。**topN 不是 categorySlots 里的槽位，不受「没命中就不产出槽位」约束**——「推荐一台冰箱」不能因为槽位都没命中就连 topN 一起省掉（实测这样会推出 3 款）。填用户说的原值，不得因为「多给几个选择更好」而擅自放大——用户要 1 款却推 3 款是明确的错误。「多推几个」这类无确定数量的泛化词不填。**只有用户完全没提数量时才省略**（宿主上限 5，超出会被收敛到 5）"
+            },
+            "excludeProductNames": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "需要排除的产品名（用户可见的产品型号名，如 CAS3516BAC(81)U1套机 或 XQG120-BLE7AD3U1），可空。**点名排除**（去掉B再推荐/不要B了）时把用户点名的那个产品名填进来；**泛化换批**（换一批/还有其他型号吗/还有别的吗/多来几个）时把上一轮**全部**已展示的产品名都填进来——多轮连续换批要累计历次已展示的产品名，不要只传最近一轮，否则会把用户看过的款式又换回来。填的是 product_name，不是内部编码"
+            }
+          },
+          "required": [
+            "category"
+          ],
+          "description": "产品推荐请求参数"
+        }
+      },
+      "required": [
+        "request"
+      ]
+    }
+  },
+  {
+    "name": "haier-smart-home-assistant/query_product_comparison",
+    "description": "产品对比接口。按产品名称（型号）列表查询各产品的参数，由后端完成同名参数对齐与差异提取，返回相同参数列表与差异参数列表。可选择只对比指定的参数名。所有参数必须包在 request 对象里。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "productNames": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 5,
+              "items": {
+                "type": "string"
+              },
+              "description": "要对比的产品名称（型号）集合，必填。按用户表达顺序给出；宿主会忽略大小写去重并最多取前 5 个。去重后不足 2 个时不会调用下游，直接返回错误码 3002（走场景1 引导补充型号）"
+            },
+            "attributeNames": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "指定对比的参数/槽位名集合，非必填。为空或省略则对比产品下所有有值参数。仅在用户点名要看某些参数时填写（如「就看能效和噪音」→ [\"能效等级\",\"噪音\"]），参数名需与 comparison_attributes.json 的标准槽位名一致；不确定就省略，让后端返回全部参数"
+            }
+          },
+          "required": [
+            "productNames"
+          ],
+          "description": "产品对比请求参数"
+        }
+      },
+      "required": [
+        "request"
+      ]
+    }
+  },
+  {
+    "name": "haier-smart-home-assistant/query_product_attribute",
+    "description": "按产品名称/型号查询参数接口。输入产品型号与可选的指定参数名集合，由后端返回该产品的参数名值对；参数名集合为空则返回该产品全量参数。所有参数必须包在 request 对象里。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "productName": {
+              "type": "string",
+              "description": "产品名称或产品型号，必填。提取优先级：① 先查 assets/product_name_aliases.json 的别名映射（口语说法 → 标准型号名，触发词取最长匹配，如「云溪5.0 D3」→ XQG120-BLE7AD3U1、「小红花502」→ BCD-502WGHTDEDG7U1、「卡萨帝601鉴赏家」→ BCD-601WGCTDA4CBU1(AI)）；② 映射不到时按该文件的 fallback_pattern 从用户话语/记忆中原样摘出型号（以大写字母或数字开头，含大写字母、数字、- / （） () 空格、中文，长度 4-60；不改写、不补全、不纠正拼写），品牌智能体直接传入的型号（示例 BCD-345XXXX）同样原样使用；③ 两者都取不到时：有品类改走 query_product_attribute_by_category，无品类返回错误码 4002。一个说法命中多个型号（如只说「云溪4.0」）时按 series_disambiguation 追问缺失的那一个维度，不要随便挑一个"
+            },
+            "attributeNames": {
+              "type": "array",
+              "maxItems": 10,
+              "items": {
+                "type": "string"
+              },
+              "description": "指定参数名集合，可空。用户明确问到的维度映射为标准参数名后按提问顺序填入（如 [\"容量偏好\",\"价格\"]）：品类专属参数名见 assets/trigger_dict.json 的 attribute_slots_by_category（按已确定品类取该品类下的槽位，触发词取最长匹配），通用参数名（套系/价格/品牌偏好/渠道，所有品类都有）见 universal_attribute_slots，口语同义词兜底见 assets/consult_attributes.json 的 slot_synonyms。金额条件的参数名是「价格」，不存在「预算」。用户泛问「参数是什么/有哪些参数」时留空表示查全量参数；映射不到标准参数名的长尾表达宁可留空查全量，也不得自造参数名。宿主会去重并最多取前 10 个"
+            }
+          },
+          "required": [
+            "productName"
+          ],
+          "description": "售前咨询「型号-参数/价格」「型号-购买建议」请求参数"
+        }
+      },
+      "required": [
+        "request"
+      ]
+    }
+  },
+  {
+    "name": "haier-smart-home-assistant/query_product_attribute_by_category",
+    "description": "按品类查询销量 TOP3 型号参数接口。输入家电品类与可选的指定参数名集合，由后端按一年内销量倒序取 TOP3 型号并返回各型号的参数名值对；参数名集合为空则返回 TOP3 型号的全量参数。所有参数必须包在 request 对象里。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "category": {
+              "type": "string",
+              "enum": [
+                "冰箱",
+                "冷柜",
+                "波轮洗衣机",
+                "滚筒洗衣机",
+                "电热水器",
+                "太阳能热水器",
+                "燃气热水器",
+                "平板电视",
+                "家中机",
+                "挂机",
+                "柜机",
+                "烤箱",
+                "洗碗机",
+                "吸排油烟机",
+                "燃气灶"
+              ],
+              "description": "家电品类，必填，只支持一个值。按 assets/trigger_dict.json 的 category 词典取最长匹配后映射为标准品类名，取值必须是这 15 个之一：冰箱/冷柜/波轮洗衣机/滚筒洗衣机/电热水器/太阳能热水器/燃气热水器/平板电视/家中机/挂机/柜机/烤箱/洗碗机/吸排油烟机/燃气灶。用户说模糊品类时按 category_ambiguous_default 取默认优先品类且**不要追问**：洗衣机→滚筒洗衣机、热水器→电热水器、空调→挂机。本轮与记忆各支持 1 个，按时间先后（记忆按最近时间）截断。为空时宿主不会调用下游，直接返回错误码 4002"
+            },
+            "attributeNames": {
+              "type": "array",
+              "maxItems": 10,
+              "items": {
+                "type": "string"
+              },
+              "description": "指定参数名集合，可空。映射规则同 query_product_attribute：品类专属参数名按已确定品类取 assets/trigger_dict.json 的 attribute_slots_by_category[该品类] 下的槽位（触发词取最长匹配），通用参数名（套系/价格/品牌偏好/渠道）见 universal_attribute_slots。金额条件的参数名是「价格」，不存在「预算」。留空表示查 TOP3 型号的全量参数。宿主会去重并最多取前 10 个"
+            }
+          },
+          "required": [
+            "category"
+          ],
+          "description": "售前咨询「品类-参数/价格」请求参数"
+        }
+      },
+      "required": [
+        "request"
+      ]
+    }
+  },
+  {
+    "name": "haier-smart-home-assistant/query_product_sale_channel",
+    "description": "查询产品在售渠道接口。根据产品型号名称与用户意向购买渠道查询在售渠道，并由服务端直接返回场景类型（sceneType），用于判定 F1 分流的三条分支与线上/线下细分。意向渠道命中判定由服务端完成，不要自己拿 channelName 与意向渠道求交。所有参数必须包在 request 对象里。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "productName": {
+              "type": "string",
+              "description": "产品型号名称，必填。用于定位该型号对应的在售渠道。提取优先级：① 先查 assets/product_name_aliases.json 的别名映射（口语说法 → 标准型号名，如「云溪5.0 D3」→ XQG120-BLE7AD3U1、「小红花502」→ BCD-502WGHTDEDG7U1、「卡萨帝601鉴赏家」→ BCD-601WGCTDA4CBU1(AI)），触发词取最长匹配；② 映射不到时按该文件的 fallback_pattern 从用户话语中原样摘出型号（不改写、不补全、不纠正拼写）；③ 两者都取不到就追问型号，不得编造或拿相近型号顶替"
+            },
+            "intentChannels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "抖音",
+                  "快手",
+                  "拼多多",
+                  "天猫",
+                  "京东",
+                  "小红书",
+                  "视频号",
+                  "线下"
+                ]
+              },
+              "description": "用户意向购买渠道，可空。填真实渠道名，仅限 抖音/快手/拼多多/天猫/京东/小红书/视频号/线下 八项（见 assets/trigger_dict.json.intent_channels）；其中「线下」视为线下渠道，其余渠道名视为线上。「附近/门店在哪」等只提位置的表达命中「线下」。用户只说了「线上」「全部/不限渠道」这类聚合词时，不要编造具体平台名，留空由服务端按未指定意向渠道处理。**异常地点不是地址，直接忽略、不得据此填「线下」**：火星/月球/霍格沃茨这类不可能有门店的地方，本字段留空按未指定意向渠道处理，正常返回该型号的在售渠道（含线上），话术里也不复述不点评这个地点（实测「XQG120-BLE7AD3WU1在火星有卖吗」下发了 [\"线下\"]，把在售渠道范围凭空缩小成只查线下）；用户同时说了真实渠道（「火星的京东有吗」）时异常地点照旧忽略、真实渠道照填 [\"京东\"]。境外真实城市（纽约/东京）与不完整的国内地址（朝阳区）**是**真实地址，不属异常地点，照常处理。完整口径见 assets/trigger_dict.json.invalid_location"
+            },
+            "excludeChannels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "抖音",
+                  "快手",
+                  "拼多多",
+                  "天猫",
+                  "京东",
+                  "小红书",
+                  "视频号",
+                  "线下"
+                ]
+              },
+              "description": "排除的渠道，可空。取值同为上述八项真实渠道名。用户说「不要天猫的」「不要京东的」「不要这些渠道」「换个渠道」时，把被排除的渠道名填入本字段（见 assets/trigger_dict.json.slot_adjust.channel_exclude）：① 点名某渠道（不要天猫）→ 填 [\"天猫\"]；② 泛指「不要这些渠道」→ 填上一轮 channelName 里命中的渠道；③ 「不要线上的」→ 填除「线下」外的七个线上渠道名（线上是聚合词，需展开成真实渠道名才能排除）；④ 「不要线下的」→ 填 [\"线下\"]。被排除的渠道不参与在售判定，服务端据剩余渠道重新回传 sceneType。与 intentChannels 互斥：同一个渠道不要同时出现在两个字段里"
+            }
+          },
+          "required": [
+            "productName"
+          ],
+          "description": "查询产品在售渠道请求参数"
+        }
+      },
+      "required": [
+        "request"
+      ]
+    }
+  },
+  {
+    "name": "haier-smart-home-assistant/query_store",
+    "description": "查询门店信息接口。根据用户指定的省/市/区/地址查询附近的海尔门店，门店数量上限 10 个，用于线下引流；面向用户最多展示 5 家。**返参是本次查询命中的门店，不是该区域的门店总量**：话术只说「为您找到 N 家」，禁止说「共/总共/只有 N 家」「就这些」「全部为您列出」。**位置有两个来源**：request 里用户说出来的省/市/区/地址，以及用户授权后由宿主注入的当前位置（不在 schema 里，模型既不可见也不得提供经纬度）。已授权时 request 可整体留空按当前位置就近查询；未授权时 request 不能留空——「附近」两个字本身不构成位置，此时不要调用本接口（否则按 2005 拒绝），直接追问用户所在省市区。所有参数必须包在 request 对象里。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "country": {
+              "type": "string",
+              "description": "国家，可空，默认中国"
+            },
+            "province": {
+              "type": "string",
+              "description": "省，按用户所述地址解析填"
+            },
+            "city": {
+              "type": "string",
+              "description": "城市，按用户所述地址解析填"
+            },
+            "district": {
+              "type": "string",
+              "description": "区，按用户所述地址解析填"
+            },
+            "address": {
+              "type": "string",
+              "description": "地址，可空，用户提供的详细地址"
+            },
+            "size": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "description": "查询门店数，可空，正整数。用户明确要「多看几家」「再多来几个」时填；不确定就省略由后端按缺省条数返回（宿主上限 10，超出会被收敛到 10）。它只影响后端取多少家，面向用户的展示条数仍为最多 5 家。**只在用户提了数量时填，且必须是正整数**：0 或负数是非法值，宿主会返回错误码 2006，不要下发；用户没提数量时省略而不是填 0"
+            },
+            "excludeStoreNames": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "排除的门店名集合，可空。用户说「换一批门店」「还有别的吗」「不要这些店」「换几家」时，把**上一轮已展示给用户的门店名**（返参 storeName 原文）填入本字段，命中的门店后端不再返回。多轮连续换批时累计填入历次已展示的门店名，避免又换回之前看过的。不再需要在本地过滤结果——后端已排除"
+            },
+            "radius": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "就近搜索半径，单位米，可空。**仅在按已授权的当前位置就近搜索时有效**：用户说「远一点/近一点」时按 ±2000 调整。按省市区查询时后端会忽略它，**不要传**，改为放宽或收窄行政区范围（区 → 市 / 市 → 区）"
+            }
+          },
+          "description": "用户指定位置查询参数（ReqLocation）。仅省市区/地址，不含经纬度。**不得整体留空**：没有地址就先追问，不要空条件调用"
+        }
+      },
+      "required": [
+        "request"
+      ]
+    }
+  }
+]

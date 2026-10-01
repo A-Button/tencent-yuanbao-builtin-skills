@@ -1,0 +1,10 @@
+{
+  "name": "pdf-skill-tools",
+  "private": true,
+  "version": "0.0.0",
+  "bin": {
+    "html_to_pdf": "bin/html_to_pdf.js",
+    "check_render_quality": "scripts/check_render_quality.js"
+  },
+  "license": "UNLICENSED"
+}

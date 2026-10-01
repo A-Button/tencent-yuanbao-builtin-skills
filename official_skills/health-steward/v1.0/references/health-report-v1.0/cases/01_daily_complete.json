@@ -1,0 +1,77 @@
+{
+  "report_type": "daily",
+  "date": "2026-09-21",
+  "weekday": "周一",
+  "day_complete_confirmed": true,
+  "profile": {
+    "height_cm": 175,
+    "weight_kg": 70,
+    "age": 30,
+    "sex": "male",
+    "goal": "fat_loss",
+    "target_kcal": 2100,
+    "target_protein_g": 90,
+    "target_fat_g": 70,
+    "target_carb_g": 250
+  },
+  "meals": [
+    {
+      "meal_type": "早餐",
+      "time": "08:10",
+      "photo_url": null,
+      "foods": [
+        {"name": "水煮蛋", "portion": "2个"},
+        {"name": "无糖豆浆", "portion": "250ml"},
+        {"name": "全麦面包", "portion": "2片"}
+      ],
+      "totals": {"kcal": 450, "protein_g": 26, "fat_g": 15, "carb_g": 54, "sodium_mg": 520},
+      "scene": "早餐把蛋白质和主食都铺稳了。",
+      "signal": "早餐蛋白质26g，占全天目标约29%。",
+      "source": "user_text",
+      "confidence": "medium"
+    },
+    {
+      "meal_type": "午餐",
+      "time": "12:35",
+      "photo_url": null,
+      "foods": [
+        {"name": "鸡胸肉", "portion": "150g"},
+        {"name": "糙米饭", "portion": "1小碗（约150g）"},
+        {"name": "西兰花", "portion": "2小碗（约300g）"}
+      ],
+      "totals": {"kcal": 720, "protein_g": 42, "fat_g": 22, "carb_g": 85, "sodium_mg": 780},
+      "scene": "午餐结构完整，肉、主食和蔬菜都在。",
+      "signal": "午餐蛋白质42g，是全天主要贡献者。",
+      "source": "user_text",
+      "confidence": "medium"
+    },
+    {
+      "meal_type": "晚餐",
+      "time": "19:10",
+      "photo_url": null,
+      "foods": [
+        {"name": "清蒸鱼", "portion": "1条（小，约250g）"},
+        {"name": "青菜", "portion": "2小碗（约300g）"},
+        {"name": "米饭", "portion": "半小碗（约80g）"}
+      ],
+      "totals": {"kcal": 610, "protein_g": 36, "fat_g": 18, "carb_g": 72, "sodium_mg": 690},
+      "scene": "晚餐收得清爽，但没有省掉主食。",
+      "signal": "三餐合计蛋白质104g，已达到当日目标。",
+      "source": "user_text",
+      "confidence": "medium"
+    }
+  ],
+  "exercises": [
+    {
+      "name": "傍晚快走",
+      "time": "18:20",
+      "duration_min": 40,
+      "distance_km": 4.2,
+      "pace": "9分31秒/公里",
+      "kcal": 168,
+      "source": "connector"
+    }
+  ],
+  "daily_activity_kcal": 300,
+  "daily_activity_source": "connector"
+}

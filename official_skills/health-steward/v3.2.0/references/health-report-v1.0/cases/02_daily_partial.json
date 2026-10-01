@@ -1,0 +1,36 @@
+{
+  "report_type": "daily",
+  "date": "2026-09-21",
+  "weekday": "周一",
+  "day_complete_confirmed": false,
+  "profile": {
+    "height_cm": null,
+    "weight_kg": null,
+    "age": null,
+    "sex": "unknown",
+    "goal": "unknown",
+    "target_kcal": null,
+    "target_protein_g": null,
+    "target_fat_g": null,
+    "target_carb_g": null
+  },
+  "meals": [
+    {
+      "meal_type": "午餐",
+      "time": "12:40",
+      "photo_url": null,
+      "foods": [
+        {"name": "牛肉面", "portion": "普通碗1碗"},
+        {"name": "卤蛋", "portion": "1个"}
+      ],
+      "totals": {"kcal": 760, "protein_g": 32, "fat_g": 24, "carb_g": 102, "sodium_mg": 2100},
+      "scene": "目前只记录到午餐。",
+      "signal": "这顿钠约2100mg，已接近一般成人全天建议上限。",
+      "source": "estimate",
+      "confidence": "low"
+    }
+  ],
+  "exercises": [],
+  "daily_activity_kcal": null,
+  "daily_activity_source": "unknown"
+}

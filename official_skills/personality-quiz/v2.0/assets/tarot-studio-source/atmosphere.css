@@ -1,0 +1,25 @@
+.atmosphere{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none;opacity:1;mix-blend-mode:normal;contain:strict}
+.atmosphere-mist,.ambient-dust{position:absolute;inset:0;width:100%;height:100%}
+.atmosphere-mist{inset:-10%;width:120%;height:120%;opacity:.5;mix-blend-mode:screen;background:radial-gradient(ellipse at 78% 18%,#78501966,transparent 52%),radial-gradient(ellipse at 18% 62%,#184d4655,transparent 48%),radial-gradient(ellipse at 62% 95%,#9b713344,transparent 46%);mask-image:linear-gradient(#000 0%,#0008 30%,#0004 55%,#000 100%);will-change:transform}
+.is-animated .atmosphere-mist{animation:mist-drift 24s ease-in-out infinite alternate}
+@keyframes mist-drift{from{transform:translate(-2%,1%) scale(1) rotate(-3deg)}to{transform:translate(3%,-2%) scale(1.08) rotate(4deg)}}
+.ambient-light{position:absolute;inset:-15%;opacity:0;will-change:transform;mix-blend-mode:screen;transition:opacity 1s}
+.ambient-light-one{background:radial-gradient(ellipse at 80% 22%,#e8b45b35,transparent 34%),radial-gradient(ellipse at 10% 72%,#6caa9b20,transparent 40%)}
+.ambient-light-two{background:radial-gradient(ellipse at 62% 92%,#d6a44c28,transparent 35%),radial-gradient(ellipse at 5% 25%,#caa2621a,transparent 30%)}
+.ambient-rays{position:absolute;inset:-35%;transform-origin:75% 10%;background:conic-gradient(from 158deg at 75% 10%,transparent 0deg,#f3d19712 8deg,transparent 16deg,#e7c07c1a 24deg,transparent 32deg,#f3d19710 42deg,transparent 49deg);filter:blur(12px);mix-blend-mode:screen;opacity:0}
+.celestial-orbit{position:absolute;width:640px;aspect-ratio:1;border:1px solid #dfbc7530;border-radius:50%;top:25%;left:-420px;opacity:0;transform:rotate(-25deg);mask-image:linear-gradient(70deg,transparent 35%,#000)}
+.celestial-orbit::before{content:'';position:absolute;inset:20px;border:1px dashed #d6b57430;border-radius:50%}
+.celestial-orbit::after{content:'';position:absolute;width:5px;height:5px;top:50%;right:-3px;border-radius:50%;background:#f4dca4;box-shadow:0 0 15px 3px #dfb36e66}
+.celestial-orbit-two{left:auto;right:-430px;top:44%;width:620px;mask-image:linear-gradient(-70deg,transparent 35%,#000)}
+.is-animated .ambient-light{opacity:1;animation:ambient-drift 19s ease-in-out infinite alternate}
+.is-animated .ambient-light-two{animation-duration:26s;animation-delay:-12s;animation-direction:alternate-reverse}
+.is-animated .ambient-rays{opacity:1;animation:ray-sway 23s ease-in-out infinite alternate}
+.is-animated .celestial-orbit{opacity:.65;animation:orbit-turn 100s linear infinite}
+.is-animated .celestial-orbit-two{animation-duration:130s;animation-direction:reverse}
+.atmosphere:not(.is-animated) .ambient-rays,.atmosphere:not(.is-animated) .celestial-orbit{opacity:0}
+.atmosphere.is-paused *{animation-play-state:paused!important}
+@keyframes ambient-drift{from{transform:translate(-3%,-2%) scale(1) rotate(-5deg)}to{transform:translate(4%,4%) scale(1.13) rotate(6deg)}}
+@keyframes ray-sway{from{transform:rotate(-9deg) scale(1);opacity:.45}to{transform:rotate(8deg) scale(1.08);opacity:1}}
+@keyframes orbit-turn{to{transform:rotate(335deg)}}
+@media(max-width:700px){.atmosphere-mist{opacity:.4}.celestial-orbit{width:440px;left:-365px;top:25%}.celestial-orbit-two{left:auto;right:-370px;top:49%}.ambient-rays{filter:blur(8px)}}
+@media(prefers-reduced-motion:reduce){.atmosphere{display:none}}

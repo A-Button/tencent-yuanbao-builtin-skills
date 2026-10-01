@@ -1,0 +1,56 @@
+[
+  {
+    "name": "image_generation/generate",
+    "description": "图像生成统一入口。dst_intent=Text2Image 用纯文本描述生成图片，input_images 必须传 []；dst_intent=Image2Image 基于已有图片做编辑/调整/再创作等各类处理，input_images 必填且至少 1 条。每条 input_images 元素为 {type, value} 结构体：type 为 url ，value 为对应的值。一次调用生成 1 张图，返回其 url（真实 URL，可直接用于展示、链式调用，或用 bash curl 下载到本地路径）。仅接受 URL 形式的输入图，本地图片文件不能作为输入。",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dst_intent": {
+          "type": "string",
+          "enum": ["Text2Image", "Image2Image"],
+          "description": "生成意图：文生图 / 图生图"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "description": "图像描述。文生图：完整描述想要的画面（主体/属性/风格/构图/氛围等）。图生图：跟文生图不同，不额外发散，只在用户原始 query 上做简单清晰化（指代消解、语言整理），写清相对输入图要做的改动即可，不主动补充用户没提的画面细节，也不重述原图中本次不改的内容。带上用户显式要素、需解析的上下文引用、比例/必含文字等硬约束，不塞无关信息。**多图输入时，用「第一张图」「第二张图」（顺序与 input_images 一致）指代各张图来描述它们的相对关系，不要用「左图/右图/上面那张」等易混淆说法。**"
+        },
+        "input_images": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["url"],
+                "description": "输入类型：url=图片URL（含短链）"
+              },
+              "value": {
+                "type": "string",
+                "minLength": 1,
+                "description": "对应类型的值"
+              }
+            },
+            "required": ["type", "value"]
+          },
+          "default": [],
+          "description": "图生图时必填的输入图片列表；文生图传空数组 []。这是**单次调用传入的【输入】图，不是输出**——每次调用恒只产出 1 张图，要多张输出就并行多次调用。**单次调用可传 1-3 张输入图**（多图融合/风格迁移/元素合成等多图任务一次最多 3 张）。type=url 时 value 为公网图片 URL（含短链）。本地文件路径、file:// 地址、base64 数据均不是合法输入，禁止填入。"
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "**仅文生图可选**，整数，取值范围 `1-10`。用途是**锁定一组图的风格/主体一致性**——当本次任务要并行产出同一系列的多张组图（连环画分镜、绘本插画、产品系列海报、品牌视觉物料等需要统一风格或同一主体复现的场景）时，该组**所有请求传同一个数字**；当多图目的是探索多样性、给用户挑选不同方向时，**不要传此参数**。单张生成默认不传。"
+        },
+        "image_ratio": {
+          "type": "string",
+          "default": "",
+          "description": "输出图的画面比例，两种写法：①\"W:H\" 整数比，如 16:9 / 3:4 / 1:1——当用户明确给出比例或分辨率时用它（分辨率换算成最接近的整数比，如 1080×1080→1:1）；②\"ref:N\" 跟随第 N 张输入图的比例（1-based，N 与 input_images 顺序一致，即 prompt 里的『第 N 张图』；仅图生图可用）。留空=auto：图生图默认跟随第一张输入图、文生图用后端默认。用户未明确比例/分辨率时按『跟随哪张图』决定取哪张作 ref:N：a) 语义明确指向被处理图（图1/这张）就跟随该图；b) 仅作风格/妆容/姿势参考的图不作比例依据；c) 多图融合/替换类跟随『主体承载/被编辑』的那张（如『把第一张图的主体放进第二张图的风景里』→ ref:2），未指明则取第一张（ref:1）。"
+        }
+      },
+      "required": ["dst_intent", "prompt"]
+    }
+  }
+]

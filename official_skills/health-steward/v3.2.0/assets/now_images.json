@@ -1,0 +1,24 @@
+{
+  "meals": {
+    "breakfast": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_small_cup_of_coffee.JPG/250px-A_small_cup_of_coffee.JPG",
+    "lunch": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg/250px-Good_Food_Display_-_NCI_Visuals_Online.jpg",
+    "dinner": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Fruit_bowl.jpg/250px-Fruit_bowl.jpg"
+  },
+  "covers": {
+    "daily": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg/500px-Good_Food_Display_-_NCI_Visuals_Online.jpg",
+    "weekly": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Banana-Single.jpg/250px-Banana-Single.jpg"
+  },
+  "exercises": {
+    "default": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Push-up.jpg/250px-Push-up.jpg",
+    "push_up": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Push-up.jpg/250px-Push-up.jpg",
+    "slider_mountain_climber": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Push-up.jpg/250px-Push-up.jpg",
+    "plank": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Plank.jpg/250px-Plank.jpg",
+    "side_plank": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Girl_exercising_doing_plank_on_stability_ball.jpg/250px-Girl_exercising_doing_plank_on_stability_ball.jpg",
+    "walking_lunge": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Sakshi_Malik_fitness_%28lunge%29.jpg/250px-Sakshi_Malik_fitness_%28lunge%29.jpg",
+    "bulgarian_split_squat": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Low_Lunge.jpg/250px-Low_Lunge.jpg",
+    "goblet_squat": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Woman_doing_squat_workout_in_gym_with_barbell.jpg/250px-Woman_doing_squat_workout_in_gym_with_barbell.jpg",
+    "romanian_deadlift": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Deadlift.jpg/250px-Deadlift.jpg",
+    "dumbbell_bench_press": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Bench_press.jpg/250px-Bench_press.jpg",
+    "ab_wheel_kneeling_rollout": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Ab_wheel.jpg/250px-Ab_wheel.jpg"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "name": "示例商品 A",
+      "unitPrice": 99.5,
+      "quantity": 2
+    },
+    {
+      "name": "示例商品 B",
+      "unitPrice": 35,
+      "quantity": 1
+    }
+  ],
+  "discount": 20,
+  "shippingFee": 0
+}

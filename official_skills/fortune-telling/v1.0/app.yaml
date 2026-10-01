@@ -1,0 +1,24 @@
+id: fortune-telling
+name: fortune-telling
+version: 1.0.0
+description: 算命App，填写姓名/性别/出生日期后，可请 Agent 推理算命话术，也可本地脚本秒算星座。
+
+entry:
+  init: scripts/init.py
+  ui: ui/index.html
+  destory: scripts/destroy.py
+
+sandbox:
+  scope: user
+  persistence: enabled
+
+resources:
+  ui:
+    index: ui/index.html
+
+# calc_zodiac 是纯规则计算（无需模型推理），声明 [ui, agent] 双重可见性：
+# UI 通过 app.callScript 短路调用；也允许 Agent 在需要时把它当普通工具调用。
+scripts:
+  - name: calc_zodiac
+    path: scripts/calc_zodiac.py
+    visibility: [ui, agent]

@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root{
+    --black:#0A0B0D;        /* 主体黑 */
+    --black-2:#14161A;      /* 次级深灰 */
+    --cyan:#3FE0E0;         /* 电光青 强调 */
+    --cyan-deep:#16B5B5;    /* 深青 */
+    --cyan-soft:#E4FAFA;    /* 极浅青 卡片底 */
+    --line:#E2E6EA;         /* 浅分隔线 */
+    --line-dark:#2A2E34;    /* 深底分隔线 */
+    --paper:#FFFFFF;
+    --paper-soft:#F5F7F8;
+    --text:#1C2126;         /* 正文 */
+    --muted:#737B85;        /* 次要文字 */
+    --muted-d:#8A93A0;      /* 深底次要文字 */
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{
+    font-family:"Inter","Noto Sans SC","Source Han Sans SC",sans-serif;
+    color:var(--text);
+    font-size:9px;
+    line-height:1.5;
+  }
+  @page{ size:A4; margin:0; }
+  /* 固定 A4 画布，作为单页边界 */
+  .sheet{
+    width:210mm; height:297mm;
+    margin:0 auto; background:var(--paper);
+    position:relative; overflow:hidden;
+  }
+  /* 内容容器：宽度=210mm，自适应等比缩放至画布内 */
+  .page{
+    width:210mm;
+    background:var(--paper);
+    position:relative;
+    padding-bottom:9mm;
+    transform-origin:top left;
+  }
+
+  /* ===== 顶部标题区（黑底 + 青色巨标题） ===== */
+  .masthead{
+    background:var(--black);
+    color:#fff;
+    padding:6mm 14mm 5.5mm 14mm;
+    position:relative; overflow:hidden;
+  }
+  /* 顶部品牌行 */
+  .mh-top{
+    display:flex;justify-content:space-between;align-items:center;
+    position:relative;z-index:1;
+    padding-bottom:5px;border-bottom:1px solid rgba(255,255,255,.10);
+  }
+  .brand{ display:flex;align-items:center;gap:9px;}
+  .brand .logo{
+    width:24px;height:24px;border-radius:6px;
+    border:1.5px solid var(--cyan);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--cyan);font-weight:800;font-size:13px;
+  }
+  .brand .org{ font-size:10px;letter-spacing:3px;color:#C4CBD3;font-weight:600;}
+  .doc-type{
+    font-size:8px;letter-spacing:3px;color:var(--black);
+    background:var(--cyan);padding:4px 12px;border-radius:20px;font-weight:800;
+  }
+  /* 标题块：英文眉题 → 主标题 → 青线引导的副标题，三级递进 */
+  .mh-title{ position:relative;z-index:1;margin-top:9px;}
+  .title-kicker{
+    font-size:7.5px;letter-spacing:5px;color:var(--cyan);
+    text-transform:uppercase;font-weight:700;margin-bottom:6px;
+  }
+  .title-main{
+    font-size:27px;font-weight:800;letter-spacing:.5px;line-height:1.1;color:#fff;
+  }
+  .title-main b{ color:var(--cyan); }
+  .title-sub{
+    display:flex;align-items:center;gap:9px;
+    font-size:10px;color:#AEB6C0;margin-top:7px;font-weight:400;line-height:1.4;
+  }
+  .title-sub::before{
+    content:"";flex-shrink:0;width:3px;height:13px;background:var(--cyan);border-radius:2px;
+  }
+
+  /* ===== 元信息条 ===== */
+  .metabar{
+    display:grid;grid-template-columns:repeat(4,1fr);
+    background:var(--black-2);
+  }
+  .metabar .cell{
+    padding:5px 14px; border-right:1px solid var(--line-dark);
+  }
+  .metabar .cell:nth-child(4n){border-right:none;}
+  .metabar .k{ font-size:7px;letter-spacing:1.5px;color:var(--cyan-deep);font-weight:700;text-transform:uppercase;}
+  .metabar .v{ font-size:9.5px;color:#EAEEF2;font-weight:600;margin-top:2px;}
+  .metabar .v.warn{ color:var(--cyan); }
+
+  .inner{ padding:0 14mm; }
+
+  /* ===== 区块标题 ===== */
+  .section{ margin-top:2.6mm; }
+  .sec-head{ display:flex;align-items:baseline;gap:10px;margin-bottom:3.5px;}
+  .sec-no{
+    font-size:15px;font-weight:800;color:var(--cyan-deep);
+    font-family:"Inter",sans-serif;letter-spacing:0;line-height:1;
+  }
+  .sec-title{ font-size:13px;font-weight:800;color:var(--black);letter-spacing:.3px;line-height:1;}
+  .sec-en{ font-size:7px;color:var(--muted);font-weight:600;letter-spacing:2px;text-transform:uppercase;}
+  .sec-rule{ flex:1;height:2px;background:var(--black);align-self:center;margin-left:2px;}
+  .sec-rule::after{content:"";display:block;width:40px;height:2px;background:var(--cyan);}
+
+  /* ===== 概要双栏 ===== */
+  .overview{ display:grid;grid-template-columns:1.5fr 1fr;gap:9px; }
+  .summary-card{
+    background:var(--paper-soft);border-left:3px solid var(--cyan);
+    border-radius:0 8px 8px 0;padding:8px 13px;
+  }
+  .summary-card p{ margin-bottom:4px;text-align:justify;}
+  .summary-card p:last-child{margin-bottom:0;}
+  .summary-card .lead{ color:var(--black);font-weight:700;}
+  .stat-stack{ display:flex;flex-direction:column;gap:6px;}
+  .stat{
+    border-radius:8px;padding:7px 13px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .stat.dark{ background:var(--black);color:#fff; }
+  .stat.dark .num{ color:var(--cyan); }
+  .stat.cyan{ background:var(--cyan);color:var(--black); }
+  .stat.soft{ background:var(--cyan-soft);color:var(--black);border:1px solid #C7EFEF; }
+  .stat .num{ font-size:20px;font-weight:800;line-height:1;font-family:"Inter",sans-serif;}
+  .stat .lbl{ font-size:8.5px;text-align:right;line-height:1.35;opacity:.92;}
+
+  /* ===== 表格 ===== */
+  table{ width:100%;border-collapse:collapse;font-size:9px; }
+  thead th{
+    background:var(--black);color:var(--cyan);font-weight:700;
+    padding:4.5px 9px;text-align:left;letter-spacing:.5px;font-size:8.4px;
+    border-bottom:2px solid var(--cyan);
+  }
+  tbody td{ padding:2.7px 9px;border-bottom:1px solid var(--line);vertical-align:middle;}
+  tbody tr:nth-child(even){ background:var(--paper-soft);}
+  .tag{ display:inline-block;font-size:7.5px;font-weight:800;padding:2px 9px;border-radius:11px;letter-spacing:.5px;}
+  .tag.high{ background:var(--black);color:var(--cyan);}
+  .tag.mid{ background:var(--cyan-soft);color:var(--cyan-deep);border:1px solid #BCEAEA;}
+  .tag.done{ background:var(--cyan);color:var(--black);}
+  .chk{ width:12px;height:12px;border:1.5px solid var(--black);border-radius:3px;display:inline-block;vertical-align:middle;}
+
+  /* ===== 议题模块 ===== */
+  .topic{
+    border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:5px;background:#fff;
+  }
+  .topic-head{
+    display:flex;align-items:center;gap:10px;
+    background:var(--black);padding:3.5px 12px;
+  }
+  .topic-idx{
+    background:var(--cyan);color:var(--black);font-size:8px;font-weight:800;
+    padding:2px 8px;border-radius:4px;letter-spacing:1px;
+  }
+  .topic-name{ font-size:11px;font-weight:700;color:#fff;flex:1;}
+  .topic-owner{ font-size:8.5px;color:var(--muted-d);}
+  .topic-owner b{ color:var(--cyan);font-weight:600;}
+  .topic-body{ padding:5px 13px;display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+  .tb-k{ font-size:8px;font-weight:800;color:var(--cyan-deep);letter-spacing:1.5px;margin-bottom:2px;text-transform:uppercase;}
+  .tb-block ul{ list-style:none;}
+  .tb-block li{ position:relative;padding-left:12px;margin-bottom:1.5px;text-align:justify;}
+  .tb-block li::before{
+    content:"";position:absolute;left:0;top:5.5px;width:5px;height:5px;
+    background:var(--cyan);transform:rotate(45deg);
+  }
+  .tb-block.full{grid-column:1 / -1;}
+
+  /* ===== 风险/下一步双栏 ===== */
+  .twocol{ display:grid;grid-template-columns:1fr 1fr;gap:9px; }
+  .note-card{ border-radius:8px;padding:7px 13px;}
+  .note-card.risk{ background:var(--black);color:#fff;}
+  .note-card.risk h4{ color:var(--cyan); }
+  .note-card.risk li{ color:#C9D0D8; }
+  .note-card.next{ background:var(--cyan-soft);border:1px solid #C7EFEF;}
+  .note-card.next h4{ color:var(--cyan-deep); }
+  .note-card h4{ font-size:10px;margin-bottom:5px;font-weight:800;}
+  .note-card ul{ list-style:none;}
+  .note-card li{ position:relative;padding-left:13px;margin-bottom:2px;text-align:justify;}
+  .note-card.risk li::before{content:"";position:absolute;left:0;top:5px;width:5px;height:5px;border-radius:50%;background:var(--cyan);}
+  .note-card.next li::before{content:"";position:absolute;left:0;top:5px;width:5px;height:5px;border-radius:50%;background:var(--cyan-deep);}
+
+  /* ===== 签批 ===== */
+  .signoff{ display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:3mm;}
+  .sign-box{ border-top:2px solid var(--black);padding-top:5px;}
+  .sign-box .role{font-size:8px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;font-weight:700;}
+  .sign-box .line{height:11px;border-bottom:1px dashed var(--line);margin-top:4px;}
+  .sign-box .date{font-size:8px;color:var(--muted);margin-top:3px;}
+
+  /* ===== 页脚 ===== */
+  .footer{
+    margin:6px 14mm 0 14mm;
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:7.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:5px;
+  }
+  .footer .conf{ color:var(--cyan-deep);font-weight:800;letter-spacing:1px;}
+
+</style>
+</head>
+<body>
+<div class="sheet">
+<div class="page" id="page">
+
+  <!-- 顶部标题 -->
+  <div class="masthead">
+    <div class="mh-top">
+      <div class="brand">
+        <div class="logo">M</div>
+        <div class="org">MERIDIAN&nbsp;&nbsp;集团运营管理中心</div>
+      </div>
+      <div class="doc-type">MEETING&nbsp;BRIEF</div>
+    </div>
+    <div class="mh-title">
+      <div class="title-kicker">QUARTERLY&nbsp;BUSINESS&nbsp;REVIEW&nbsp;&amp;&nbsp;STRATEGIC&nbsp;ALIGNMENT</div>
+      <div class="title-main">第三季度经营分析与<b>战略协同</b>会议简报</div>
+      <div class="title-sub">围绕季度业绩复盘、重点项目进度与下一阶段资源调配的决策纪要</div>
+    </div>
+  </div>
+
+  <!-- 元信息条 -->
+  <div class="metabar">
+    <div class="cell"><div class="k">会议编号</div><div class="v">MTG-2026-Q3-018</div></div>
+    <div class="cell"><div class="k">会议日期</div><div class="v">2026-06-09 周二</div></div>
+    <div class="cell"><div class="k">时间地点</div><div class="v">14:00 / 总部 A 座 9F</div></div>
+    <div class="cell"><div class="k">主持人</div><div class="v">陈志远 · 运营副总裁</div></div>
+  </div>
+  <div class="metabar" style="border-top:1px solid var(--line-dark);">
+    <div class="cell"><div class="k">记录人</div><div class="v">林思齐</div></div>
+    <div class="cell"><div class="k">应到 / 实到</div><div class="v">12 / 11 人</div></div>
+    <div class="cell"><div class="k">会议时长</div><div class="v">95 分钟</div></div>
+    <div class="cell"><div class="k">密级</div><div class="v warn">内部 · 限阅</div></div>
+  </div>
+
+  <div class="inner">
+
+    <!-- 01 会议概要 -->
+    <div class="section">
+      <div class="sec-head">
+        <div class="sec-no">01</div>
+        <div class="sec-title">会议概要</div>
+        <div class="sec-en">Overview</div>
+        <div class="sec-rule"></div>
+      </div>
+      <div class="overview">
+        <div class="summary-card">
+          <p class="lead">本次会议聚焦第三季度整体经营态势，对营收、成本与重点项目交付情况进行全面复盘。</p>
+          <p>会议确认季度营收同比增长稳健，核心业务线毛利率改善明显；同时指出渠道拓展进度滞后、新品上市节奏需要前置等问题。与会者就资源向高潜力区域倾斜、跨部门交付协同机制达成共识，并明确第四季度优先级工作与责任人，最终形成 5 项正式决议、8 项行动事项，并对两项重大风险设置了跟踪与升级路径。</p>
+        </div>
+        <div class="stat-stack">
+          <div class="stat cyan"><div class="num">5</div><div class="lbl">正式决议<br>事项数</div></div>
+          <div class="stat dark"><div class="num">8</div><div class="lbl">行动项 /<br>待办任务</div></div>
+          <div class="stat soft"><div class="num">+12.6%</div><div class="lbl">季度营收<br>同比增速</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 参会人员 -->
+    <div class="section">
+      <div class="sec-head">
+        <div class="sec-no">02</div>
+        <div class="sec-title">参会人员</div>
+        <div class="sec-en">Attendees</div>
+        <div class="sec-rule"></div>
+      </div>
+      <table>
+        <thead><tr><th style="width:16%">姓名</th><th style="width:24%">部门 / 职务</th><th style="width:13%">角色</th><th>会议职责</th></tr></thead>
+        <tbody>
+          <tr><td>陈志远</td><td>运营管理中心 · 副总裁</td><td><span class="tag done">主持</span></td><td>统筹议程、裁决资源分配与最终决议</td></tr>
+          <tr><td>苏 婷</td><td>财务部 · 总监</td><td>汇报人</td><td>季度财务数据复盘与成本结构分析</td></tr>
+          <tr><td>王浩然</td><td>市场部 · 总监</td><td>汇报人</td><td>渠道与品牌投放进度、新品上市规划</td></tr>
+          <tr><td>李梦圆</td><td>产品研发部 · 负责人</td><td>列席</td><td>新品研发节点与交付风险说明</td></tr>
+          <tr><td>张明轩</td><td>销售大区 · 华东负责人</td><td>列席</td><td>区域销售达成与客户拓展反馈</td></tr>
+          <tr><td>林思齐</td><td>运营管理中心 · 高级专员</td><td>记录</td><td>会议纪要、决议与行动项跟踪</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 03 议题与讨论 -->
+    <div class="section">
+      <div class="sec-head">
+        <div class="sec-no">03</div>
+        <div class="sec-title">议题与讨论纪要</div>
+        <div class="sec-en">Agenda &amp; Discussion</div>
+        <div class="sec-rule"></div>
+      </div>
+
+      <div class="topic">
+        <div class="topic-head">
+          <span class="topic-idx">议题 01</span>
+          <span class="topic-name">第三季度经营业绩复盘</span>
+          <span class="topic-owner">汇报：<b>苏婷</b> · 30 min</span>
+        </div>
+        <div class="topic-body">
+          <div class="tb-block">
+            <div class="tb-k">关键结论</div>
+            <ul>
+              <li>季度营收 4.82 亿元，同比 +12.6%，环比 +5.3%，达成季度目标 103%。</li>
+              <li>综合毛利率提升至 38.4%，主因高毛利产品占比上升与采购优化。</li>
+              <li>经营性现金流转正，回款周期由 62 天缩短至 54 天。</li>
+            </ul>
+          </div>
+          <div class="tb-block">
+            <div class="tb-k">讨论要点</div>
+            <ul>
+              <li>华东、华南表现突出，西部区域增速低于预期需重点关注。</li>
+              <li>销售费用率同比上升 1.8pct，投放 ROI 有待优化。</li>
+              <li>建议建立区域盈利看板，按月跟踪边际贡献。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic">
+        <div class="topic-head">
+          <span class="topic-idx">议题 02</span>
+          <span class="topic-name">重点项目进度与交付风险</span>
+          <span class="topic-owner">汇报：<b>李梦圆</b> · 25 min</span>
+        </div>
+        <div class="topic-body">
+          <div class="tb-block">
+            <div class="tb-k">进展情况</div>
+            <ul>
+              <li>新一代旗舰产品已完成研发验证，进入小批量试产阶段。</li>
+              <li>配套供应链协议签署完成 80%，关键物料锁定产能。</li>
+            </ul>
+          </div>
+          <div class="tb-block">
+            <div class="tb-k">风险与对策</div>
+            <ul>
+              <li>核心芯片交期存在 3 周波动，已启动双供应商备份。</li>
+              <li>上市窗口建议前置至 10 月，抢占节日销售旺季。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic">
+        <div class="topic-head">
+          <span class="topic-idx">议题 03</span>
+          <span class="topic-name">市场渠道拓展与品牌投放</span>
+          <span class="topic-owner">汇报：<b>王浩然</b> · 20 min</span>
+        </div>
+        <div class="topic-body">
+          <div class="tb-block full">
+            <div class="tb-k">核心议程</div>
+            <ul>
+              <li>新增经销渠道 36 家，覆盖率达成 78%，距全年目标尚有 12pct 缺口，需在 Q4 加速下沉市场布局。</li>
+              <li>线上自营渠道 GMV 同比 +34%，私域复购率提升至 26%，建议追加内容营销与会员运营投入。</li>
+              <li>品牌投放预算建议向高转化的短视频与区域分众渠道倾斜，缩减低效硬广占比，整体 ROI 目标提升至 1:4.5。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 决议事项 -->
+    <div class="section">
+      <div class="sec-head">
+        <div class="sec-no">04</div>
+        <div class="sec-title">决议事项</div>
+        <div class="sec-en">Resolutions</div>
+        <div class="sec-rule"></div>
+      </div>
+      <table>
+        <thead><tr><th style="width:7%">No.</th><th style="width:48%">决议内容</th><th style="width:18%">责任部门</th><th style="width:13%">优先级</th><th>状态</th></tr></thead>
+        <tbody>
+          <tr><td>R1</td><td>批准旗舰新品上市窗口前置至 10 月第二周</td><td>产品研发部</td><td><span class="tag high">高</span></td><td>已通过</td></tr>
+          <tr><td>R2</td><td>设立西部区域专项扶持预算 800 万元</td><td>财务部 / 销售</td><td><span class="tag high">高</span></td><td>已通过</td></tr>
+          <tr><td>R3</td><td>上线区域盈利看板，按月跟踪边际贡献</td><td>运营管理中心</td><td><span class="tag mid">中</span></td><td>已通过</td></tr>
+          <tr><td>R4</td><td>核心物料启用双供应商备份机制</td><td>供应链部</td><td><span class="tag high">高</span></td><td>已通过</td></tr>
+          <tr><td>R5</td><td>品牌投放结构调整，硬广占比下调至 25%</td><td>市场部</td><td><span class="tag mid">中</span></td><td>已通过</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 05 行动项 -->
+    <div class="section">
+      <div class="sec-head">
+        <div class="sec-no">05</div>
+        <div class="sec-title">行动项与责任分工</div>
+        <div class="sec-en">Action Items</div>
+        <div class="sec-rule"></div>
+      </div>
+      <table>
+        <thead><tr><th style="width:5%"></th><th style="width:42%">任务事项</th><th style="width:15%">负责人</th><th style="width:17%">截止日期</th><th>验收标准</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chk"></span></td><td>制定旗舰新品上市作战方案</td><td>王浩然</td><td>2026-06-20</td><td>方案评审通过</td></tr>
+          <tr><td><span class="chk"></span></td><td>完成西部专项预算分解与下达</td><td>苏婷</td><td>2026-06-18</td><td>预算文件签发</td></tr>
+          <tr><td><span class="chk"></span></td><td>搭建区域盈利看板 V1</td><td>林思齐</td><td>2026-06-30</td><td>看板上线试运行</td></tr>
+          <tr><td><span class="chk"></span></td><td>确认双供应商备份协议</td><td>供应链部</td><td>2026-06-25</td><td>协议签署完成</td></tr>
+          <tr><td><span class="chk"></span></td><td>调整 Q4 品牌投放媒介组合</td><td>市场部</td><td>2026-07-05</td><td>投放计划发布</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 06 风险与下一步 -->
+    <div class="section">
+      <div class="sec-head">
+        <div class="sec-no">06</div>
+        <div class="sec-title">风险提示与下一步</div>
+        <div class="sec-en">Risk &amp; Next Steps</div>
+        <div class="sec-rule"></div>
+      </div>
+      <div class="twocol">
+        <div class="note-card risk">
+          <h4>重点风险跟踪</h4>
+          <ul>
+            <li>核心芯片交期波动，可能影响试产节奏 — 已设升级机制，每周复核。</li>
+            <li>西部区域增速持续低迷，需观察专项预算效果，8 月评估止损。</li>
+            <li>销售费用率上升，存在投放效率下滑风险。</li>
+          </ul>
+        </div>
+        <div class="note-card next">
+          <h4>下一步与下次会议</h4>
+          <ul>
+            <li>各责任人于 6 月 20 日前提交行动项首轮进展。</li>
+            <li>运营中心汇总形成周度跟踪简报，下次例会 07-08 周三 14:00。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 签批 -->
+    <div class="signoff">
+      <div class="sign-box"><div class="role">记录人 / Recorder</div><div class="line"></div><div class="date">日期：__________</div></div>
+      <div class="sign-box"><div class="role">主持人 / Chair</div><div class="line"></div><div class="date">日期：__________</div></div>
+      <div class="sign-box"><div class="role">审批 / Approved</div><div class="line"></div><div class="date">日期：__________</div></div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span>MERIDIAN 集团运营管理中心　|　会议简报模板 v2.0</span>
+    <span class="conf">CONFIDENTIAL · 内部限阅</span>
+    <span>第 1 页 / 共 1 页</span>
+  </div>
+
+</div><!-- /.page -->
+</div><!-- /.sheet -->
+
+<script>
+  // 自适应等比缩放：把内容精确收进 A4 单页，杜绝溢出与空白页
+  (function fit(){
+    var sheet = document.querySelector('.sheet');
+    var page  = document.getElementById('page');
+    if(!sheet || !page) return;
+    page.style.transform = 'none';
+    page.style.width = '210mm';
+    var avail = sheet.clientHeight;          // A4 画布高度(px)
+    var need  = page.scrollHeight;           // 内容自然高度(px)
+    if(need > avail){
+      var scale = avail / need;
+      page.style.transform = 'scale(' + scale + ')';
+      page.style.width = (210 / scale) + 'mm';   // 缩放后宽度回到 210mm，铺满页宽
+    }
+  })();
+</script>
+</body>
+</html>

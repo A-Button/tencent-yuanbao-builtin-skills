@@ -1,0 +1,256 @@
+#!/usr/bin/env python3
+"""{{APP_NAME}}的存储层（SQLite 版），供 scripts/ 下各个 tool 脚本共用。
+
+它自己不是 tool，不出现在 app.yaml 里。对外暴露的东西（``Store``、``execute``、``print_model_result``、
+``new_record``、``require_text``、``touch``、``ActionError``）与 JSON 版逐一对应，
+所以 create_{{ENTITY}}.py 这些 tool 脚本两种存储共用同一份，不必区分底层。
+
+存储路径 ``{{STORE_PATH}}``。沙箱里选它而不是 ``~/``，是因为 Agent 沙箱与 App 沙箱是
+两个沙箱、各有各的 home，但挂的是同一份 ``/data/user``；写在 home 下会导致
+「Agent 建的记录 UI 看不到」。本地跑没有这个挂载，退到 ``~/.one-agent/data/``——本地
+模式下不存在双沙箱，共用一个 home 反而是对的。
+
+选 SQLite 而不是整份 JSON，是为了让记录涨到几千条以后仍然只动要动的那一行：
+增删改走行级 SQL，不必把全表读进内存再整份写回。
+
+持久卷是 COS fuse，**不支持 SQLite 依赖的那套文件锁**，所以：
+
+* 库文件放持久卷，但并发控制沿用与 JSON 版同一把 flock，锁文件在本地 ``/tmp``。
+* journal 模式保持默认的 ``DELETE``，不要改成 WAL —— WAL 需要共享内存文件，
+  在 fuse 上会直接打不开库。
+
+换领域模型时，``CREATE TABLE`` 与 ``COLUMNS`` 要一起改：``new_record()`` 产出的字段
+必须和表的列对得上，否则 ``insert()`` 会在 SQL 层报错。
+"""
+
+from __future__ import annotations
+
+import contextlib
+import fcntl
+import hashlib
+import json
+import os
+import sqlite3
+import time
+import uuid
+from datetime import datetime, timezone
+from pathlib import Path
+
+DEFAULT_DATA_DIR = "/data/user"
+LOCAL_DATA_DIR = "~/.one-agent/data"
+STORE_FILENAME = "{{STORE_FILE}}"
+COLLECTION = "{{ENTITY_PLURAL}}"
+TABLE = "{{ENTITY_PLURAL}}"
+_LOCK_DIR = os.environ.get("{{ENV_PREFIX}}_LOCK_DIR", "/tmp")
+_LOCK_TIMEOUT = float(os.environ.get("{{ENV_PREFIX}}_LOCK_TIMEOUT", "30"))
+# 列顺序即出参里字段的顺序，UI 直接按它渲染。
+COLUMNS = ("id", "title", "notes", "created_at", "updated_at")
+
+
+class ActionError(RuntimeError):
+    def __init__(self, code: str, message: str):
+        self.code = code
+        self.message = message
+        super().__init__(f"{code}: {message}")
+
+
+def _now_iso() -> str:
+    return datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
+
+
+def _resolve_store_path(environ: dict[str, str] | None = None) -> Path:
+    """显式文件 > 环境变量指定的数据根 > 持久卷 /data/user > 本地 ~/.one-agent/data。
+
+    环境变量仅供测试与特殊部署，正常运行两条真实分支就够：沙箱里 ``/data/user``
+    是按用户挂载的持久卷，本地跑没有这个挂载，退到用户目录。判断的是挂载点本身
+    存在与否，而不是 ``<app-id>`` 子目录——子目录首次写入时才建。
+    """
+    env = os.environ if environ is None else environ
+    explicit = (env.get("{{ENV_PREFIX}}_STORE") or "").strip()
+    if explicit:
+        return Path(explicit)
+    override = (
+        env.get("{{ENV_PREFIX}}_DATA_DIR") or env.get("ONEAGENT_APP_DATA_DIR") or ""
+    ).strip()
+    root = Path(override) if override else _data_root()
+    return root / "{{APP_ID}}" / STORE_FILENAME
+
+
+def _data_root() -> Path:
+    # 挂载点不在就退到本地：此时创建 /data/user 只会写进容器本地盘，数据不持久，
+    # 还不如落在用户目录里。
+    persistent = Path(DEFAULT_DATA_DIR)
+    if persistent.is_dir():
+        return persistent
+    return Path(LOCAL_DATA_DIR).expanduser()
+
+
+def _lock_path(store_path: Path) -> Path:
+    """锁文件跟着库文件走，但放在本地盘：COS fuse 上 flock 不可靠。"""
+    digest = hashlib.sha256(str(store_path).encode("utf-8")).hexdigest()[:16]
+    return Path(_LOCK_DIR) / f"{{APP_ID}}-{digest}.lock"
+
+
+@contextlib.contextmanager
+def _store_lock(store_path: Path):
+    lock_file = _lock_path(store_path)
+    lock_file.parent.mkdir(parents=True, exist_ok=True)
+    deadline = time.monotonic() + _LOCK_TIMEOUT
+    with open(lock_file, "a+", encoding="utf-8") as handle:
+        while True:
+            try:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except OSError:
+                if time.monotonic() >= deadline:
+                    raise ActionError("STORE_BUSY", "数据正被其它操作占用，请稍后重试。")
+                time.sleep(0.05)
+        try:
+            yield
+        finally:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
+@contextlib.contextmanager
+def _connect(path: Path):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        connection = sqlite3.connect(path, timeout=_LOCK_TIMEOUT)
+    except sqlite3.Error as exc:
+        raise ActionError("STORE_UNAVAILABLE", f"打不开数据库：{exc}") from exc
+    connection.row_factory = sqlite3.Row
+    try:
+        # 建表放在每次连接：首次调用就能用，不需要额外的迁移步骤。
+        connection.execute(
+            f"""
+            CREATE TABLE IF NOT EXISTS {TABLE} (
+                id TEXT PRIMARY KEY,
+                title TEXT NOT NULL,
+                notes TEXT NOT NULL DEFAULT '',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+            """
+        )
+        connection.commit()
+        yield connection
+    except sqlite3.DatabaseError as exc:
+        connection.rollback()
+        raise ActionError("STORE_CORRUPTED", f"数据库损坏或不可读：{exc}") from exc
+    finally:
+        connection.close()
+
+
+class Store:
+    """一次调用期间的数据视图，增删改都是行级 SQL，立即 commit。"""
+
+    def __init__(self, connection: sqlite3.Connection):
+        self._connection = connection
+
+    def all(self) -> list[dict]:
+        """全量快照。记录很多时在这里加 WHERE/LIMIT，别把整表带回 UI。"""
+        cursor = self._connection.execute(
+            f"SELECT {', '.join(COLUMNS)} FROM {TABLE} ORDER BY created_at, id"
+        )
+        return [dict(row) for row in cursor.fetchall()]
+
+    def find(self, record_id: str) -> dict | None:
+        cursor = self._connection.execute(
+            f"SELECT {', '.join(COLUMNS)} FROM {TABLE} WHERE id = ?", (record_id,)
+        )
+        row = cursor.fetchone()
+        return dict(row) if row is not None else None
+
+    def require(self, record_id: str) -> dict:
+        record = self.find(record_id)
+        if record is None:
+            raise ActionError("NOT_FOUND", f"未找到记录：{record_id}")
+        return record
+
+    def insert(self, record: dict) -> None:
+        self._connection.execute(
+            f"INSERT INTO {TABLE} ({', '.join(COLUMNS)})"
+            f" VALUES ({', '.join('?' for _ in COLUMNS)})",
+            tuple(record.get(column) for column in COLUMNS),
+        )
+        self._connection.commit()
+
+    def replace(self, record: dict) -> None:
+        self.require(record["id"])
+        assignments = ", ".join(f"{column} = ?" for column in COLUMNS if column != "id")
+        self._connection.execute(
+            f"UPDATE {TABLE} SET {assignments} WHERE id = ?",
+            tuple(record.get(column) for column in COLUMNS if column != "id")
+            + (record["id"],),
+        )
+        self._connection.commit()
+
+    def remove(self, record_id: str) -> dict:
+        record = self.require(record_id)
+        self._connection.execute(f"DELETE FROM {TABLE} WHERE id = ?", (record_id,))
+        self._connection.commit()
+        return record
+
+
+def new_record(**fields: object) -> dict:
+    """补上 id 与时间戳。id 由服务端生成，模型与 UI 都只能复用返回值里的那个。"""
+    now = _now_iso()
+    return {"id": uuid.uuid4().hex, "created_at": now, "updated_at": now, **fields}
+
+
+def touch(record: dict) -> dict:
+    record["updated_at"] = _now_iso()
+    return record
+
+
+def require_text(args: dict, name: str) -> str:
+    """取一个非空白的必填文本。
+
+    字段是否存在由 app.yaml 的 ``required`` 在 CLI 侧拦下；但 CLI 的校验器不支持
+    ``pattern``，``minLength: 1`` 拦不住纯空格，所以「去掉空白后不能为空」留在这里。
+    """
+    value = args.get(name)
+    if not isinstance(value, str) or not value.strip():
+        raise ActionError("INVALID_ARGUMENT", f"缺少参数：{name}")
+    return value.strip()
+
+
+def execute(handler, args: dict, store_path: str | os.PathLike | None = None) -> dict:
+    """领域调用：拿锁 → 交给 handler → 补 UI 快照，返回完整结果。
+
+    handler 形如 ``handler(args, store) -> dict``，只返回自己那部分结果，
+    ``{{ENTITY_PLURAL}}`` 与 ``count`` 由这里统一补上。
+    """
+    try:
+        if not isinstance(args, dict):
+            raise ActionError("INVALID_ARGUMENT", "请求参数必须为对象。")
+        path = Path(store_path) if store_path else _resolve_store_path()
+        # 整段读-改-写在同一把 flock 内：COS fuse 上 SQLite 自己的锁不可靠。
+        with _store_lock(path), _connect(path) as connection:
+            store = Store(connection)
+            result = handler(args, store)
+            records = store.all()
+            result[COLLECTION] = records
+            result["count"] = len(records)
+    except ActionError as exc:
+        code = exc.code
+        message = exc.message
+        result = {
+            "phase": "error",
+            "code": code,
+            "message": message,
+            "retryable": code not in {"STORE_CORRUPTED"},
+        }
+    return result
+
+
+def print_model_result(result: dict, *fields: str) -> None:
+    """stdout 只输出模型需要的字段；完整快照由 tool 的入口函数返回给 UI。
+
+    查询需保留记录 ID 与明细，写操作只需本次变更对象及数量。错误同时给两个出口。
+    日志请写 stderr，不要混入模型结果。
+    """
+    model_result = result if result.get("phase") == "error" else {
+        key: result[key] for key in fields
+    }
+    print(json.dumps(model_result, ensure_ascii=False, separators=(",", ":")))

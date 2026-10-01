@@ -1,0 +1,169 @@
+from __future__ import annotations
+
+import contextlib
+import importlib.util
+import io
+import json
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+from unittest import mock
+
+import yaml
+
+APP_ROOT = Path(__file__).resolve().parents[1]
+SCRIPTS = APP_ROOT / "scripts"
+
+
+class ApiTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        sys.path.insert(0, str(SCRIPTS))
+        manifest = yaml.safe_load((APP_ROOT / "assets" / "app.yaml").read_text(encoding="utf-8"))
+        cls.handlers = {tool["name"]: tool["handler"] for tool in manifest["tools"]}
+        cls.modules = {}
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.store = Path(self._tmp.name) / "{{STORE_FILE}}"
+        self.addCleanup(self._tmp.cleanup)
+
+    def run_tool(self, tool: str, payload: dict | None = None) -> dict:
+        """直接验证函数契约：stdout 给模型，返回值给 UI。
+
+        app 的 worker 负责进程隔离和结果传输；这里独立测试业务函数，
+        不依赖测试环境是否已安装新版 app。inputSchema 校验不在这一层。
+        """
+        handler = self.handlers[tool]
+        path = APP_ROOT / handler["path"]
+        if path not in self.modules:
+            spec = importlib.util.spec_from_file_location(f"_test_handler_{len(self.modules)}", path)
+            module = importlib.util.module_from_spec(spec)
+            sys.modules[spec.name] = module
+            spec.loader.exec_module(module)
+            self.modules[path] = module
+        function_name = handler["function"] if "function" in handler else tool
+        function = getattr(self.modules[path], function_name)
+        output = io.StringIO()
+        with mock.patch.dict("os.environ", {"{{ENV_PREFIX}}_STORE": str(self.store)}):
+            with contextlib.redirect_stdout(output):
+                result = function(payload or {})
+        self.assertIsInstance(result, dict)
+        # worker 必须能严格序列化返回值，NaN/Infinity 也不属于有效 JSON。
+        json.dumps(result, allow_nan=False)
+        self.model_result = json.loads(output.getvalue())
+        return result
+
+    def test_create_then_list_returns_snapshot(self):
+        created = self.run_tool("create_{{ENTITY}}", {"title": "第一条"})
+        self.assertEqual(created["{{ENTITY}}"]["title"], "第一条")
+        self.assertEqual(created["count"], 1)
+        # 写操作必须自带全量快照，UI 不需要再拉一次。
+        self.assertEqual(len(created["{{ENTITY_PLURAL}}"]), 1)
+
+        listed = self.run_tool("list_{{ENTITY_PLURAL}}")
+        self.assertEqual([item["title"] for item in listed["{{ENTITY_PLURAL}}"]], ["第一条"])
+
+    def test_update_and_delete_roundtrip(self):
+        created = self.run_tool("create_{{ENTITY}}", {"title": "原标题"})
+        record_id = created["{{ENTITY}}"]["id"]
+
+        updated = self.run_tool(
+            "update_{{ENTITY}}", {"id": record_id, "title": "新标题", "notes": "备注"}
+        )
+        self.assertEqual(updated["{{ENTITY}}"]["title"], "新标题")
+        self.assertEqual(updated["{{ENTITY}}"]["notes"], "备注")
+
+        cleared = self.run_tool("update_{{ENTITY}}", {"id": record_id, "notes": ""})
+        self.assertEqual(cleared["{{ENTITY}}"]["notes"], "")
+        # 没传 title 就不该动它。
+        self.assertEqual(cleared["{{ENTITY}}"]["title"], "新标题")
+
+        deleted = self.run_tool("delete_{{ENTITY}}", {"id": record_id})
+        self.assertTrue(deleted["deleted"])
+        self.assertEqual(deleted["count"], 0)
+
+    def test_list_on_missing_store_is_empty_not_error(self):
+        result = self.run_tool("list_{{ENTITY_PLURAL}}")
+        self.assertEqual(result["{{ENTITY_PLURAL}}"], [])
+
+    def test_every_tool_returns_a_full_snapshot(self):
+        # UI 只订阅 tool-result，任何一个 tool 少带快照都会让界面停在旧状态。
+        first = self.run_tool("create_{{ENTITY}}", {"title": "甲"})
+        second = self.run_tool("create_{{ENTITY}}", {"title": "乙"})
+        record_id = first["{{ENTITY}}"]["id"]
+        for result in (
+            second,
+            self.run_tool("update_{{ENTITY}}", {"id": record_id, "notes": "x"}),
+            self.run_tool("list_{{ENTITY_PLURAL}}"),
+            self.run_tool("delete_{{ENTITY}}", {"id": record_id}),
+        ):
+            self.assertIn("{{ENTITY_PLURAL}}", result)
+            self.assertEqual(result["count"], len(result["{{ENTITY_PLURAL}}"]))
+
+    def test_model_gets_changed_record_and_ui_gets_full_snapshot(self):
+        first = self.run_tool("create_{{ENTITY}}", {"title": "甲"})
+        created = self.run_tool("create_{{ENTITY}}", {"title": "乙"})
+        self.assertEqual(len(created["{{ENTITY_PLURAL}}"]), 2)
+        self.assertNotIn("{{ENTITY_PLURAL}}", self.model_result)
+        self.assertEqual(self.model_result["{{ENTITY}}"]["id"], created["{{ENTITY}}"]["id"])
+        self.assertEqual(self.model_result["count"], 2)
+
+        listed = self.run_tool("list_{{ENTITY_PLURAL}}")
+        self.assertEqual(self.model_result["{{ENTITY_PLURAL}}"], listed["{{ENTITY_PLURAL}}"])
+        self.assertIn(first["{{ENTITY}}"]["id"], {
+            record["id"] for record in self.model_result["{{ENTITY_PLURAL}}"]
+        })
+
+    def test_errors_use_stable_envelope(self):
+        not_found = self.run_tool("delete_{{ENTITY}}", {"id": "nope"})
+        self.assertEqual(self.model_result, not_found)
+        self.assertEqual(not_found["phase"], "error")
+        self.assertEqual(not_found["code"], "NOT_FOUND")
+        self.assertTrue(not_found["retryable"])
+
+    def test_blank_required_text_is_rejected(self):
+        # 字段缺失由 app.yaml 的 required 在 CLI 侧拦下，但 CLI 不支持 pattern，
+        # minLength: 1 拦不住纯空格，所以「去掉空白后为空」必须 handler 自己兜。
+        blank_title = self.run_tool("create_{{ENTITY}}", {"title": "   "})
+        self.assertEqual(blank_title["code"], "INVALID_ARGUMENT")
+        self.assertIn("title", blank_title["message"])
+
+        blank_id = self.run_tool("update_{{ENTITY}}", {"id": "  ", "title": "x"})
+        self.assertEqual(blank_id["code"], "INVALID_ARGUMENT")
+
+        self.assertEqual(self.run_tool("list_{{ENTITY_PLURAL}}")["count"], 0)
+
+
+class StoreRootTest(unittest.TestCase):
+    """数据根怎么选：挂了持久卷就用它，没挂才退到用户目录。
+
+    选错的后果不是报错而是「数据写进去了但另一个沙箱看不到」，所以两条分支都要钉住。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        sys.path.insert(0, str(SCRIPTS))
+        import _store
+
+        cls.store = _store
+
+    def test_prefers_persistent_volume_when_mounted(self):
+        with mock.patch.object(Path, "is_dir", return_value=True):
+            self.assertEqual(self.store._data_root(), Path("/data/user"))
+
+    def test_falls_back_to_user_dir_when_not_mounted(self):
+        with mock.patch.object(Path, "is_dir", return_value=False):
+            root = self.store._data_root()
+        self.assertEqual(root, Path("~/.one-agent/data").expanduser())
+        # 必须已经展开，带 ~ 的路径会被当成字面目录名建出来。
+        self.assertNotIn("~", str(root))
+
+    def test_explicit_store_env_wins_over_everything(self):
+        path = self.store._resolve_store_path({"{{ENV_PREFIX}}_STORE": "/tmp/explicit.store"})
+        self.assertEqual(path, Path("/tmp/explicit.store"))
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,0 +1,43 @@
+id: running_club_checkin_appskill
+name: 跑团打卡录入
+version: v1.0
+description: 跑团打卡群的打卡录入 App，识别打卡意图后在群聊内嵌可编辑「打卡录入卡片」，用户在卡片上点确认后才落库。
+
+# 卡片走 A2UI：骨架 DSL 由 scripts/_run.py 原样写入 _meta.ui.dsl
+# （surfaceId 固定 runGroupCheckIn_msg_run_1001，不跟 card_id）。
+# 数据在 structuredContent.card_data 里下发一份。组件 RunGroupCheckIn
+# 由客户端提供，所以这里没有 path —— 不再有需要下载的 HTML 产物。
+resources:
+  - uri: ui://running_club_checkin_appskill/card
+    name: 打卡录入卡片
+    description: 嵌入消息流的可编辑打卡录入卡片，用户核对/补充字段后点确认才落库
+    mimeType: text/html;profile=mcp-app
+    _meta:
+      ui:
+        permissions: {}
+
+tools:
+  - name: ledger_api
+    title: 打卡录入 API
+    description: >
+      跑团打卡业务入口，唯一链路是打卡卡片流：draft_checkin（出可编辑打卡草稿卡片，不落库）→
+      用户在卡片上点确认 → commit_checkin（落库一条 checkin）；点取消走 cancel_checkin（不落库）。
+      另有 find_checkin / delete_checkin 两个只读与删除入口。draft 挂「打卡录入」卡片资源，
+      commit / cancel 是状态变更只回 app.data。模型无任何绕过卡片直接写 checkin 的入口。
+    inputSchema:
+      type: object
+      properties:
+        operation:
+          type: string
+      required: [operation]
+      additionalProperties: true
+    outputSchema:
+      type: object
+      additionalProperties: true
+    handler:
+      type: script
+      path: scripts/ledger_api.py
+    _meta:
+      ui:
+        resourceUri: ui://running_club_checkin_appskill/card
+        visibility: [model, app]

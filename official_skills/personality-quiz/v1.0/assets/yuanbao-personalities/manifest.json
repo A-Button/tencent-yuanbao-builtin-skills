@@ -1,0 +1,153 @@
+{
+  "schema_version": "1.1.0",
+  "asset_kind": "yuanbao_personality_mascots",
+  "mime_type": "image/webp",
+  "order": [
+    "INTJ",
+    "INTP",
+    "ENTJ",
+    "ENTP",
+    "INFJ",
+    "INFP",
+    "ENFJ",
+    "ENFP",
+    "ISTJ",
+    "ISFJ",
+    "ESTJ",
+    "ESFJ",
+    "ISTP",
+    "ISFP",
+    "ESTP",
+    "ESFP"
+  ],
+  "types": {
+    "INTJ": {
+      "file": "intj.webp",
+      "alt": "INTJ 架构师对应的元宝形象",
+      "sha256": "de81b80faccdc3aaa38d5ecf8ef75c6bde3b1f2898ec85a614930c47288c58b0",
+      "width": 320,
+      "height": 320,
+      "visual_offset_y": -30
+    },
+    "INTP": {
+      "file": "intp.webp",
+      "alt": "INTP 逻辑学家对应的元宝形象",
+      "sha256": "214fc05a3cdbe457eb97ba206bec24bda20ac13b47d2b6775525ad394252f3c2",
+      "width": 320,
+      "height": 320,
+      "visual_offset_y": -30
+    },
+    "ENTJ": {
+      "file": "entj.webp",
+      "alt": "ENTJ 指挥官对应的元宝形象",
+      "sha256": "f977ab1c0502739d5ebcb0e8cc6faa5a9d80279154f5fee041ff1155f211f78e",
+      "width": 320,
+      "height": 320,
+      "visual_offset_y": -30
+    },
+    "ENTP": {
+      "file": "entp.webp",
+      "alt": "ENTP 辩论家对应的元宝形象",
+      "sha256": "51275df275848d7bf879ad35d70769d80b45e41e77286ded880e89ebca104d75",
+      "width": 320,
+      "height": 320,
+      "visual_offset_y": -30
+    },
+    "INFJ": {
+      "file": "infj.webp",
+      "alt": "INFJ 提倡者对应的元宝形象",
+      "sha256": "90d1ba5f0916330424450be568ece2999cc77e4d9888014bacf5ad28ea37f241",
+      "width": 320,
+      "height": 320,
+      "visual_offset_y": 0
+    },
+    "INFP": {
+      "file": "infp.webp",
+      "alt": "INFP 调停者对应的元宝形象",
+      "sha256": "5f83170ccbc9276ba53183471d17668494b759da1daa82ef4217e5704048d2e0",
+      "width": 320,
+      "height": 320,
+      "visual_offset_y": 0
+    },
+    "ENFJ": {
+      "file": "enfj.webp",
+      "alt": "ENFJ 主人公对应的元宝形象",
+      "sha256": "ca6a1b605501ef336c7f2158b81db8c20e4153958e3d952c99f62c1449b25f21",
+      "width": 320,
+      "height": 320,
+      "visual_offset_y": 0
+    },
+    "ENFP": {
+      "file": "enfp.webp",
+      "alt": "ENFP 活动家对应的元宝形象",
+      "sha256": "0685b91805086e777a2722506836e0ca2b8de3199bc9f2b0d64400b06e866b72",
+      "width": 320,
+      "height": 320,
+      "visual_offset_y": 0
+    },
+    "ISTJ": {
+      "file": "istj.webp",
+      "alt": "ISTJ 物流师对应的元宝形象",
+      "sha256": "474e751dae99dda0b69bf34317fe8e85b857edd3fe52039807698b6ecb3b9cfb",
+      "width": 320,
+      "height": 320,
+      "visual_offset_y": 32
+    },
+    "ISFJ": {
+      "file": "isfj.webp",
+      "alt": "ISFJ 守护者对应的元宝形象",
+      "sha256": "07b32e46ea4d9c10854c16a8d59ad633cc723f2032ea78e879a3c78d4ba699b8",
+      "width": 320,
+      "height": 320,
+      "visual_offset_y": 32
+    },
+    "ESTJ": {
+      "file": "estj.webp",
+      "alt": "ESTJ 管理者对应的元宝形象",
+      "sha256": "e2dc7a69c888d2b58cd3e1bdfa57e31a031a371bbc266cb9bee21c65ed643d29",
+      "width": 320,
+      "height": 320,
+      "visual_offset_y": 32
+    },
+    "ESFJ": {
+      "file": "esfj.webp",
+      "alt": "ESFJ 执政官对应的元宝形象",
+      "sha256": "8046ca42418c888b71b57ee4cb63cea02e8d858dd6ebe0ed640ad8cc767e7af0",
+      "width": 320,
+      "height": 320,
+      "visual_offset_y": 32
+    },
+    "ISTP": {
+      "file": "istp.webp",
+      "alt": "ISTP 鉴赏家对应的元宝形象",
+      "sha256": "725c40567781fe38cae019cff97faa849e0e522d5e6e603613e1a336f387c5c5",
+      "width": 320,
+      "height": 320,
+      "visual_offset_y": 73
+    },
+    "ISFP": {
+      "file": "isfp.webp",
+      "alt": "ISFP 冒险家对应的元宝形象",
+      "sha256": "56c8867d98a18265d77eb8f71cd9bc9e179e599958f706eea2de42d9149c4bf4",
+      "width": 320,
+      "height": 320,
+      "visual_offset_y": 73
+    },
+    "ESTP": {
+      "file": "estp.webp",
+      "alt": "ESTP 企业家对应的元宝形象",
+      "sha256": "268a1741f637aa726473bc5dc7569c70f25f40eefc4c057c2e054a298b2a6db4",
+      "width": 320,
+      "height": 320,
+      "visual_offset_y": 73
+    },
+    "ESFP": {
+      "file": "esfp.webp",
+      "alt": "ESFP 表演者对应的元宝形象",
+      "sha256": "b3bf2d6acba95859cde143bf6207842bb0a385258f7d4ca97b7747589c9f157f",
+      "width": 320,
+      "height": 320,
+      "visual_offset_y": 73
+    }
+  }
+}

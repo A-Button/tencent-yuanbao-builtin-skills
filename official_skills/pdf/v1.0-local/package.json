@@ -1,0 +1,12 @@
+{
+  "name": "pdf-skill-tools",
+  "private": true,
+  "version": "0.0.0",
+  "engines": {
+    "node": "20.19.5"
+  },
+  "bin": {
+    "html_to_pdf": "bin/html_to_pdf.js"
+  },
+  "license": "UNLICENSED"
+}

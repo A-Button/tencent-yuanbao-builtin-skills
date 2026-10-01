@@ -1,0 +1,101 @@
+{
+  "$comment": "目录：选择模式；选项字段；selected 与 done 互斥；单选预选数量限制。",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "select_mode": {
+      "type": "integer",
+      "enum": [
+        1,
+        2
+      ]
+    },
+    "options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "option_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "desc": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^https://"
+          },
+          "selected": {
+            "type": "boolean"
+          },
+          "done": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "option_id",
+          "title"
+        ],
+        "not": {
+          "properties": {
+            "selected": {
+              "const": true
+            },
+            "done": {
+              "const": true
+            }
+          },
+          "required": [
+            "selected",
+            "done"
+          ]
+        }
+      },
+      "minItems": 1,
+      "maxItems": 20
+    }
+  },
+  "required": [
+    "select_mode",
+    "options"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "select_mode": {
+            "const": 1
+          }
+        },
+        "required": [
+          "select_mode"
+        ]
+      },
+      "then": {
+        "properties": {
+          "options": {
+            "contains": {
+              "properties": {
+                "selected": {
+                  "const": true
+                }
+              },
+              "required": [
+                "selected"
+              ]
+            },
+            "minContains": 0,
+            "maxContains": 1
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+interface:
+  display_name: "VariFlight MCP"
+  short_description: "Route flight and airport questions through VariFlight MCP"
+  default_prompt: "Use $variflight-mcp to answer a current flight, airport, airline, or fare-reference request."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "variflight-mcp"
+      description: "VariFlight MCP server for current flight and airport data"
+      transport: "streamable_http"
+      url: "https://c-gw.variflight.com/chat_message/mcp/api"
+
+policy:
+  allow_implicit_invocation: true

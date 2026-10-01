@@ -1,0 +1,227 @@
+id: job-hunting
+name: 求职助手
+version: v1.0.1
+description: 为简历诊断、求职任务、岗位搜索和面试提醒提供四张原生 XCard 卡片。
+
+resources:
+  - uri: ai_apps.skills.job_hunting_resume_diagnosis_res
+    name: 简历美化
+    description: 展示简历评分、亮点、待改进项和下一步动作。
+    path: assets/ui/resume-diagnosis.json
+    mimeType: application/a2ui+json
+    ui:
+      defaultSize: { width: 498, height: 560 }
+      params: &resume_diagnosis_schema
+        type: object
+        properties:
+          source_label: { type: string, minLength: 1, description: 简历来源或诊断时刻 }
+          title: { type: string, minLength: 1, description: 本次诊断或改写结果标题 }
+          role: { type: string, minLength: 1, description: 求职方向；未知时写待补充 }
+          profile_summary: { type: string, minLength: 1, description: 城市、经验等已确认档案摘要 }
+          task_status: { type: string, minLength: 1, description: 当前状态标签 }
+          strengths_count: { type: integer, minimum: 0, description: 亮点总数，可多于卡上展示的条数 }
+          improvements_count: { type: integer, minimum: 0, description: 待改进总数，可多于卡上展示的条数 }
+          score: { type: integer, minimum: 0, maximum: 100, description: 简历完备度综合评分 }
+          strengths:
+            type: array
+            maxItems: 2
+            description: 卡上展示的亮点，最多两条，按重要性排序
+            items:
+              type: object
+              properties:
+                title: { type: string, minLength: 1, description: 亮点标题 }
+                detail: { type: string, minLength: 1, description: 一行事实依据 }
+              required: [title, detail]
+              additionalProperties: false
+          improvements:
+            type: array
+            maxItems: 2
+            description: 卡上展示的待改进项，最多两条，按影响排序
+            items:
+              type: object
+              properties:
+                title: { type: string, minLength: 1, description: 待改进标题 }
+                detail: { type: string, minLength: 1, description: 一行具体改法 }
+              required: [title, detail]
+              additionalProperties: false
+          has_strengths: { type: boolean, description: strengths 非空时为 true，控制「亮点」分组显隐 }
+          has_improvements: { type: boolean, description: improvements 非空时为 true，控制「待改进」分组显隐 }
+          updated_at: { type: string, description: 更新时间，可省略 }
+        required: [source_label, title, role, profile_summary, task_status, strengths_count, improvements_count, score, strengths, improvements, has_strengths, has_improvements]
+        additionalProperties: false
+
+  - uri: ai_apps.skills.job_hunting_career_task_res
+    name: 求职任务
+    description: 展示当前求职目标、面试准备清单、完成进度和去准备入口。
+    path: assets/ui/career-task.json
+    mimeType: application/a2ui+json
+    ui:
+      defaultSize: { width: 498, height: 560 }
+      params: &career_task_schema
+        type: object
+        properties:
+          source_label: { type: string, minLength: 1, description: 卡片来源，例如“来自当前对话 · 字节跳动前端一面” }
+          title: { type: string, minLength: 1, description: 卡片标题，例如“求职任务已创建”或“求职任务进行中” }
+          goal_title: { type: string, minLength: 1, description: Thing 的求职目标标题 }
+          goal_summary: { type: string, minLength: 1, description: 城市、岗位、公司、轮次或面试时间等已确认摘要 }
+          task_status: { type: string, minLength: 1, description: Thing 当前状态标签，例如“进行中” }
+          section_title: { type: string, minLength: 1, description: Todo 分区标题，例如“面试准备” }
+          completed_count: { type: integer, minimum: 0, description: 当前范围内已完成的 Todo 数量 }
+          pending_count: { type: integer, minimum: 0, description: 当前范围内尚未完成的 Todo 数量 }
+          progress: { type: integer, minimum: 0, maximum: 100, description: 当前范围内 Todo 完成百分比 }
+          todos:
+            type: array
+            minItems: 1
+            maxItems: 5
+            description: 从账本 interviews[].prep_items[] 投影出的最多五条面试准备项
+            items:
+              type: object
+              properties:
+                title: { type: string, minLength: 1, description: Todo 标题 }
+                detail: { type: string, minLength: 1, description: Todo 的具体准备内容或当前进展 }
+                label: { type: string, minLength: 1, description: 已完成、进行中、待准备、已暂停或待确认 }
+                tone: { type: string, enum: [done, active, pending], description: 状态语气，仅用于保持数据语义 }
+              required: [title, detail, label, tone]
+              additionalProperties: false
+          actions:
+            type: array
+            minItems: 2
+            maxItems: 2
+            description: 固定两个操作并保持顺序；第一项为“跟进相关岗位”，第二项为“去准备”
+            items:
+              type: object
+              properties:
+                key: { type: string, enum: [follow_jobs, continue_prep], description: 固定动作键 }
+                label: { type: string, enum: [跟进相关岗位, 去准备], description: 固定按钮文案 }
+                prompt: { type: string, minLength: 1, description: 回投 Agent 的完整自然语言指令 }
+              required: [key, label, prompt]
+              additionalProperties: false
+          updated_at: { type: string, description: 更新时间，可省略 }
+        required: [source_label, title, goal_title, goal_summary, task_status, section_title, completed_count, pending_count, progress, todos, actions]
+        additionalProperties: false
+
+  - uri: ai_apps.skills.job_hunting_job_results_res
+    name: 岗位搜索结果
+    description: 展示本轮筛选条件、岗位列表及固定“去投递”入口，以及零结果空态。
+    path: assets/ui/job-results.json
+    mimeType: application/a2ui+json
+    ui:
+      defaultSize: { width: 498, height: 680 }
+      params: &job_search_results_schema
+        type: object
+        properties:
+          title: { type: string, minLength: 1, description: 本次检索结果标题 }
+          filters:
+            type: array
+            maxItems: 4
+            description: 本轮实际生效的筛选条件；城市、岗位、薪资依次传入，label 保留维度前缀，例如“城市 深圳”“岗位 产品经理”“薪资 ≥25K”
+            items:
+              type: object
+              properties:
+                key: { type: string, minLength: 1, description: 条件键 }
+                label: { type: string, minLength: 1, description: 用户可读条件 }
+              required: [key, label]
+              additionalProperties: false
+          jobs:
+            type: array
+            maxItems: 3
+            description: 已打开原页核验或由 Web Search 明确返回且标记待核验的岗位列表；按与用户条件的匹配度排序，最多传 3 个最匹配岗位；列表高度随岗位条数自适应，卡内不滚动
+            items:
+              type: object
+              properties:
+                title: { type: string, minLength: 1, description: 岗位名称 }
+                company: { type: string, minLength: 1, description: 公司名称 }
+                salary: { type: string, minLength: 1, description: 薪资，单独高亮显示在信息行最前面；原页未注明时写“薪资面议”或“未注明” }
+                meta: { type: string, minLength: 1, description: 除薪资外的城市、区域、经验与学历摘要，用“ · ”分隔 }
+                summary: { type: string, minLength: 1, description: 定性匹配依据 }
+                label: { type: string, minLength: 1, description: 强、中、弱匹配或待核验的语义状态；卡片右侧固定显示“去投递” }
+                tone: { type: string, enum: [rec, warn, info], description: 展示语气 }
+                source_url: { type: string, minLength: 1, pattern: '^https?://', description: 点击「去投递」时打开的原页 URL；逐字使用已核验原页或本轮 Web Search 返回的待核验来源 URL }
+              required: [title, company, salary, meta, summary, label, tone, source_url]
+              additionalProperties: false
+          updated_at: { type: string, description: 更新时间，可省略 }
+        required: [title, filters, jobs]
+        additionalProperties: false
+
+  - uri: ai_apps.skills.job_hunting_interview_reminder_res
+    name: 面试提醒
+    description: 展示临近面试、已知安排、准备要点和辅导入口。
+    path: assets/ui/interview-reminder.json
+    mimeType: application/a2ui+json
+    ui:
+      defaultSize: { width: 498, height: 400 }
+      params: &interview_reminder_schema
+        type: object
+        properties:
+          source_label: { type: string, minLength: 1, description: 顶部来源文案，例如“来自「我的求职任务」 · 临近面试” }
+          title: { type: string, minLength: 1, description: 公司、岗位和轮次标题 }
+          countdown: { type: string, minLength: 1, description: 主标题式倒计时，例如“字节一面还有 2 天” }
+          summary: { type: string, minLength: 1, description: 倒计时下方的一行提醒摘要，只写面试时间和公司岗位；准备项放 prep_items }
+          status_label: { type: string, minLength: 1, description: 待面试或待核实等状态 }
+          schedule_summary: { type: string, minLength: 1, description: "单行面试安排，例如‘HR 约定时间：周四 15:00’" }
+          prep_items:
+            type: array
+            minItems: 1
+            maxItems: 3
+            description: 「建议准备」纵向列表，每项一行，按优先级排序
+            items:
+              type: object
+              properties:
+                title: { type: string, minLength: 1, maxLength: 16, description: 准备项短名，例如“STAR 项目案例” }
+              required: [title]
+              additionalProperties: false
+          prep_count_label: { type: string, minLength: 1, description: prep_items 实际条数标签，例如“3 项” }
+          actions:
+            type: array
+            minItems: 2
+            maxItems: 2
+            description: 固定两个操作；第一项为次按钮“模拟面试”，第二项为主按钮“帮我准备”
+            items:
+              type: object
+              properties:
+                key: { type: string, minLength: 1, description: 非敏感稳定动作键 }
+                label: { type: string, minLength: 1, description: 按钮文案 }
+                prompt: { type: string, minLength: 1, description: 可独立理解的自然语言指令 }
+              required: [key, label, prompt]
+              additionalProperties: false
+          updated_at: { type: string, description: 更新时间，可省略 }
+        required: [source_label, title, countdown, summary, status_label, schedule_summary, prep_items, prep_count_label, actions]
+        additionalProperties: false
+
+# 四个 tool 都是纯展示适配器：只把已核验 DataModel 原样回传给对应 XCard。
+tools:
+  - name: render_resume_diagnosis
+    title: 展示简历诊断卡片
+    description: 把已核验的简历诊断或改写摘要显示为 XCard。
+    inputSchema: *resume_diagnosis_schema
+    outputSchema: { type: object, additionalProperties: true }
+    handler: { type: script, path: scripts/render_resume_diagnosis.py }
+    _meta:
+      ui: { resourceUri: "ai_apps.skills.job_hunting_resume_diagnosis_res", visibility: [model] }
+
+  - name: render_career_task
+    title: 展示求职任务卡片
+    description: 把当前求职目标与账本里的面试准备清单投影为求职任务 XCard。
+    inputSchema: *career_task_schema
+    outputSchema: { type: object, additionalProperties: true }
+    handler: { type: script, path: scripts/render_career_task.py }
+    _meta:
+      ui: { resourceUri: "ai_apps.skills.job_hunting_career_task_res", visibility: [model] }
+
+  - name: render_job_search_results
+    title: 展示岗位搜索卡片
+    description: 每次岗位搜索结束都调用；把岗位列表或零结果状态显示为 XCard，并固定提供“持续关注”“按岗位改简历”两个操作。
+    inputSchema: *job_search_results_schema
+    outputSchema: { type: object, additionalProperties: true }
+    handler: { type: script, path: scripts/render_job_results.py }
+    _meta:
+      ui: { resourceUri: "ai_apps.skills.job_hunting_job_results_res", visibility: [model] }
+
+  - name: render_interview_reminder
+    title: 展示面试提醒卡片
+    description: 把已记录的面试安排与准备要点显示为 XCard。
+    inputSchema: *interview_reminder_schema
+    outputSchema: { type: object, additionalProperties: true }
+    handler: { type: script, path: scripts/render_interview_reminder.py }
+    _meta:
+      ui: { resourceUri: "ai_apps.skills.job_hunting_interview_reminder_res", visibility: [model] }

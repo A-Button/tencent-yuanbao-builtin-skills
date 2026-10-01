@@ -1,0 +1,257 @@
+{
+  "tools": [
+    {
+      "name": "search_stores",
+      "description": "按城市查询可预约的新氧连锁门店；需要 Bearer 用户认证。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "city_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "用户明确给出的城市名称，例如：北京。"
+          }
+        },
+        "required": ["city_name"]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "query_booking_slots",
+      "description": "查询指定门店和日期的可预约时间切片；需要 Bearer 用户认证。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "hospital_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "description": "由 search_stores 返回的机构 ID。"
+          },
+          "city_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "门店所在城市名称。"
+          },
+          "date": {
+            "type": "string",
+            "description": "要查询的绝对日期，格式必须是 YYYY-MM-DD。"
+          }
+        },
+        "required": ["hospital_id", "city_name", "date"]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "query_bookings",
+      "description": "查询当前认证用户的预约；需要 Bearer 用户认证。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "submit_booking",
+      "description": "创建预约；需要 Bearer 认证，调用前须取得用户明确确认。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "hospital_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "description": "由 search_stores 返回的机构 ID。"
+          },
+          "start_time": {
+            "type": "string",
+            "description": "预约开始时间，格式 YYYY-MM-DD HH:MM:SS。"
+          },
+          "end_time": {
+            "type": "string",
+            "description": "预约结束时间，格式 YYYY-MM-DD HH:MM:SS。"
+          },
+          "confirmed": {
+            "type": "boolean",
+            "description": "仅在用户明确确认上述门店和时间后传 true。"
+          }
+        },
+        "required": ["hospital_id", "start_time", "end_time", "confirmed"]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "modify_booking",
+      "description": "修改预约；需要 Bearer 认证，调用前须取得用户明确确认。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "booking_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "description": "由 query_bookings 返回的预约 ID。"
+          },
+          "hospital_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "description": "目标机构 ID。"
+          },
+          "start_time": {
+            "type": "string",
+            "description": "新的预约开始时间，格式 YYYY-MM-DD HH:MM:SS。"
+          },
+          "end_time": {
+            "type": "string",
+            "description": "新的预约结束时间，格式 YYYY-MM-DD HH:MM:SS。"
+          },
+          "confirmed": {
+            "type": "boolean",
+            "description": "仅在用户明确确认预约 ID、门店和新时间后传 true。"
+          }
+        },
+        "required": [
+          "booking_id",
+          "hospital_id",
+          "start_time",
+          "end_time",
+          "confirmed"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "cancel_booking",
+      "description": "取消预约；需要 Bearer 认证，调用前须取得用户明确确认。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "booking_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "description": "由 query_bookings 返回的预约 ID。"
+          },
+          "confirmed": {
+            "type": "boolean",
+            "description": "仅在用户明确确认取消该预约后传 true。"
+          }
+        },
+        "required": ["booking_id", "confirmed"]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "search_clinic_solutions",
+      "description": "匿名搜索医美品项、原理、适合人群、治疗信息和安全提示。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "从用户问题提取的品项实体关键词，不含对话填充词。"
+          },
+          "city_name": {
+            "type": ["string", "null"],
+            "maxLength": 50,
+            "default": null,
+            "description": "用户明确指定的城市；未指定时省略。"
+          }
+        },
+        "required": ["content"]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "search_clinic_products",
+      "description": "匿名按城市搜索可售医美商品、价格、使用产品信息和适用门店。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "从用户问题提取的商品或项目实体关键词。"
+          },
+          "city_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "用户明确指定的城市。"
+          }
+        },
+        "required": ["content", "city_name"]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "search_clinic_doctors",
+      "description": "匿名按城市搜索医生、资质、常驻门店、操作信息和排班。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "医生、门店或擅长方向等实体关键词。"
+          },
+          "city_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "用户明确指定的城市。"
+          }
+        },
+        "required": ["content", "city_name"]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    }
+  ]
+}

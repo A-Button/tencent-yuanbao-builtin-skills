@@ -1,0 +1,15 @@
+interface:
+  display_name: "海尔智家助手"
+  short_description: "海尔家电选购推荐、产品参数对比、门店查询与售后知识助手"
+  default_prompt: "使用 $haier-smart-home-assistant，先加载技能规则，再推荐适合三口之家的海尔冰箱。"
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "haier-smart-home-assistant"
+      description: "海尔智家产品、门店、知识库与公开资料查询工具"
+      transport: "streamable_http"
+      url: "https://web-hdsuec-agent.haier.net/mcp"
+
+policy:
+  allow_implicit_invocation: true

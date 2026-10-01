@@ -1,0 +1,852 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>{{DOCUMENT_TITLE}}</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --page: #eef0eb;
+      --paper: #fffdf8;
+      --ink: #20251f;
+      --muted: #687066;
+      --line: #d8ddd2;
+      --sage: #5d7964;
+      --sage-soft: #e7eee7;
+      --gold: #c88b42;
+      --gold-soft: #fbf3e5;
+      --blue: #7698a8;
+      --danger: #9b5c4f;
+      --shadow: 0 24px 70px rgba(41, 53, 43, .09);
+    }
+    * { box-sizing: border-box; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    html { min-height: 100%; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background: radial-gradient(circle at 15% 10%, #dce7dd 0, transparent 35%), var(--page);
+      color: var(--ink);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+    }
+    button, textarea { font: inherit; }
+    button { color: inherit; }
+    a { color: var(--sage); }
+    .app {
+      width: min(980px, calc(100% - 32px));
+      min-height: calc(100vh - 64px);
+      margin: 32px auto;
+      background: rgba(255, 253, 248, .98);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 20px clamp(22px, 5vw, 54px);
+      border-bottom: 1px solid var(--line);
+    }
+    .brand { font-size: 14px; font-weight: 800; letter-spacing: .08em; }
+    .privacy-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .privacy-badge::before {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--sage);
+      content: "";
+    }
+    .screen { padding: clamp(32px, 7vw, 76px); }
+    .screen[hidden] { display: none !important; }
+    .eyebrow, .section-kicker {
+      margin: 0 0 10px;
+      color: var(--sage);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 760px;
+      margin: 0;
+      font-size: clamp(36px, 7vw, 64px);
+      line-height: 1.08;
+      letter-spacing: -.05em;
+    }
+    h1[tabindex="-1"]:focus { outline: none; }
+    h2 { margin: 42px 0 20px; font-size: clamp(23px, 3vw, 31px); }
+    h3 { margin: 0 0 10px; font-size: 19px; }
+    p { line-height: 1.72; }
+    .notice {
+      max-width: 720px;
+      margin: 26px 0;
+      padding: 18px 20px;
+      border-left: 4px solid var(--gold);
+      background: var(--gold-soft);
+      color: #4f5149;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .primary, .secondary, .text-button {
+      min-height: 46px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+    }
+    .primary {
+      padding: 12px 22px;
+      border: 1px solid var(--sage);
+      background: var(--sage);
+      color: #fff;
+      font-weight: 750;
+    }
+    .primary:hover { transform: translateY(-1px); background: #506b57; }
+    button:disabled { cursor: not-allowed; opacity: .55; transform: none !important; }
+    .secondary {
+      padding: 11px 18px;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-weight: 700;
+    }
+    .secondary:hover { border-color: var(--sage); }
+    .text-button { padding: 8px 4px; border: 0; background: transparent; color: var(--muted); }
+    button:focus-visible, textarea:focus-visible, a:focus-visible { outline: 3px solid rgba(93, 121, 100, .32); outline-offset: 3px; }
+    .progress-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; color: var(--muted); font-size: 13px; }
+    .progress-track { height: 8px; margin: 12px 0 clamp(34px, 6vw, 62px); overflow: hidden; border-radius: 999px; background: #e4e8e1; }
+    .progress-track span { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--sage), var(--gold)); transition: width .25s ease; }
+    .question-wrap { max-width: 760px; margin: 0 auto; }
+    .question-number { margin: 0 0 13px; color: var(--sage); font-size: 13px; font-weight: 800; letter-spacing: .12em; }
+    .question-text { min-height: 2.5em; margin: 0 0 32px; font-size: clamp(26px, 4vw, 40px); line-height: 1.28; letter-spacing: -.025em; }
+    .choices { display: grid; gap: 11px; }
+    .choice {
+      display: grid;
+      grid-template-columns: 34px 1fr auto;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      min-height: 60px;
+      padding: 12px 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color .15s ease, background .15s ease, transform .15s ease;
+    }
+    .choice:hover { transform: translateY(-1px); border-color: var(--sage); }
+    .choice[aria-pressed="true"] { border-color: var(--sage); background: var(--sage-soft); }
+    .choice-value {
+      display: grid;
+      width: 30px;
+      height: 30px;
+      place-items: center;
+      border-radius: 50%;
+      background: #eef1ec;
+      color: var(--sage);
+      font-weight: 800;
+    }
+    .choice[aria-pressed="true"] .choice-value { background: var(--sage); color: #fff; }
+    .choice-label { font-weight: 650; }
+    .choice-key { color: #90978d; font-size: 11px; }
+    .quiz-footer { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 26px; }
+    .keyboard-tip { color: var(--muted); font-size: 12px; }
+    .result-screen { padding-top: clamp(30px, 5vw, 56px); }
+    .result-hero {
+      display: grid;
+      grid-template-columns: minmax(180px, .72fr) minmax(320px, 1.28fr);
+      align-items: center;
+      column-gap: clamp(24px, 5vw, 52px);
+      row-gap: 18px;
+    }
+    .result-hero-copy { min-width: 0; max-width: 420px; }
+    .result-hero-copy h1 { font-size: clamp(26px, 3.4vw, 38px); letter-spacing: -.035em; }
+    .type-code { margin: 16px 0 0; color: var(--sage); font: 800 clamp(50px, 8vw, 82px)/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .07em; }
+    .result-summary { max-width: 320px; margin: 8px 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .result-mascots {
+      display: flex;
+      width: 100%;
+      align-items: flex-start;
+      justify-content: flex-end;
+      gap: 16px;
+      justify-self: end;
+    }
+    .result-mascots[hidden] { display: none !important; }
+    .result-mascot-figure { width: min(100%, 224px); margin: 0; text-align: center; }
+    .result-mascots[data-count="2"] .result-mascot-figure { width: min(48%, 164px); }
+    .result-mascot-visual { width: 100%; overflow: hidden; aspect-ratio: 1; background: var(--paper); }
+    .result-mascot-image {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1;
+      border: 0;
+      background: transparent;
+      object-fit: cover;
+    }
+    .result-mascot-caption { margin-top: 4px; color: var(--ink); font-size: 14px; font-weight: 700; line-height: 1.4; }
+    .quality-note { margin: 28px 0; padding: 18px 22px; border-left: 4px solid var(--gold); background: var(--gold-soft); }
+    .scales { display: grid; gap: 18px; }
+    .scale { padding: 18px; border: 1px solid var(--line); background: #fff; }
+    .scale-heading, .pole-labels, .pole-values, .raw-labels { display: flex; justify-content: space-between; align-items: baseline; gap: 18px; }
+    .scale-heading span { font-weight: 750; }
+    .scale-heading small, .pole-labels, .pole-values, .raw-labels, .muted { color: var(--muted); }
+    .pole-labels, .pole-values, .raw-labels { margin: 10px 0 7px; font-size: 12px; }
+    .trait-description { margin: 4px 0 10px; color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .bipolar-track, .raw-track { display: flex; height: 12px; overflow: hidden; border-radius: 999px; background: #e6e9e3; }
+    .left-fill { background: var(--sage); }
+    .right-fill { background: var(--blue); }
+    .raw-track span { display: block; border-radius: 999px; background: linear-gradient(90deg, var(--sage), var(--gold)); }
+    .result-dimensions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 18px; margin-top: 36px; }
+    .result-dimensions.single-column { grid-template-columns: 1fr; }
+    .dimension-column { display: flex; min-width: 0; padding: 18px; flex-direction: column; border: 1px solid var(--line); }
+    .dimension-column--mbti { border-color: #d3ded4; background: linear-gradient(180deg, #f3f7f3, #edf3ee); }
+    .dimension-column--big-five { border-color: #eadcc5; background: linear-gradient(180deg, #fcf8ef, #faf2e4); }
+    .dimension-column h2 { margin: 0 0 16px; font-size: clamp(21px, 3vw, 27px); }
+    .dimension-column .scales { flex: 1; gap: 12px; }
+    .dimension-column--mbti .scales { grid-template-rows: repeat(4, minmax(0, 1fr)); }
+    .dimension-column--big-five .scales { grid-template-rows: repeat(5, minmax(0, 1fr)); }
+    .result-dimensions .scale { display: flex; padding: 14px; flex-direction: column; justify-content: center; border-color: rgba(114, 126, 112, .22); background: rgba(255, 255, 255, .78); }
+    .analysis-item { padding: 26px 28px; border-left: 3px solid var(--sage); background: #f4f6f1; }
+    .analysis-list { display: grid; gap: 12px; margin: 0; padding-left: 1.25em; color: #4e574d; line-height: 1.75; }
+    .type-profile-section { margin-top: 48px; }
+    .type-profile-panels { display: grid; gap: 36px; }
+    .type-profile-panels[data-count="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px; }
+    .type-profile-panel { min-width: 0; }
+    .type-profile-panel[data-boundary="true"] { padding-top: 18px; border-top: 2px solid #cbd7cb; }
+    .profile-type-heading { margin: 0 0 8px; color: var(--sage); font: 800 15px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .06em; }
+    .profile-topics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 34px; }
+    .type-profile-panels[data-count="2"] .profile-topics { grid-template-columns: 1fr; }
+    .profile-topic { min-width: 0; padding: 23px 0 21px; border-top: 1px solid var(--line); }
+    .profile-topic-heading { display: flex; align-items: baseline; gap: 10px; margin: 0 0 10px; color: var(--sage); font-size: 19px; }
+    .profile-topic p { margin: 0; color: #4e574d; font-size: 16px; line-height: 1.8; }
+    .profile-figures { padding-top: 23px; border-top: 1px solid var(--line); }
+    .profile-figures h3, .profile-figures h4 { margin: 0 0 11px; color: var(--sage); font-size: 17px; }
+    .profile-figure-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
+    .type-profile-panels[data-count="2"] .profile-figure-list { grid-template-columns: 1fr; }
+    .profile-figure-list li {
+      min-width: 0;
+      min-height: 92px;
+      padding: 14px 15px;
+      border: 1px solid #dde4da;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #fff, #f4f7f2);
+      box-shadow: 0 8px 22px rgba(67, 83, 68, .06);
+      overflow-wrap: anywhere;
+    }
+    .profile-figure-list li::before { display: block; width: 28px; height: 3px; margin-bottom: 11px; border-radius: 999px; background: var(--sage); content: ""; }
+    .profile-figure-list strong, .profile-figure-list span { display: block; }
+    .profile-figure-list strong { font-size: 14px; line-height: 1.45; }
+    .profile-figure-list span { margin-top: 3px; color: var(--muted); font-size: 12px; line-height: 1.55; }
+    .bridge { max-width: 680px; margin: 48px auto 0; padding: 26px 28px 22px; border: 1px solid #cbd7cb; background: var(--sage-soft); text-align: center; }
+    .bridge h2 { margin: 0 0 16px; }
+    .bridge-actions { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+    .bridge-actions .primary { width: 100%; }
+    .copy-status { width: 100%; min-height: 1.4em; color: var(--sage); font-size: 13px; line-height: 1.4; text-align: center; }
+    .copy-status:empty { display: none; }
+    .restart-inline { align-self: center; min-height: 32px; margin-top: -2px; font-size: 13px; }
+    /* 确认做在页面里，不用 window.confirm：宿主 iframe 没给 allow-modals 时浏览器会
+       直接忽略那次调用并返回 false，重测入口等于失灵。 */
+    .restart-confirm { margin-top: 2px; }
+    .restart-confirm__text { margin: 0 0 10px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .restart-confirm__actions { display: flex; justify-content: center; gap: 12px; }
+    .restart-confirm__actions .secondary { min-height: 38px; padding: 8px 18px; font-size: 13px; }
+    .restart-confirm__actions .text-button { min-height: 38px; font-size: 13px; }
+    .source-note { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; line-height: 1.65; }
+    .runtime-notice { max-width: 660px; margin: 20px 0 0; color: var(--danger); font-size: 13px; }
+    @media (max-width: 680px) {
+      .app { width: 100%; min-height: 100vh; margin: 0; border: 0; }
+      .topbar { padding: 16px 20px; }
+      .screen { padding: 30px 20px 44px; }
+      .privacy-badge span { display: none; }
+      .choice { grid-template-columns: 34px 1fr; }
+      .choice-key, .keyboard-tip { display: none; }
+      .result-hero { grid-template-columns: minmax(100px, .68fr) minmax(0, 1.32fr); column-gap: 12px; row-gap: 16px; }
+      .result-hero-copy h1 { font-size: clamp(24px, 7vw, 30px); }
+      .type-code { margin-top: 12px; font-size: clamp(40px, 12vw, 52px); letter-spacing: .045em; }
+      .result-summary { margin-top: 6px; }
+      .result-mascots { width: 100%; justify-content: center; gap: 6px; justify-self: end; }
+      .result-mascot-figure { width: min(100%, 156px); }
+      .result-mascots[data-count="2"] .result-mascot-figure { width: min(48%, 112px); }
+      .result-summary { font-size: 12px; }
+      .result-dimensions { grid-template-columns: 1fr; }
+      .type-profile-panels[data-count="2"], .profile-topics, .profile-figure-list { grid-template-columns: 1fr; }
+    }
+    @media (min-width: 681px) and (max-width: 840px) {
+      .type-profile-panels[data-count="2"] { grid-template-columns: 1fr; }
+    }
+    @media print {
+      body { background: #fff; }
+      .app { width: 100%; min-height: auto; margin: 0; border: 0; box-shadow: none; }
+      .topbar, .bridge { display: none; }
+      .screen { padding: 20px; }
+      .result-hero, .result-mascot-figure, .type-profile-panel, .profile-topic, .profile-figure-list li { break-inside: avoid; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app" data-assessment-build="{{BUILD_MARKER}}">
+    <header class="topbar">
+      <div class="brand">MBTI TEST</div>
+      <div class="privacy-badge"><span>本地作答</span></div>
+    </header>
+
+    <section id="questionScreen" class="screen">
+      <p id="runtimeNotice" class="runtime-notice" role="status">正在加载第一题；若长时间没有出现，请在系统浏览器中重新打开此 HTML。</p>
+      <div class="progress-row">
+        <span id="progressText">第 1 题</span>
+        <span id="answeredText">已答 0 题</span>
+      </div>
+      <div class="progress-track" role="progressbar" aria-label="答题进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progressBar"></span></div>
+      <div class="question-wrap">
+        <p id="questionNumber" class="question-number"></p>
+        <h1 id="questionText" class="question-text" tabindex="-1"></h1>
+        <div id="choices" class="choices" role="group" aria-label="请选择符合程度"></div>
+        <div class="quiz-footer">
+          <button id="backButton" class="text-button" type="button">← 上一题</button>
+          <span class="keyboard-tip">也可按数字键 1—5 选择</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="resultScreen" class="screen result-screen" hidden>
+      <header class="result-hero">
+        <div class="result-hero-copy">
+          <h1 id="resultTitle" tabindex="-1">你的人格</h1>
+          <div id="typeCode" class="type-code"></div>
+          <p id="resultSummary" class="result-summary" hidden></p>
+        </div>
+        <div id="resultMascots" class="result-mascots" role="group" aria-label="与当前结果相关的元宝形象" hidden></div>
+      </header>
+      <aside id="qualityNote" class="quality-note" hidden></aside>
+
+      <div id="resultDimensions" class="result-dimensions">
+        <section id="typeSection" class="dimension-column dimension-column--mbti">
+          <h2>MBTI倾向</h2>
+          <div id="axisScales" class="scales"></div>
+        </section>
+
+        <section class="dimension-column dimension-column--big-five">
+          <h2 id="bigFiveHeading">大五人格分数</h2>
+          <div id="traitScales" class="scales"></div>
+        </section>
+      </div>
+
+      <section id="insightSection">
+        <h2>简要分析</h2>
+        <article class="analysis-item"><ul id="insightList" class="analysis-list"></ul></article>
+      </section>
+
+      <section id="typeProfileSection" class="type-profile-section" aria-labelledby="typeProfileTitle" hidden>
+        <h2 id="typeProfileTitle" class="sr-only">你的人格类型表现</h2>
+        <div id="typeProfilePanels" class="type-profile-panels"></div>
+      </section>
+
+      <section class="bridge" aria-labelledby="bridgeTitle">
+        <h2 id="bridgeTitle">继续聊聊</h2>
+        <textarea id="resultTransfer" hidden readonly aria-label="人格测评结果" spellcheck="false"></textarea>
+        <div class="bridge-actions">
+          <button id="copyButton" class="primary" type="button">复制测试结果，进一步解读</button>
+          <span id="copyStatus" class="copy-status" role="status"></span>
+          <button id="restartButton" class="text-button restart-inline" type="button">重新测试</button>
+          <div id="restartConfirm" class="restart-confirm" hidden>
+            <p class="restart-confirm__text">重新作答会清空当前页面的答案和结果。</p>
+            <div class="restart-confirm__actions">
+              <button id="restartConfirmButton" class="secondary" type="button">确认重测</button>
+              <button id="restartCancelButton" class="text-button" type="button">取消</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="source-note">
+        <p>题目基于IPIP公开国际人格测试题目池选取；你的测试结果不宜作为任一诊断依据。</p>
+      </footer>
+    </section>
+  </main>
+
+  <script>
+    "use strict";
+    /*{{SCORING_CORE}}*/
+    const DATA = /*{{ASSESSMENT_PAYLOAD}}*/ null;
+    const { TRAITS } = window.PersonalityScoringV1;
+    const TRAIT_LABELS = {
+      extraversion: "外向性",
+      agreeableness: "宜人性",
+      conscientiousness: "尽责性",
+      neuroticism: "情绪敏感性",
+      imagination: "智性与想象"
+    };
+    const TRAIT_DESCRIPTIONS = {
+      extraversion: "社交投入、活跃程度与外部刺激偏好",
+      agreeableness: "合作、信任与顾及他人感受的倾向",
+      conscientiousness: "计划、秩序、自律与完成任务的倾向",
+      neuroticism: "对压力、担忧与情绪波动的敏感程度",
+      imagination: "对新想法、抽象关联与审美体验的开放程度"
+    };
+    const AXIS_LABELS = {
+      EI: { label: "精力取向", highLabel: "外倾", lowLabel: "内倾" },
+      NS: { label: "信息取向", highLabel: "直觉", lowLabel: "实感" },
+      FT: { label: "决策取向", highLabel: "情感", lowLabel: "思考" },
+      JP: { label: "行动取向", highLabel: "判断", lowLabel: "感知" }
+    };
+    const PROFILE_TOPICS = [
+      { key: "career", title: "事业发展" },
+      { key: "emotion", title: "情感婚恋" },
+      { key: "study", title: "学业考试" },
+      { key: "talent", title: "天赋挖掘" }
+    ];
+    const TRAIT_COPY = {
+      extraversion: {
+        high: "你更容易主动参与交流，并从人际互动和外部活动中获得精力。",
+        middle: "你的社交投入会随场景切换，既能主动参与，也会保留独处恢复空间。",
+        low: "你更偏好有选择地参与交流，也更需要独处或安静环境恢复精力。"
+      },
+      agreeableness: {
+        high: "你做决定时较常顾及他人感受与合作关系，倾向寻找彼此都能接受的方式。",
+        middle: "你通常能在照顾关系与坚持立场之间切换，具体取舍较依赖情境。",
+        low: "你面对分歧时更重视独立判断和问题本身，表达立场通常较为直接。"
+      },
+      conscientiousness: {
+        high: "你处理任务时更重视条理、计划与完成度，通常愿意按既定标准推进。",
+        middle: "你能够使用计划，也会根据现场变化调整节奏，不会始终依赖固定流程。",
+        low: "你的行动节奏更容易跟随兴趣或现场优先级，对固定秩序保留较多弹性。"
+      },
+      neuroticism: {
+        high: "你对压力、担忧和情绪变化较敏感，往往能较快察觉内部状态的波动。",
+        middle: "你面对压力时会有正常起伏，也通常能够在一段时间后恢复平衡。",
+        low: "你的情绪反应相对平稳，在多数情境下较容易维持稳定并继续处理事务。"
+      },
+      imagination: {
+        high: "你更容易被新想法、抽象关联和多种解释吸引，愿意探索尚未定型的可能性。",
+        middle: "你既能关注具体经验，也能接受抽象探索，通常会根据任务需要切换。",
+        low: "你的注意力更靠近清楚、实用和可验证的信息，偏好从具体经验出发。"
+      }
+    };
+    const state = { index: 0, answers: new Map(), advanceTimer: null };
+    const byId = (id) => document.getElementById(id);
+    const screens = [byId("questionScreen"), byId("resultScreen")];
+
+    function showScreen(target) {
+      screens.forEach((screen) => { screen.hidden = screen !== target; });
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+
+    function createElement(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function startAssessment() {
+      state.index = Math.min(state.index, DATA.items.length - 1);
+      showScreen(byId("questionScreen"));
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      clearTimeout(state.advanceTimer);
+      const item = DATA.items[state.index];
+      const selected = state.answers.get(item.id);
+      const answered = state.answers.size;
+      const percentage = Math.round(answered / DATA.items.length * 100);
+      byId("progressText").textContent = `第 ${state.index + 1} / ${DATA.items.length} 题`;
+      byId("answeredText").textContent = `已答 ${answered} 题`;
+      byId("progressBar").style.width = `${percentage}%`;
+      const progressTrack = document.querySelector(".progress-track");
+      progressTrack.setAttribute("aria-valuenow", String(percentage));
+      byId("questionNumber").textContent = `QUESTION ${String(item.id).padStart(2, "0")}`;
+      byId("questionText").textContent = item.text;
+      const backButton = byId("backButton");
+      backButton.hidden = state.index === 0;
+      backButton.textContent = "← 上一题";
+
+      const choices = byId("choices");
+      choices.replaceChildren();
+      for (let value = 1; value <= 5; value += 1) {
+        const button = createElement("button", "choice");
+        button.type = "button";
+        button.dataset.value = String(value);
+        button.setAttribute("aria-pressed", selected === value ? "true" : "false");
+        button.append(
+          createElement("span", "choice-value", String(value)),
+          createElement("span", "choice-label", DATA.response_scale[String(value)]),
+          createElement("span", "choice-key", `键盘 ${value}`)
+        );
+        button.addEventListener("click", () => chooseAnswer(value));
+        choices.append(button);
+      }
+      byId("questionText").focus({ preventScroll: true });
+    }
+
+    function chooseAnswer(value) {
+      const item = DATA.items[state.index];
+      state.answers.set(item.id, value);
+      document.querySelectorAll(".choice").forEach((button) => {
+        button.setAttribute("aria-pressed", Number(button.dataset.value) === value ? "true" : "false");
+      });
+      const answered = state.answers.size;
+      const percentage = Math.round(answered / DATA.items.length * 100);
+      byId("answeredText").textContent = `已答 ${answered} 题`;
+      byId("progressBar").style.width = `${percentage}%`;
+      document.querySelector(".progress-track").setAttribute("aria-valuenow", String(percentage));
+      clearTimeout(state.advanceTimer);
+      state.advanceTimer = setTimeout(() => {
+        if (state.index === DATA.items.length - 1) {
+          renderResult();
+        } else {
+          state.index += 1;
+          renderQuestion();
+        }
+      }, 220);
+    }
+
+    function goBack() {
+      clearTimeout(state.advanceTimer);
+      if (state.index === 0) return;
+      state.index -= 1;
+      renderQuestion();
+    }
+
+    function scoreAnswers() {
+      return window.PersonalityScoringV1.evaluateAssessment(DATA, state.answers);
+    }
+
+    function renderAxis(container, axis) {
+      const labelsForAxis = AXIS_LABELS[axis.key];
+      const card = createElement("div", "scale");
+      const heading = createElement("div", "scale-heading");
+      heading.append(createElement("span", "", labelsForAxis.label));
+      const labels = createElement("div", "pole-labels");
+      labels.append(createElement("span", "", `${axis.highLetter} · ${labelsForAxis.highLabel}`), createElement("span", "", `${labelsForAxis.lowLabel} · ${axis.lowLetter}`));
+      const track = createElement("div", "bipolar-track");
+      track.setAttribute("role", "img");
+      track.setAttribute("aria-label", `${labelsForAxis.label}：${labelsForAxis.highLabel} ${axis.high}%，${labelsForAxis.lowLabel} ${axis.low}%`);
+      const left = createElement("span", "left-fill");
+      left.style.width = `${axis.high}%`;
+      const right = createElement("span", "right-fill");
+      right.style.width = `${axis.low}%`;
+      track.append(left, right);
+      const values = createElement("div", "pole-values");
+      values.append(createElement("span", "", `${axis.high}%`), createElement("span", "", `${axis.low}%`));
+      card.append(heading, labels, track, values);
+      container.append(card);
+    }
+
+    function renderTrait(container, trait, score) {
+      const mean = score.mean_x100 / 100;
+      const card = createElement("div", "scale");
+      const heading = createElement("div", "scale-heading");
+      heading.append(createElement("span", "", TRAIT_LABELS[trait]), createElement("strong", "", mean.toFixed(2)));
+      const description = createElement("p", "trait-description", TRAIT_DESCRIPTIONS[trait]);
+      const track = createElement("div", "raw-track");
+      track.setAttribute("role", "img");
+      track.setAttribute("aria-label", `${TRAIT_LABELS[trait]}：原始均值 ${mean.toFixed(2)}，范围 1 到 5`);
+      const fill = createElement("span");
+      fill.style.width = `${(mean - 1) / 4 * 100}%`;
+      track.append(fill);
+      const labels = createElement("div", "raw-labels");
+      labels.append(createElement("span", "", "1"), createElement("span", "", "5"));
+      card.append(heading, description, track, labels);
+      container.append(card);
+    }
+
+    function renderInsights(scores) {
+      const ranked = TRAITS.map((trait, index) => ({ trait, index, mean: scores[trait].mean_x100 / 100 }))
+        .sort((a, b) => Math.abs(b.mean - 3) - Math.abs(a.mean - 3) || a.index - b.index);
+      const list = byId("insightList");
+      list.replaceChildren();
+      ranked.forEach(({ trait, mean }) => {
+        const level = mean > 3.25 ? "high" : mean < 2.75 ? "low" : "middle";
+        list.append(createElement("li", "", TRAIT_COPY[trait][level]));
+      });
+    }
+
+    function renderResultMascots(result) {
+      const container = byId("resultMascots");
+      const selectedMascots = window.PersonalityScoringV1.selectMascotTypeCodes(result);
+      const validSelection = Array.isArray(selectedMascots)
+        && selectedMascots.length <= 2
+        && new Set(selectedMascots).size === selectedMascots.length
+        && selectedMascots.every((code) => /^[EI][NS][FT][JP]$/.test(code) && DATA.yuanbao_mascots[code]);
+      const mascotCodes = validSelection ? selectedMascots : [];
+      container.replaceChildren();
+      if (mascotCodes.length === 0) {
+        container.hidden = true;
+        container.removeAttribute("data-count");
+        return mascotCodes;
+      }
+      mascotCodes.forEach((code) => {
+        const asset = DATA.yuanbao_mascots[code];
+        if (!asset) return;
+        const figure = createElement("figure", "result-mascot-figure");
+        const visual = createElement("div", "result-mascot-visual");
+        visual.dataset.type = code;
+        const image = createElement("img", "result-mascot-image");
+        image.src = asset.src;
+        image.alt = "";
+        image.width = asset.width;
+        image.height = asset.height;
+        image.decoding = "async";
+        image.style.transform = `translateY(${asset.visual_offset_y / 3.2}%)`;
+        const caption = createElement(
+          "figcaption",
+          "result-mascot-caption",
+          DATA.type_labels[code]
+        );
+        visual.append(image);
+        figure.append(visual, caption);
+        container.append(figure);
+      });
+      container.dataset.count = String(container.childElementCount);
+      container.hidden = container.childElementCount === 0;
+      return mascotCodes;
+    }
+
+    function renderTypeProfiles(typeCodes) {
+      const section = byId("typeProfileSection");
+      const panels = byId("typeProfilePanels");
+      panels.replaceChildren();
+      panels.removeAttribute("data-count");
+      section.hidden = true;
+      const profileCodes = Array.isArray(typeCodes)
+        ? typeCodes.filter((code) => DATA.type_profiles.types[code])
+        : [];
+      if (profileCodes.length === 0 || profileCodes.length > 2) return;
+      const isBoundaryPair = profileCodes.length === 2;
+      panels.dataset.count = String(profileCodes.length);
+
+      profileCodes.forEach((code) => {
+        const profile = DATA.type_profiles.types[code];
+        const panel = createElement("article", "type-profile-panel");
+        panel.dataset.boundary = String(isBoundaryPair);
+        if (isBoundaryPair) {
+          const heading = createElement("h3", "profile-type-heading", code);
+          heading.id = `typeProfile-${code}`;
+          panel.setAttribute("aria-labelledby", heading.id);
+          panel.append(heading);
+        }
+
+        const topics = createElement("div", "profile-topics");
+        PROFILE_TOPICS.forEach(({ key, title }) => {
+          const topic = createElement("section", "profile-topic");
+          const heading = createElement(isBoundaryPair ? "h4" : "h3", "profile-topic-heading", title);
+          topic.append(heading, createElement("p", "", profile[key]));
+          topics.append(topic);
+        });
+        panel.append(topics);
+
+        const figures = createElement("section", "profile-figures");
+        figures.append(createElement(isBoundaryPair ? "h4" : "h3", "", "类型参考人物"));
+        const figureList = createElement("ul", "profile-figure-list");
+        profile.representatives.forEach((representative) => {
+          const item = createElement("li");
+          item.append(
+            createElement("strong", "", representative.name),
+            createElement("span", "", representative.role)
+          );
+          figureList.append(item);
+        });
+        figures.append(figureList);
+        panel.append(figures);
+        panels.append(panel);
+      });
+      section.hidden = false;
+    }
+
+    function renderResult() {
+      clearTimeout(state.advanceTimer);
+      const result = scoreAnswers();
+      const straightLining = result.quality === "straight_lining";
+      const axes = result.axes;
+      const typeCode = result.type_code;
+      const mascotCodes = renderResultMascots(result);
+      byId("typeCode").textContent = straightLining ? "—" : typeCode;
+      const resultSummary = byId("resultSummary");
+      const xCount = straightLining || !typeCode
+        ? 0
+        : Array.from(typeCode).filter((letter) => letter === "X").length;
+      resultSummary.textContent = xCount > 0 ? "X表示你同时具有两种倾向" : "";
+      resultSummary.hidden = xCount === 0;
+      const quality = byId("qualityNote");
+      quality.hidden = !straightLining;
+      quality.textContent = straightLining ? "你的答案过于一致，结果仅供参考。" : "";
+      byId("typeSection").hidden = straightLining;
+      byId("insightSection").hidden = straightLining;
+      if (straightLining) {
+        byId("typeProfileSection").hidden = true;
+        byId("typeProfilePanels").replaceChildren();
+      } else {
+        renderTypeProfiles(mascotCodes);
+      }
+      byId("resultDimensions").classList.toggle("single-column", straightLining);
+      byId("bigFiveHeading").textContent = "大五人格分数";
+
+      const axisContainer = byId("axisScales");
+      axisContainer.replaceChildren();
+      if (!straightLining) axes.forEach((axis) => renderAxis(axisContainer, axis));
+      const traitContainer = byId("traitScales");
+      traitContainer.replaceChildren();
+      TRAITS.forEach((trait) => renderTrait(traitContainer, trait, result.scores[trait]));
+      if (!straightLining) renderInsights(result.scores);
+      const transferModel = window.PersonalityScoringV1.buildTransferModel(DATA, result);
+      byId("resultTransfer").value = window.PersonalityScoringV1.formatTransferText(transferModel);
+      byId("copyStatus").textContent = "";
+      showScreen(byId("resultScreen"));
+      byId("resultTitle").focus({ preventScroll: true });
+    }
+
+    async function copyResult() {
+      const field = byId("resultTransfer");
+      const status = byId("copyStatus");
+      try {
+        if (!navigator.clipboard || !window.isSecureContext) throw new Error("clipboard unavailable");
+        await navigator.clipboard.writeText(field.value);
+        status.textContent = "已复制，你可以回到对话粘贴。";
+        return;
+      } catch (_error) {
+        const fallback = document.createElement("textarea");
+        fallback.value = field.value;
+        fallback.setAttribute("readonly", "");
+        fallback.style.position = "fixed";
+        fallback.style.left = "-9999px";
+        document.body.append(fallback);
+        fallback.select();
+        try {
+          if (document.execCommand("copy")) {
+            status.textContent = "已复制，你可以回到对话粘贴。";
+            fallback.remove();
+            return;
+          }
+        } catch (_fallbackError) {
+          // A visible status below explains the fallback.
+        }
+        fallback.remove();
+        status.textContent = "复制失败，请在浏览器中允许剪贴板权限后重试。";
+      }
+    }
+
+    // 确认走页面内的两步，不用 window.confirm：宿主 iframe 没给 allow-modals 时浏览器
+    // 直接忽略那次调用并返回 false，于是 restartAssessment 每次都提前 return——
+    // "点重新测试没反应"就是这么来的。
+    function askRestart() {
+      byId("restartButton").hidden = true;
+      byId("restartConfirm").hidden = false;
+      byId("restartConfirmButton").focus();
+    }
+
+    function dismissRestart() {
+      byId("restartConfirm").hidden = true;
+      byId("restartButton").hidden = false;
+    }
+
+    function restartAssessment() {
+      dismissRestart();
+      clearTimeout(state.advanceTimer);
+      state.index = 0;
+      state.answers.clear();
+      byId("resultTransfer").value = "";
+      byId("copyStatus").textContent = "";
+      startAssessment();
+    }
+
+    function initialize() {
+      const typeCodes = DATA && DATA.type_labels && typeof DATA.type_labels === "object"
+        ? Object.keys(DATA.type_labels)
+        : [];
+      const mascotCodes = DATA && DATA.yuanbao_mascots && typeof DATA.yuanbao_mascots === "object"
+        ? Object.keys(DATA.yuanbao_mascots)
+        : [];
+      const profileCatalog = DATA && DATA.type_profiles && typeof DATA.type_profiles === "object"
+        ? DATA.type_profiles
+        : null;
+      const profileCodes = profileCatalog && profileCatalog.types && typeof profileCatalog.types === "object"
+        ? Object.keys(profileCatalog.types)
+        : [];
+      const validMascotCatalog = typeCodes.length === 16
+        && mascotCodes.length === 16
+        && typeCodes.every((code) => /^[EI][NS][FT][JP]$/.test(code) && mascotCodes.includes(code))
+        && mascotCodes.every((code) => {
+          const asset = DATA.yuanbao_mascots[code];
+          return asset
+            && typeof asset.src === "string"
+            && asset.src.startsWith("data:image/webp;base64,")
+            && typeof asset.alt === "string"
+            && asset.alt.length > 0
+            && asset.width === 320
+            && asset.height === 320
+            && Number.isInteger(asset.visual_offset_y)
+            && asset.visual_offset_y >= -80
+            && asset.visual_offset_y <= 80;
+        });
+      const validProfileCatalog = profileCodes.length === 16
+        && typeCodes.every((code) => profileCodes.includes(code))
+        && profileCodes.every((code) => {
+          const profile = profileCatalog.types[code];
+          return profile
+            && PROFILE_TOPICS.every(({ key }) => typeof profile[key] === "string" && profile[key].startsWith("你"))
+            && Array.isArray(profile.representatives)
+            && profile.representatives.length === 3
+            && profile.representatives.every((representative) => representative
+              && typeof representative.name === "string"
+              && representative.name.length > 0
+              && typeof representative.role === "string"
+              && representative.role.length > 0);
+        });
+      if (
+        !DATA
+        || !Array.isArray(DATA.items)
+        || DATA.items.length !== DATA.item_count
+        || !validMascotCatalog
+        || !validProfileCatalog
+      ) throw new Error("页面加载失败，请重新打开。");
+      byId("backButton").addEventListener("click", goBack);
+      byId("copyButton").addEventListener("click", copyResult);
+      byId("restartButton").addEventListener("click", askRestart);
+      byId("restartConfirmButton").addEventListener("click", restartAssessment);
+      byId("restartCancelButton").addEventListener("click", () => {
+        dismissRestart();
+        byId("restartButton").focus();
+      });
+      document.addEventListener("keydown", (event) => {
+        if (byId("questionScreen").hidden || event.altKey || event.ctrlKey || event.metaKey) return;
+        if (/^[1-5]$/.test(event.key)) {
+          event.preventDefault();
+          chooseAnswer(Number(event.key));
+        }
+      });
+      startAssessment();
+      document.documentElement.dataset.assessmentReady = "true";
+      byId("runtimeNotice").hidden = true;
+    }
+
+    try {
+      initialize();
+    } catch (error) {
+      byId("runtimeNotice").textContent = error instanceof Error ? error.message : "页面加载失败，请重新打开。";
+    }
+  </script>
+</body>
+</html>

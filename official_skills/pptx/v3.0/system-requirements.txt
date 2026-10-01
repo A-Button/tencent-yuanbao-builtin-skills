@@ -1,0 +1,7 @@
+# pptx 技能依赖的系统级二进制（ensure_deps.py 只探测并告警，不自动安装）。
+# 每行：cand1[|cand2...]   # 说明；`|` 分隔可接受的多个可执行名，任一存在即满足。
+# 这些由运行环境/桌面端预装提供；镜像内均已内置。
+
+soffice|libreoffice   # 渲染/格式转换（pptx→pdf 预览、缩略图）
+pdftoppm              # PDF 转位图预览（poppler-utils）
+yuanbao-cli           # 模板按需下载器（平台预装，内置路由：path 以 商业/学校/政府/设计 等类别开头即可）

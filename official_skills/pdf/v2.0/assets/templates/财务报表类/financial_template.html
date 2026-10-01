@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>企业财务分析报告模板</title>
+<style>
+    @page {
+        size: A4;
+        margin: 0;
+    }
+    @page :first { margin: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+        --violet:   #6d28d9;
+        --violet-d: #4c1d95;
+        --purple:   #7c3aed;
+        --magenta:  #c026d3;
+        --rose:     #e11d8f;
+        --orange:   #fb6a3c;
+        --orange-l: #fb923c;
+        --red:      #f5333f;
+        --red-d:    #d61e36;
+        --ink:      #1c1630;
+        --gray:     #5d5870;
+        --gray-l:   #8b87a0;
+        --line:     #e4e1ee;
+        --bg-soft:  #f5f4f9;
+        --bg-tint:  #f0ecfa;
+        --bg-rose:  #fdeef6;
+        --dark:     #181228;
+        --dark2:    #241a3d;
+        --pos:      #f5333f;   /* 涨/增 红 */
+        --neg:      #16a34a;   /* 跌/减 绿 */
+    }
+    html { font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; }
+    body { color: var(--ink); font-size: 10pt; line-height: 1.6; background:#fff; }
+
+    /* 渐变定义 */
+    .grad-main { background: linear-gradient(120deg, var(--violet) 0%, var(--magenta) 55%, var(--orange) 100%); }
+
+    /* ============ 封面（满版，黑底 + 垂直光柱 light beams，左黑右亮紫红） ============ */
+    .cover {
+        width: 210mm; height: 297mm;
+        position: relative; page-break-after: always;
+        background: #000000;
+        color: #fff; overflow: hidden;
+    }
+    /* 第1层 aurora：纯黑底（左侧保持极暗） */
+    .cover .aurora {
+        position:absolute; inset:0;
+        background: linear-gradient(90deg, #000000 0%, #030109 30%, #070313 55%, #0a0518 100%);
+    }
+    /* 第2层 corehl：右后方透出的彩色光场（紫→品红→橙，自右向左衰减，整体加亮） */
+    .cover .corehl {
+        position:absolute; inset:0;
+        background:
+            radial-gradient(55% 80% at 99% 50%, rgba(255,205,150,0.95) 0%, rgba(255,180,120,0.0) 26%),
+            radial-gradient(72% 100% at 97% 50%, rgba(248,96,176,1) 0%, rgba(248,96,176,0.0) 40%),
+            radial-gradient(95% 115% at 92% 50%, rgba(200,46,216,0.85) 0%, rgba(200,46,216,0.0) 56%),
+            radial-gradient(120% 130% at 84% 50%, rgba(140,66,245,0.7) 0%, rgba(124,58,237,0.0) 70%),
+            radial-gradient(150% 150% at 72% 50%, rgba(99,40,200,0.45) 0%, rgba(99,40,200,0.0) 80%);
+    }
+    /* 第3层 beams：垂直光柱 —— 黑色竖条遮罩，亮缝透出下层彩色光，形成 light beams */
+    .cover .beams {
+        position:absolute; inset:0;
+        background-image: repeating-linear-gradient(90deg,
+            rgba(0,0,0,0.88) 0px,
+            rgba(0,0,0,0.88) 16px,
+            rgba(0,0,0,0.22) 25px,
+            rgba(0,0,0,0.0) 31px,
+            rgba(0,0,0,0.22) 37px,
+            rgba(0,0,0,0.88) 46px);
+        background-size: 46px 100%;
+    }
+    /* 高光：在每道亮缝中心叠一条白色高光，使光柱更锐利发光（右侧更强） */
+    .cover .beams::after {
+        content:""; position:absolute; inset:0; mix-blend-mode:screen;
+        background-image: repeating-linear-gradient(90deg,
+            rgba(255,255,255,0.0) 0px,
+            rgba(255,255,255,0.0) 29px,
+            rgba(255,255,255,0.55) 31px,
+            rgba(255,255,255,0.0) 33px,
+            rgba(255,255,255,0.0) 46px);
+        background-size: 46px 100%;
+        -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,0) 22%, rgba(0,0,0,0.6) 55%, rgba(0,0,0,1) 100%);
+                mask-image: linear-gradient(90deg, rgba(0,0,0,0) 22%, rgba(0,0,0,0.6) 55%, rgba(0,0,0,1) 100%);
+    }
+    /* 第4层 vignette：左侧、上下压黑，强化"左黑右亮"纵深 */
+    .cover .vignette {
+        position:absolute; inset:0;
+        background:
+            linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.55) 26%, rgba(0,0,0,0.0) 50%),
+            linear-gradient(0deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.0) 18%),
+            linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.0) 16%);
+    }
+    .cover-inner { position:relative; z-index:3; height:100%; display:flex; flex-direction:column; padding: 24mm 22mm; }
+    .cover-top { display:flex; align-items:center; gap:12px; }
+    .cover-org { font-size:12.5pt; letter-spacing:3px; font-weight:700; }
+    .cover-orgsub { font-size:8pt; letter-spacing:2.5px; color:rgba(255,255,255,.6); }
+    .cover-badge { display:inline-block; align-self:flex-start; margin-top:62mm; font-size:9pt; letter-spacing:5px; color:#fff; font-weight:600;
+        padding:6px 18px; border-radius:24px; background: linear-gradient(120deg, var(--magenta), var(--orange)); box-shadow:0 8px 24px rgba(192,38,211,.35); }
+    .cover-title { font-size:42pt; font-weight:900; line-height:1.1; margin:20px 0 4px; letter-spacing:1px; }
+    .cover-title .en { display:block; font-size:15pt; font-weight:300; letter-spacing:7px; margin-top:14px; color:#d8b4fe; }
+    .cover-year { font-size:52pt; font-weight:900; letter-spacing:3px; margin-top:6px; color:#f06fc2; }
+    .cover-rule { width:78mm; height:4px; margin:20px 0; border-radius:3px;
+        background: linear-gradient(90deg, var(--purple), var(--rose), var(--orange)); }
+    .cover-desc { font-size:10pt; color:rgba(255,255,255,.82); max-width:130mm; line-height:1.8; }
+    .cover-meta { margin-top:auto; }
+    .cover-meta .mrow { display:flex; padding:6px 0; font-size:9.5pt; border-bottom:1px solid rgba(255,255,255,.14); }
+    .cover-meta .mk { width:90px; color:#e879c8; letter-spacing:1px; }
+    .cover-meta .mv { color:rgba(255,255,255,.92); }
+    .cover-conf { position:absolute; top:24mm; right:22mm; z-index:4; font-size:8pt; letter-spacing:2px;
+        color:#fff; padding:4px 12px; border-radius:5px; background:rgba(245,51,63,.85); }
+    .cover-foot { margin-top:14mm; font-size:7.5pt; color:rgba(255,255,255,.5); letter-spacing:1px; }
+
+    /* ============ 正文页（带边距容器，固定高度防溢出） ============ */
+    .page { width:210mm; height:297mm; padding: 13mm 15mm 11mm 15mm; page-break-after: always;
+        position:relative; overflow:hidden; }
+    .page:last-child { page-break-after: auto; }
+    .page::before { content:""; position:absolute; left:0; top:0; width:8mm; height:100%;
+        background: linear-gradient(180deg, var(--violet), var(--magenta) 50%, var(--orange)); }
+
+    .runhead { display:flex; justify-content:space-between; align-items:center;
+        padding-bottom:6px; margin-bottom:12px; font-size:8pt; color:var(--gray-l); letter-spacing:1px;
+        border-bottom:1.5px solid var(--line); }
+    .runhead .rh-l { font-weight:700; color:var(--violet); }
+    .runhead .rh-r { color:var(--orange); }
+
+    /* ============ 标题层级 ============ */
+    h1.chap { font-size:16pt; color:var(--ink); font-weight:900; padding:4px 0 8px; margin:2px 0 12px;
+        border-bottom:3px solid; border-image: linear-gradient(90deg, var(--violet), var(--magenta), var(--orange)) 1; }
+    h1.chap .num { display:inline-block; color:#fff; font-size:12pt; font-weight:800; padding:3px 13px; border-radius:6px;
+        margin-right:12px; background: linear-gradient(135deg, var(--violet), var(--magenta)); vertical-align:middle; }
+    h2.sec { font-size:12pt; color:var(--violet-d); font-weight:800; margin:14px 0 7px; padding-left:11px;
+        border-left:5px solid; border-image: linear-gradient(180deg, var(--purple), var(--rose)) 1; }
+    h3.sub { font-size:10.5pt; color:var(--magenta); font-weight:700; margin:10px 0 5px; }
+    h3.sub::before { content:"▸ "; color:var(--orange); }
+    h4.item { font-size:10pt; color:var(--ink); font-weight:700; margin:7px 0 3px; }
+    p { margin:4px 0; text-align:justify; line-height:1.65; }
+    p.lead { color:var(--gray); }
+    ul, ol { margin:4px 0 7px 20px; }
+    li { margin:2px 0; line-height:1.55; }
+
+    /* ============ 信息块 ============ */
+    .callout { padding:8px 13px; margin:9px 0; border-radius:0 6px 6px 0; font-size:9.4pt; line-height:1.6;
+        background: var(--bg-tint); border-left:4px solid var(--purple); }
+    .callout.orange { background: #fff2ec; border-left-color: var(--orange); }
+    .callout.rose { background: var(--bg-rose); border-left-color: var(--rose); }
+    .callout .ct { font-weight:800; color:var(--violet-d); display:block; margin-bottom:2px; }
+
+    .kpi-row { display:flex; gap:9px; margin:10px 0; }
+    .kpi { flex:1; border-radius:9px; padding:11px 12px; color:#fff; position:relative; overflow:hidden; }
+    .kpi.k1 { background: linear-gradient(135deg, var(--violet), var(--purple)); }
+    .kpi.k2 { background: linear-gradient(135deg, var(--magenta), var(--rose)); }
+    .kpi.k3 { background: linear-gradient(135deg, var(--orange), var(--orange-l)); }
+    .kpi .k-label { font-size:8pt; letter-spacing:.5px; opacity:.92; }
+    .kpi .k-value { font-size:19pt; font-weight:900; margin:2px 0; line-height:1.1; }
+    .kpi .k-delta { font-size:8.5pt; font-weight:700; opacity:.95; }
+
+    .up { color:var(--pos); } .down { color:var(--neg); }
+
+    /* ============ 表格 ============ */
+    table.fin { width:100%; border-collapse:collapse; margin:7px 0 11px; font-size:9pt; }
+    table.fin caption { text-align:left; font-size:9pt; color:var(--gray); margin-bottom:3px; font-weight:600; }
+    table.fin caption .cap-no { color:var(--magenta); font-weight:800; }
+    table.fin thead th { color:#fff; font-weight:600; padding:6px 8px; text-align:right; border:none;
+        background: linear-gradient(120deg, var(--violet), var(--magenta)); }
+    table.fin thead th:first-child { text-align:left; border-radius:5px 0 0 0; }
+    table.fin thead th:last-child { border-radius:0 5px 0 0; }
+    table.fin tbody td { padding:4.5px 8px; border-bottom:1px solid var(--line); text-align:right; }
+    table.fin tbody td:first-child { text-align:left; }
+    table.fin tbody tr:nth-child(even) { background:var(--bg-soft); }
+    table.fin tbody tr.subtotal { background:var(--bg-tint); font-weight:700; }
+    table.fin tbody tr.total { background: linear-gradient(90deg, var(--bg-tint), var(--bg-rose)); font-weight:800; color:var(--violet-d); }
+    table.fin tbody tr.total td { border-top:2px solid var(--magenta); border-bottom:none; }
+    .indent1 td:first-child { padding-left:22px; }
+
+    .bar-wrap { display:flex; align-items:center; }
+    .bar-track { flex:1; height:8px; background:var(--line); border-radius:5px; overflow:hidden; }
+    .bar-fill { height:100%; background: linear-gradient(90deg, var(--purple), var(--orange)); }
+
+    .note-list { font-size:8.5pt; color:var(--gray-l); margin:4px 0 0 16px; }
+    .note-list li { margin:1px 0; }
+
+    .info-grid { width:100%; border-collapse:collapse; margin:6px 0 10px; font-size:9pt; }
+    .info-grid td { padding:6px 9px; border:1px solid var(--line); }
+    .info-grid td.lbl { background:var(--bg-soft); font-weight:700; color:var(--violet-d); width:24%; }
+
+    /* 目录 */
+    .toc-item { display:flex; align-items:baseline; margin:5px 0; font-size:10.5pt; }
+    .toc-item .t-no { color:#fff; font-weight:800; font-size:8.5pt; width:30px; height:20px; border-radius:5px;
+        text-align:center; line-height:20px; margin-right:12px;
+        background: linear-gradient(135deg, var(--violet), var(--magenta)); }
+    .toc-item .t-name { color:var(--ink); font-weight:700; }
+    .toc-item .t-dots { flex:1; border-bottom:1.5px dotted var(--line); margin:0 8px; transform:translateY(-3px); }
+    .toc-item .t-pg { color:var(--magenta); font-weight:700; }
+    .toc-sub { padding-left:42px; font-size:9pt; color:var(--gray); margin:2px 0 8px; }
+
+    .sign-area { margin-top:14px; display:flex; gap:36px; font-size:9.5pt; }
+    .sign-box { flex:1; }
+    .sign-line { border-bottom:1.5px solid var(--ink); height:24px; margin-top:4px; }
+    .sign-label { color:var(--gray); font-size:8.5pt; margin-top:3px; }
+
+    .seal-row { display:flex; gap:36px; margin-top:10px; }
+    .seal { flex:1; height:80px; border:1.5px dashed var(--line); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--gray-l); font-size:9pt; }
+
+    .fill-note { font-size:8.5pt; color:var(--orange); background:#fff2ec; padding:1px 6px; border-radius:3px; }
+    .endline { margin-top:18px; text-align:center; color:var(--gray-l); font-size:8.5pt; }
+
+    /* ============ 图表通用 ============ */
+    .chart-card { border:1px solid var(--line); border-radius:9px; padding:9px 11px 7px; margin:8px 0; background:#fff; }
+    .chart-card .ch-title { font-size:9pt; font-weight:800; color:var(--violet-d); margin-bottom:2px; }
+    .chart-card .ch-title .accent { color:var(--magenta); }
+    .ch-legend { display:flex; gap:14px; font-size:7.8pt; color:var(--gray); margin:2px 0 4px; flex-wrap:wrap; }
+    .ch-legend i { display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:4px; vertical-align:middle; }
+    .ch-legend .ln { width:14px; height:3px; border-radius:2px; }
+    .two-col { display:flex; gap:11px; }
+    .two-col > * { flex:1; min-width:0; }
+    svg { display:block; }
+    .donut-center { font-weight:900; }
+
+    /* 矩阵 / 时间轴 / 杜邦节点等用纯 div 实现 */
+    .milestone { display:flex; align-items:center; margin:10px 0 4px; }
+    .ms-dot { width:13px; height:13px; border-radius:50%; flex-shrink:0; }
+    .ms-line { flex:1; height:3px; }
+    .ms-label { font-size:7.5pt; color:var(--gray); text-align:center; margin-top:3px; }
+
+    .dupont { font-size:8.2pt; }
+    .dp-node { display:inline-block; border-radius:7px; padding:5px 9px; color:#fff; text-align:center; min-width:74px; }
+    .dp-node .dn-lbl { font-size:7pt; opacity:.9; display:block; }
+    .dp-node .dn-val { font-size:11pt; font-weight:900; }
+    .dp-connect { text-align:center; color:var(--gray-l); font-size:8pt; }
+
+    .prog-row { display:flex; align-items:center; gap:8px; margin:6px 0; }
+    .prog-tag { width:42px; flex-shrink:0; font-size:8.5pt; font-weight:700; color:#fff; text-align:center;
+        padding:4px 0; border-radius:6px; background: linear-gradient(135deg, var(--violet), var(--magenta)); }
+    .prog-block { flex:1; }
+    .prog-name { font-size:8pt; color:var(--gray); margin-bottom:2px; }
+    .prog-track { height:9px; background:var(--line); border-radius:5px; overflow:hidden; }
+    .prog-fill { height:100%; border-radius:5px; }
+    .prog-pct { font-size:8.5pt; font-weight:800; color:var(--magenta); width:34px; text-align:right; flex-shrink:0; }
+</style>
+</head>
+<body>
+
+<!-- ===================== 封面 满版 ===================== -->
+<div class="cover">
+    <div class="aurora"></div><div class="corehl"></div><div class="beams"></div><div class="vignette"></div>
+    <span class="cover-conf">机密 · CONFIDENTIAL</span>
+    <div class="cover-inner">
+        <!-- 顶部：仅企业名称（无 logo） -->
+        <div class="cover-top">
+            <div>
+                <div class="cover-org">［ 企业名称 ］</div>
+                <div class="cover-orgsub">FINANCE · ANNUAL REPORT</div>
+            </div>
+        </div>
+
+        <span class="cover-badge">财 务 报 告</span>
+        <div class="cover-title">企业财务分析报告<span class="en">FINANCIAL ANALYSIS REPORT</span></div>
+        <div class="cover-year">20XX</div>
+        <div class="cover-rule"></div>
+        <p class="cover-desc">本报告依据企业会计准则编制，涵盖资产负债、利润、现金流量等核心财务信息及指标分析，供管理层决策、投资者参考及监管报送之用。</p>
+
+        <div class="cover-meta">
+            <div class="mrow"><span class="mk">报告期间</span><span class="mv">20XX 年度（XX.01 – XX.12）</span></div>
+            <div class="mrow"><span class="mk">编制单位</span><span class="mv">财务管理部</span></div>
+            <div class="mrow"><span class="mk">报告编号</span><span class="mv">FIN-RPT-20XX-001</span></div>
+            <div class="mrow"><span class="mk">编制日期</span><span class="mv">20XX 年 XX 月 XX 日</span></div>
+            <div class="mrow"><span class="mk">币种单位</span><span class="mv">人民币元（除特别注明外）</span></div>
+            <div class="cover-foot">本文件包含敏感财务信息，未经授权不得复制、转发或对外披露 · 版权所有</div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== 目录 ===================== -->
+<div class="page">
+    <div class="runhead"><span class="rh-l">企业财务分析报告</span><span class="rh-r">目录 / CONTENTS</span></div>
+    <h1 class="chap"><span class="num">目录</span>CONTENTS</h1>
+
+    <div class="toc-item"><span class="t-no">01</span><span class="t-name">报告概述与编制说明</span><span class="t-dots"></span><span class="t-pg">03</span></div>
+    <div class="toc-sub">1.1 编制依据　1.2 报告范围与编制基础　1.3 重要提示</div>
+    <div class="toc-item"><span class="t-no">02</span><span class="t-name">公司基本情况与经营概览</span><span class="t-dots"></span><span class="t-pg">04</span></div>
+    <div class="toc-sub">2.1 公司基本信息　2.2 经营关键指标概览　2.3 经营业绩简评</div>
+    <div class="toc-item"><span class="t-no">03</span><span class="t-name">主要财务报表</span><span class="t-dots"></span><span class="t-pg">05</span></div>
+    <div class="toc-sub">3.1 资产负债表　3.2 利润表　3.3 现金流量表</div>
+    <div class="toc-item"><span class="t-no">04</span><span class="t-name">财务指标分析</span><span class="t-dots"></span><span class="t-pg">08</span></div>
+    <div class="toc-sub">4.1 偿债能力　4.2 营运能力　4.3 盈利能力　4.4 成长能力　4.5 核心指标可视化（含杜邦分解）</div>
+    <div class="toc-item"><span class="t-no">05</span><span class="t-name">预算执行与差异分析</span><span class="t-dots"></span><span class="t-pg">10</span></div>
+    <div class="toc-sub">5.1 预算执行情况总览（含预算-实际对比图）　5.2 重大差异原因分析</div>
+    <div class="toc-item"><span class="t-no">06</span><span class="t-name">财务报表附注（节选）</span><span class="t-dots"></span><span class="t-pg">11</span></div>
+    <div class="toc-sub">6.1 会计政策　6.2 科目明细　6.3 或有事项　6.4 经营分析图示（矩阵 / 进度 / 瀑布）</div>
+    <div class="toc-item"><span class="t-no">07</span><span class="t-name">风险提示与管理建议</span><span class="t-dots"></span><span class="t-pg">13</span></div>
+    <div class="toc-sub">7.1 风险识别　7.2 风险评估矩阵　7.3 管理改进建议</div>
+    <div class="toc-item"><span class="t-no">08</span><span class="t-name">声明、签署与审批</span><span class="t-dots"></span><span class="t-pg">14</span></div>
+    <div class="toc-sub">8.1 责任声明　8.2 签署　8.3 审批记录　8.4 盖章</div>
+
+    <div class="callout orange" style="margin-top:22px;">
+        <span class="ct">使用说明</span>
+        本文件为<b>通用模板</b>。所有以「［ ］」「XX」「示例数据」标注处均为占位内容，请在实际使用时替换为真实信息。表格结构、编号体系与层级样式可直接沿用。
+    </div>
+
+    <div class="kpi-row" style="margin-top:18px;">
+        <div class="kpi k1"><div class="k-label">报告章节</div><div class="k-value">08</div><div class="k-delta">个核心章节</div></div>
+        <div class="kpi k2"><div class="k-label">分析维度</div><div class="k-value">04</div><div class="k-delta">类财务能力</div></div>
+        <div class="kpi k3"><div class="k-label">核心报表</div><div class="k-value">03</div><div class="k-delta">张主表</div></div>
+    </div>
+</div>
+
+<!-- ===================== 01 ===================== -->
+<div class="page">
+    <div class="runhead"><span class="rh-l">第一章 · 报告概述与编制说明</span><span class="rh-r">FIN-RPT-20XX-001</span></div>
+    <h1 class="chap"><span class="num">01</span>报告概述与编制说明</h1>
+
+    <h2 class="sec">1.1 编制依据</h2>
+    <p>本报告依据下列规范及制度编制，确保财务信息的真实、准确、完整：</p>
+    <ol>
+        <li>《中华人民共和国会计法》及相关法律法规；</li>
+        <li>《企业会计准则——基本准则》及各项具体准则；</li>
+        <li>财政部发布的会计准则应用指南与解释公告；</li>
+        <li>本企业内部《财务管理制度》与《会计核算办法》。</li>
+    </ol>
+
+    <h2 class="sec">1.2 报告范围与编制基础</h2>
+    <h3 class="sub">1.2.1 合并范围</h3>
+    <p>本报告涵盖母公司及其全部纳入合并范围的子公司财务数据。报告期内合并范围变动情况详见第六章附注说明。</p>
+    <h3 class="sub">1.2.2 编制基础</h3>
+    <p>财务报表以持续经营为基础，按权责发生制原则，以历史成本为主要计量属性编制；部分金融工具、投资性房地产按公允价值计量。</p>
+    <h3 class="sub">1.2.3 报告期间</h3>
+    <p>本报告期间为 <span class="fill-note">20XX 年 1 月 1 日至 20XX 年 12 月 31 日</span>，比较期间为上一会计年度。</p>
+
+    <h2 class="sec">1.3 重要提示</h2>
+    <div class="callout rose">
+        <span class="ct">真实性声明</span>
+        本企业管理层及财务负责人保证本报告所载财务信息真实、准确、完整，不存在虚假记载、误导性陈述或重大遗漏，并对其承担相应法律责任。
+    </div>
+    <ul>
+        <li>本报告数据除特别注明外，均以人民币元为单位列示；</li>
+        <li>部分合计数与各分项加总存在的尾差系四舍五入所致；</li>
+        <li>本报告涉及的前瞻性陈述不构成实质性承诺，投资者应注意相关风险。</li>
+    </ul>
+
+    <div class="callout">
+        <span class="ct">编制原则速览</span>
+        真实性 · 准确性 · 完整性 · 可比性 · 谨慎性 —— 五项原则贯穿本报告全部财务信息的确认、计量与列报。
+    </div>
+</div>
+
+<!-- ===================== 02 ===================== -->
+<div class="page">
+    <div class="runhead"><span class="rh-l">第二章 · 公司基本情况与经营概览</span><span class="rh-r">FIN-RPT-20XX-001</span></div>
+    <h1 class="chap"><span class="num">02</span>公司基本情况与经营概览</h1>
+
+    <h2 class="sec">2.1 公司基本信息</h2>
+    <table class="info-grid">
+        <tr><td class="lbl">公司全称</td><td>［ 企业名称有限公司 ］</td><td class="lbl">统一社会信用代码</td><td>91XXXXXXXXXXXXXXXX</td></tr>
+        <tr><td class="lbl">法定代表人</td><td>XXX</td><td class="lbl">注册资本</td><td>人民币 XX,XXX 万元</td></tr>
+        <tr><td class="lbl">成立日期</td><td>20XX-XX-XX</td><td class="lbl">所属行业</td><td>XX 制造 / 服务业</td></tr>
+        <tr><td class="lbl">注册地址</td><td colspan="3">XX 省 XX 市 XX 区 XX 路 XX 号</td></tr>
+    </table>
+
+    <h2 class="sec">2.2 经营关键指标概览</h2>
+    <div class="kpi-row">
+        <div class="kpi k1"><div class="k-label">营业收入（万元）</div><div class="k-value">52,860</div><div class="k-delta">▲ 12.4% 同比</div></div>
+        <div class="kpi k2"><div class="k-label">净利润（万元）</div><div class="k-value">6,420</div><div class="k-delta">▲ 8.7% 同比</div></div>
+        <div class="kpi k3"><div class="k-label">毛利率</div><div class="k-value">31.2%</div><div class="k-delta">▼ 0.9pct 同比</div></div>
+    </div>
+    <div class="kpi-row">
+        <div class="kpi k1"><div class="k-label">总资产（万元）</div><div class="k-value">98,750</div><div class="k-delta">▲ 6.1% 同比</div></div>
+        <div class="kpi k2"><div class="k-label">资产负债率</div><div class="k-value">45.8%</div><div class="k-delta">▼ 2.3pct 同比</div></div>
+        <div class="kpi k3"><div class="k-label">净资产收益率</div><div class="k-value">11.9%</div><div class="k-delta">▲ 0.6pct 同比</div></div>
+    </div>
+
+    <h2 class="sec">2.3 经营业绩简评</h2>
+    <p class="lead">报告期内，公司紧扣年度经营目标，主营业务规模稳步扩张。营业收入实现两位数增长，主要得益于核心产品销量提升与新市场开拓；净利润同步增长但增速略低于收入，反映原材料成本及费用端存在一定压力。整体财务结构保持稳健，资产负债率持续优化，偿债能力与流动性处于合理区间。</p>
+    <div class="callout orange">
+        <span class="ct">管理层观点</span>
+        在收入端保持增长的同时，需重点关注毛利率小幅下滑的趋势，强化成本管控与产品结构优化，以巩固盈利质量与可持续增长动能。
+    </div>
+</div>
+
+<!-- ===================== 03 资产负债表 ===================== -->
+<div class="page">
+    <div class="runhead"><span class="rh-l">第三章 · 主要财务报表</span><span class="rh-r">FIN-RPT-20XX-001</span></div>
+    <h1 class="chap"><span class="num">03</span>主要财务报表</h1>
+
+    <h2 class="sec">3.1 资产负债表</h2>
+    <h3 class="sub">3.1.1 资产</h3>
+    <table class="fin">
+        <caption><span class="cap-no">表 3-1</span>　合并资产负债表（节选）　单位：万元</caption>
+        <thead><tr><th>项目</th><th>期末余额</th><th>年初余额</th><th>变动率</th></tr></thead>
+        <tbody>
+            <tr class="subtotal"><td>流动资产合计</td><td>46,820</td><td>43,150</td><td class="up">8.5%</td></tr>
+            <tr class="indent1"><td>货币资金</td><td>12,360</td><td>10,980</td><td>12.6%</td></tr>
+            <tr class="indent1"><td>应收账款</td><td>15,240</td><td>14,820</td><td>2.8%</td></tr>
+            <tr class="indent1"><td>存货</td><td>16,420</td><td>14,860</td><td>10.5%</td></tr>
+            <tr class="indent1"><td>其他流动资产</td><td>2,800</td><td>2,490</td><td>12.4%</td></tr>
+            <tr class="subtotal"><td>非流动资产合计</td><td>51,930</td><td>49,920</td><td class="up">4.0%</td></tr>
+            <tr class="indent1"><td>固定资产</td><td>38,620</td><td>37,540</td><td>2.9%</td></tr>
+            <tr class="indent1"><td>无形资产</td><td>8,310</td><td>7,980</td><td>4.1%</td></tr>
+            <tr class="indent1"><td>长期股权投资</td><td>5,000</td><td>4,400</td><td>13.6%</td></tr>
+            <tr class="total"><td>资产总计</td><td>98,750</td><td>93,070</td><td>6.1%</td></tr>
+        </tbody>
+    </table>
+
+    <h3 class="sub">3.1.2 负债及所有者权益</h3>
+    <table class="fin">
+        <caption><span class="cap-no">表 3-2</span>　负债及所有者权益（节选）　单位：万元</caption>
+        <thead><tr><th>项目</th><th>期末余额</th><th>年初余额</th><th>变动率</th></tr></thead>
+        <tbody>
+            <tr class="subtotal"><td>流动负债合计</td><td>32,140</td><td>33,560</td><td class="down">-4.2%</td></tr>
+            <tr class="indent1"><td>短期借款</td><td>8,000</td><td>9,500</td><td>-15.8%</td></tr>
+            <tr class="indent1"><td>应付账款</td><td>14,260</td><td>14,060</td><td>1.4%</td></tr>
+            <tr class="indent1"><td>其他流动负债</td><td>9,880</td><td>10,000</td><td>-1.2%</td></tr>
+            <tr class="subtotal"><td>非流动负债合计</td><td>13,100</td><td>13,940</td><td class="down">-6.0%</td></tr>
+            <tr class="indent1"><td>长期借款</td><td>13,100</td><td>13,940</td><td>-6.0%</td></tr>
+            <tr class="subtotal"><td>负债合计</td><td>45,240</td><td>47,500</td><td class="down">-4.8%</td></tr>
+            <tr class="subtotal"><td>所有者权益合计</td><td>53,510</td><td>45,570</td><td class="up">17.4%</td></tr>
+            <tr class="total"><td>负债和所有者权益总计</td><td>98,750</td><td>93,070</td><td>6.1%</td></tr>
+        </tbody>
+    </table>
+    <ul class="note-list">
+        <li>注①：本表数据已经审计，与申报口径一致。</li>
+        <li>注②：变动率＝（期末－年初）÷ 年初 × 100%。</li>
+    </ul>
+</div>
+
+<!-- ===================== 03 利润表 ===================== -->
+<div class="page">
+    <div class="runhead"><span class="rh-l">第三章 · 主要财务报表（续）</span><span class="rh-r">FIN-RPT-20XX-001</span></div>
+    <h2 class="sec" style="margin-top:2px">3.2 利润表</h2>
+    <table class="fin">
+        <caption><span class="cap-no">表 3-3</span>　合并利润表　单位：万元</caption>
+        <thead><tr><th>项目</th><th>本期金额</th><th>上期金额</th><th>同比</th></tr></thead>
+        <tbody>
+            <tr class="subtotal"><td>一、营业总收入</td><td>52,860</td><td>47,030</td><td class="up">12.4%</td></tr>
+            <tr class="indent1"><td>其中：营业收入</td><td>52,860</td><td>47,030</td><td>12.4%</td></tr>
+            <tr class="subtotal"><td>二、营业总成本</td><td>45,180</td><td>40,360</td><td class="up">11.9%</td></tr>
+            <tr class="indent1"><td>营业成本</td><td>36,370</td><td>32,180</td><td>13.0%</td></tr>
+            <tr class="indent1"><td>销售费用</td><td>3,420</td><td>3,180</td><td>7.5%</td></tr>
+            <tr class="indent1"><td>管理费用</td><td>3,180</td><td>2,960</td><td>7.4%</td></tr>
+            <tr class="indent1"><td>研发费用</td><td>1,580</td><td>1,420</td><td>11.3%</td></tr>
+            <tr class="indent1"><td>财务费用</td><td>630</td><td>620</td><td>1.6%</td></tr>
+            <tr class="subtotal"><td>三、营业利润</td><td>7,680</td><td>6,670</td><td class="up">15.1%</td></tr>
+            <tr class="indent1"><td>加：营业外收入</td><td>180</td><td>150</td><td>20.0%</td></tr>
+            <tr class="indent1"><td>减：营业外支出</td><td>120</td><td>110</td><td>9.1%</td></tr>
+            <tr class="subtotal"><td>四、利润总额</td><td>7,740</td><td>6,710</td><td class="up">15.4%</td></tr>
+            <tr class="indent1"><td>减：所得税费用</td><td>1,320</td><td>1,205</td><td>9.5%</td></tr>
+            <tr class="total"><td>五、净利润</td><td>6,420</td><td>5,505</td><td>16.6%</td></tr>
+        </tbody>
+    </table>
+
+    <h3 class="sub">3.2.1 成本费用结构与利润趋势</h3>
+    <p>营业成本占营业收入比重为 68.8%，较上年上升 0.4 个百分点；三项期间费用合计占比 13.7%，整体保持稳定；研发费用占收入 3.0%，体现公司对创新能力的重视。</p>
+
+    <div class="two-col">
+        <!-- 环形图：成本费用结构 -->
+        <div class="chart-card">
+            <div class="ch-title">图 3-1　主要成本费用<span class="accent">结构占比</span></div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <svg width="120" height="120" viewBox="0 0 42 42" style="flex-shrink:0">
+                    <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#e4e1ee" stroke-width="6"/>
+                    <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#6d28d9" stroke-width="6" stroke-dasharray="68.8 31.2" stroke-dashoffset="25" transform="rotate(-90 21 21)"/>
+                    <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#c026d3" stroke-width="6" stroke-dasharray="6.5 93.5" stroke-dashoffset="-43.8" transform="rotate(-90 21 21)"/>
+                    <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#e11d8f" stroke-width="6" stroke-dasharray="6.0 94.0" stroke-dashoffset="-50.3" transform="rotate(-90 21 21)"/>
+                    <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#fb6a3c" stroke-width="6" stroke-dasharray="3.0 97.0" stroke-dashoffset="-56.3" transform="rotate(-90 21 21)"/>
+                    <text x="21" y="20" text-anchor="middle" font-size="5" font-weight="900" fill="#4c1d95">84.3%</text>
+                    <text x="21" y="25" text-anchor="middle" font-size="2.6" fill="#5d5870">成本费用率</text>
+                </svg>
+                <div style="font-size:8pt; color:var(--gray); line-height:1.9;">
+                    <div><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#6d28d9;margin-right:5px"></span>营业成本 <b style="color:var(--ink)">68.8%</b></div>
+                    <div><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#c026d3;margin-right:5px"></span>销售费用 <b style="color:var(--ink)">6.5%</b></div>
+                    <div><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#e11d8f;margin-right:5px"></span>管理费用 <b style="color:var(--ink)">6.0%</b></div>
+                    <div><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#fb6a3c;margin-right:5px"></span>研发费用 <b style="color:var(--ink)">3.0%</b></div>
+                </div>
+            </div>
+        </div>
+        <!-- 分组柱状图：本期 vs 上期 -->
+        <div class="chart-card">
+            <div class="ch-title">图 3-2　费用项目<span class="accent">同比对比</span>（万元）</div>
+            <div class="ch-legend">
+                <span><i style="background:#6d28d9"></i>本期</span>
+                <span><i style="background:#fb6a3c"></i>上期</span>
+            </div>
+            <svg width="100%" height="118" viewBox="0 0 230 118" preserveAspectRatio="none">
+                <line x1="6" y1="92" x2="228" y2="92" stroke="#e4e1ee" stroke-width="1"/>
+                <!-- 四组 max=3500 高度80 -->
+                <!-- 营业成本/10=3637/3218 -->
+                <rect x="14" y="9" width="13" height="83" fill="#6d28d9"/><rect x="28" y="18" width="13" height="74" fill="#fb6a3c"/>
+                <rect x="68" y="69" width="13" height="23" fill="#6d28d9"/><rect x="82" y="71" width="13" height="21" fill="#fb6a3c"/>
+                <rect x="122" y="71" width="13" height="21" fill="#6d28d9"/><rect x="136" y="72" width="13" height="20" fill="#fb6a3c"/>
+                <rect x="176" y="81" width="13" height="11" fill="#6d28d9"/><rect x="190" y="82" width="13" height="10" fill="#fb6a3c"/>
+                <text x="27" y="105" text-anchor="middle" font-size="6.5" fill="#5d5870">营业成本</text>
+                <text x="81" y="105" text-anchor="middle" font-size="6.5" fill="#5d5870">销售费用</text>
+                <text x="135" y="105" text-anchor="middle" font-size="6.5" fill="#5d5870">管理费用</text>
+                <text x="189" y="105" text-anchor="middle" font-size="6.5" fill="#5d5870">研发费用</text>
+            </svg>
+        </div>
+    </div>
+
+    <div class="chart-card">
+        <div class="ch-title">图 3-3　按月度<span class="accent">营业收入与净利润</span>趋势（万元）</div>
+        <div class="ch-legend">
+            <span><i class="ln" style="background:#6d28d9"></i>营业收入</span>
+            <span><i class="ln" style="background:#fb6a3c"></i>净利润</span>
+        </div>
+        <svg width="100%" height="135" viewBox="0 0 500 135" preserveAspectRatio="none">
+            <line x1="22" y1="105" x2="492" y2="105" stroke="#e4e1ee"/>
+            <line x1="22" y1="70" x2="492" y2="70" stroke="#f0ecfa"/>
+            <line x1="22" y1="35" x2="492" y2="35" stroke="#f0ecfa"/>
+            <!-- 收入面积 12点 x:22..492 step≈42.7 ; y范围 105(low)~18(high) -->
+            <polygon fill="#6d28d9" fill-opacity="0.10" points="22,72 64,66 107,58 149,64 192,52 234,60 277,46 319,54 362,40 404,48 447,34 489,28 489,105 22,105"/>
+            <polyline fill="none" stroke="#6d28d9" stroke-width="2.2" points="22,72 64,66 107,58 149,64 192,52 234,60 277,46 319,54 362,40 404,48 447,34 489,28"/>
+            <!-- 净利润折线 偏下 -->
+            <polyline fill="none" stroke="#fb6a3c" stroke-width="2.2" points="22,95 64,92 107,88 149,90 192,84 234,87 277,80 319,84 362,76 404,80 447,72 489,68"/>
+            <g fill="#6d28d9"><circle cx="22" cy="72" r="2.4"/><circle cx="107" cy="58" r="2.4"/><circle cx="192" cy="52" r="2.4"/><circle cx="277" cy="46" r="2.4"/><circle cx="362" cy="40" r="2.4"/><circle cx="447" cy="34" r="2.4"/><circle cx="489" cy="28" r="2.4"/></g>
+            <g fill="#fb6a3c"><circle cx="22" cy="95" r="2.2"/><circle cx="192" cy="84" r="2.2"/><circle cx="362" cy="76" r="2.2"/><circle cx="489" cy="68" r="2.2"/></g>
+            <g font-size="7" fill="#8b87a0" text-anchor="middle">
+                <text x="22" y="120">1月</text><text x="107" y="120">3月</text><text x="192" y="120">5月</text><text x="277" y="120">7月</text><text x="362" y="120">9月</text><text x="447" y="120">11月</text><text x="489" y="120">12月</text>
+            </g>
+        </svg>
+    </div>
+</div>
+
+<!-- ===================== 03 现金流量表 ===================== -->
+<div class="page">
+    <div class="runhead"><span class="rh-l">第三章 · 主要财务报表（续）</span><span class="rh-r">FIN-RPT-20XX-001</span></div>
+    <h2 class="sec" style="margin-top:2px">3.3 现金流量表</h2>
+    <table class="fin">
+        <caption><span class="cap-no">表 3-5</span>　合并现金流量表（节选）　单位：万元</caption>
+        <thead><tr><th>项目</th><th>本期金额</th><th>上期金额</th></tr></thead>
+        <tbody>
+            <tr class="subtotal"><td>一、经营活动产生的现金流量</td><td></td><td></td></tr>
+            <tr class="indent1"><td>销售商品、提供劳务收到的现金</td><td>54,200</td><td>48,600</td></tr>
+            <tr class="indent1"><td>购买商品、接受劳务支付的现金</td><td>-38,400</td><td>-34,200</td></tr>
+            <tr class="indent1"><td>支付给职工及为职工支付的现金</td><td>-6,800</td><td>-6,200</td></tr>
+            <tr class="indent1"><td>支付的各项税费</td><td>-2,900</td><td>-2,600</td></tr>
+            <tr class="subtotal"><td>经营活动现金流量净额</td><td>6,100</td><td>5,600</td></tr>
+            <tr class="subtotal"><td>二、投资活动产生的现金流量</td><td></td><td></td></tr>
+            <tr class="indent1"><td>购建固定、无形等长期资产支付的现金</td><td>-4,200</td><td>-3,800</td></tr>
+            <tr class="indent1"><td>收回投资及取得投资收益收到的现金</td><td>900</td><td>700</td></tr>
+            <tr class="subtotal"><td>投资活动现金流量净额</td><td>-3,300</td><td>-3,100</td></tr>
+            <tr class="subtotal"><td>三、筹资活动产生的现金流量</td><td></td><td></td></tr>
+            <tr class="indent1"><td>取得 / 偿还借款净额</td><td>-2,300</td><td>-1,500</td></tr>
+            <tr class="indent1"><td>分配股利、利润支付的现金</td><td>-1,120</td><td>-900</td></tr>
+            <tr class="subtotal"><td>筹资活动现金流量净额</td><td>-3,420</td><td>-2,400</td></tr>
+            <tr class="total"><td>四、现金及现金等价物净增加额</td><td>-620</td><td>100</td></tr>
+        </tbody>
+    </table>
+
+    <h3 class="sub">3.3.1 现金流量质量分析</h3>
+    <p>报告期经营活动现金流量净额为 6,100 万元，与净利润 6,420 万元基本匹配，现金含量（经营净现金流／净利润）约为 0.95，盈利质量良好。投资活动净流出主要用于产能扩张与技术升级；筹资活动净流出反映公司主动降低杠杆、回报股东的财务策略。</p>
+    <div class="callout">
+        <span class="ct">关注点</span>
+        现金及现金等价物净增加额为负，主要受偿债与投资支出影响。建议持续关注资金调度，确保流动性安全垫充足，必要时优化筹资节奏。
+    </div>
+</div>
+
+<!-- ===================== 04 财务指标分析 ===================== -->
+<div class="page">
+    <div class="runhead"><span class="rh-l">第四章 · 财务指标分析</span><span class="rh-r">FIN-RPT-20XX-001</span></div>
+    <h1 class="chap"><span class="num">04</span>财务指标分析</h1>
+
+    <h2 class="sec">4.1 偿债能力分析</h2>
+    <table class="fin">
+        <caption><span class="cap-no">表 4-1</span>　偿债能力指标</caption>
+        <thead><tr><th>指标</th><th>本期</th><th>上期</th><th>行业均值</th><th>评价</th></tr></thead>
+        <tbody>
+            <tr><td>流动比率</td><td>1.46</td><td>1.29</td><td>1.50</td><td>合理</td></tr>
+            <tr><td>速动比率</td><td>0.95</td><td>0.84</td><td>1.00</td><td>偏紧</td></tr>
+            <tr><td>资产负债率</td><td>45.8%</td><td>51.0%</td><td>48.0%</td><td>优</td></tr>
+            <tr><td>利息保障倍数</td><td>13.3</td><td>11.8</td><td>8.0</td><td>优</td></tr>
+        </tbody>
+    </table>
+    <p>公司短期偿债能力较上年明显改善，资产负债率低于行业均值，长期偿债能力稳健；速动比率略低于 1，建议适度优化存货周转以增强即时偿付能力。</p>
+
+    <h2 class="sec">4.2 营运能力分析</h2>
+    <table class="fin">
+        <caption><span class="cap-no">表 4-2</span>　营运能力指标</caption>
+        <thead><tr><th>指标</th><th>本期</th><th>上期</th><th>变动</th></tr></thead>
+        <tbody>
+            <tr><td>应收账款周转率（次）</td><td>3.52</td><td>3.30</td><td class="up">+0.22</td></tr>
+            <tr><td>存货周转率（次）</td><td>2.33</td><td>2.25</td><td class="up">+0.08</td></tr>
+            <tr><td>总资产周转率（次）</td><td>0.55</td><td>0.52</td><td class="up">+0.03</td></tr>
+        </tbody>
+    </table>
+    <p>各项周转效率均有提升，应收账款回款与资产运营效率优化，反映公司营运管理能力增强。</p>
+
+    <h2 class="sec">4.3 盈利能力分析</h2>
+    <table class="fin">
+        <caption><span class="cap-no">表 4-3</span>　盈利能力指标</caption>
+        <thead><tr><th>指标</th><th>本期</th><th>上期</th><th>变动</th></tr></thead>
+        <tbody>
+            <tr><td>销售毛利率</td><td>31.2%</td><td>32.1%</td><td class="down">-0.9pct</td></tr>
+            <tr><td>销售净利率</td><td>12.1%</td><td>11.7%</td><td class="up">+0.4pct</td></tr>
+            <tr><td>净资产收益率（ROE）</td><td>11.9%</td><td>11.3%</td><td class="up">+0.6pct</td></tr>
+            <tr><td>总资产报酬率（ROA）</td><td>7.8%</td><td>7.2%</td><td class="up">+0.6pct</td></tr>
+        </tbody>
+    </table>
+    <p>毛利率小幅下滑但净利率回升，主要因费用管控见效、规模效应释放。ROE 与 ROA 双双提升，股东回报与资产效益持续向好。</p>
+
+    <h2 class="sec">4.4 成长能力分析</h2>
+    <table class="fin">
+        <caption><span class="cap-no">表 4-4</span>　成长能力指标</caption>
+        <thead><tr><th>指标</th><th>本期</th><th>上期</th><th>趋势</th></tr></thead>
+        <tbody>
+            <tr><td>营业收入增长率</td><td class="up">12.4%</td><td>9.8%</td><td class="up">↑ 加速</td></tr>
+            <tr><td>净利润增长率</td><td class="up">16.6%</td><td>10.2%</td><td class="up">↑ 加速</td></tr>
+            <tr><td>总资产增长率</td><td class="up">6.1%</td><td>5.4%</td><td class="up">↑ 稳增</td></tr>
+            <tr><td>净资产增长率</td><td class="up">17.4%</td><td>9.1%</td><td class="up">↑ 加速</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- ===================== 04 续：指标可视化 ===================== -->
+<div class="page">
+    <div class="runhead"><span class="rh-l">第四章 · 财务指标分析（续）</span><span class="rh-r">FIN-RPT-20XX-001</span></div>
+    <h2 class="sec" style="margin-top:2px">4.5 核心指标可视化</h2>
+    <p>为直观呈现盈利与成长态势，下列图表分别展示关键比率的同比变化，以及净资产收益率的杜邦分解路径。</p>
+
+    <div class="two-col">
+        <!-- 分组柱状图：盈利能力指标对比 -->
+        <div class="chart-card">
+            <div class="ch-title">图 4-1　盈利能力指标<span class="accent">同比对比</span></div>
+            <div class="ch-legend"><span><i style="background:#fb6a3c"></i>上期</span><span><i style="background:#6d28d9"></i>本期</span></div>
+            <svg width="100%" height="138" viewBox="0 0 230 138" preserveAspectRatio="none">
+                <line x1="6" y1="108" x2="228" y2="108" stroke="#e4e1ee"/>
+                <line x1="6" y1="74" x2="228" y2="74" stroke="#f5f4f9"/>
+                <line x1="6" y1="40" x2="228" y2="40" stroke="#f5f4f9"/>
+                <!-- 毛利率 32.1/31.2 (max40 -> h=68/v) 缩放 *2.1 -->
+                <rect x="12" y="40" width="12" height="68" fill="#fb6a3c"/><rect x="25" y="42" width="12" height="66" fill="#6d28d9"/>
+                <text x="24" y="35" text-anchor="middle" font-size="6.5" font-weight="700" fill="#6d28d9">31.2</text>
+                <!-- 净利率 11.7/12.1 -->
+                <rect x="68" y="84" width="12" height="24" fill="#fb6a3c"/><rect x="81" y="83" width="12" height="25" fill="#6d28d9"/>
+                <text x="80" y="78" text-anchor="middle" font-size="6.5" font-weight="700" fill="#6d28d9">12.1</text>
+                <!-- ROE 11.3/11.9 -->
+                <rect x="124" y="85" width="12" height="23" fill="#fb6a3c"/><rect x="137" y="83" width="12" height="25" fill="#6d28d9"/>
+                <text x="136" y="78" text-anchor="middle" font-size="6.5" font-weight="700" fill="#6d28d9">11.9</text>
+                <!-- ROA 7.2/7.8 -->
+                <rect x="180" y="93" width="12" height="15" fill="#fb6a3c"/><rect x="193" y="92" width="12" height="16" fill="#6d28d9"/>
+                <text x="192" y="87" text-anchor="middle" font-size="6.5" font-weight="700" fill="#6d28d9">7.8</text>
+                <g font-size="6.3" fill="#5d5870" text-anchor="middle">
+                    <text x="24" y="120">毛利率</text><text x="80" y="120">净利率</text><text x="136" y="120">ROE</text><text x="192" y="120">ROA</text>
+                </g>
+            </svg>
+        </div>
+        <!-- 成长能力折线 -->
+        <div class="chart-card">
+            <div class="ch-title">图 4-2　成长能力指标<span class="accent">变化趋势</span></div>
+            <div class="ch-legend"><span><i class="ln" style="background:#c026d3"></i>本期</span><span><i class="ln" style="background:#fb6a3c"></i>上期</span></div>
+            <svg width="100%" height="138" viewBox="0 0 230 138" preserveAspectRatio="none">
+                <line x1="10" y1="108" x2="224" y2="108" stroke="#e4e1ee"/>
+                <line x1="10" y1="70" x2="224" y2="70" stroke="#f5f4f9"/>
+                <line x1="10" y1="38" x2="224" y2="38" stroke="#f5f4f9"/>
+                <!-- 本期 12.4/16.6/6.1/17.4 ; max20 -> y=108-(v*3.5) -->
+                <polyline fill="none" stroke="#c026d3" stroke-width="2.2" points="30,65 95,50 160,87 218,47"/>
+                <polyline fill="none" stroke="#fb6a3c" stroke-width="2" stroke-dasharray="3 3" points="30,74 95,72 160,89 218,76"/>
+                <g fill="#c026d3"><circle cx="30" cy="65" r="2.6"/><circle cx="95" cy="50" r="2.6"/><circle cx="160" cy="87" r="2.6"/><circle cx="218" cy="47" r="2.6"/></g>
+                <g font-size="6.5" font-weight="700" fill="#c026d3" text-anchor="middle">
+                    <text x="30" y="60">12.4</text><text x="95" y="45">16.6</text><text x="160" y="82">6.1</text><text x="218" y="42">17.4</text>
+                </g>
+                <g font-size="6" fill="#5d5870" text-anchor="middle">
+                    <text x="30" y="120">收入</text><text x="95" y="120">净利</text><text x="160" y="120">资产</text><text x="218" y="120">净资产</text>
+                </g>
+            </svg>
+        </div>
+    </div>
+
+    <h3 class="sub">4.5.1 净资产收益率（ROE）杜邦分解</h3>
+    <p>ROE 由销售净利率、总资产周转率与权益乘数三项驱动，逐层分解如下：</p>
+    <div class="chart-card" style="padding:12px 11px;">
+        <div style="text-align:center;">
+            <div class="dp-node" style="background:linear-gradient(135deg,#6d28d9,#c026d3); min-width:120px;">
+                <span class="dn-lbl">净资产收益率 ROE</span><span class="dn-val">11.9%</span>
+            </div>
+        </div>
+        <div class="dp-connect" style="margin:5px 0;">＝ 净利率 × 总资产周转率 × 权益乘数</div>
+        <div style="display:flex; justify-content:space-around; gap:8px;">
+            <div class="dp-node" style="background:#7c3aed;"><span class="dn-lbl">销售净利率</span><span class="dn-val">12.1%</span></div>
+            <div style="align-self:center;color:var(--gray-l);font-size:11pt;font-weight:800;">×</div>
+            <div class="dp-node" style="background:#c026d3;"><span class="dn-lbl">总资产周转率</span><span class="dn-val">0.55</span></div>
+            <div style="align-self:center;color:var(--gray-l);font-size:11pt;font-weight:800;">×</div>
+            <div class="dp-node" style="background:#fb6a3c;"><span class="dn-lbl">权益乘数</span><span class="dn-val">1.85</span></div>
+        </div>
+        <div style="display:flex; justify-content:space-around; gap:8px; margin-top:6px;">
+            <div style="flex:1; text-align:center; font-size:7.5pt; color:var(--gray);">净利润 6,420<br>÷ 收入 52,860</div>
+            <div style="width:18px;"></div>
+            <div style="flex:1; text-align:center; font-size:7.5pt; color:var(--gray);">收入 52,860<br>÷ 总资产 98,750</div>
+            <div style="width:18px;"></div>
+            <div style="flex:1; text-align:center; font-size:7.5pt; color:var(--gray);">总资产 98,750<br>÷ 净资产 53,510</div>
+        </div>
+    </div>
+    <div class="callout">
+        <span class="ct">分解结论</span>
+        本期 ROE 提升主要由销售净利率改善与资产周转效率提升共同驱动，权益乘数维持稳健，盈利质量与资产运营效率协同向好。
+    </div>
+</div>
+
+<!-- ===================== 05 预算执行 ===================== -->
+<div class="page">
+    <div class="runhead"><span class="rh-l">第五章 · 预算执行与差异分析</span><span class="rh-r">FIN-RPT-20XX-001</span></div>
+    <h1 class="chap"><span class="num">05</span>预算执行与差异分析</h1>
+
+    <h2 class="sec">5.1 预算执行情况总览</h2>
+    <table class="fin">
+        <caption><span class="cap-no">表 5-1</span>　年度预算执行表　单位：万元</caption>
+        <thead><tr><th>项目</th><th>预算数</th><th>实际数</th><th>差异额</th><th>执行率</th></tr></thead>
+        <tbody>
+            <tr><td>营业收入</td><td>50,000</td><td>52,860</td><td class="up">+2,860</td><td>105.7%</td></tr>
+            <tr><td>营业成本</td><td>34,500</td><td>36,370</td><td>+1,870</td><td>105.4%</td></tr>
+            <tr><td>期间费用</td><td>8,600</td><td>8,810</td><td>+210</td><td>102.4%</td></tr>
+            <tr><td>研发投入</td><td>1,500</td><td>1,580</td><td>+80</td><td>105.3%</td></tr>
+            <tr class="total"><td>净利润</td><td>6,000</td><td>6,420</td><td>+420</td><td>107.0%</td></tr>
+        </tbody>
+    </table>
+
+    <div class="chart-card">
+        <div class="ch-title">图 5-1　预算 vs 实际<span class="accent">柱状对比与执行率</span>（左轴 万元 / 右轴 %）</div>
+        <div class="ch-legend">
+            <span><i style="background:#fb6a3c"></i>预算数</span>
+            <span><i style="background:#6d28d9"></i>实际数</span>
+            <span><i class="ln" style="background:#c026d3"></i>执行率</span>
+        </div>
+        <svg width="100%" height="150" viewBox="0 0 500 150" preserveAspectRatio="none">
+            <line x1="26" y1="118" x2="486" y2="118" stroke="#e4e1ee"/>
+            <line x1="26" y1="80" x2="486" y2="80" stroke="#f5f4f9"/>
+            <line x1="26" y1="42" x2="486" y2="42" stroke="#f5f4f9"/>
+            <rect x="46" y="33" width="18" height="85" fill="#fb6a3c"/><rect x="65" y="28" width="18" height="90" fill="#6d28d9"/>
+            <rect x="138" y="59" width="18" height="59" fill="#fb6a3c"/><rect x="157" y="56" width="18" height="62" fill="#6d28d9"/>
+            <rect x="230" y="103" width="18" height="15" fill="#fb6a3c"/><rect x="249" y="103" width="18" height="15" fill="#6d28d9"/>
+            <rect x="322" y="115" width="18" height="3" fill="#fb6a3c"/><rect x="341" y="115" width="18" height="3" fill="#6d28d9"/>
+            <rect x="414" y="108" width="18" height="10" fill="#fb6a3c"/><rect x="433" y="107" width="18" height="11" fill="#6d28d9"/>
+            <polyline fill="none" stroke="#c026d3" stroke-width="2.2" points="65,52 157,54 249,69 341,54 433,47"/>
+            <g fill="#c026d3"><circle cx="65" cy="52" r="2.6"/><circle cx="157" cy="54" r="2.6"/><circle cx="249" cy="69" r="2.6"/><circle cx="341" cy="54" r="2.6"/><circle cx="433" cy="47" r="2.6"/></g>
+            <g font-size="6.5" font-weight="700" fill="#c026d3" text-anchor="middle">
+                <text x="65" y="47">105.7%</text><text x="157" y="49">105.4%</text><text x="249" y="64">102.4%</text><text x="341" y="49">105.3%</text><text x="433" y="42">107.0%</text>
+            </g>
+            <g font-size="7" fill="#5d5870" text-anchor="middle">
+                <text x="65" y="132">营业收入</text><text x="157" y="132">营业成本</text><text x="249" y="132">期间费用</text><text x="341" y="132">研发投入</text><text x="433" y="132">净利润</text>
+            </g>
+        </svg>
+    </div>
+
+    <h2 class="sec">5.2 重大差异原因分析</h2>
+    <h3 class="sub">5.2.1 收入端差异</h3>
+    <p>营业收入超预算 5.7%，主要因核心产品线市场需求超预期，新签订单增长带动出货量提升，区域市场拓展取得阶段性成效。</p>
+    <h3 class="sub">5.2.2 成本端差异</h3>
+    <p>营业成本超预算 5.4%，与收入增长基本同步，单位成本控制在合理区间，反映采购与生产管理有效，规模效应初步显现。</p>
+    <h3 class="sub">5.2.3 利润端差异</h3>
+    <p>净利润超预算 7.0%，收入超额贡献为主要驱动，费用控制良好进一步放大利润弹性，整体盈利目标超额达成。</p>
+
+    <div class="callout orange">
+        <span class="ct">下期预算建议</span>
+        结合本期执行情况，建议下一预算周期适度上调收入目标，同步加强成本标准化管理，并为研发与市场拓展预留弹性额度，建立差异预警与滚动调整机制。各项指标执行率均在 102%–107% 区间，预算编制科学性与执行约束力得到验证。
+    </div>
+</div>
+
+<!-- ===================== 06 附注 ===================== -->
+<div class="page">
+    <div class="runhead"><span class="rh-l">第六章 · 财务报表附注（节选）</span><span class="rh-r">FIN-RPT-20XX-001</span></div>
+    <h1 class="chap"><span class="num">06</span>财务报表附注（节选）</h1>
+
+    <h2 class="sec">6.1 重要会计政策与会计估计</h2>
+    <h3 class="sub">6.1.1 收入确认</h3>
+    <p>公司在客户取得相关商品或服务控制权时确认收入。对于在某一时段内履约的合同，按履约进度确认收入。</p>
+    <h3 class="sub">6.1.2 固定资产折旧</h3>
+    <p>固定资产采用年限平均法计提折旧，主要类别折旧年限如下：</p>
+    <table class="fin">
+        <caption><span class="cap-no">表 6-1</span>　固定资产折旧政策</caption>
+        <thead><tr><th>类别</th><th>折旧年限</th><th>残值率</th><th>年折旧率</th></tr></thead>
+        <tbody>
+            <tr><td>房屋及建筑物</td><td>20–30 年</td><td>5%</td><td>3.17%–4.75%</td></tr>
+            <tr><td>机器设备</td><td>10 年</td><td>5%</td><td>9.50%</td></tr>
+            <tr><td>运输工具</td><td>5 年</td><td>5%</td><td>19.00%</td></tr>
+            <tr><td>电子及办公设备</td><td>3–5 年</td><td>5%</td><td>19.00%–31.67%</td></tr>
+        </tbody>
+    </table>
+
+    <h2 class="sec">6.2 主要科目明细附注</h2>
+    <h3 class="sub">6.2.1 应收账款账龄</h3>
+    <table class="fin">
+        <caption><span class="cap-no">表 6-2</span>　应收账款账龄分析　单位：万元</caption>
+        <thead><tr><th>账龄</th><th>金额</th><th>占比</th><th>坏账准备比例</th></tr></thead>
+        <tbody>
+            <tr><td>1 年以内</td><td>13,100</td><td>86.0%</td><td>5%</td></tr>
+            <tr><td>1–2 年</td><td>1,520</td><td>10.0%</td><td>10%</td></tr>
+            <tr><td>2–3 年</td><td>460</td><td>3.0%</td><td>30%</td></tr>
+            <tr><td>3 年以上</td><td>160</td><td>1.0%</td><td>50%</td></tr>
+            <tr class="total"><td>合计</td><td>15,240</td><td>100%</td><td>—</td></tr>
+        </tbody>
+    </table>
+
+    <div class="two-col">
+        <div class="chart-card">
+            <div class="ch-title">图 6-1　应收账款<span class="accent">账龄结构</span></div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <svg width="108" height="108" viewBox="0 0 42 42" style="flex-shrink:0">
+                    <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#6d28d9" stroke-width="6" stroke-dasharray="86 14" stroke-dashoffset="25" transform="rotate(-90 21 21)"/>
+                    <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#c026d3" stroke-width="6" stroke-dasharray="10 90" stroke-dashoffset="-61" transform="rotate(-90 21 21)"/>
+                    <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#e11d8f" stroke-width="6" stroke-dasharray="3 97" stroke-dashoffset="-71" transform="rotate(-90 21 21)"/>
+                    <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#fb6a3c" stroke-width="6" stroke-dasharray="1 99" stroke-dashoffset="-74" transform="rotate(-90 21 21)"/>
+                    <text x="21" y="22" text-anchor="middle" font-size="4" font-weight="900" fill="#4c1d95">15,240</text>
+                </svg>
+                <div style="font-size:7.6pt; color:var(--gray); line-height:1.8;">
+                    <div><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#6d28d9;margin-right:4px"></span>1年以内 <b style="color:var(--ink)">86%</b></div>
+                    <div><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#c026d3;margin-right:4px"></span>1–2年 <b style="color:var(--ink)">10%</b></div>
+                    <div><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#e11d8f;margin-right:4px"></span>2–3年 <b style="color:var(--ink)">3%</b></div>
+                    <div><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#fb6a3c;margin-right:4px"></span>3年以上 <b style="color:var(--ink)">1%</b></div>
+                </div>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="ch-title">图 6-2　各账龄段<span class="accent">坏账计提比例</span></div>
+            <svg width="100%" height="108" viewBox="0 0 220 108" preserveAspectRatio="none">
+                <line x1="8" y1="86" x2="216" y2="86" stroke="#e4e1ee"/>
+                <!-- 5/10/30/50 % max60 h=68 -->
+                <rect x="22" y="80" width="26" height="6" fill="#6d28d9"/><text x="35" y="74" text-anchor="middle" font-size="7" font-weight="700" fill="#6d28d9">5%</text>
+                <rect x="72" y="74" width="26" height="12" fill="#7c3aed"/><text x="85" y="68" text-anchor="middle" font-size="7" font-weight="700" fill="#7c3aed">10%</text>
+                <rect x="122" y="52" width="26" height="34" fill="#c026d3"/><text x="135" y="46" text-anchor="middle" font-size="7" font-weight="700" fill="#c026d3">30%</text>
+                <rect x="172" y="29" width="26" height="57" fill="#e11d8f"/><text x="185" y="23" text-anchor="middle" font-size="7" font-weight="700" fill="#e11d8f">50%</text>
+                <g font-size="6" fill="#5d5870" text-anchor="middle">
+                    <text x="35" y="98">1年内</text><text x="85" y="98">1–2年</text><text x="135" y="98">2–3年</text><text x="185" y="98">3年+</text>
+                </g>
+            </svg>
+        </div>
+    </div>
+
+    <h2 class="sec">6.3 或有事项与承诺</h2>
+    <ul>
+        <li>报告期末，公司不存在需披露的重大未决诉讼、仲裁事项；</li>
+        <li>对外担保余额为 0 万元，未发生新增对外担保；</li>
+        <li>已签订但尚未履行完毕的重大资本性支出合同金额约 XX 万元；</li>
+        <li>不存在影响持续经营能力的重大或有负债。</li>
+    </ul>
+</div>
+
+<!-- ===================== 06 续：经营分析图示 ===================== -->
+<div class="page">
+    <div class="runhead"><span class="rh-l">第六章 · 财务报表附注（续）</span><span class="rh-r">FIN-RPT-20XX-001</span></div>
+    <h2 class="sec" style="margin-top:2px">6.4 经营分析图示</h2>
+    <p>以下图示用于辅助经营分析：产品矩阵气泡图反映各产品的盈利能力与市场份额，重点项目进度跟踪呈现关键工作的执行节奏。</p>
+
+    <h3 class="sub">6.4.1 产品 / 资产气泡矩阵</h3>
+    <div class="chart-card">
+        <div class="ch-title">图 6-3　产品<span class="accent">盈利能力—市场份额</span>矩阵（气泡大小＝营收规模）</div>
+        <svg width="100%" height="190" viewBox="0 0 500 190">
+            <line x1="40" y1="20" x2="40" y2="165" stroke="#e4e1ee"/>
+            <line x1="40" y1="165" x2="488" y2="165" stroke="#e4e1ee"/>
+            <line x1="264" y1="20" x2="264" y2="165" stroke="#f0ecfa" stroke-dasharray="3 3"/>
+            <line x1="40" y1="92" x2="488" y2="92" stroke="#f0ecfa" stroke-dasharray="3 3"/>
+            <text x="20" y="95" font-size="7" fill="#8b87a0" transform="rotate(-90 20 95)" text-anchor="middle">盈利能力 →</text>
+            <text x="264" y="180" font-size="7" fill="#8b87a0" text-anchor="middle">市场份额 →</text>
+            <!-- 象限标签 -->
+            <text x="150" y="32" font-size="6.5" fill="#c026d3">问题类</text>
+            <text x="380" y="32" font-size="6.5" fill="#6d28d9">明星类</text>
+            <text x="150" y="160" font-size="6.5" fill="#fb6a3c">瘦狗类</text>
+            <text x="380" y="160" font-size="6.5" fill="#e11d8f">现金牛类</text>
+            <!-- 气泡 -->
+            <circle cx="400" cy="55" r="22" fill="#6d28d9" fill-opacity="0.30" stroke="#6d28d9"/><text x="400" y="58" font-size="7" text-anchor="middle" fill="#4c1d95" font-weight="700">A</text>
+            <circle cx="350" cy="75" r="15" fill="#7c3aed" fill-opacity="0.30" stroke="#7c3aed"/><text x="350" y="78" font-size="6.5" text-anchor="middle" fill="#4c1d95">B</text>
+            <circle cx="180" cy="60" r="13" fill="#c026d3" fill-opacity="0.30" stroke="#c026d3"/><text x="180" y="63" font-size="6.5" text-anchor="middle" fill="#991e6e">C</text>
+            <circle cx="210" cy="48" r="9" fill="#c026d3" fill-opacity="0.25" stroke="#c026d3"/><text x="210" y="51" font-size="6" text-anchor="middle" fill="#991e6e">D</text>
+            <circle cx="400" cy="128" r="18" fill="#e11d8f" fill-opacity="0.28" stroke="#e11d8f"/><text x="400" y="131" font-size="7" text-anchor="middle" fill="#8a1457">E</text>
+            <circle cx="340" cy="135" r="11" fill="#e11d8f" fill-opacity="0.25" stroke="#e11d8f"/><text x="340" y="138" font-size="6" text-anchor="middle" fill="#8a1457">F</text>
+            <circle cx="150" cy="135" r="12" fill="#fb6a3c" fill-opacity="0.30" stroke="#fb6a3c"/><text x="150" y="138" font-size="6.5" text-anchor="middle" fill="#9a3c12">G</text>
+            <circle cx="110" cy="120" r="8" fill="#fb6a3c" fill-opacity="0.25" stroke="#fb6a3c"/><text x="110" y="123" font-size="6" text-anchor="middle" fill="#9a3c12">H</text>
+        </svg>
+    </div>
+
+    <h3 class="sub">6.4.2 重点项目过程跟踪</h3>
+    <div class="prog-row">
+        <span class="prog-tag">项目1</span>
+        <div class="prog-block"><div class="prog-name">项目进度</div><div class="prog-track"><div class="prog-fill" style="width:70%;background:linear-gradient(90deg,#6d28d9,#c026d3)"></div></div></div>
+        <span class="prog-pct">70%</span>
+        <div class="prog-block"><div class="prog-name">预算花费进度</div><div class="prog-track"><div class="prog-fill" style="width:75%;background:linear-gradient(90deg,#c026d3,#fb6a3c)"></div></div></div>
+        <span class="prog-pct">75%</span>
+    </div>
+    <div class="prog-row">
+        <span class="prog-tag">项目2</span>
+        <div class="prog-block"><div class="prog-name">项目进度</div><div class="prog-track"><div class="prog-fill" style="width:35%;background:linear-gradient(90deg,#6d28d9,#c026d3)"></div></div></div>
+        <span class="prog-pct">35%</span>
+        <div class="prog-block"><div class="prog-name">预算花费进度</div><div class="prog-track"><div class="prog-fill" style="width:30%;background:linear-gradient(90deg,#c026d3,#fb6a3c)"></div></div></div>
+        <span class="prog-pct">30%</span>
+    </div>
+    <div class="prog-row">
+        <span class="prog-tag">项目3</span>
+        <div class="prog-block"><div class="prog-name">项目进度</div><div class="prog-track"><div class="prog-fill" style="width:80%;background:linear-gradient(90deg,#6d28d9,#c026d3)"></div></div></div>
+        <span class="prog-pct">80%</span>
+        <div class="prog-block"><div class="prog-name">预算花费进度</div><div class="prog-track"><div class="prog-fill" style="width:60%;background:linear-gradient(90deg,#c026d3,#fb6a3c)"></div></div></div>
+        <span class="prog-pct">60%</span>
+    </div>
+    <div class="prog-row">
+        <span class="prog-tag">项目4</span>
+        <div class="prog-block"><div class="prog-name">项目进度</div><div class="prog-track"><div class="prog-fill" style="width:30%;background:linear-gradient(90deg,#6d28d9,#c026d3)"></div></div></div>
+        <span class="prog-pct">30%</span>
+        <div class="prog-block"><div class="prog-name">预算花费进度</div><div class="prog-track"><div class="prog-fill" style="width:32%;background:linear-gradient(90deg,#c026d3,#fb6a3c)"></div></div></div>
+        <span class="prog-pct">32%</span>
+    </div>
+
+    <h3 class="sub">6.4.3 项目关键里程碑</h3>
+    <div class="milestone">
+        <div class="ms-dot" style="background:#6d28d9"></div><div class="ms-line" style="background:#6d28d9"></div>
+        <div class="ms-dot" style="background:#c026d3"></div><div class="ms-line" style="background:#c026d3"></div>
+        <div class="ms-dot" style="background:#e11d8f"></div><div class="ms-line" style="background:#e4e1ee"></div>
+        <div class="ms-dot" style="background:#e4e1ee"></div>
+    </div>
+    <div style="display:flex; justify-content:space-between;">
+        <span class="ms-label">立项 ✓<br>Q1</span>
+        <span class="ms-label">需求评审 ✓<br>Q2</span>
+        <span class="ms-label">开发交付 ✓<br>Q3</span>
+        <span class="ms-label">验收上线<br>Q4</span>
+    </div>
+    <h3 class="sub">6.4.4 现金流量瀑布图</h3>
+    <div class="chart-card">
+        <div class="ch-title">图 6-4　现金流量<span class="accent">三大活动净额瀑布</span>（万元）</div>
+        <svg width="100%" height="150" viewBox="0 0 500 150" preserveAspectRatio="none">
+            <line x1="30" y1="78" x2="490" y2="78" stroke="#b4b2a9"/>
+            <text x="22" y="80" font-size="6" fill="#8b87a0" text-anchor="end">0</text>
+            <!-- 经营 +6100 (向上 6100/120=51) -->
+            <rect x="60" y="27" width="64" height="51" fill="#e11d8f"/><text x="92" y="22" text-anchor="middle" font-size="7" font-weight="700" fill="#991e6e">+6,100</text><text x="92" y="92" text-anchor="middle" font-size="6.3" fill="#5d5870">经营活动</text>
+            <!-- 投资 -3300 (向下 28) -->
+            <rect x="160" y="78" width="64" height="28" fill="#6d28d9"/><text x="192" y="118" text-anchor="middle" font-size="7" font-weight="700" fill="#4c1d95">-3,300</text><text x="192" y="74" text-anchor="middle" font-size="6.3" fill="#5d5870">投资活动</text>
+            <!-- 筹资 -3420 (向下 29) -->
+            <rect x="260" y="78" width="64" height="29" fill="#7c3aed"/><text x="292" y="120" text-anchor="middle" font-size="7" font-weight="700" fill="#4c1d95">-3,420</text><text x="292" y="74" text-anchor="middle" font-size="6.3" fill="#5d5870">筹资活动</text>
+            <!-- 合计净变动 -620 (向下 5) -->
+            <rect x="372" y="78" width="64" height="6" fill="#fb6a3c"/><text x="404" y="98" text-anchor="middle" font-size="7" font-weight="700" fill="#9a3c12">-620</text><text x="404" y="74" text-anchor="middle" font-size="6.3" fill="#5d5870">净变动</text>
+            <!-- 连接虚线 -->
+            <line x1="124" y1="27" x2="160" y2="27" stroke="#b4b2a9" stroke-dasharray="2 2"/>
+            <line x1="224" y1="106" x2="260" y2="106" stroke="#b4b2a9" stroke-dasharray="2 2"/>
+            <line x1="324" y1="107" x2="372" y2="78" stroke="#b4b2a9" stroke-dasharray="2 2"/>
+        </svg>
+    </div>
+    <div class="callout" style="margin-top:6px;">
+        <span class="ct">提示</span>
+        以上图示为通用范式，可按实际项目数量与阶段自由增减；气泡矩阵横纵轴含义可替换为「营收增速 / 毛利率」等任意两维指标，瀑布图直观呈现现金净额的来源与去向。
+    </div>
+</div>
+
+<!-- ===================== 07 风险提示 ===================== -->
+<div class="page">
+    <div class="runhead"><span class="rh-l">第七章 · 风险提示与管理建议</span><span class="rh-r">FIN-RPT-20XX-001</span></div>
+    <h1 class="chap"><span class="num">07</span>风险提示与管理建议</h1>
+
+    <h2 class="sec">7.1 主要财务风险识别</h2>
+    <h3 class="sub">7.1.1 信用风险</h3>
+    <p>应收账款规模较大，若客户回款延迟或发生违约，可能影响资金周转。建议强化客户信用评级与账期管理。</p>
+    <h3 class="sub">7.1.2 流动性风险</h3>
+    <p>本期现金净流出，需关注短期偿债与日常运营的资金匹配。建议建立现金流滚动预测机制，保持合理资金储备。</p>
+    <h3 class="sub">7.1.3 市场与价格风险</h3>
+    <p>原材料价格波动可能挤压毛利空间。建议通过集中采购、长期协议与套期保值等方式对冲风险。</p>
+    <h3 class="sub">7.1.4 汇率风险</h3>
+    <p>若涉及外币结算，汇率波动将影响损益。建议匹配外币资产负债结构，必要时运用远期结售汇工具。</p>
+
+    <h2 class="sec">7.2 风险等级评估矩阵</h2>
+    <table class="fin">
+        <caption><span class="cap-no">表 7-1</span>　财务风险评估矩阵</caption>
+        <thead><tr><th>风险类型</th><th>发生可能性</th><th>影响程度</th><th>综合等级</th><th>应对策略</th></tr></thead>
+        <tbody>
+            <tr><td>信用风险</td><td>中</td><td>中</td><td class="up">中</td><td>信用管控 / 计提准备</td></tr>
+            <tr><td>流动性风险</td><td>中</td><td>高</td><td class="up">较高</td><td>现金流预测 / 授信储备</td></tr>
+            <tr><td>市场价格风险</td><td>高</td><td>中</td><td class="up">较高</td><td>集中采购 / 套保</td></tr>
+            <tr><td>汇率风险</td><td>低</td><td>中</td><td class="down">低</td><td>结构匹配 / 远期工具</td></tr>
+        </tbody>
+    </table>
+
+    <h2 class="sec">7.3 管理改进建议</h2>
+    <ol>
+        <li>建立健全全面预算管理与差异预警机制，提升预算约束力；</li>
+        <li>优化应收账款与存货周转，提升营运资金使用效率；</li>
+        <li>持续优化资本结构，控制综合融资成本；</li>
+        <li>加强财务数字化建设，提升数据决策支持与风险预警能力。</li>
+    </ol>
+</div>
+
+<!-- ===================== 08 声明签署 ===================== -->
+<div class="page">
+    <div class="runhead"><span class="rh-l">第八章 · 声明、签署与审批</span><span class="rh-r">FIN-RPT-20XX-001</span></div>
+    <h1 class="chap"><span class="num">08</span>声明、签署与审批</h1>
+
+    <h2 class="sec">8.1 责任声明</h2>
+    <div class="callout rose">
+        <span class="ct">声明</span>
+        本企业董事会、管理层及财务负责人确认：本财务报告所载内容真实、准确、完整，已按照企业会计准则及相关规定编制，不存在虚假记载、误导性陈述或重大遗漏。
+    </div>
+
+    <h2 class="sec">8.2 签署</h2>
+    <div class="sign-area">
+        <div class="sign-box"><div class="sign-line"></div><div class="sign-label">编制人（签字）　　　日期：　 年 　月 　日</div></div>
+        <div class="sign-box"><div class="sign-line"></div><div class="sign-label">复核人（签字）　　　日期：　 年 　月 　日</div></div>
+    </div>
+    <div class="sign-area">
+        <div class="sign-box"><div class="sign-line"></div><div class="sign-label">财务负责人（签字）　日期：　 年 　月 　日</div></div>
+        <div class="sign-box"><div class="sign-line"></div><div class="sign-label">法定代表人（签字）　日期：　 年 　月 　日</div></div>
+    </div>
+
+    <h2 class="sec">8.3 审批记录</h2>
+    <table class="fin">
+        <caption><span class="cap-no">表 8-1</span>　报告审批流程记录</caption>
+        <thead><tr><th>环节</th><th>负责人 / 部门</th><th>意见</th><th>日期</th></tr></thead>
+        <tbody>
+            <tr><td>编制</td><td>财务核算岗</td><td style="text-align:left">—</td><td>　年　月　日</td></tr>
+            <tr><td>复核</td><td>财务复核岗</td><td style="text-align:left">—</td><td>　年　月　日</td></tr>
+            <tr><td>审核</td><td>财务负责人</td><td style="text-align:left">—</td><td>　年　月　日</td></tr>
+            <tr><td>批准</td><td>总经理 / 董事会</td><td style="text-align:left">—</td><td>　年　月　日</td></tr>
+        </tbody>
+    </table>
+
+    <h2 class="sec">8.4 盖章</h2>
+    <div class="seal-row">
+        <div class="seal">（单位公章）</div>
+        <div class="seal">（财务专用章）</div>
+    </div>
+
+    <p class="endline">—— 本报告正文结束 ·  © 20XX ［企业名称］ 财务管理部 编制 ——</p>
+</div>
+
+</body>
+</html>

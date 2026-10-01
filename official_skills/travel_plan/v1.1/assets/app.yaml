@@ -1,0 +1,432 @@
+id: travel_plan
+name: 旅游规划
+version: v2.7
+description: 旅游行程规划 App：模型只写行程结构，脚本用同程、腾讯和受控官方网页补齐景点详情与真实路网。
+
+resources:
+  - uri: ui://travel_plan/main
+    name: 旅游规划
+    description: 行程卡片界面
+    path: assets/ui/index.html
+    mimeType: text/html;profile=mcp-app
+
+tools:
+  - name: update_trip_meta
+    title: 新建卡片或修改标题
+    description: >
+      新旅行必须带 title、destination 和 newTrip=true；已有行程时禁止再次传 newTrip=true，
+      避免误删全部 days。若用户明确要另一趟旅行，确认后先 reset_trip；已有旅行仅更新传入字段。
+      写完全部内容后统一调用一次 render_trip。
+    inputSchema:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 120
+        destination:
+          type: string
+          minLength: 1
+          maxLength: 80
+          description: 主目的城市
+        city:
+          type: string
+          minLength: 1
+          maxLength: 80
+          description: destination 的兼容别名
+        newTrip:
+          type: boolean
+          description: 仅在当前没有行程时传 true；修改已有行程严禁传入
+      allOf:
+        - if:
+            required: [newTrip]
+            properties:
+              newTrip: {const: true}
+          then:
+            required: [title]
+            anyOf:
+              - required: [destination]
+              - required: [city]
+      additionalProperties: false
+    outputSchema: &mutationOutput
+      oneOf:
+        - type: object
+          required: [operation, phase, title, destination, planDays, hasTrip, tripId, stateScope, dayIds, changed, rendered, nextAction, protocolVersion, updateMode, contentHash, eventId, issues]
+          properties:
+            operation: {type: string}
+            phase: {type: string, enum: [ready, partial, empty]}
+            title: {type: string}
+            destination: {type: string}
+            planDays:
+              type: array
+              maxItems: 14
+              description: 写入后的行程骨架；stop 的 summary 一律省略成 “…”，完整卡片只由 render_trip 产出
+            rendered: {type: boolean}
+            nextAction: {type: string, enum: [render_trip, none]}
+            hasTrip: {type: boolean}
+            tripId: {type: string}
+            stateScope: {type: string}
+            dayIds: {type: array, items: {type: string}}
+            changed: {type: boolean}
+            protocolVersion: {type: string}
+            updateMode: {type: string, enum: [snapshot, tombstone]}
+            contentHash: {type: string}
+            eventId: {type: string}
+            issues: {type: array}
+          additionalProperties: true
+        - type: object
+          required: [operation, phase, code, message, retryable, issues]
+          properties:
+            operation: {type: string}
+            phase: {const: error}
+            code: {type: string}
+            message: {type: string}
+            retryable: {type: boolean}
+            issues: {type: array}
+          additionalProperties: true
+    handler: {type: script, path: scripts/update_trip_meta.py}
+    _meta:
+      ui: {visibility: [model]}
+
+  - name: upsert_day
+    title: 新增或更新某一天
+    description: >
+      一天一次写入完整景点列表。回包只给行程骨架 planDays（summary 省略成 “…”），不含图片与路线。
+      stops 只允许 name 与规划型 summary；
+      传 dayId 和 stops 会整段替换该天景点，不能用于单景点修改，单点修改必须用 upsert_stop。
+      坐标、图片、评分、票价、营业、介绍与真实路线全部由脚本补齐。
+      本工具不出卡片：回包 rendered=false 时最后一天写完必须继续调 render_trip，不能就此收尾。
+    inputSchema:
+      type: object
+      properties:
+        dayId:
+          type: string
+          minLength: 1
+          maxLength: 80
+          description: 已有天 id；不传表示新增
+        label:
+          type: string
+          minLength: 1
+          maxLength: 40
+        title:
+          type: string
+          maxLength: 120
+        subtitle:
+          type: string
+          maxLength: 300
+        city:
+          type: string
+          maxLength: 80
+          description: 多城市行程中该天所在城市
+        stops:
+          type: array
+          minItems: 1
+          maxItems: 12
+          items:
+            type: object
+            properties: &stopInput
+              name:
+                type: string
+                minLength: 1
+                maxLength: 80
+                description: 景点名；禁止交通枢纽、酒店等非游览点
+              summary:
+                type: string
+                minLength: 1
+                maxLength: 800
+                description: 规划理由、游玩亮点和近期热点；不得写客观票价、评分或坐标
+            required: [name, summary]
+            additionalProperties: false
+        replaceStops:
+          type: boolean
+          description: 仅更新已有天且确需整段替换 stops 时传 true
+        expectedStopIds:
+          type: array
+          maxItems: 12
+          items: {type: string, minLength: 1, maxLength: 80}
+          description: 整段替换前由 get_plan_state 返回的该天完整 stopIds，顺序也必须一致
+      anyOf:
+        - required: [dayId]
+        - required: [stops]
+      allOf:
+        - if:
+            required: [dayId, stops]
+          then:
+            required: [replaceStops, expectedStopIds]
+            properties:
+              replaceStops: {const: true}
+      additionalProperties: false
+    outputSchema: *mutationOutput
+    handler: {type: script, path: scripts/upsert_day.py}
+    _meta:
+      ui: {visibility: [model]}
+
+  - name: upsert_stop
+    title: 新增或编辑单个景点
+    description: >
+      不传 stopId 时新增并要求 name、summary；传 stopId 时只修改 name 或 summary。
+      所有客观事实由脚本补齐。本工具不出卡片：回包 rendered=false 时必须继续调 render_trip。
+    inputSchema:
+      type: object
+      properties:
+        <<: *stopInput
+        dayId:
+          type: string
+          minLength: 1
+          maxLength: 80
+        stopId:
+          type: string
+          minLength: 1
+          maxLength: 80
+      required: [dayId]
+      allOf:
+        - anyOf:
+            - required: [name]
+            - required: [summary]
+            - required: [name, summary]
+        - anyOf:
+            - required: [stopId]
+            - required: [name, summary]
+      additionalProperties: false
+    outputSchema: *mutationOutput
+    handler: {type: script, path: scripts/upsert_stop.py}
+    _meta:
+      ui: {visibility: [model]}
+
+  - name: apply_verified_web_facts
+    title: 补充官方网页事实
+    description: >
+      仅当 render_trip 提示 API 缺少 introduction、ticketPrice 或 businessHours 时使用。
+      必须先 web_search，并提交官方来源、抓取时间与证据；评分、等级、坐标和路线禁止补写。
+    inputSchema:
+      type: object
+      properties:
+        dayId: {type: string, minLength: 1, maxLength: 80}
+        stopId: {type: string, minLength: 1, maxLength: 80}
+        facts:
+          type: object
+          minProperties: 1
+          properties:
+            introduction: {type: string, minLength: 1, maxLength: 2000}
+            ticketPrice: {type: string, minLength: 1, maxLength: 300}
+            businessHours: {type: string, minLength: 1, maxLength: 300}
+          additionalProperties: false
+        sourceUrl:
+          type: string
+          pattern: "^https://"
+          maxLength: 2048
+        sourceType:
+          type: string
+          enum: [official_site, government, official_ticket, official_account]
+        retrievedAt: {type: string, minLength: 1, maxLength: 64}
+        evidence: {type: string, minLength: 8, maxLength: 2000}
+      required: [dayId, stopId, facts, sourceUrl, sourceType, retrievedAt, evidence]
+      additionalProperties: false
+    outputSchema: *mutationOutput
+    handler: {type: script, path: scripts/apply_verified_web_facts.py}
+    _meta:
+      ui: {visibility: [model]}
+
+  - name: delete_stop
+    title: 删除景点
+    description: 删除某一天的指定景点；先确认并提交当前 tripId 与景点名称快照，误操作可立即撤销一次。
+    inputSchema:
+      type: object
+      properties:
+        dayId: {type: string, minLength: 1, maxLength: 80}
+        stopId: {type: string, minLength: 1, maxLength: 80}
+        expectedTripId: {type: string, minLength: 1, maxLength: 80}
+        expectedStopName: {type: string, minLength: 1, maxLength: 80}
+      required: [dayId, stopId, expectedTripId, expectedStopName]
+      additionalProperties: false
+    outputSchema: *mutationOutput
+    handler: {type: script, path: scripts/delete_stop.py}
+    _meta:
+      ui: {visibility: [model]}
+
+  - name: delete_day
+    title: 删除某一天
+    description: 删除该天及其全部景点；先确认并提交当前 tripId 与完整 stopIds 快照，误操作可立即撤销一次。
+    inputSchema:
+      type: object
+      properties:
+        dayId: {type: string, minLength: 1, maxLength: 80}
+        expectedTripId: {type: string, minLength: 1, maxLength: 80}
+        expectedStopIds:
+          type: array
+          minItems: 1
+          maxItems: 12
+          items: {type: string, minLength: 1, maxLength: 80}
+      required: [dayId, expectedTripId, expectedStopIds]
+      additionalProperties: false
+    outputSchema: *mutationOutput
+    handler: {type: script, path: scripts/delete_day.py}
+    _meta:
+      ui: {visibility: [model]}
+
+  - name: render_trip
+    title: 渲染攻略卡片
+    description: >
+      唯一能出卡片的收尾动作：补齐景点详情与真实路线，并显示完整卡片。
+      任何写入之后都必须调用它，否则用户看到的卡片只有景点名和文案。
+      字段缺失时在 issues 中返回可执行诊断，按其 action 处理。
+    inputSchema:
+      type: object
+      properties: {}
+      additionalProperties: false
+    outputSchema: &cardOutput
+      oneOf:
+        - type: object
+          required: [operation, phase, title, tabs, days, hasTrip, tripId, stateScope, protocolVersion, updateMode, contentHash, eventId, issues]
+          properties:
+            operation: {type: string}
+            phase: {type: string, enum: [ready, partial, empty]}
+            title: {type: string}
+            tabs: {type: array}
+            days: {type: object}
+            hasTrip: {type: boolean}
+            tripId: {type: string}
+            stateScope: {type: string}
+            protocolVersion: {type: string}
+            updateMode: {type: string, enum: [snapshot, tombstone]}
+            contentHash: {type: string}
+            eventId: {type: string}
+            rendered: {const: true}
+            nextAction: {const: none}
+            warnings:
+              type: array
+              items: {type: string}
+            issues:
+              type: array
+              items:
+                type: object
+                properties:
+                  code: {type: string}
+                  severity: {type: string}
+                  provider: {type: string}
+                  retryable: {type: boolean}
+                  action: {type: string}
+                  message: {type: string}
+                required: [code, severity, retryable, action, message]
+                additionalProperties: true
+          additionalProperties: true
+        - type: object
+          required: [operation, phase, code, message]
+          properties:
+            operation: {type: string}
+            phase: {const: error}
+            code: {type: string}
+            message: {type: string}
+            retryable: {type: boolean}
+          additionalProperties: true
+    handler: {type: python, path: scripts/render_trip.py}
+    _meta:
+      ui:
+        resourceUri: ui://travel_plan/main
+        visibility: [model]
+
+  - name: get_trip
+    title: 读取行程卡
+    description: 供卡片端读取完整渲染结果；模型编辑应使用更小的 get_plan_state。
+    inputSchema:
+      type: object
+      properties: {}
+      additionalProperties: false
+    outputSchema: *cardOutput
+    handler: {type: script, path: scripts/get_trip.py}
+    _meta:
+      ui: {visibility: [app]}
+
+  - name: get_plan_state
+    title: 读取轻量编辑状态
+    description: >
+      每轮编辑前调用，从 planDays 读取 tripId 与每天的景点 stopId/name/summary
+      作为编辑依据；planDays 不含图片、路线和详情，不要据此改写客观字段。
+    inputSchema:
+      type: object
+      properties: {}
+      additionalProperties: false
+    outputSchema:
+      type: object
+      required: [operation, phase, title, destination, planDays, hasTrip, tripId, stateScope, rendered, nextAction, protocolVersion, updateMode, contentHash, eventId, issues]
+      properties:
+        operation: {const: get_plan_state}
+        phase: {type: string, enum: [ready, partial, empty]}
+        title: {type: string}
+        hasTrip: {type: boolean}
+        tripId: {type: string}
+        stateScope: {type: string}
+        rendered: {type: boolean}
+        nextAction: {type: string, enum: [render_trip, none]}
+        protocolVersion: {type: string}
+        updateMode: {type: string, enum: [snapshot, tombstone]}
+        contentHash: {type: string}
+        eventId: {type: string}
+        issues: {type: array}
+        destination: {type: string}
+        planDays:
+          type: array
+          maxItems: 14
+          items:
+            type: object
+            required: [dayId, label, title, subtitle, city, stops, stopIds]
+            properties:
+              dayId: {type: string}
+              label: {type: string}
+              title: {type: string}
+              subtitle: {type: string}
+              city: {type: string}
+              stops:
+                type: array
+                maxItems: 12
+                items:
+                  type: object
+                  required: [stopId, name, summary]
+                  properties:
+                    stopId: {type: string}
+                    name: {type: string}
+                    summary: {type: string}
+                  additionalProperties: false
+              stopIds:
+                type: array
+                maxItems: 12
+                items: {type: string}
+            additionalProperties: false
+        summaryLimit: {type: integer, minimum: 0}
+        warnings: {type: array}
+      additionalProperties: false
+    handler: {type: script, path: scripts/get_plan_state.py}
+    _meta:
+      ui: {visibility: [model]}
+
+  - name: reset_trip
+    title: 清空行程
+    description: >
+      清空当前完整行程；必须在用户明确确认后调用，并提交 get_plan_state 的 tripId。
+      可紧接着用 undo_last_mutation 撤销一次。
+    inputSchema:
+      type: object
+      properties:
+        expectedTripId: {type: string, minLength: 1, maxLength: 80}
+      required: [expectedTripId]
+      additionalProperties: false
+    outputSchema: *mutationOutput
+    handler: {type: script, path: scripts/reset_trip.py}
+    _meta:
+      ui: {visibility: [model]}
+
+  - name: undo_last_mutation
+    title: 撤销最近一次规划修改
+    description: >
+      恢复最近一次有界规划快照；用于误删、误替换或误重置后的立即恢复。
+      必须提交当前或刚被重置旅行的 tripId。
+    inputSchema:
+      type: object
+      properties:
+        expectedTripId: {type: string, minLength: 1, maxLength: 80}
+      required: [expectedTripId]
+      additionalProperties: false
+    outputSchema: *mutationOutput
+    handler: {type: script, path: scripts/undo_last_mutation.py}
+    _meta:
+      ui: {visibility: [model]}

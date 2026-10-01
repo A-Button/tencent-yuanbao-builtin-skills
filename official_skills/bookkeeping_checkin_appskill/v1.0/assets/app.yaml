@@ -1,0 +1,47 @@
+id: bookkeeping_checkin_appskill
+name: 记账打卡台账
+version: v1.0
+description: 群聊记账的流水录入 App，识别记账意图后在群聊内嵌可编辑「记账录入卡片」，用户在卡片上点确认后才落库。
+
+# 卡片走 A2UI：骨架 DSL 由 scripts/_run.py 原样写入 _meta.ui.dsl
+# （surfaceId 固定 runGroupCheckIn_msg_book_2001，不跟 card_id）。
+# 数据在 structuredContent.card_data 里下发一份。组件 / path / catalogId
+# 与跑团同一套（RunGroupCheckIn / /runGroup）。所以这里没有 path。
+resources:
+  - uri: ui://bookkeeping_checkin_appskill/card
+    name: 记账录入卡片
+    description: 嵌入消息流的可编辑记账录入卡片，用户核对/补充字段后点确认才落库
+    mimeType: text/html;profile=mcp-app
+    _meta:
+      ui:
+        permissions: {}
+
+tools:
+  - name: ledger_api
+    title: 记账录入 API
+    description: >
+      记账业务入口，唯一链路是记账卡片流：draft_txn（出可编辑记账草稿卡片，不落库）→
+      用户在卡片上点确认 → commit_txn（落库一条流水）；点取消走 cancel_txn（不落库）。
+      draft 挂「记账录入」卡片资源，commit / cancel 是状态变更只回 app.data。
+      另有 find_txn（只读查询/统计，定位 txn_id）与 delete_txn（软删已落库流水）两个不出卡的 op。
+      归属人必须是已建档成员（建档前置，与跑团一致）：draft / commit 未建档都直接报
+      MEMBER_NOT_FOUND，不出卡、不落库。成员档案走 assets/tracker.py 的成员管理子命令；
+      该 CLI 里写流水的 add_txn / correct / delete_txn 是本 API 的内部实现，只供人工排查补录，
+      模型落库一律经卡片确认后的 commit_txn。
+    inputSchema:
+      type: object
+      properties:
+        operation:
+          type: string
+      required: [operation]
+      additionalProperties: true
+    outputSchema:
+      type: object
+      additionalProperties: true
+    handler:
+      type: script
+      path: scripts/ledger_api.py
+    _meta:
+      ui:
+        resourceUri: ui://bookkeeping_checkin_appskill/card
+        visibility: [model, app]

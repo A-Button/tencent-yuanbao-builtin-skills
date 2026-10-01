@@ -1,0 +1,454 @@
+id: stock-watch
+name: 智能盯盘
+version: v1.0
+description: 盯盘提醒卡：把一只股票的当前价格、涨跌幅、数据时刻和本次盯盘事件渲染成对话卡。由 stock-watch 驱动在主对话上屏，不在 Now 动态里渲染。只负责展示，不取数、不判定。
+
+resources:
+  # 没有 H5 全屏页：「查看详情」openUrl 到自选股小程序个股页，「帮我分析」回传对话。
+  # 不要用 open_workspace。mimeType 是宿主分派渲染引擎的唯一依据，写成 H5
+  # 会被灌进 iframe 后整张变空白。
+  - uri: ai_apps.skills.stock_watch_main_res
+    name: 智能盯盘
+    description: 单只标的的盯盘卡：事件标题、数据时刻、名称与代码、现价与涨跌幅、两个后续动作。
+    path: assets/ui/card.json
+    mimeType: application/a2ui+json
+  # 咨询建议是多标的的，单标的那套大数字排不下，所以是另一份组件树。
+  - uri: ai_apps.skills.stock_watch_advice_res
+    name: 个股操作建议
+    description: 多只标的的操作建议：白底大卡，每只股票一块灰底（时刻 / 名称 / 代码·交易所 / 现价涨跌）+「查看详情 / 帮我分析」。
+    path: assets/ui/advice.card.json
+    mimeType: application/a2ui+json
+  # 资讯是标题 + 彩色标签 + 出处，跟行情没有一个字段是共用的。
+  - uri: ai_apps.skills.stock_watch_news6_res
+    name: 资讯汇总
+    description: 公告 / 研报 / 事件 / 新闻的汇总列表：每条一个彩色标签与一句话解读。
+    path: assets/ui/news.card.json
+    mimeType: application/a2ui+json
+
+# 一个业务事件一个 tool。不合成 show_card + scene 参数：那样 inputSchema 只能取
+# 四个场景字段的并集，required 退化成只能要求 scene 自己，「异动卡传了 alert_price」
+# 这种也拦不住（CLI 不实现 if/then、oneOf）。拆开之后 alert_price 只出现在到价两个
+# tool 里，CLI 才拦得住。
+tools:
+  # 异动判定取数：给 Trigger 的 judge 周期调用，不挂 UI、不上屏。
+  # judge 写 tool_name: check_anomaly，平台按名字分发；写成 bash 跑 westock 则要赌
+  # Judge 那套精简环境里装了那个二进制，没装就是每小时一次取数失败。
+  - name: check_anomaly
+    title: 异动 / 到价条件取数
+    description: >
+      取一次现价，判定是否构成异动（量比 + 当日涨跌幅）或是否到价（mode: alert），
+      都须在连续竞价时段内。无状态，阈值由入参带进来，回包 triggered 供 judge 直接判定；
+      不上屏。命中后的展示另用 show_anomaly / show_alert_hit。
+    inputSchema:
+      type: object
+      properties:
+        symbol:
+          type: string
+          minLength: 3
+          maxLength: 16
+          description: 带市场前缀的代码，如 sh601020 / hk00700 / usAAPL。
+        volume_ratio_min:
+          type: number
+          description: 量比阈值，默认 2。行情源不返回量比时自动降级为只看涨跌幅。
+        change_pct_min:
+          type: number
+          description: 当日涨跌幅绝对值阈值（%），默认 5。涨跌都算。
+        mode:
+          type: string
+          enum: [anomaly, alert]
+          description: >
+            anomaly 只判异动；alert 只判到价，须同时给 alert_price / alert_direction。
+            异动和到价各建一条规则——异动当天停用次日恢复、到价命中即结束，不能共用一个开关。
+            不传时兼容合并时期建的旧规则：异动照判，给了 alert_price 再加判到价。
+        alert_price:
+          type: number
+          description: >
+            到价线，用在 mode: alert 的单独到价规则里。与 alert_direction 必须成对出现。
+        alert_direction:
+          type: string
+          enum: [above, below]
+          description: above 涨破、below 跌破。给了 alert_price 就必填。
+      required: [symbol]
+      additionalProperties: false
+    handler:
+      type: script
+      path: scripts/check_anomaly.py
+    _meta:
+      ui:
+        visibility: [model]
+
+  - name: show_alert_set
+    title: 到价提醒已设置
+    description: 用户刚设好到价/止损提醒时上屏。标题写明为哪只票设了什么价位的提醒。
+    inputSchema:
+      type: object
+      properties:
+        code:
+          type: string
+          minLength: 3
+          maxLength: 16
+          description: 带市场前缀的代码，如 sh600519 / hk00700 / usAAPL。禁止裸六位数字。
+        name:
+          type: string
+          minLength: 1
+          maxLength: 40
+          description: 标的名称
+        price:
+          type: number
+          description: 现价，照取数返回值写，不要自己换算
+        change:
+          type: number
+          description: 涨跌额，与 price 同币种
+        change_pct:
+          type: number
+          description: 涨跌幅（百分数，如 0.93 表示 +0.93%）
+        currency:
+          type: string
+          maxLength: 8
+          description: 按市场标注，港股港元、美股美元。禁止给港美股写人民币符号。
+        as_of:
+          type: string
+          minLength: 1
+          maxLength: 40
+          description: 行情数据时刻，照取数返回的时间写。禁止填当前系统时间。
+        as_of_kind:
+          type: string
+          enum: [realtime, minute, close]
+          description: as_of 的粒度。realtime=行情源自带时刻；minute=分时最后一个点；close=只到交易日，卡上会标「收盘」。
+        alert_direction:
+          type: string
+          enum: [above, below]
+          description: above=涨到提醒，below=跌破提醒
+        alert_price:
+          type: number
+          exclusiveMinimum: 0
+          description: 提醒阈值
+        note:
+          type: string
+          maxLength: 120
+          description: 覆盖卡片提示行。不传时本包按入参算一句（到价算「距触发还有多少」，异动拼量比与归因）。只写有数据依据的内容。
+      required: [code, name, price, as_of, as_of_kind, alert_direction, alert_price]
+      additionalProperties: false
+    outputSchema:
+      type: object
+      additionalProperties: true
+    handler:
+      type: script
+      path: scripts/show_alert_set.py
+    _meta:
+      ui:
+        resourceUri: ai_apps.skills.stock_watch_main_res
+        visibility: [model]
+
+  - name: show_alert_hit
+    title: 到价提醒已触发
+    description: Judge 命中到价条件、且复查后条件仍成立时上屏。不要用它显示尚未触发的提醒。
+    inputSchema:
+      type: object
+      properties:
+        code:
+          type: string
+          minLength: 3
+          maxLength: 16
+        name:
+          type: string
+          minLength: 1
+          maxLength: 40
+        price:
+          type: number
+        change:
+          type: number
+        change_pct:
+          type: number
+        currency:
+          type: string
+          maxLength: 8
+        as_of:
+          type: string
+          minLength: 1
+          maxLength: 40
+        as_of_kind:
+          type: string
+          enum: [realtime, minute, close]
+        alert_direction:
+          type: string
+          enum: [above, below]
+        alert_price:
+          type: number
+          exclusiveMinimum: 0
+        note:
+          type: string
+          maxLength: 120
+          description: 覆盖卡片提示行。不传时本包按入参算一句（到价算「距触发还有多少」，异动拼量比与归因）。只写有数据依据的内容。
+      required: [code, name, price, as_of, as_of_kind, alert_direction, alert_price]
+      additionalProperties: false
+    outputSchema:
+      type: object
+      additionalProperties: true
+    handler:
+      type: script
+      path: scripts/show_alert_hit.py
+    _meta:
+      ui:
+        resourceUri: ai_apps.skills.stock_watch_main_res
+        visibility: [model]
+
+  - name: show_anomaly
+    title: 异动上屏
+    description: 异动 Judge 命中后上屏。归因质量必须如实写进 grade，扶摇未接入前写不出 verified。
+    inputSchema:
+      type: object
+      properties:
+        code:
+          type: string
+          minLength: 3
+          maxLength: 16
+        name:
+          type: string
+          minLength: 1
+          maxLength: 40
+        price:
+          type: number
+        change:
+          type: number
+        change_pct:
+          type: number
+        currency:
+          type: string
+          maxLength: 8
+        as_of:
+          type: string
+          minLength: 1
+          maxLength: 40
+        as_of_kind:
+          type: string
+          enum: [realtime, minute, close]
+        volume_ratio:
+          type: number
+          minimum: 0
+          description: 量比。原生工具不返回量比时整个字段省略，不要填 0 冒充。
+        grade:
+          type: string
+          enum: [verified, inferred, unknown]
+          description: verified=拿到成品异动原因；inferred=用新闻/事件/资金流自己拼的；unknown=取数成功但确实没有可归因内容
+        reason:
+          type: string
+          maxLength: 120
+          description: 一句话异动原因。没有明确消息面就省略本字段，卡片会显示「暂无明确消息面」。
+        note:
+          type: string
+          maxLength: 120
+          description: 覆盖卡片提示行。不传时本包按入参算一句（到价算「距触发还有多少」，异动拼量比与归因）。只写有数据依据的内容。
+      required: [code, name, price, as_of, as_of_kind, grade]
+      additionalProperties: false
+    outputSchema:
+      type: object
+      additionalProperties: true
+    handler:
+      type: script
+      path: scripts/show_anomaly.py
+    _meta:
+      ui:
+        resourceUri: ai_apps.skills.stock_watch_main_res
+        visibility: [model]
+
+  - name: show_quote
+    title: 行情快照上屏
+    description: 问盘面、问行情时默认调用。一轮主对话只出这一张，不要再出资讯卡，也不要一只一张连出多张。不要用它假装触发了提醒或异动。
+    inputSchema:
+      type: object
+      properties:
+        code:
+          type: string
+          minLength: 3
+          maxLength: 16
+        name:
+          type: string
+          minLength: 1
+          maxLength: 40
+        price:
+          type: number
+        change:
+          type: number
+        change_pct:
+          type: number
+        currency:
+          type: string
+          maxLength: 8
+        as_of:
+          type: string
+          minLength: 1
+          maxLength: 40
+        as_of_kind:
+          type: string
+          enum: [realtime, minute, close]
+        note:
+          type: string
+          maxLength: 120
+          description: 覆盖卡片提示行。不传时本包按入参算一句（到价算「距触发还有多少」，异动拼量比与归因）。只写有数据依据的内容。
+      required: [code, name, price, as_of, as_of_kind]
+      additionalProperties: false
+    outputSchema:
+      type: object
+      additionalProperties: true
+    handler:
+      type: script
+      path: scripts/show_quote.py
+    _meta:
+      ui:
+        resourceUri: ai_apps.skills.stock_watch_main_res
+        visibility: [model]
+
+  - name: show_advice
+    title: 个股操作建议
+    description: 禁止调用。个股操作建议不出 xcard，建议和理由写在对话正文；行情用 show_quote。
+    inputSchema:
+      type: object
+      properties:
+        basis:
+          type: string
+          minLength: 1
+          maxLength: 40
+          description: 结论依据，显示在标题上方，如「基于实时行情 + 基本面」。据实写，没查基本面就别写基本面。
+        title:
+          type: string
+          maxLength: 40
+          description: 卡片标题，默认「个股操作建议」
+        footer:
+          type: string
+          maxLength: 80
+          description: 底部那一句引导语，可不填
+        items:
+          type: array
+          minItems: 1
+          maxItems: 6
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                minLength: 3
+                maxLength: 16
+                description: 带市场前缀的代码，如 sh600519 / hk00700 / usAAPL
+              name:
+                type: string
+                minLength: 1
+                maxLength: 40
+              price:
+                type: number
+              change:
+                type: number
+                description: 涨跌额，与 price 同币种。和 change_pct 一起画在现价下面。
+              change_pct:
+                type: number
+                description: 涨跌幅（百分数）。缺了这一行就不染色，不猜方向。
+              as_of:
+                type: string
+                minLength: 1
+                maxLength: 40
+                description: 这一行行情的数据时刻。每只票自己的，照取数返回值写，禁止墙上时钟。
+              as_of_kind:
+                type: string
+                enum: [realtime, minute, close]
+                description: as_of 的粒度。close 会在卡上补「收盘」。
+              advice:
+                type: string
+                enum: [持有, 加仓, 观望, 减仓, 回避]
+                description: 操作标签，必须来自本轮技术面 + 资金面 + 消息面的综合判断
+              reason:
+                type: string
+                maxLength: 30
+                description: 最多 30 个字符，用一句话说清这个标签怎么来的。不要把整段分析贴进来。
+            required: [code, name, price, as_of, as_of_kind, advice]
+            additionalProperties: false
+      required: [basis, items]
+      additionalProperties: false
+    outputSchema:
+      type: object
+      additionalProperties: true
+    handler:
+      type: script
+      path: scripts/show_advice.py
+    _meta:
+      ui:
+        resourceUri: ai_apps.skills.stock_watch_advice_res
+        visibility: [model]
+
+  - name: show_news
+    title: 资讯汇总
+    description: 问资讯、公告、研报时默认调用，几只票合成一张。一轮主对话只出这一张，不要再出盘面卡。排序与 stance 判断由你做，本包只负责画。
+    inputSchema:
+      type: object
+      properties:
+        source_line:
+          type: string
+          minLength: 1
+          maxLength: 60
+          description: 顶部那行出处，如「来自「资讯监控」· 盯盘 2 只 · 每晚 20:00 汇总推送」
+        title:
+          type: string
+          maxLength: 40
+          description: 卡片标题，默认「今日 N 条重点资讯」
+        summary:
+          type: string
+          maxLength: 80
+          description: 标题下那句说明，可不填
+        items:
+          type: array
+          minItems: 1
+          maxItems: 6
+          items:
+            type: object
+            properties:
+              kind:
+                type: string
+                enum: [notice, report, event, news]
+                description: notice=公告，report=研报，event=事件，news=一般新闻
+              title:
+                type: string
+                minLength: 1
+                maxLength: 60
+                description: 只写事件本身，归属标的用 name 字段，本包会拼成「名称 · 标题」
+              code:
+                type: string
+                minLength: 3
+                maxLength: 16
+                description: 这一条归属哪只票，带市场前缀。决定本条利好/利空的配色口径；行业新闻可不填。
+              name:
+                type: string
+                maxLength: 40
+                description: 归属标的名称，会拼在标题前。不填就只显示标题。
+              stance:
+                type: string
+                enum: [利好, 利空, 中立, 中性]
+                description: 情绪标签，和类型标签同时画。判断依据必须来自内容本身。拿不准写中立；省略或写中性时，卡上情绪标签也画「中立」，类型标签照常显示。
+              published_at:
+                type: string
+                maxLength: 24
+                description: 如「2 小时前」「今早」「昨晚」
+              origin:
+                type: string
+                maxLength: 24
+                description: 出处，如 巨潮资讯 / 财联社
+              takeaway:
+                type: string
+                maxLength: 60
+                description: 一句话解读，说对股价的潜在影响
+              url:
+                type: string
+                maxLength: 500
+                description: 这条资讯的 http(s) 原文链接。有它，点标题才会 openUrl 跳过去；不传标题不可点。必须是取数返回的链接，不要用 id 拼。
+            required: [kind, title]
+            additionalProperties: false
+      required: [source_line, items]
+      additionalProperties: false
+    outputSchema:
+      type: object
+      additionalProperties: true
+    handler:
+      type: script
+      path: scripts/show_news.py
+    _meta:
+      ui:
+        resourceUri: ai_apps.skills.stock_watch_news6_res
+        visibility: [model]

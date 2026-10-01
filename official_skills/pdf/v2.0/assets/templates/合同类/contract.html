@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>合同模板</title>
+<style>
+  /* ============ 页面与打印设置 ============ */
+  @page {
+    size: A4;
+    margin: 22mm 20mm 20mm 20mm;
+    @bottom-center {
+      content: "第 " counter(page) " 页 / 共 " counter(pages) " 页";
+      font-family: "SimSun", "Songti SC", serif;
+      font-size: 9pt;
+      color: #555;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body {
+    font-family: "SimSun", "Songti SC", "Noto Serif CJK SC", serif;
+    font-size: 10.5pt;
+    line-height: 1.85;
+    color: #1a1a1a;
+    text-align: justify;
+  }
+
+  /* 内容自然流动，不再强制整页分页，避免出现大片空白 */
+  .page {
+    position: relative;
+  }
+  /* 仅封面后断页，让正文从新页干净开始；封面行距收紧以容纳整页 */
+  .cover { page-break-after: always; line-height: 1.6; }
+  .cover .party-line { line-height: 1.7; }
+  /* 签署页单独成页，避免签章被拆散 */
+  .sign-page { page-break-before: always; }
+
+  /* 表格、签署区、缔约方块等整体不跨页 */
+  table.info-grid,
+  table.tbl,
+  table.sign,
+  .party-block,
+  .sign-wrap { page-break-inside: avoid; }
+
+  /* 部分旗标与第X条标题后不立即断页 */
+  .section-flag { page-break-after: avoid; page-break-inside: avoid; }
+  h2.art { page-break-after: avoid; }
+
+  /* ============ 标题层级 ============ */
+  .hei { font-family: "SimHei", "Heiti SC", "Noto Sans CJK SC", sans-serif; }
+
+  .doc-meta {
+    text-align: right;
+    font-size: 9.5pt;
+    color: #444;
+    border-bottom: 1px solid #888;
+    padding-bottom: 4px;
+    margin-bottom: 26px;
+    letter-spacing: 0.3px;
+  }
+  .doc-meta span { display: inline-block; margin-left: 22px; }
+
+  h1.title {
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-size: 21pt;
+    text-align: center;
+    letter-spacing: 8px;
+    margin: 18px 0 6px 0;
+    font-weight: bold;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 12pt;
+    color: #333;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+  .title-rule {
+    width: 70px; height: 3px; background: #1a1a1a;
+    margin: 8px auto 18px auto;
+  }
+
+  /* 合同基本信息条 */
+  .info-grid {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto 14px auto;
+    font-size: 10pt;
+  }
+  .info-grid td {
+    padding: 5px 10px;
+    border: 1px solid #999;
+    vertical-align: middle;
+  }
+  .info-grid td.lbl {
+    background: #f0f0f0;
+    font-family: "SimHei", sans-serif;
+    width: 22%;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  /* 缔约方块 */
+  .party-block { margin: 4px 0 12px 0; }
+  .party-line { margin-bottom: 3px; }
+  .party-tag {
+    font-family: "SimHei", sans-serif;
+    font-weight: bold;
+  }
+  .fill { display: inline-block; border-bottom: 1px solid #555; min-width: 230px; text-align: center; color:#777; }
+  .fill.lg { min-width: 320px; }
+  .fill.sm { min-width: 120px; }
+
+  .lead {
+    margin: 14px 0 6px 0;
+    text-indent: 2em;
+  }
+
+  /* 鉴于条款 */
+  .recital { text-indent: 2em; margin-bottom: 4px; }
+
+  /* ============ 条款编号体系 ============ */
+  /* 一级：第X条 */
+  h2.art {
+    font-family: "SimHei", "Heiti SC", sans-serif;
+    font-size: 12.5pt;
+    margin: 20px 0 8px 0;
+    padding-left: 10px;
+    border-left: 4px solid #1a1a1a;
+    line-height: 1.4;
+    page-break-after: avoid;
+  }
+  /* 二级：X.1 */
+  .cl {
+    margin: 5px 0 5px 0;
+    padding-left: 2.4em;
+    text-indent: -2.4em;
+  }
+  .cl > .num { font-family:"SimHei",sans-serif; }
+  /* 三级：X.1.1 */
+  .scl {
+    margin: 3px 0 3px 1.6em;
+    padding-left: 3.0em;
+    text-indent: -3.0em;
+  }
+  /* 四级：(1) */
+  .item {
+    margin: 2px 0 2px 3.6em;
+    padding-left: 2.2em;
+    text-indent: -2.2em;
+  }
+  /* 五级：① */
+  .sub {
+    margin: 2px 0 2px 5.4em;
+    padding-left: 1.6em;
+    text-indent: -1.6em;
+    color:#222;
+  }
+
+  .note { font-size: 9pt; color: #777; }
+
+  /* 表格（条款内） */
+  table.tbl {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0 10px 0;
+    font-size: 9.8pt;
+  }
+  table.tbl th, table.tbl td {
+    border: 1px solid #999;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+  table.tbl th {
+    background: #ebebeb;
+    font-family: "SimHei", sans-serif;
+    text-align: center;
+  }
+  table.tbl td.c { text-align: center; }
+
+  /* 签署区 */
+  .sign-wrap { margin-top: 30px; }
+  .sign-title {
+    font-family:"SimHei",sans-serif; font-size: 11pt;
+    margin-bottom: 14px;
+  }
+  table.sign {
+    width: 100%; border-collapse: collapse; margin-top: 6px;
+  }
+  table.sign td {
+    width: 50%;
+    border: 1px solid #999;
+    padding: 14px 14px 26px 14px;
+    vertical-align: top;
+    font-size: 10pt;
+    line-height: 2.2;
+  }
+  table.sign .sh {
+    font-family:"SimHei",sans-serif; font-weight:bold;
+    border-bottom: 1px solid #ccc; padding-bottom:6px; margin-bottom:10px;
+  }
+  .seal-hint { color:#bbb; font-size: 9pt; }
+
+  .section-flag {
+    text-align:center; font-family:"SimHei",sans-serif;
+    font-size: 13pt; letter-spacing:4px;
+    margin: 4px 0 16px 0; color:#1a1a1a;
+    border-top:2px solid #1a1a1a; border-bottom:2px solid #1a1a1a;
+    padding: 8px 0;
+  }
+
+  .annex-h { font-family:"SimHei",sans-serif; font-size:12pt; margin:16px 0 8px; }
+  .blank-fill { display:inline-block; border-bottom:1px solid #888; min-width:60px; }
+</style>
+</head>
+<body>
+
+<!-- ============ 封面 / 首页 ============ -->
+<div class="page cover">
+  <div class="doc-meta">
+    <span>合同编号：HT-［　　　］-［　　　　］号</span>
+    <span>密级：商业秘密</span>
+  </div>
+
+  <h1 class="title">合 同 书</h1>
+  <div class="subtitle">（技术开发与服务合同 · 通用模板）</div>
+  <div class="title-rule"></div>
+
+  <table class="info-grid">
+    <tr><td class="lbl">合同名称</td><td>____________________________________________</td></tr>
+    <tr><td class="lbl">合同编号</td><td>HT-［部门］-［年份］-［流水号］</td></tr>
+    <tr><td class="lbl">甲　　方</td><td>____________________________________________</td></tr>
+    <tr><td class="lbl">乙　　方</td><td>____________________________________________</td></tr>
+    <tr><td class="lbl">签订地点</td><td>______省______市______区（县）</td></tr>
+    <tr><td class="lbl">签订日期</td><td>________年______月______日</td></tr>
+    <tr><td class="lbl">合同金额</td><td>人民币（大写）____________________元（￥__________）</td></tr>
+    <tr><td class="lbl">有效期限</td><td>自________年__月__日起 至________年__月__日止</td></tr>
+  </table>
+
+  <div class="lead" style="margin-top:16px;">
+    本合同由下列双方在平等、自愿、公平、诚实信用的原则基础上，经友好协商一致后订立，
+    双方应共同遵守本合同各项约定。
+  </div>
+
+  <div style="margin-top:14px;">
+    <div class="party-block">
+      <div class="party-line"><span class="party-tag">甲方（委托方）：</span><span class="fill lg"></span></div>
+      <div class="party-line">统一社会信用代码 / 身份证号：<span class="fill"></span></div>
+      <div class="party-line">法定代表人 / 负责人：<span class="fill sm"></span>　职务：<span class="fill sm"></span></div>
+      <div class="party-line">住所地：<span class="fill lg"></span></div>
+      <div class="party-line">联系人：<span class="fill sm"></span>　联系电话：<span class="fill sm"></span></div>
+    </div>
+    <div class="party-block">
+      <div class="party-line"><span class="party-tag">乙方（受托方）：</span><span class="fill lg"></span></div>
+      <div class="party-line">统一社会信用代码 / 身份证号：<span class="fill"></span></div>
+      <div class="party-line">法定代表人 / 负责人：<span class="fill sm"></span>　职务：<span class="fill sm"></span></div>
+      <div class="party-line">住所地：<span class="fill lg"></span></div>
+      <div class="party-line">联系人：<span class="fill sm"></span>　联系电话：<span class="fill sm"></span></div>
+    </div>
+    <div class="note" style="text-indent:2em;margin-top:6px;">
+      注：以上甲、乙双方在本合同中合称"双方"，单称"一方"。本合同对双方的合法继受人、受让人及承继人具有同等约束力。
+    </div>
+  </div>
+</div>
+
+<!-- ============ 正文 第一部分 ============ -->
+<div class="page">
+  <div class="section-flag">第一部分　总　则</div>
+
+  <p class="recital" style="font-family:'SimHei',sans-serif;margin-bottom:8px;">鉴于：</p>
+  <p class="recital">（A）甲方因经营/业务需要，拟就本合同项下事项委托乙方提供相应的开发、服务或交付成果；</p>
+  <p class="recital">（B）乙方具备完成本合同项下工作所需的资质、技术、人员、设备及经验，并愿意按照本合同约定向甲方提供前述服务；</p>
+  <p class="recital">（C）双方确认订立本合同的意思表示真实，且不存在欺诈、胁迫或重大误解等情形。</p>
+  <p class="recital" style="margin-top:6px;">据此，双方依据《中华人民共和国民法典》及相关法律、行政法规的规定，达成如下条款，以资共同信守：</p>
+
+  <h2 class="art">第一条　定义与解释</h2>
+  <div class="cl"><span class="num">1.1</span>　除本合同上下文另有所指外，下列术语具有如下含义：</div>
+  <div class="scl">1.1.1　"本合同"：指本合同正文、附件及双方此后签署的补充协议、变更协议的总称；</div>
+  <div class="scl">1.1.2　"工作成果"：指乙方依据本合同应向甲方交付的全部文档、软件、数据、报告及其他可交付物；</div>
+  <div class="scl">1.1.3　"验收标准"：指本合同附件一所列、用以判定工作成果是否合格的技术与质量指标；</div>
+  <div class="scl">1.1.4　"保密信息"：指一方以书面、口头或其他形式向另一方披露的、标注或依其性质应被视为保密的信息。</div>
+  <div class="cl"><span class="num">1.2</span>　本合同的解释规则：</div>
+  <div class="scl">1.2.1　标题仅为方便阅读而设，不影响条款的解释；</div>
+  <div class="scl">1.2.2　凡提及"日"，除特别说明为"工作日"外，均指自然日；提及"书面"，包括但不限于纸质文件、电子邮件及经双方确认的即时通讯记录。</div>
+
+  <h2 class="art">第二条　合同标的与工作范围</h2>
+  <div class="cl"><span class="num">2.1</span>　合同标的：乙方根据甲方需求，完成下列工作并交付相应成果。</div>
+  <div class="cl"><span class="num">2.2</span>　工作范围（具体明细见附件一《工作说明书》）：</div>
+  <div class="scl">2.2.1　需求调研与方案设计；</div>
+  <div class="scl">2.2.2　开发 / 实施 / 服务的具体执行；</div>
+  <div class="scl">2.2.3　测试、试运行及交付部署；</div>
+  <div class="scl">2.2.4　质保期内的维护与技术支持。</div>
+  <div class="cl"><span class="num">2.3</span>　工作量及交付清单一览：</div>
+  <table class="tbl">
+    <tr><th style="width:8%">序号</th><th>交付物名称</th><th style="width:18%">数量/规格</th><th style="width:22%">交付时间</th></tr>
+    <tr><td class="c">1</td><td>　</td><td class="c">　</td><td class="c">　</td></tr>
+    <tr><td class="c">2</td><td>　</td><td class="c">　</td><td class="c">　</td></tr>
+    <tr><td class="c">3</td><td>　</td><td class="c">　</td><td class="c">　</td></tr>
+  </table>
+
+  <h2 class="art">第三条　履行期限、地点与方式</h2>
+  <div class="cl"><span class="num">3.1</span>　履行期限：自________年__月__日起至________年__月__日止；具体里程碑节点见附件二。</div>
+  <div class="cl"><span class="num">3.2</span>　履行地点：____________________；交付方式为：□现场交付　□线上交付　□快递/物流。</div>
+  <div class="cl"><span class="num">3.3</span>　工期顺延：因下列情形导致工期延误的，经双方书面确认后相应顺延：</div>
+  <div class="item">（1）甲方未按约定提供必要的资料、场地或配合条件；</div>
+  <div class="item">（2）因不可抗力或情势变更致使无法按期履行；</div>
+  <div class="item">（3）双方协商一致变更工作范围。</div>
+</div>
+
+<!-- ============ 正文 第二部分 ============ -->
+<div class="page">
+  <div class="section-flag">第二部分　权利义务</div>
+
+  <h2 class="art">第四条　甲方的权利与义务</h2>
+  <div class="cl"><span class="num">4.1</span>　甲方的权利：</div>
+  <div class="scl">4.1.1　有权要求乙方按照本合同约定的标准、期限完成并交付工作成果；</div>
+  <div class="scl">4.1.2　有权对乙方的工作进度、质量进行监督、检查，并提出合理意见；</div>
+  <div class="scl">4.1.3　有权依约定对不符合验收标准的成果要求乙方限期整改或重作。</div>
+  <div class="cl"><span class="num">4.2</span>　甲方的义务：</div>
+  <div class="scl">4.2.1　按本合同约定及时、足额支付合同价款；</div>
+  <div class="scl">4.2.2　及时提供乙方履约所必需的资料、数据、场地及其他协作条件；</div>
+  <div class="scl">4.2.3　指定专人作为联系人，负责与乙方对接、确认及验收事宜：</div>
+  <div class="item">（1）应在收到乙方交付物之日起 ____ 个工作日内组织验收；</div>
+  <div class="item">（2）逾期未提出书面异议的，视为验收合格。</div>
+
+  <h2 class="art">第五条　乙方的权利与义务</h2>
+  <div class="cl"><span class="num">5.1</span>　乙方的权利：</div>
+  <div class="scl">5.1.1　有权按本合同约定的时间、方式收取合同价款；</div>
+  <div class="scl">5.1.2　有权要求甲方提供履约所需的协作与配合。</div>
+  <div class="cl"><span class="num">5.2</span>　乙方的义务：</div>
+  <div class="scl">5.2.1　按约定的标准、进度与期限完成全部工作并交付成果；</div>
+  <div class="scl">5.2.2　保证所交付成果不存在权利瑕疵，未侵犯任何第三方的合法权益；</div>
+  <div class="scl">5.2.3　对工作过程中知悉的甲方商业秘密及个人信息予以保密；</div>
+  <div class="scl">5.2.4　在质保期内提供约定的维护与技术支持服务：</div>
+  <div class="item">（1）一般问题应于接到通知后 ____ 小时内响应；</div>
+  <div class="item">（2）重大问题应于 ____ 小时内提供解决方案；</div>
+  <div class="sub">① 响应时间自甲方书面（含电子邮件）通知送达时起算；</div>
+  <div class="sub">② 因乙方原因导致的缺陷，维护不另行收费。</div>
+
+  <h2 class="art">第六条　合同价款与支付</h2>
+  <div class="cl"><span class="num">6.1</span>　合同总价：人民币（大写）______________________元整（￥__________），为含税价款，包含乙方履行本合同的全部费用。</div>
+  <div class="cl"><span class="num">6.2</span>　支付方式与节点：</div>
+  <table class="tbl">
+    <tr><th style="width:8%">期次</th><th>支付节点</th><th style="width:18%">比例</th><th style="width:24%">金额（元）</th></tr>
+    <tr><td class="c">首付款</td><td>合同签订后 __ 个工作日内</td><td class="c">__%</td><td class="c">　</td></tr>
+    <tr><td class="c">进度款</td><td>阶段成果验收合格后</td><td class="c">__%</td><td class="c">　</td></tr>
+    <tr><td class="c">尾　款</td><td>全部成果验收合格且质保金扣留后</td><td class="c">__%</td><td class="c">　</td></tr>
+  </table>
+  <div class="cl"><span class="num">6.3</span>　发票与税费：乙方应在收款前向甲方开具合法、有效的增值税____票；除法律另有规定外，各自税费由各自承担。</div>
+  <div class="cl"><span class="num">6.4</span>　收款账户：</div>
+  <div class="scl">户名：________________；开户行：________________；账号：________________。</div>
+</div>
+
+<!-- ============ 正文 第三部分 ============ -->
+<div class="page">
+  <div class="section-flag">第三部分　质量、知识产权与保密</div>
+
+  <h2 class="art">第七条　验收与质量保证</h2>
+  <div class="cl"><span class="num">7.1</span>　验收依据：以附件一所列验收标准及国家/行业相关标准为准。</div>
+  <div class="cl"><span class="num">7.2</span>　验收程序：</div>
+  <div class="scl">7.2.1　乙方完成后向甲方提交书面验收申请及全部交付物；</div>
+  <div class="scl">7.2.2　甲方在约定期限内组织验收并出具《验收报告》；</div>
+  <div class="scl">7.2.3　验收不合格的，乙方应在 ____ 日内无偿整改，整改后重新验收。</div>
+  <div class="cl"><span class="num">7.3</span>　质量保证期：自验收合格之日起 ____ 个月。质保期内因乙方原因产生的缺陷，乙方应无偿修复。</div>
+
+  <h2 class="art">第八条　知识产权</h2>
+  <div class="cl"><span class="num">8.1</span>　成果权属：除双方另有约定外，乙方依本合同专门开发完成的工作成果，其知识产权归 □甲方 □乙方 □双方共有 所有。</div>
+  <div class="cl"><span class="num">8.2</span>　背景知识产权：本合同签订前各方既有的知识产权仍归各自所有，不因本合同而发生转移。</div>
+  <div class="cl"><span class="num">8.3</span>　权利担保：乙方保证交付成果不侵犯任何第三方知识产权；若发生侵权主张，由乙方负责处理并赔偿甲方因此遭受的损失。</div>
+
+  <h2 class="art">第九条　保密条款</h2>
+  <div class="cl"><span class="num">9.1</span>　保密义务：双方对因履行本合同而获悉的对方保密信息负有保密义务，未经对方书面同意不得向第三方披露或用于本合同以外的目的。</div>
+  <div class="cl"><span class="num">9.2</span>　例外情形：下列信息不属于保密信息：</div>
+  <div class="item">（1）已经或将要进入公知领域而非因接收方违约所致的信息；</div>
+  <div class="item">（2）接收方在获悉前已合法持有的信息；</div>
+  <div class="item">（3）依法律规定或有权机关要求须披露的信息。</div>
+  <div class="cl"><span class="num">9.3</span>　保密期限：本条约定的保密义务在本合同终止后仍持续有效，期限为 ____ 年。</div>
+
+  <h2 class="art">第十条　个人信息与数据合规</h2>
+  <div class="cl"><span class="num">10.1</span>　双方应遵守《个人信息保护法》《数据安全法》等法律法规，在合同履行中收集、使用个人信息须具备合法基础。</div>
+  <div class="cl"><span class="num">10.2</span>　乙方处理甲方提供的数据，应仅限于本合同目的，并采取必要的技术和管理措施保障数据安全。</div>
+</div>
+
+<!-- ============ 正文 第四部分 ============ -->
+<div class="page">
+  <div class="section-flag">第四部分　违约、变更与争议</div>
+
+  <h2 class="art">第十一条　违约责任</h2>
+  <div class="cl"><span class="num">11.1</span>　迟延履行：</div>
+  <div class="scl">11.1.1　乙方逾期交付的，每逾期一日，按合同总价的 ____‰ 向甲方支付违约金；</div>
+  <div class="scl">11.1.2　甲方逾期付款的，每逾期一日，按应付未付款项的 ____‰ 向乙方支付违约金。</div>
+  <div class="cl"><span class="num">11.2</span>　质量违约：交付成果不符合约定且经催告仍未整改的，甲方有权解除合同并要求乙方赔偿损失。</div>
+  <div class="cl"><span class="num">11.3</span>　赔偿范围：违约方应赔偿守约方因此遭受的实际损失，包括为防止损失扩大及实现债权而支出的合理费用（含律师费、诉讼/仲裁费、保全费等）。</div>
+  <div class="cl"><span class="num">11.4</span>　违约金与损失：约定违约金低于实际损失的，守约方有权请求予以补足。</div>
+
+  <h2 class="art">第十二条　合同的变更、转让与解除</h2>
+  <div class="cl"><span class="num">12.1</span>　变更：本合同的任何变更须经双方协商一致并签署书面补充协议，补充协议与本合同具有同等法律效力。</div>
+  <div class="cl"><span class="num">12.2</span>　转让：未经对方书面同意，任何一方不得将本合同项下的权利义务全部或部分转让给第三方。</div>
+  <div class="cl"><span class="num">12.3</span>　解除情形：</div>
+  <div class="item">（1）双方协商一致；</div>
+  <div class="item">（2）因不可抗力致使合同目的不能实现；</div>
+  <div class="item">（3）一方根本违约，守约方有权单方解除并通知对方。</div>
+
+  <h2 class="art">第十三条　不可抗力</h2>
+  <div class="cl"><span class="num">13.1</span>　不可抗力指不能预见、不能避免且不能克服的客观情况（如自然灾害、政府行为、重大疫情等）。</div>
+  <div class="cl"><span class="num">13.2</span>　受影响一方应在不可抗力发生后 ____ 日内书面通知对方，并在合理期限内提供证明；据此免除或部分免除责任。</div>
+
+  <h2 class="art">第十四条　争议解决</h2>
+  <div class="cl"><span class="num">14.1</span>　本合同的订立、效力、解释、履行及争议解决均适用中华人民共和国法律。</div>
+  <div class="cl"><span class="num">14.2</span>　因本合同发生的争议，双方应首先友好协商解决；协商不成的，按下列第 ____ 种方式解决：</div>
+  <div class="item">（1）提交 ______________ 仲裁委员会，按其届时有效的仲裁规则进行仲裁，裁决为终局并对双方均有约束力；</div>
+  <div class="item">（2）向 ______________ 人民法院提起诉讼。</div>
+
+  <h2 class="art">第十五条　通知与送达</h2>
+  <div class="cl"><span class="num">15.1</span>　双方在本合同首部载明的地址、邮箱、电话为有效送达地址；一方变更的，应提前 ____ 日书面通知对方。</div>
+  <div class="cl"><span class="num">15.2</span>　以专人送达的，交付时视为送达；以邮寄送达的，发出后第 ____ 日视为送达；以电子邮件送达的，发送成功即视为送达。</div>
+
+  <h2 class="art">第十六条　其他约定</h2>
+  <div class="cl"><span class="num">16.1</span>　本合同未尽事宜，由双方另行协商，并以书面补充协议形式确定。</div>
+  <div class="cl"><span class="num">16.2</span>　本合同部分条款无效或被撤销，不影响其他条款的效力。</div>
+  <div class="cl"><span class="num">16.3</span>　本合同附件为合同不可分割的组成部分，与正文具有同等法律效力。</div>
+  <div class="cl"><span class="num">16.4</span>　本合同一式 ____ 份，甲乙双方各执 ____ 份，具有同等法律效力。</div>
+  <div class="cl"><span class="num">16.5</span>　本合同自双方法定代表人或授权代表签字（或盖章）并加盖公章之日起生效。</div>
+</div>
+
+<!-- ============ 签署页 ============ -->
+<div class="page sign-page">
+  <div class="section-flag">第五部分　签署与盖章</div>
+
+  <div class="sign-wrap">
+    <p class="lead" style="text-indent:2em;">本页为《合同书》之签署页，无正文。双方确认已充分阅读并理解本合同全部条款，自愿签署如下：</p>
+
+    <table class="sign">
+      <tr>
+        <td>
+          <div class="sh">甲方（盖章）：</div>
+          <div>法定代表人 / 授权代表（签字）：</div>
+          <div style="height:30px"></div>
+          <div>签署日期：________年____月____日</div>
+          <div class="seal-hint" style="margin-top:18px;text-align:center;">（此处加盖单位公章 / 合同专用章）</div>
+        </td>
+        <td>
+          <div class="sh">乙方（盖章）：</div>
+          <div>法定代表人 / 授权代表（签字）：</div>
+          <div style="height:30px"></div>
+          <div>签署日期：________年____月____日</div>
+          <div class="seal-hint" style="margin-top:18px;text-align:center;">（此处加盖单位公章 / 合同专用章）</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- 附件清单 -->
+  <div style="margin-top:34px;">
+    <div class="annex-h">附件清单</div>
+    <table class="tbl">
+      <tr><th style="width:10%">附件号</th><th>附件名称</th><th style="width:20%">页数</th></tr>
+      <tr><td class="c">附件一</td><td>工作说明书（含验收标准）</td><td class="c">　</td></tr>
+      <tr><td class="c">附件二</td><td>项目进度计划与里程碑表</td><td class="c">　</td></tr>
+      <tr><td class="c">附件三</td><td>报价明细 / 费用清单</td><td class="c">　</td></tr>
+      <tr><td class="c">附件四</td><td>保密协议</td><td class="c">　</td></tr>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>

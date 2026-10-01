@@ -1,0 +1,222 @@
+{
+  "search_clinic_solutions": {
+    "authentication": "none",
+    "request": {
+      "method": "tools/call",
+      "params": {
+        "name": "search_clinic_solutions",
+        "arguments": {
+          "content": "肉毒",
+          "city_name": "北京"
+        }
+      }
+    },
+    "response": {
+      "ok": true,
+      "request_id": "11111111111111111111111111111111",
+      "total": 1,
+      "solutions": [
+        {
+          "品项名称": "肉毒素除皱",
+          "适合人群": "有动态皱纹改善需求的人群",
+          "治疗说明": "示例内容"
+        }
+      ],
+      "message": null
+    }
+  },
+  "search_clinic_products": {
+    "authentication": "none",
+    "request": {
+      "method": "tools/call",
+      "params": {
+        "name": "search_clinic_products",
+        "arguments": {
+          "content": "肉毒",
+          "city_name": "北京"
+        }
+      }
+    },
+    "response": {
+      "ok": true,
+      "request_id": "22222222222222222222222222222222",
+      "total": 1,
+      "products": [
+        {
+          "商品ID": 10001,
+          "商品名称": "示例商品",
+          "价格": "999",
+          "适用门店": "示例门店"
+        }
+      ],
+      "message": null
+    }
+  },
+  "search_clinic_doctors": {
+    "authentication": "none",
+    "request": {
+      "method": "tools/call",
+      "params": {
+        "name": "search_clinic_doctors",
+        "arguments": {
+          "content": "肉毒",
+          "city_name": "北京"
+        }
+      }
+    },
+    "response": {
+      "ok": true,
+      "request_id": "33333333333333333333333333333333",
+      "total": 1,
+      "doctors": [
+        {
+          "医生ID": 20001,
+          "医生姓名": "示例医生",
+          "资质": "示例资质",
+          "常驻门店": "示例门店"
+        }
+      ],
+      "message": null
+    }
+  },
+  "search_stores": {
+    "authentication": "Authorization: Bearer <claw-token>",
+    "request": {
+      "method": "tools/call",
+      "params": {
+        "name": "search_stores",
+        "arguments": {
+          "city_name": "北京"
+        }
+      }
+    },
+    "response": {
+      "ok": true,
+      "request_id": "44444444444444444444444444444444",
+      "total": 1,
+      "stores": [
+        {
+          "机构ID": 11642747,
+          "机构名称": "示例门店",
+          "营业时间": "09:00-18:00",
+          "机构地址": "示例地址"
+        }
+      ],
+      "message": null
+    }
+  },
+  "query_booking_slots": {
+    "authentication": "Authorization: Bearer <claw-token>",
+    "request": {
+      "method": "tools/call",
+      "params": {
+        "name": "query_booking_slots",
+        "arguments": {
+          "hospital_id": 11642747,
+          "city_name": "北京",
+          "date": "2026-09-15"
+        }
+      }
+    },
+    "response": {
+      "ok": true,
+      "request_id": "55555555555555555555555555555555",
+      "total": 1,
+      "slots": [
+        {
+          "start_time": "2026-09-15 10:00:00",
+          "end_time": "2026-09-15 10:30:00",
+          "status": "可预约"
+        }
+      ],
+      "message": null
+    }
+  },
+  "query_bookings": {
+    "authentication": "Authorization: Bearer <claw-token>",
+    "request": {
+      "method": "tools/call",
+      "params": {
+        "name": "query_bookings",
+        "arguments": {}
+      }
+    },
+    "response": {
+      "ok": true,
+      "request_id": "66666666666666666666666666666666",
+      "total": 1,
+      "bookings": [
+        {
+          "预约ID": 13433,
+          "机构ID": 11642747,
+          "机构名称": "示例门店",
+          "预约开始时间": "2026-09-15 10:00:00",
+          "预约结束时间": "2026-09-15 10:30:00",
+          "预约状态": "已预约"
+        }
+      ],
+      "message": null
+    }
+  },
+  "submit_booking": {
+    "authentication": "Authorization: Bearer <claw-token>",
+    "request": {
+      "method": "tools/call",
+      "params": {
+        "name": "submit_booking",
+        "arguments": {
+          "hospital_id": 11642747,
+          "start_time": "2026-09-15 10:00:00",
+          "end_time": "2026-09-15 10:30:00",
+          "confirmed": true
+        }
+      }
+    },
+    "response": {
+      "ok": true,
+      "request_id": "77777777777777777777777777777777",
+      "booking_id": 13433,
+      "message": "预约已提交。"
+    }
+  },
+  "modify_booking": {
+    "authentication": "Authorization: Bearer <claw-token>",
+    "request": {
+      "method": "tools/call",
+      "params": {
+        "name": "modify_booking",
+        "arguments": {
+          "booking_id": 13433,
+          "hospital_id": 11642747,
+          "start_time": "2026-09-15 11:00:00",
+          "end_time": "2026-09-15 11:30:00",
+          "confirmed": true
+        }
+      }
+    },
+    "response": {
+      "ok": true,
+      "request_id": "88888888888888888888888888888888",
+      "booking_id": 13433,
+      "message": "预约已修改。"
+    }
+  },
+  "cancel_booking": {
+    "authentication": "Authorization: Bearer <claw-token>",
+    "request": {
+      "method": "tools/call",
+      "params": {
+        "name": "cancel_booking",
+        "arguments": {
+          "booking_id": 13433,
+          "confirmed": true
+        }
+      }
+    },
+    "response": {
+      "ok": true,
+      "request_id": "99999999999999999999999999999999",
+      "message": "预约已取消。"
+    }
+  }
+}

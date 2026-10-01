@@ -1,0 +1,305 @@
+{
+  "components": [
+    {
+      "id": "root",
+      "component": "Column",
+      "align": "stretch",
+      "children": ["alert-card"],
+      "style": { "padding": { "bottom": 16 }, "spacing": 16 }
+    },
+    {
+      "id": "alert-card",
+      "component": "Card",
+      "children": ["alert-eyebrow", "alert-body"],
+      "style": {
+        "padding": { "horizontal": 12, "vertical": 16 },
+        "spacing": 12,
+        "shape": 32
+      }
+    },
+    {
+      "id": "alert-eyebrow",
+      "component": "Row",
+      "children": ["alert-eyebrow-icon", "kicker"],
+      "align": "center",
+      "style": { "fillMaxWidth": 1, "spacing": 4 }
+    },
+    {
+      "id": "alert-eyebrow-icon",
+      "component": "Icon",
+      "name": "clock",
+      "style": { "width": 12, "height": 12, "tint": "basic_function_blue" }
+    },
+    {
+      "id": "kicker",
+      "component": "Text",
+      "text": { "path": "/kicker" },
+      "variant": "caption",
+      "maxLines": 1,
+      "style": { "color": "basic_function_blue", "fontWeight": 500 }
+    },
+    {
+      "id": "alert-body",
+      "component": "Column",
+      "children": ["title", "quote-row", "note-slot", "action-row"],
+      "align": "stretch",
+      "style": { "fillMaxWidth": 1, "spacing": 14 }
+    },
+    {
+      "id": "title",
+      "component": "Text",
+      "text": { "path": "/title" },
+      "variant": "h3",
+      "maxLines": 2,
+      "style": { "fontWeight": 500 }
+    },
+    {
+      "id": "quote-row",
+      "component": "Card",
+      "child": "quote-body",
+      "style": {
+        "containerColor": "basic_container_quaternary",
+        "shape": 16,
+        "padding": 16,
+        "borderWidth": 0
+      }
+    },
+    {
+      "id": "quote-body",
+      "component": "Column",
+      "children": ["as-of", "quote-main"],
+      "align": "stretch",
+      "style": { "fillMaxWidth": 1, "spacing": 6 }
+    },
+    {
+      "id": "as-of",
+      "component": "Text",
+      "text": { "path": "/as_of_text" },
+      "variant": "footnote",
+      "maxLines": 1,
+      "style": { "color": "basic_text_quinary", "fontWeight": 500 }
+    },
+    {
+      "id": "quote-main",
+      "component": "Row",
+      "children": ["quote-info", "quote-data"],
+      "align": "end",
+      "style": { "fillMaxWidth": 1, "spacing": 16 }
+    },
+    {
+      "id": "quote-info",
+      "component": "Column",
+      "children": ["name", "code"],
+      "align": "start",
+      "weight": 1
+    },
+    {
+      "id": "name",
+      "component": "Text",
+      "text": { "path": "/name" },
+      "variant": "h4",
+      "maxLines": 1,
+      "style": { "fontWeight": 500 }
+    },
+    {
+      "id": "code",
+      "component": "Text",
+      "text": { "path": "/code_text" },
+      "variant": "body",
+      "maxLines": 1,
+      "style": { "color": "basic_text_secondary", "fontWeight": 500 }
+    },
+    {
+      "id": "quote-data",
+      "component": "Column",
+      "children": ["price-stack", "change-stack"],
+      "align": "end"
+    },
+    {
+      "id": "price-stack",
+      "component": "Column",
+      "children": ["price-red", "price-green", "price-flat"],
+      "align": "end",
+      "style": { "spacing": 0 }
+    },
+    {
+      "id": "price-red",
+      "component": "Visibility",
+      "value": { "path": "/is_red" },
+      "child": "price-red-text"
+    },
+    {
+      "id": "price-red-text",
+      "component": "Text",
+      "text": { "path": "/price_text" },
+      "variant": "h2",
+      "maxLines": 1,
+      "style": { "color": "basic_function_red", "fontWeight": 500 }
+    },
+    {
+      "id": "price-green",
+      "component": "Visibility",
+      "value": { "path": "/is_green" },
+      "child": "price-green-text"
+    },
+    {
+      "id": "price-green-text",
+      "component": "Text",
+      "text": { "path": "/price_text" },
+      "variant": "h2",
+      "maxLines": 1,
+      "style": { "color": "basic_function_green", "fontWeight": 500 }
+    },
+    {
+      "id": "price-flat",
+      "component": "Visibility",
+      "value": { "path": "/is_plain_price" },
+      "child": "price-flat-text"
+    },
+    {
+      "id": "price-flat-text",
+      "component": "Text",
+      "text": { "path": "/price_text" },
+      "variant": "h2",
+      "maxLines": 1,
+      "style": { "color": "basic_text_primary", "fontWeight": 500 }
+    },
+    {
+      "id": "change-stack",
+      "component": "Column",
+      "children": ["change-red", "change-green", "change-flat"],
+      "align": "end",
+      "style": { "spacing": 0 }
+    },
+    {
+      "id": "change-red",
+      "component": "Visibility",
+      "value": { "path": "/is_red" },
+      "child": "change-red-text"
+    },
+    {
+      "id": "change-red-text",
+      "component": "Text",
+      "text": { "path": "/change_text" },
+      "variant": "body",
+      "maxLines": 1,
+      "style": { "color": "basic_function_red", "fontWeight": 500 }
+    },
+    {
+      "id": "change-green",
+      "component": "Visibility",
+      "value": { "path": "/is_green" },
+      "child": "change-green-text"
+    },
+    {
+      "id": "change-green-text",
+      "component": "Text",
+      "text": { "path": "/change_text" },
+      "variant": "body",
+      "maxLines": 1,
+      "style": { "color": "basic_function_green", "fontWeight": 500 }
+    },
+    {
+      "id": "change-flat",
+      "component": "Visibility",
+      "value": { "path": "/is_flat" },
+      "child": "change-flat-text"
+    },
+    {
+      "id": "change-flat-text",
+      "component": "Text",
+      "text": { "path": "/change_text" },
+      "variant": "body",
+      "maxLines": 1,
+      "style": { "color": "basic_text_quaternary", "fontWeight": 500 }
+    },
+    {
+      "id": "note-slot",
+      "component": "Visibility",
+      "value": { "path": "/has_note" },
+      "child": "note"
+    },
+    {
+      "id": "note",
+      "component": "Text",
+      "text": { "path": "/note_text" },
+      "variant": "caption",
+      "maxLines": 3
+    },
+    {
+      "id": "action-row",
+      "component": "Row",
+      "children": ["detail-slot", "edit-slot", "primary-action"],
+      "align": "center",
+      "justify": "end",
+      "style": { "spacing": 10 }
+    },
+    {
+      "id": "detail-slot",
+      "component": "Visibility",
+      "value": { "path": "/has_detail_url" },
+      "child": "detail-action"
+    },
+    {
+      "id": "detail-action",
+      "component": "Button",
+      "child": "detail-label",
+      "variant": "default",
+      "action": {
+        "functionCall": {
+          "call": "openUrl",
+          "args": { "url": { "path": "/detail_url" } }
+        }
+      }
+    },
+    {
+      "id": "detail-label",
+      "component": "Text",
+      "text": { "path": "/secondary_label" },
+      "variant": "body"
+    },
+    {
+      "id": "edit-slot",
+      "component": "Visibility",
+      "value": { "path": "/has_secondary_prompt" },
+      "child": "secondary-action"
+    },
+    {
+      "id": "secondary-action",
+      "component": "Button",
+      "child": "secondary-label",
+      "variant": "default",
+      "action": {
+        "functionCall": {
+          "call": "sendQuery",
+          "args": { "prompt": { "path": "/secondary_prompt" } }
+        }
+      }
+    },
+    {
+      "id": "secondary-label",
+      "component": "Text",
+      "text": { "path": "/secondary_label" },
+      "variant": "body"
+    },
+    {
+      "id": "primary-action",
+      "component": "Button",
+      "child": "primary-label",
+      "variant": "primary",
+      "action": {
+        "functionCall": {
+          "call": "sendQuery",
+          "args": { "prompt": { "path": "/primary_prompt" } }
+        }
+      }
+    },
+    {
+      "id": "primary-label",
+      "component": "Text",
+      "text": { "path": "/primary_label" },
+      "variant": "body",
+      "style": { "color": "components_button_primary_title" }
+    }
+  ]
+}

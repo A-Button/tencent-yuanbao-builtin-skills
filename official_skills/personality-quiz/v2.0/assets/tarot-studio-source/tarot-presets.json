@@ -1,0 +1,4742 @@
+{
+  "tradition": "韦特—史密斯体系",
+  "contentVersion": "1.1.0",
+  "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+  "reviewStatus": "团队逐牌初审",
+  "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。",
+  "drawPolicy": {
+    "orientation": "含正位与逆位",
+    "reversalRate": 0.42,
+    "note": "逆位比例是内部抽牌参数，不是传统标准。"
+  },
+  "spreads": {
+    "single": {
+      "id": "single",
+      "name": "单牌",
+      "positions": [
+        {
+          "index": 1,
+          "label": "核心",
+          "meaning": "当前问题最需要看见的讯息"
+        }
+      ]
+    },
+    "three-card": {
+      "id": "three-card",
+      "name": "过去 · 现在 · 未来",
+      "positions": [
+        {
+          "index": 1,
+          "label": "过去",
+          "meaning": "已经形成的影响"
+        },
+        {
+          "index": 2,
+          "label": "现在",
+          "meaning": "当下的处境"
+        },
+        {
+          "index": 3,
+          "label": "未来",
+          "meaning": "延续当前趋势的走向"
+        }
+      ]
+    },
+    "three-card-issue": {
+      "id": "three-card-issue",
+      "name": "情况 · 障碍 · 建议",
+      "positions": [
+        {
+          "index": 1,
+          "label": "情况",
+          "meaning": "这件事此刻真实的样貌"
+        },
+        {
+          "index": 2,
+          "label": "障碍",
+          "meaning": "正卡住你的那一环"
+        },
+        {
+          "index": 3,
+          "label": "建议",
+          "meaning": "可以着手调整的方向"
+        }
+      ]
+    }
+  },
+  "defaultSpread": "single",
+  "cards": [
+    {
+      "cardId": "rws-major-00",
+      "name": "愚者",
+      "nameZh": "愚者",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 0,
+      "keywords": [
+        "新开始",
+        "冒险",
+        "开放"
+      ],
+      "symbolId": "tarot-major-0",
+      "meaningUpright": "新开始、冒险、纯真、自由精神",
+      "meaningReversed": "鲁莽、逃避责任、缺乏方向",
+      "displayUpright": "眼前适合以开放心态接触新的可能，在行动中逐步辨认真正想走的方向。",
+      "displayReversed": "冲动与逃避可能让行动失去方向，先看清责任与现实边界，再决定是否继续前进。",
+      "reversalMeanings": {
+        "受阻": "鲁莽、逃避责任、缺乏方向",
+        "内化": "新开始更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "新开始或冒险被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕新开始的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕新开始的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "带着好奇走进尚未定义的新阶段。",
+      "visualSymbols": [
+        "悬崖边缘",
+        "白色玫瑰",
+        "白犬",
+        "太阳"
+      ],
+      "reflectionQuestions": [
+        "“愚者”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“新开始”与“冒险”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-01",
+      "name": "魔术师",
+      "nameZh": "魔术师",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 1,
+      "keywords": [
+        "意志",
+        "创造",
+        "行动"
+      ],
+      "symbolId": "tarot-major-1",
+      "meaningUpright": "意志力、创造、技能、主动行动",
+      "meaningReversed": "操控、欺骗、潜力未发挥",
+      "displayUpright": "你已经拥有若干可用资源，关键在于集中意图，并把想法落实为一个具体行动。",
+      "displayReversed": "能力或资源尚未被诚实而有效地使用，需要留意操控、夸大承诺与迟迟不行动。",
+      "reversalMeanings": {
+        "受阻": "操控、欺骗、潜力未发挥",
+        "内化": "意志更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "意志或创造被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕意志的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕意志的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "把已有资源集中起来，让意图落到具体行动。",
+      "visualSymbols": [
+        "无限符号",
+        "高举的权杖",
+        "四花色器物",
+        "玫瑰与百合"
+      ],
+      "reflectionQuestions": [
+        "“魔术师”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“意志”与“创造”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-02",
+      "name": "女祭司",
+      "nameZh": "女祭司",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 2,
+      "keywords": [
+        "直觉",
+        "潜意识",
+        "静默"
+      ],
+      "symbolId": "tarot-major-2",
+      "meaningUpright": "直觉、神秘、潜意识、内在智慧",
+      "meaningReversed": "忽视直觉、秘密被隐藏、情绪压抑",
+      "displayUpright": "信息尚未完全显露，安静观察直觉与细节，有助于辨认真正值得信任的线索。",
+      "displayReversed": "内在感受可能被压下，或关键情况仍未说清，需要区分直觉、恐惧与未经证实的秘密。",
+      "reversalMeanings": {
+        "受阻": "忽视直觉、秘密被隐藏、情绪压抑",
+        "内化": "直觉更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "直觉或潜意识被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕直觉的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕直觉的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "在信息未明时，给直觉与观察留出安静空间。",
+      "visualSymbols": [
+        "黑白双柱",
+        "石榴帷幕",
+        "卷轴",
+        "新月"
+      ],
+      "reflectionQuestions": [
+        "“女祭司”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“直觉”与“潜意识”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-03",
+      "name": "皇后",
+      "nameZh": "皇后",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 3,
+      "keywords": [
+        "丰盛",
+        "滋养",
+        "生长"
+      ],
+      "symbolId": "tarot-major-3",
+      "meaningUpright": "丰盛、创造力、母性、自然之美",
+      "meaningReversed": "过度依赖、创造力受阻、自我忽视",
+      "displayUpright": "关系、创意或计划需要持续照料，给身体与感受留出空间，生长才会更稳健。",
+      "displayReversed": "照料可能滑向过度依赖或自我忽视，先补回自身需求，让受阻的创造力获得恢复空间。",
+      "reversalMeanings": {
+        "受阻": "过度依赖、创造力受阻、自我忽视",
+        "内化": "丰盛更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "丰盛或滋养被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕丰盛的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕丰盛的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "让关系、创意或计划在照料中自然生长。",
+      "visualSymbols": [
+        "星冠",
+        "麦田",
+        "金星盾牌",
+        "森林与流水"
+      ],
+      "reflectionQuestions": [
+        "“皇后”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“丰盛”与“滋养”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-04",
+      "name": "皇帝",
+      "nameZh": "皇帝",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 4,
+      "keywords": [
+        "秩序",
+        "权威",
+        "边界"
+      ],
+      "symbolId": "tarot-major-4",
+      "meaningUpright": "权威、稳定、结构、领导力",
+      "meaningReversed": "独裁、僵化、控制欲过强",
+      "displayUpright": "清楚的边界、结构与责任分配，能够为当前局面提供稳定而可执行的秩序。",
+      "displayReversed": "规则可能已经变得僵硬或被控制欲占据，需要重新核对权力是否伴随相应责任。",
+      "reversalMeanings": {
+        "受阻": "独裁、僵化、控制欲过强",
+        "内化": "秩序更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "秩序或权威被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕秩序的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕秩序的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "用边界、结构和责任感稳定局面。",
+      "visualSymbols": [
+        "公羊头石座",
+        "红袍与铠甲",
+        "十字权杖",
+        "荒山"
+      ],
+      "reflectionQuestions": [
+        "“皇帝”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“秩序”与“权威”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-05",
+      "name": "教皇",
+      "nameZh": "教皇",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 5,
+      "keywords": [
+        "传统",
+        "教导",
+        "共同规则"
+      ],
+      "symbolId": "tarot-major-5",
+      "meaningUpright": "传统、信仰、教育、社会规范",
+      "meaningReversed": "叛逆、打破传统、教条束缚",
+      "displayUpright": "传统、经验与共同规则可以提供参照，但真正有用的是理解其原则并作出清醒选择。",
+      "displayReversed": "旧有规范可能带来束缚，也可能正被仓促否定，需要辨认哪些值得保留、哪些应当更新。",
+      "reversalMeanings": {
+        "受阻": "叛逆、打破传统、教条束缚",
+        "内化": "传统更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "传统或教导被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕传统的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕传统的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "借助传统、共同规则或可信经验理解眼前选择。",
+      "visualSymbols": [
+        "双柱",
+        "三重冠",
+        "交叉钥匙",
+        "两位侍从"
+      ],
+      "reflectionQuestions": [
+        "“教皇”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“传统”与“教导”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-06",
+      "name": "恋人",
+      "nameZh": "恋人",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 6,
+      "keywords": [
+        "结合",
+        "选择",
+        "价值一致"
+      ],
+      "symbolId": "tarot-major-6",
+      "meaningUpright": "选择、关系、价值观一致、爱情",
+      "meaningReversed": "关系失衡、价值观冲突、逃避选择",
+      "displayUpright": "吸引与关系之外，更重要的是让价值观、承诺和现实选择彼此保持一致。",
+      "displayReversed": "关系中的期待或价值可能没有对齐，回避选择容易延长失衡，需要把分歧说清楚。",
+      "reversalMeanings": {
+        "受阻": "关系失衡、价值观冲突、逃避选择",
+        "内化": "结合更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "结合或选择被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕结合的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕结合的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "在吸引、价值观与选择之间保持一致。",
+      "visualSymbols": [
+        "裸身男女",
+        "天使",
+        "蛇与智慧树",
+        "火焰树"
+      ],
+      "reflectionQuestions": [
+        "“恋人”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“结合”与“选择”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-07",
+      "name": "战车",
+      "nameZh": "战车",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 7,
+      "keywords": [
+        "前进",
+        "掌控",
+        "决心"
+      ],
+      "symbolId": "tarot-major-7",
+      "meaningUpright": "意志力、胜利、掌控、前进",
+      "meaningReversed": "失控、方向不明、意志薄弱",
+      "displayUpright": "分散的力量需要对准同一方向，清楚目标并稳定节奏，行动才更容易持续推进。",
+      "displayReversed": "推进可能因方向模糊或控制失衡而受阻，先整合冲突的意愿，再恢复行动节奏。",
+      "reversalMeanings": {
+        "受阻": "失控、方向不明、意志薄弱",
+        "内化": "前进更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "前进或掌控被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕前进的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕前进的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "让分散的力量朝一个清楚方向前进。",
+      "visualSymbols": [
+        "黑白狮身兽",
+        "星空华盖",
+        "披甲御者",
+        "城墙"
+      ],
+      "reflectionQuestions": [
+        "“战车”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“前进”与“掌控”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-08",
+      "name": "力量",
+      "nameZh": "力量",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 8,
+      "keywords": [
+        "勇气",
+        "耐心",
+        "柔性掌控"
+      ],
+      "symbolId": "tarot-major-8",
+      "meaningUpright": "内在力量、勇气、耐心、温柔的控制",
+      "meaningReversed": "自我怀疑、恐惧、内力耗尽",
+      "displayUpright": "真正的力量来自温柔而稳定的自我掌握，以耐心承接恐惧与冲动，而不是强行压制。",
+      "displayReversed": "自我怀疑或长期消耗正在削弱内在力量，需要先恢复安全感，再逐步找回稳定的勇气。",
+      "reversalMeanings": {
+        "受阻": "自我怀疑、恐惧、内力耗尽",
+        "内化": "勇气更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "勇气或耐心被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕勇气的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕勇气的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "以温柔但坚定的方式容纳冲动与不安。",
+      "visualSymbols": [
+        "人物与狮子",
+        "无限符号",
+        "花环",
+        "白袍"
+      ],
+      "reflectionQuestions": [
+        "“力量”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“勇气”与“耐心”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-09",
+      "name": "隐者",
+      "nameZh": "隐者",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 9,
+      "keywords": [
+        "内省",
+        "独处",
+        "指引"
+      ],
+      "symbolId": "tarot-major-9",
+      "meaningUpright": "独处、内省、寻求智慧、引导",
+      "meaningReversed": "孤立、拒绝帮助、过度退缩",
+      "displayUpright": "暂时降低外界噪音，在有边界的独处中梳理问题，有助于辨认真正属于自己的答案。",
+      "displayReversed": "内省可能已经变成隔离或过度退缩，既要保留独处空间，也要允许可信的支持进入。",
+      "reversalMeanings": {
+        "受阻": "孤立、拒绝帮助、过度退缩",
+        "内化": "内省更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "内省或独处被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕内省的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕内省的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "暂时离开外界噪音，辨认自己真正想寻找的答案。",
+      "visualSymbols": [
+        "六芒星提灯",
+        "灰色斗篷",
+        "手杖",
+        "雪峰"
+      ],
+      "reflectionQuestions": [
+        "“隐者”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“内省”与“独处”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-10",
+      "name": "命运之轮",
+      "nameZh": "命运之轮",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 10,
+      "keywords": [
+        "循环",
+        "转机",
+        "变化"
+      ],
+      "symbolId": "tarot-major-10",
+      "meaningUpright": "循环、转机、命运、机遇",
+      "meaningReversed": "坏运气、抗拒变化、命运之外的力量",
+      "displayUpright": "局面正处在变化与循环之中，接纳不可控的部分，同时调整自己仍能影响的环节。",
+      "displayReversed": "变化可能暂时受阻，或外部条件超出掌控；与其归因于运气，不如辨认仍可调整的部分。",
+      "reversalMeanings": {
+        "受阻": "坏运气、抗拒变化、命运之外的力量",
+        "内化": "循环更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "循环或转机被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕循环的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕循环的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "承认局面正在变化，并寻找自己能调整的部分。",
+      "visualSymbols": [
+        "刻有字母与符号的轮盘",
+        "狮身人面兽",
+        "蛇",
+        "四角有翼生物"
+      ],
+      "reflectionQuestions": [
+        "“命运之轮”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“循环”与“转机”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-11",
+      "name": "正义",
+      "nameZh": "正义",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 11,
+      "keywords": [
+        "权衡",
+        "责任",
+        "公平"
+      ],
+      "symbolId": "tarot-major-11",
+      "meaningUpright": "公平、真相、因果、平衡",
+      "meaningReversed": "不公正、逃避责任、失衡",
+      "displayUpright": "事实、边界与后果需要被放在同一张天平上，诚实承担责任会让选择更清楚。",
+      "displayReversed": "判断可能受到偏见或失衡影响，逃避责任也会模糊问题，需要重新核对事实与标准。",
+      "reversalMeanings": {
+        "受阻": "不公正、逃避责任、失衡",
+        "内化": "权衡更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "权衡或责任被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕权衡的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕权衡的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "让决定经得起事实、边界与后果的核对。",
+      "visualSymbols": [
+        "天平",
+        "直立长剑",
+        "红袍",
+        "双柱与帷幕"
+      ],
+      "reflectionQuestions": [
+        "“正义”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“权衡”与“责任”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-12",
+      "name": "倒吊人",
+      "nameZh": "倒吊人",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 12,
+      "keywords": [
+        "悬置",
+        "换位",
+        "让渡"
+      ],
+      "symbolId": "tarot-major-12",
+      "meaningUpright": "暂停、换角度、牺牲、等待",
+      "meaningReversed": "犹豫不决、停滞、无谓牺牲",
+      "displayUpright": "当前更适合暂停惯常动作，从相反角度重看困局，并允许答案在等待中逐渐成形。",
+      "displayReversed": "等待可能已经滑向犹豫与停滞，需要分清有意义的让渡，和没有边界的自我牺牲。",
+      "reversalMeanings": {
+        "受阻": "犹豫不决、停滞、无谓牺牲",
+        "内化": "悬置更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "悬置或换位被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕悬置的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕悬置的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "暂停惯常动作，从相反角度重看困局。",
+      "visualSymbols": [
+        "倒悬人物",
+        "有生命的木架",
+        "头部光环",
+        "交叠的双腿"
+      ],
+      "reflectionQuestions": [
+        "“倒吊人”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“悬置”与“换位”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-13",
+      "name": "死神",
+      "nameZh": "死神",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 13,
+      "keywords": [
+        "终结",
+        "转化",
+        "放手"
+      ],
+      "symbolId": "tarot-major-13",
+      "meaningUpright": "结束与转化、蜕变、放下旧事",
+      "meaningReversed": "抗拒变化、停滞不前、恐惧结束",
+      "displayUpright": "失去作用的阶段需要结束，主动为旧事收尾，才能给新的形态腾出真实空间。",
+      "displayReversed": "对结束的恐惧可能让变化停滞，先承认已经失效的部分，再练习放下无法延续的旧方式。",
+      "reversalMeanings": {
+        "受阻": "抗拒变化、停滞不前、恐惧结束",
+        "内化": "终结更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "终结或转化被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕终结的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕终结的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "结束失去作用的阶段，为新的形态腾出空间。",
+      "visualSymbols": [
+        "白马上的骷髅骑士",
+        "白蔷薇黑旗",
+        "倒下的国王",
+        "双塔间日出"
+      ],
+      "reflectionQuestions": [
+        "“死神”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“终结”与“转化”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-14",
+      "name": "节制",
+      "nameZh": "节制",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 14,
+      "keywords": [
+        "调和",
+        "适度",
+        "耐心"
+      ],
+      "symbolId": "tarot-major-14",
+      "meaningUpright": "平衡、耐心、适度、整合",
+      "meaningReversed": "极端、失调、缺乏耐心",
+      "displayUpright": "不同需求可以通过耐心调和，找到适合彼此共存的比例，让节奏恢复稳定与持续。",
+      "displayReversed": "极端做法或急于求成正在打乱节奏，需要减少过量投入，重新建立可持续的配比。",
+      "reversalMeanings": {
+        "受阻": "极端、失调、缺乏耐心",
+        "内化": "调和更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "调和或适度被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕调和的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕调和的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "把不同需求调到可以共存的比例与节奏。",
+      "visualSymbols": [
+        "有翼天使",
+        "两只杯",
+        "一脚入水一脚踏地",
+        "通往山间的道路"
+      ],
+      "reflectionQuestions": [
+        "“节制”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“调和”与“适度”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-15",
+      "name": "恶魔",
+      "nameZh": "恶魔",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 15,
+      "keywords": [
+        "束缚",
+        "执念",
+        "阴影"
+      ],
+      "symbolId": "tarot-major-15",
+      "meaningUpright": "束缚、执念、物质主义、阴影面",
+      "meaningReversed": "挣脱枷锁、觉醒、摆脱依赖",
+      "displayUpright": "欲望、依赖或短期满足可能正在限制选择，看见锁链如何形成，是恢复主动性的开始。",
+      "displayReversed": "对束缚的觉察正在增加，识别依赖带来的代价，并用具体行动收回一部分选择权。",
+      "reversalMeanings": {
+        "受阻": "挣脱枷锁、觉醒、摆脱依赖",
+        "内化": "束缚更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "束缚或执念被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕束缚的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕束缚的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "看见欲望、依赖与自我束缚如何影响选择。",
+      "visualSymbols": [
+        "有角翼人",
+        "倒五芒星",
+        "锁链中的男女",
+        "黑色基座"
+      ],
+      "reflectionQuestions": [
+        "“恶魔”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“束缚”与“执念”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-16",
+      "name": "高塔",
+      "nameZh": "高塔",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 16,
+      "keywords": [
+        "突变",
+        "崩解",
+        "真相显露"
+      ],
+      "symbolId": "tarot-major-16",
+      "meaningUpright": "突然颠覆、启示、破除旧结构",
+      "meaningReversed": "避免灾难、内部崩溃、拒绝改变",
+      "displayUpright": "原有结构或假设受到冲击，重要的是面对已经显露的事实，而不是勉强维持失效的秩序。",
+      "displayReversed": "冲击可能被压在内部或暂时避开，拒绝必要改变往往意味着压力仍在累积，需要从最不稳的环节开始检查。",
+      "reversalMeanings": {
+        "受阻": "避免灾难、内部崩溃、拒绝改变",
+        "内化": "突变更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "突变或崩解被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕突变的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕突变的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "突发冲击打破原有假设，迫使事实浮现。",
+      "visualSymbols": [
+        "闪电击中的王冠高塔",
+        "坠落的人",
+        "火焰",
+        "黑暗天空"
+      ],
+      "reflectionQuestions": [
+        "“高塔”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“突变”与“崩解”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-17",
+      "name": "星星",
+      "nameZh": "星星",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 17,
+      "keywords": [
+        "希望",
+        "疗愈",
+        "坦诚"
+      ],
+      "symbolId": "tarot-major-17",
+      "meaningUpright": "希望、疗愈、灵感、信念",
+      "meaningReversed": "失去希望、悲观、灵感枯竭",
+      "displayUpright": "经历消耗之后，坦诚面对真实需要，可以慢慢恢复希望、信任与继续尝试的意愿。",
+      "displayReversed": "希望感或灵感暂时难以触及，先承认失望与疲惫，再寻找一个仍可信的小小支点。",
+      "reversalMeanings": {
+        "受阻": "失去希望、悲观、灵感枯竭",
+        "内化": "希望更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "希望或疗愈被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕希望的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕希望的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "在经历消耗后，重新建立希望与坦诚。",
+      "visualSymbols": [
+        "一颗大八芒星与七颗小星",
+        "跪地人物",
+        "两只水罐",
+        "树上飞鸟"
+      ],
+      "reflectionQuestions": [
+        "“星星”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“希望”与“疗愈”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-18",
+      "name": "月亮",
+      "nameZh": "月亮",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 18,
+      "keywords": [
+        "模糊",
+        "投射",
+        "不安"
+      ],
+      "symbolId": "tarot-major-18",
+      "meaningUpright": "幻觉、恐惧、潜意识、模糊",
+      "meaningReversed": "混乱消散、真相浮现、恐惧减退",
+      "displayUpright": "信息仍然模糊，情绪与想象可能正在填补空白，此时需要耐心区分事实、感受和投射。",
+      "displayReversed": "混乱开始松动，某些线索变得更清楚；仍需逐项核对事实，不必急着为真相下结论。",
+      "reversalMeanings": {
+        "受阻": "混乱消散、真相浮现、恐惧减退",
+        "内化": "模糊更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "模糊或投射被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕模糊的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕模糊的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "在模糊、投射与情绪波动中慢慢核对真实。",
+      "visualSymbols": [
+        "有脸的月亮",
+        "双塔",
+        "犬与狼",
+        "水中螯虾与蜿蜒小径"
+      ],
+      "reflectionQuestions": [
+        "“月亮”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“模糊”与“投射”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-19",
+      "name": "太阳",
+      "nameZh": "太阳",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 19,
+      "keywords": [
+        "明朗",
+        "活力",
+        "喜悦"
+      ],
+      "symbolId": "tarot-major-19",
+      "meaningUpright": "喜悦、成功、活力、清晰",
+      "meaningReversed": "短暂的挫折、过度乐观、光芒被遮蔽",
+      "displayUpright": "清晰、活力与坦率更容易被表达，把真实成果带到光下，也让喜悦能够与他人共享。",
+      "displayReversed": "光亮并未完全消失，但短暂挫折或过度乐观遮住了它，需要校准期待并看见已有进展。",
+      "reversalMeanings": {
+        "受阻": "短暂的挫折、过度乐观、光芒被遮蔽",
+        "内化": "明朗更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "明朗或活力被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕明朗的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕明朗的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "让事情回到清楚、坦率和可共享的喜悦。",
+      "visualSymbols": [
+        "白马上的孩子",
+        "红旗",
+        "向日葵",
+        "放射光芒的太阳"
+      ],
+      "reflectionQuestions": [
+        "“太阳”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“明朗”与“活力”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-20",
+      "name": "审判",
+      "nameZh": "审判",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 20,
+      "keywords": [
+        "觉醒",
+        "回顾",
+        "召唤"
+      ],
+      "symbolId": "tarot-major-20",
+      "meaningUpright": "觉醒、召唤、评估、重生",
+      "meaningReversed": "自我怀疑、拒绝觉醒、过去的枷锁",
+      "displayUpright": "过去的经验正等待重新评估，听见内在召唤之后，需要以清醒行动回应真正重要的部分。",
+      "displayReversed": "自我怀疑或对过去的执着阻碍了回应，先停止苛责，再辨认哪些经验值得带入下一阶段。",
+      "reversalMeanings": {
+        "受阻": "自我怀疑、拒绝觉醒、过去的枷锁",
+        "内化": "觉醒更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "觉醒或回顾被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕觉醒的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕觉醒的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "听见内在召唤，重新评价过去并作出回应。",
+      "visualSymbols": [
+        "吹号角的天使",
+        "十字旗",
+        "从棺中起身的人群",
+        "远山"
+      ],
+      "reflectionQuestions": [
+        "“审判”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“觉醒”与“回顾”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-major-21",
+      "name": "世界",
+      "nameZh": "世界",
+      "arcana": "major",
+      "arcanaLabel": "大阿尔卡那",
+      "number": 21,
+      "keywords": [
+        "完成",
+        "整合",
+        "新循环"
+      ],
+      "symbolId": "tarot-major-21",
+      "meaningUpright": "完成、整合、成就、新循环",
+      "meaningReversed": "未竟之事、停滞、逃避完成",
+      "displayUpright": "一个阶段已具备整合与收尾的条件，看见完整成果，也为进入新的循环留出空间。",
+      "displayReversed": "未竟之事仍牵制着完成感，真正的卡点可能在逃避收尾，或尚缺一个可落实的最后环节。",
+      "reversalMeanings": {
+        "受阻": "未竟之事、停滞、逃避完成",
+        "内化": "完成更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "完成或整合被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕完成的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕完成的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "archetype": "一个阶段形成完整闭环，也打开更广阔的下一程。",
+      "visualSymbols": [
+        "月桂花环",
+        "舞动人物",
+        "双手权杖",
+        "四角守望者"
+      ],
+      "reflectionQuestions": [
+        "“世界”这组母题在当前问题里最像哪一种现实表现？",
+        "如果把“完成”与“整合”放在一起，哪一部分最需要被看见？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-wands-01",
+      "name": "权杖一",
+      "nameZh": "权杖一",
+      "arcana": "wands",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 1,
+      "suitLabel": "权杖",
+      "rankLabel": "一",
+      "keywords": [
+        "灵感",
+        "启动",
+        "潜能"
+      ],
+      "symbolId": "tarot-wands-1",
+      "meaningUpright": "新灵感、创业、热情启动",
+      "meaningReversed": "创意受阻、缺乏动力",
+      "displayUpright": "一股新的行动意愿正在成形，适合先把灵感落成一个可尝试的起点。",
+      "displayReversed": "想法可能已经出现，却暂时缺少动力或出口；先辨认阻塞来自疲惫、条件还是犹疑。",
+      "reversalMeanings": {
+        "受阻": "创意受阻、缺乏动力",
+        "内化": "灵感更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "灵感或启动被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕灵感的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕灵感的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "火",
+      "domain": "行动、意愿与创造",
+      "rankArchetype": "种子与入口",
+      "archetype": "种子与入口发生在行动、意愿与创造这一层。",
+      "visualSymbols": [
+        "云中伸出的手",
+        "发芽权杖",
+        "飘落叶片",
+        "远方城堡"
+      ],
+      "contextLenses": {
+        "relationship": "关系中的主动程度、吸引力与边界推进",
+        "work": "动机、启动速度、领导与执行",
+        "resources": "时间和精力如何被投入",
+        "growth": "怎样把冲动变成可持续行动"
+      },
+      "reflectionQuestions": [
+        "现在真正值得开始的最小一步是什么？",
+        "怎样把冲动变成可持续行动？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-wands-02",
+      "name": "权杖二",
+      "nameZh": "权杖二",
+      "arcana": "wands",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 2,
+      "suitLabel": "权杖",
+      "rankLabel": "二",
+      "keywords": [
+        "规划",
+        "选择",
+        "远见"
+      ],
+      "symbolId": "tarot-wands-2",
+      "meaningUpright": "计划未来、展望、个人力量",
+      "meaningReversed": "犹豫不决、恐惧未知",
+      "displayUpright": "眼前已有一定主动权，重点是比较方向、规划下一步，并让远见接受现实条件检验。",
+      "displayReversed": "对未知的顾虑正在拖慢选择，计划也可能停留在设想；需要先缩小风险与验证范围。",
+      "reversalMeanings": {
+        "受阻": "犹豫不决、恐惧未知",
+        "内化": "规划更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "规划或选择被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕规划的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕规划的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "火",
+      "domain": "行动、意愿与创造",
+      "rankArchetype": "对照与选择",
+      "archetype": "对照与选择发生在行动、意愿与创造这一层。",
+      "visualSymbols": [
+        "手持地球的人物",
+        "城墙",
+        "两根权杖",
+        "海陆远景"
+      ],
+      "contextLenses": {
+        "relationship": "关系中的主动程度、吸引力与边界推进",
+        "work": "动机、启动速度、领导与执行",
+        "resources": "时间和精力如何被投入",
+        "growth": "怎样把冲动变成可持续行动"
+      },
+      "reflectionQuestions": [
+        "眼前两种力量需要取舍，还是需要重新配比？",
+        "怎样把冲动变成可持续行动？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-wands-03",
+      "name": "权杖三",
+      "nameZh": "权杖三",
+      "arcana": "wands",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 3,
+      "suitLabel": "权杖",
+      "rankLabel": "三",
+      "keywords": [
+        "拓展",
+        "等待",
+        "远见"
+      ],
+      "symbolId": "tarot-wands-3",
+      "meaningUpright": "扩张、等待结果、远见",
+      "meaningReversed": "延误、挫折、视野受限",
+      "displayUpright": "前期投入已开始向外展开，适合观察反馈、连接更大范围，并耐心等待结果显现。",
+      "displayReversed": "推进可能受到延误或落差影响，视野也容易被眼前挫折收窄；此时更需要重新校准预期。",
+      "reversalMeanings": {
+        "受阻": "延误、挫折、视野受限",
+        "内化": "拓展更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "拓展或等待被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕拓展的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕拓展的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "火",
+      "domain": "行动、意愿与创造",
+      "rankArchetype": "展开与协作",
+      "archetype": "展开与协作发生在行动、意愿与创造这一层。",
+      "visualSymbols": [
+        "背向观者的人物",
+        "三根权杖",
+        "海面船只",
+        "高处远眺"
+      ],
+      "contextLenses": {
+        "relationship": "关系中的主动程度、吸引力与边界推进",
+        "work": "动机、启动速度、领导与执行",
+        "resources": "时间和精力如何被投入",
+        "growth": "怎样把冲动变成可持续行动"
+      },
+      "reflectionQuestions": [
+        "怎样让初步成果进入更大的关系或环境？",
+        "怎样把冲动变成可持续行动？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-wands-04",
+      "name": "权杖四",
+      "nameZh": "权杖四",
+      "arcana": "wands",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 4,
+      "suitLabel": "权杖",
+      "rankLabel": "四",
+      "keywords": [
+        "庆祝",
+        "归属",
+        "稳固"
+      ],
+      "symbolId": "tarot-wands-4",
+      "meaningUpright": "庆典、稳定家园、里程碑",
+      "meaningReversed": "家庭紧张、延迟庆祝",
+      "displayUpright": "阶段成果值得被确认，与可信任的人共享喜悦，也有助于稳固归属感和共同基础。",
+      "displayReversed": "原本应带来安定的关系或环境可能出现紧张，庆祝也被推迟；先处理未说清的边界与安排。",
+      "reversalMeanings": {
+        "受阻": "家庭紧张、延迟庆祝",
+        "内化": "庆祝更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "庆祝或归属被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕庆祝的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕庆祝的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "火",
+      "domain": "行动、意愿与创造",
+      "rankArchetype": "稳定与边界",
+      "archetype": "稳定与边界发生在行动、意愿与创造这一层。",
+      "visualSymbols": [
+        "花环相连的四根权杖",
+        "庆祝人群",
+        "远方城堡",
+        "花束"
+      ],
+      "contextLenses": {
+        "relationship": "关系中的主动程度、吸引力与边界推进",
+        "work": "动机、启动速度、领导与执行",
+        "resources": "时间和精力如何被投入",
+        "growth": "怎样把冲动变成可持续行动"
+      },
+      "reflectionQuestions": [
+        "什么需要被保护，什么已经因为过度稳固而僵住？",
+        "怎样把冲动变成可持续行动？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-wands-05",
+      "name": "权杖五",
+      "nameZh": "权杖五",
+      "arcana": "wands",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 5,
+      "suitLabel": "权杖",
+      "rankLabel": "五",
+      "keywords": [
+        "竞争",
+        "摩擦",
+        "试炼"
+      ],
+      "symbolId": "tarot-wands-5",
+      "meaningUpright": "竞争、冲突、挑战",
+      "meaningReversed": "避免冲突、内部争斗",
+      "displayUpright": "多股意愿正在碰撞，摩擦既可能消耗精力，也可能帮助差异和真实能力浮现。",
+      "displayReversed": "表面冲突也许被压下，分歧却转入内在或暗处；回避对话可能让竞争持续消耗。",
+      "reversalMeanings": {
+        "受阻": "避免冲突、内部争斗",
+        "内化": "竞争更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "竞争或摩擦被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕竞争的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕竞争的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "火",
+      "domain": "行动、意愿与创造",
+      "rankArchetype": "冲突与缺口",
+      "archetype": "冲突与缺口发生在行动、意愿与创造这一层。",
+      "visualSymbols": [
+        "五位挥舞权杖的青年",
+        "交错的木杖",
+        "不同颜色衣装",
+        "混乱姿态"
+      ],
+      "contextLenses": {
+        "relationship": "关系中的主动程度、吸引力与边界推进",
+        "work": "动机、启动速度、领导与执行",
+        "resources": "时间和精力如何被投入",
+        "growth": "怎样把冲动变成可持续行动"
+      },
+      "reflectionQuestions": [
+        "当前摩擦暴露了哪个不能再忽略的缺口？",
+        "怎样把冲动变成可持续行动？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-wands-06",
+      "name": "权杖六",
+      "nameZh": "权杖六",
+      "arcana": "wands",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 6,
+      "suitLabel": "权杖",
+      "rankLabel": "六",
+      "keywords": [
+        "胜利",
+        "认可",
+        "自信"
+      ],
+      "symbolId": "tarot-wands-6",
+      "meaningUpright": "胜利、认可、自信",
+      "meaningReversed": "自我怀疑、名誉受损",
+      "displayUpright": "主题落在成果被看见与获得认可，也提醒你接住肯定，并确认信心有真实能力与支持作基础。",
+      "displayReversed": "外界评价或一次失利可能动摇信心，认可暂时没有如期到来；需要把名声与实际进展分开看。",
+      "reversalMeanings": {
+        "受阻": "自我怀疑、名誉受损",
+        "内化": "胜利更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "胜利或认可被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕胜利的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕胜利的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "火",
+      "domain": "行动、意愿与创造",
+      "rankArchetype": "调整与交换",
+      "archetype": "调整与交换发生在行动、意愿与创造这一层。",
+      "visualSymbols": [
+        "戴月桂冠的骑手",
+        "系花环的权杖",
+        "白马",
+        "迎接人群"
+      ],
+      "contextLenses": {
+        "relationship": "关系中的主动程度、吸引力与边界推进",
+        "work": "动机、启动速度、领导与执行",
+        "resources": "时间和精力如何被投入",
+        "growth": "怎样把冲动变成可持续行动"
+      },
+      "reflectionQuestions": [
+        "怎样恢复给予、接受与责任之间的平衡？",
+        "怎样把冲动变成可持续行动？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-wands-07",
+      "name": "权杖七",
+      "nameZh": "权杖七",
+      "arcana": "wands",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 7,
+      "suitLabel": "权杖",
+      "rankLabel": "七",
+      "keywords": [
+        "防守",
+        "立场",
+        "勇气"
+      ],
+      "symbolId": "tarot-wands-7",
+      "meaningUpright": "坚守立场、防守、挑战中的勇气",
+      "meaningReversed": "退让、不知所措",
+      "displayUpright": "你可能需要在压力中守住立场，清楚说明边界，并把有限精力用在真正重要的防线上。",
+      "displayReversed": "持续防守可能令人不知所措，退让也未必等于失败；先分辨哪些立场值得守，哪些负担可以放下。",
+      "reversalMeanings": {
+        "受阻": "退让、不知所措",
+        "内化": "防守更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "防守或立场被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕防守的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕防守的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "火",
+      "domain": "行动、意愿与创造",
+      "rankArchetype": "评估与坚持",
+      "archetype": "评估与坚持发生在行动、意愿与创造这一层。",
+      "visualSymbols": [
+        "高地上的人物",
+        "手中权杖",
+        "下方六根权杖",
+        "防守姿态"
+      ],
+      "contextLenses": {
+        "relationship": "关系中的主动程度、吸引力与边界推进",
+        "work": "动机、启动速度、领导与执行",
+        "resources": "时间和精力如何被投入",
+        "growth": "怎样把冲动变成可持续行动"
+      },
+      "reflectionQuestions": [
+        "现在更需要继续投入，还是修正方向？",
+        "怎样把冲动变成可持续行动？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-wands-08",
+      "name": "权杖八",
+      "nameZh": "权杖八",
+      "arcana": "wands",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 8,
+      "suitLabel": "权杖",
+      "rankLabel": "八",
+      "keywords": [
+        "速度",
+        "消息",
+        "推进"
+      ],
+      "symbolId": "tarot-wands-8",
+      "meaningUpright": "快速行动、信息、旅行",
+      "meaningReversed": "延误、挫折、误解",
+      "displayUpright": "速度、消息与行动是当前主题；保持沟通清楚，才能让快速推进真正服务于既定方向。",
+      "displayReversed": "原本迅速的进程可能被延误或误解打断，信息传递需要复核，行动节奏也宜稍作调整。",
+      "reversalMeanings": {
+        "受阻": "延误、挫折、误解",
+        "内化": "速度更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "速度或消息被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕速度的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕速度的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "火",
+      "domain": "行动、意愿与创造",
+      "rankArchetype": "推进与熟练",
+      "archetype": "推进与熟练发生在行动、意愿与创造这一层。",
+      "visualSymbols": [
+        "空中飞行的八根权杖",
+        "开阔天空",
+        "河流",
+        "绿色丘陵"
+      ],
+      "contextLenses": {
+        "relationship": "关系中的主动程度、吸引力与边界推进",
+        "work": "动机、启动速度、领导与执行",
+        "resources": "时间和精力如何被投入",
+        "growth": "怎样把冲动变成可持续行动"
+      },
+      "reflectionQuestions": [
+        "什么正在加速，又需要怎样避免失控或机械重复？",
+        "怎样把冲动变成可持续行动？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-wands-09",
+      "name": "权杖九",
+      "nameZh": "权杖九",
+      "arcana": "wands",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 9,
+      "suitLabel": "权杖",
+      "rankLabel": "九",
+      "keywords": [
+        "韧性",
+        "警戒",
+        "坚持"
+      ],
+      "symbolId": "tarot-wands-9",
+      "meaningUpright": "坚韧、防御、接近终点",
+      "meaningReversed": "偏执、疲惫、不愿坚持",
+      "displayUpright": "经历消耗后仍保有坚持的力量，接近终点时尤其需要守住边界，并为自己留下恢复空间。",
+      "displayReversed": "长期警戒可能已经转为疲惫或过度防备，继续硬撑未必有效；可以先评估坚持的代价。",
+      "reversalMeanings": {
+        "受阻": "偏执、疲惫、不愿坚持",
+        "内化": "韧性更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "韧性或警戒被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕韧性的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕韧性的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "火",
+      "domain": "行动、意愿与创造",
+      "rankArchetype": "接近完成",
+      "archetype": "接近完成发生在行动、意愿与创造这一层。",
+      "visualSymbols": [
+        "头缠绷带的人物",
+        "九根权杖",
+        "守备姿态",
+        "远方山地"
+      ],
+      "contextLenses": {
+        "relationship": "关系中的主动程度、吸引力与边界推进",
+        "work": "动机、启动速度、领导与执行",
+        "resources": "时间和精力如何被投入",
+        "growth": "怎样把冲动变成可持续行动"
+      },
+      "reflectionQuestions": [
+        "最后一段路需要守住什么，也可以放松什么？",
+        "怎样把冲动变成可持续行动？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-wands-10",
+      "name": "权杖十",
+      "nameZh": "权杖十",
+      "arcana": "wands",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 10,
+      "suitLabel": "权杖",
+      "rankLabel": "十",
+      "keywords": [
+        "负担",
+        "责任",
+        "过载"
+      ],
+      "symbolId": "tarot-wands-10",
+      "meaningUpright": "负担沉重、责任过多",
+      "meaningReversed": "放下负担、委派任务",
+      "displayUpright": "责任和任务正在集中到一个人身上，完成目标仍有可能，但过载已成为不能忽略的现实。",
+      "displayReversed": "负担开始有机会被重新分配，适合放下不必独自承担的部分，并把责任交回对应位置。",
+      "reversalMeanings": {
+        "受阻": "放下负担、委派任务",
+        "内化": "负担更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "负担或责任被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕负担的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕负担的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "火",
+      "domain": "行动、意愿与创造",
+      "rankArchetype": "结果与过载",
+      "archetype": "结果与过载发生在行动、意愿与创造这一层。",
+      "visualSymbols": [
+        "抱持十根权杖的人物",
+        "弯曲的身体",
+        "前方城镇",
+        "沉重步伐"
+      ],
+      "contextLenses": {
+        "relationship": "关系中的主动程度、吸引力与边界推进",
+        "work": "动机、启动速度、领导与执行",
+        "resources": "时间和精力如何被投入",
+        "growth": "怎样把冲动变成可持续行动"
+      },
+      "reflectionQuestions": [
+        "这份完成带来了什么成果，又产生了什么负担？",
+        "怎样把冲动变成可持续行动？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-wands-11",
+      "name": "权杖侍者",
+      "nameZh": "权杖侍者",
+      "arcana": "wands",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 11,
+      "suitLabel": "权杖",
+      "rankLabel": "侍者",
+      "keywords": [
+        "探索",
+        "热情",
+        "消息"
+      ],
+      "symbolId": "tarot-wands-11",
+      "meaningUpright": "探索、热情、新消息",
+      "meaningReversed": "冲动、缺乏方向",
+      "displayUpright": "新的兴趣、消息或尝试正在点燃好奇心，适合边探索边学习，不必等到完全确定才开始。",
+      "displayReversed": "热情容易来得快却缺少方向，消息也可能尚未成熟；先给冲动一个小范围验证的出口。",
+      "reversalMeanings": {
+        "受阻": "冲动、缺乏方向",
+        "内化": "探索更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "探索或热情被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕探索的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕探索的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "火",
+      "domain": "行动、意愿与创造",
+      "rankArchetype": "学习者与消息",
+      "archetype": "学习者与消息发生在行动、意愿与创造这一层。",
+      "visualSymbols": [
+        "凝视权杖的青年",
+        "发芽木杖",
+        "火蜥蜴纹衣",
+        "荒漠"
+      ],
+      "contextLenses": {
+        "relationship": "关系中的主动程度、吸引力与边界推进",
+        "work": "动机、启动速度、领导与执行",
+        "resources": "时间和精力如何被投入",
+        "growth": "怎样把冲动变成可持续行动"
+      },
+      "reflectionQuestions": [
+        "以初学者姿态，需要先观察或验证哪条信息？",
+        "怎样把冲动变成可持续行动？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-wands-12",
+      "name": "权杖骑士",
+      "nameZh": "权杖骑士",
+      "arcana": "wands",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 12,
+      "suitLabel": "权杖",
+      "rankLabel": "骑士",
+      "keywords": [
+        "行动",
+        "冒险",
+        "冲劲"
+      ],
+      "symbolId": "tarot-wands-12",
+      "meaningUpright": "冒险、冲劲、魅力",
+      "meaningReversed": "鲁莽、暴躁、计划未完",
+      "displayUpright": "行动欲和冒险精神明显增强，个人魅力也更容易被看见；明确目的能让冲劲不只停在热闹。",
+      "displayReversed": "速度可能滑向鲁莽或急躁，计划尚未收尾就想转向；减速核对承诺，有助于避免留下残局。",
+      "reversalMeanings": {
+        "受阻": "鲁莽、暴躁、计划未完",
+        "内化": "行动更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "行动或冒险被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕行动的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕行动的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "火",
+      "domain": "行动、意愿与创造",
+      "rankArchetype": "推动者与追求",
+      "archetype": "推动者与追求发生在行动、意愿与创造这一层。",
+      "visualSymbols": [
+        "跃起的马",
+        "高举权杖的骑士",
+        "火蜥蜴披风",
+        "沙丘"
+      ],
+      "contextLenses": {
+        "relationship": "关系中的主动程度、吸引力与边界推进",
+        "work": "动机、启动速度、领导与执行",
+        "resources": "时间和精力如何被投入",
+        "growth": "怎样把冲动变成可持续行动"
+      },
+      "reflectionQuestions": [
+        "行动速度和方向是否一致，哪里需要减速核对？",
+        "怎样把冲动变成可持续行动？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-wands-13",
+      "name": "权杖王后",
+      "nameZh": "权杖王后",
+      "arcana": "wands",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 13,
+      "suitLabel": "权杖",
+      "rankLabel": "王后",
+      "keywords": [
+        "自信",
+        "热情",
+        "独立"
+      ],
+      "symbolId": "tarot-wands-13",
+      "meaningUpright": "自信、热情、独立、领袖气质",
+      "meaningReversed": "嫉妒、情绪化、自我怀疑",
+      "displayUpright": "自信与热情能够自然感染周围的人，独立判断和温暖表达可以同时成为你的影响力来源。",
+      "displayReversed": "自我怀疑可能让热情转成敏感、比较或嫉妒；先找回自己的尺度，再回应外界目光。",
+      "reversalMeanings": {
+        "受阻": "嫉妒、情绪化、自我怀疑",
+        "内化": "自信更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "自信或热情被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕自信的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕自信的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "火",
+      "domain": "行动、意愿与创造",
+      "rankArchetype": "内在掌握与照料",
+      "archetype": "内在掌握与照料发生在行动、意愿与创造这一层。",
+      "visualSymbols": [
+        "手持向日葵与权杖的王后",
+        "黑猫",
+        "狮纹王座",
+        "荒漠"
+      ],
+      "contextLenses": {
+        "relationship": "关系中的主动程度、吸引力与边界推进",
+        "work": "动机、启动速度、领导与执行",
+        "resources": "时间和精力如何被投入",
+        "growth": "怎样把冲动变成可持续行动"
+      },
+      "reflectionQuestions": [
+        "怎样在照顾他人或局面的同时保留自己的中心？",
+        "怎样把冲动变成可持续行动？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-wands-14",
+      "name": "权杖国王",
+      "nameZh": "权杖国王",
+      "arcana": "wands",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 14,
+      "suitLabel": "权杖",
+      "rankLabel": "国王",
+      "keywords": [
+        "远见",
+        "领导",
+        "担当"
+      ],
+      "symbolId": "tarot-wands-14",
+      "meaningUpright": "远见、领导力、激励他人",
+      "meaningReversed": "独断、冲动、独裁",
+      "displayUpright": "清晰的远见与承担责任的意愿正在结合，适合带动他人，并把长期方向落实为可执行安排。",
+      "displayReversed": "影响力可能被急躁或独断放大，行动快于倾听；重新纳入他人意见，才能避免领导变成控制。",
+      "reversalMeanings": {
+        "受阻": "独断、冲动、独裁",
+        "内化": "远见更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "远见或领导被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕远见的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕远见的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "火",
+      "domain": "行动、意愿与创造",
+      "rankArchetype": "外在掌握与负责",
+      "archetype": "外在掌握与负责发生在行动、意愿与创造这一层。",
+      "visualSymbols": [
+        "手持发芽权杖的国王",
+        "狮与火蜥蜴王座",
+        "红橙长袍",
+        "火蜥蜴"
+      ],
+      "contextLenses": {
+        "relationship": "关系中的主动程度、吸引力与边界推进",
+        "work": "动机、启动速度、领导与执行",
+        "resources": "时间和精力如何被投入",
+        "growth": "怎样把冲动变成可持续行动"
+      },
+      "reflectionQuestions": [
+        "怎样使用影响力，同时承担决定带来的后果？",
+        "怎样把冲动变成可持续行动？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-cups-01",
+      "name": "圣杯一",
+      "nameZh": "圣杯一",
+      "arcana": "cups",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 1,
+      "suitLabel": "圣杯",
+      "rankLabel": "一",
+      "keywords": [
+        "情感开启",
+        "接纳",
+        "流动"
+      ],
+      "symbolId": "tarot-cups-1",
+      "meaningUpright": "新感情、情感流动、爱的开始",
+      "meaningReversed": "情感压抑、心门关闭",
+      "displayUpright": "新的感受正在打开，情绪更容易流动与被接纳；给关系或创意留出自然发生的空间。",
+      "displayReversed": "感受可能被压回内在，心门暂时不易打开；与其勉强表达，不如先辨认自己在保护什么。",
+      "reversalMeanings": {
+        "受阻": "情感压抑、心门关闭",
+        "内化": "情感开启更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "情感开启或接纳被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕情感开启的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕情感开启的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "水",
+      "domain": "情绪、关系与直觉",
+      "rankArchetype": "种子与入口",
+      "archetype": "种子与入口发生在情绪、关系与直觉这一层。",
+      "visualSymbols": [
+        "云中伸出的手",
+        "溢水圣杯",
+        "白鸽",
+        "莲花水面"
+      ],
+      "contextLenses": {
+        "relationship": "情感交流、依恋、共情与相互回应",
+        "work": "归属感、团队氛围与价值认同",
+        "resources": "情绪容量与支持网络",
+        "growth": "怎样承认感受而不被感受淹没"
+      },
+      "reflectionQuestions": [
+        "现在真正值得开始的最小一步是什么？",
+        "怎样承认感受而不被感受淹没？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-cups-02",
+      "name": "圣杯二",
+      "nameZh": "圣杯二",
+      "arcana": "cups",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 2,
+      "suitLabel": "圣杯",
+      "rankLabel": "二",
+      "keywords": [
+        "互惠",
+        "吸引",
+        "联结"
+      ],
+      "symbolId": "tarot-cups-2",
+      "meaningUpright": "伴侣关系、相互吸引、联盟",
+      "meaningReversed": "关系失衡、分离",
+      "displayUpright": "这组主题关注彼此回应与吸引形成的联结，重点在互惠、坦诚，以及双方是否愿意共同投入。",
+      "displayReversed": "互动中的期待或投入可能没有对齐，距离因而扩大；需要看实际回应，而非替对方推定心意。",
+      "reversalMeanings": {
+        "受阻": "关系失衡、分离",
+        "内化": "互惠更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "互惠或吸引被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕互惠的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕互惠的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "水",
+      "domain": "情绪、关系与直觉",
+      "rankArchetype": "对照与选择",
+      "archetype": "对照与选择发生在情绪、关系与直觉这一层。",
+      "visualSymbols": [
+        "交换圣杯的两人",
+        "双蛇杖",
+        "有翼狮首",
+        "相对站立"
+      ],
+      "contextLenses": {
+        "relationship": "情感交流、依恋、共情与相互回应",
+        "work": "归属感、团队氛围与价值认同",
+        "resources": "情绪容量与支持网络",
+        "growth": "怎样承认感受而不被感受淹没"
+      },
+      "reflectionQuestions": [
+        "眼前两种力量需要取舍，还是需要重新配比？",
+        "怎样承认感受而不被感受淹没？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-cups-03",
+      "name": "圣杯三",
+      "nameZh": "圣杯三",
+      "arcana": "cups",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 3,
+      "suitLabel": "圣杯",
+      "rankLabel": "三",
+      "keywords": [
+        "友谊",
+        "庆祝",
+        "社群"
+      ],
+      "symbolId": "tarot-cups-3",
+      "meaningUpright": "友谊、庆祝、社群",
+      "meaningReversed": "过度放纵、社交疲惫",
+      "displayUpright": "友谊、分享与群体支持是当前重点；适合庆祝成果，也别忘了让每个人保有真实的位置。",
+      "displayReversed": "社交或庆祝可能已经超过情绪容量，热闹之后反而感到疲惫；适度抽身有助于恢复真诚连接。",
+      "reversalMeanings": {
+        "受阻": "过度放纵、社交疲惫",
+        "内化": "友谊更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "友谊或庆祝被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕友谊的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕友谊的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "水",
+      "domain": "情绪、关系与直觉",
+      "rankArchetype": "展开与协作",
+      "archetype": "展开与协作发生在情绪、关系与直觉这一层。",
+      "visualSymbols": [
+        "举杯的三位人物",
+        "花环",
+        "果实与收获",
+        "圆形舞姿"
+      ],
+      "contextLenses": {
+        "relationship": "情感交流、依恋、共情与相互回应",
+        "work": "归属感、团队氛围与价值认同",
+        "resources": "情绪容量与支持网络",
+        "growth": "怎样承认感受而不被感受淹没"
+      },
+      "reflectionQuestions": [
+        "怎样让初步成果进入更大的关系或环境？",
+        "怎样承认感受而不被感受淹没？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-cups-04",
+      "name": "圣杯四",
+      "nameZh": "圣杯四",
+      "arcana": "cups",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 4,
+      "suitLabel": "圣杯",
+      "rankLabel": "四",
+      "keywords": [
+        "冷淡",
+        "停顿",
+        "重新评估"
+      ],
+      "symbolId": "tarot-cups-4",
+      "meaningUpright": "冷漠、重新评估、错过机会",
+      "meaningReversed": "新的动力、走出低谷",
+      "displayUpright": "注意力可能困在乏味或失望里，以至于忽略新的可能；暂停回应，也可以成为重新辨认需求的过程。",
+      "displayReversed": "停滞的情绪开始松动，新的兴趣或回应逐渐可见；不必急着振作，先接住愿意靠近的一小步。",
+      "reversalMeanings": {
+        "受阻": "新的动力、走出低谷",
+        "内化": "冷淡更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "冷淡或停顿被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕冷淡的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕冷淡的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "水",
+      "domain": "情绪、关系与直觉",
+      "rankArchetype": "稳定与边界",
+      "archetype": "稳定与边界发生在情绪、关系与直觉这一层。",
+      "visualSymbols": [
+        "树下抱臂的人物",
+        "地面三只杯",
+        "云中递出的杯",
+        "远山"
+      ],
+      "contextLenses": {
+        "relationship": "情感交流、依恋、共情与相互回应",
+        "work": "归属感、团队氛围与价值认同",
+        "resources": "情绪容量与支持网络",
+        "growth": "怎样承认感受而不被感受淹没"
+      },
+      "reflectionQuestions": [
+        "什么需要被保护，什么已经因为过度稳固而僵住？",
+        "怎样承认感受而不被感受淹没？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-cups-05",
+      "name": "圣杯五",
+      "nameZh": "圣杯五",
+      "arcana": "cups",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 5,
+      "suitLabel": "圣杯",
+      "rankLabel": "五",
+      "keywords": [
+        "失落",
+        "哀伤",
+        "尚存希望"
+      ],
+      "symbolId": "tarot-cups-5",
+      "meaningUpright": "失落、悲伤、后悔",
+      "meaningReversed": "接受失去、向前看",
+      "displayUpright": "失去与遗憾此刻占据较多注意力，允许哀伤存在，同时也要看见仍被保留的支持与选择。",
+      "displayReversed": "对失去的承认正在带来松动，目光可以逐步从遗憾转向尚存的关系、资源和下一步。",
+      "reversalMeanings": {
+        "受阻": "接受失去、向前看",
+        "内化": "失落更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "失落或哀伤被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕失落的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕失落的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "水",
+      "domain": "情绪、关系与直觉",
+      "rankArchetype": "冲突与缺口",
+      "archetype": "冲突与缺口发生在情绪、关系与直觉这一层。",
+      "visualSymbols": [
+        "黑斗篷人物",
+        "倾倒的三只杯",
+        "直立的两只杯",
+        "桥与城堡"
+      ],
+      "contextLenses": {
+        "relationship": "情感交流、依恋、共情与相互回应",
+        "work": "归属感、团队氛围与价值认同",
+        "resources": "情绪容量与支持网络",
+        "growth": "怎样承认感受而不被感受淹没"
+      },
+      "reflectionQuestions": [
+        "当前摩擦暴露了哪个不能再忽略的缺口？",
+        "怎样承认感受而不被感受淹没？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-cups-06",
+      "name": "圣杯六",
+      "nameZh": "圣杯六",
+      "arcana": "cups",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 6,
+      "suitLabel": "圣杯",
+      "rankLabel": "六",
+      "keywords": [
+        "怀旧",
+        "善意",
+        "纯真"
+      ],
+      "symbolId": "tarot-cups-6",
+      "meaningUpright": "怀旧、童年记忆、纯真",
+      "meaningReversed": "沉溺过去、不切实际",
+      "displayUpright": "熟悉的记忆与善意正在回到眼前，它们可以提供安慰，也提醒你分辨过去与当下的需要。",
+      "displayReversed": "过去的美好可能被过度理想化，因而遮住当下差异；保留温柔记忆，也需要核对现实。",
+      "reversalMeanings": {
+        "受阻": "沉溺过去、不切实际",
+        "内化": "怀旧更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "怀旧或善意被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕怀旧的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕怀旧的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "水",
+      "domain": "情绪、关系与直觉",
+      "rankArchetype": "调整与交换",
+      "archetype": "调整与交换发生在情绪、关系与直觉这一层。",
+      "visualSymbols": [
+        "两个孩子",
+        "盛花的六只杯",
+        "庭院",
+        "守卫人物"
+      ],
+      "contextLenses": {
+        "relationship": "情感交流、依恋、共情与相互回应",
+        "work": "归属感、团队氛围与价值认同",
+        "resources": "情绪容量与支持网络",
+        "growth": "怎样承认感受而不被感受淹没"
+      },
+      "reflectionQuestions": [
+        "怎样恢复给予、接受与责任之间的平衡？",
+        "怎样承认感受而不被感受淹没？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-cups-07",
+      "name": "圣杯七",
+      "nameZh": "圣杯七",
+      "arcana": "cups",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 7,
+      "suitLabel": "圣杯",
+      "rankLabel": "七",
+      "keywords": [
+        "幻想",
+        "多重选择",
+        "辨别"
+      ],
+      "symbolId": "tarot-cups-7",
+      "meaningUpright": "幻想、选择过多、白日梦",
+      "meaningReversed": "看清现实、专注目标",
+      "displayUpright": "选择与想象同时增多，吸引人的可能并不都能落地；先明确标准，再判断哪些值得投入。",
+      "displayReversed": "混杂的想象正在散去，优先级逐渐清楚；把注意力收回一个可验证目标，会更容易前进。",
+      "reversalMeanings": {
+        "受阻": "看清现实、专注目标",
+        "内化": "幻想更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "幻想或多重选择被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕幻想的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕幻想的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "水",
+      "domain": "情绪、关系与直觉",
+      "rankArchetype": "评估与坚持",
+      "archetype": "评估与坚持发生在情绪、关系与直觉这一层。",
+      "visualSymbols": [
+        "面对云中七只杯的人影",
+        "珠宝与花环",
+        "蛇与龙",
+        "被布遮盖的人形"
+      ],
+      "contextLenses": {
+        "relationship": "情感交流、依恋、共情与相互回应",
+        "work": "归属感、团队氛围与价值认同",
+        "resources": "情绪容量与支持网络",
+        "growth": "怎样承认感受而不被感受淹没"
+      },
+      "reflectionQuestions": [
+        "现在更需要继续投入，还是修正方向？",
+        "怎样承认感受而不被感受淹没？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-cups-08",
+      "name": "圣杯八",
+      "nameZh": "圣杯八",
+      "arcana": "cups",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 8,
+      "suitLabel": "圣杯",
+      "rankLabel": "八",
+      "keywords": [
+        "离开",
+        "追寻意义",
+        "放下"
+      ],
+      "symbolId": "tarot-cups-8",
+      "meaningUpright": "离开、寻找更深层意义",
+      "meaningReversed": "害怕放手、漫无目的",
+      "displayUpright": "已有的投入未必继续带来满足，离开可能是为了寻找更深的意义，而非否定此前经历。",
+      "displayReversed": "对放手的害怕可能让人停在不再满足的位置，也可能在离开后失去方向；先确认真正想寻找什么。",
+      "reversalMeanings": {
+        "受阻": "害怕放手、漫无目的",
+        "内化": "离开更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "离开或追寻意义被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕离开的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕离开的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "水",
+      "domain": "情绪、关系与直觉",
+      "rankArchetype": "推进与熟练",
+      "archetype": "推进与熟练发生在情绪、关系与直觉这一层。",
+      "visualSymbols": [
+        "离开八只杯的人物",
+        "月亮",
+        "河流",
+        "崎岖山地"
+      ],
+      "contextLenses": {
+        "relationship": "情感交流、依恋、共情与相互回应",
+        "work": "归属感、团队氛围与价值认同",
+        "resources": "情绪容量与支持网络",
+        "growth": "怎样承认感受而不被感受淹没"
+      },
+      "reflectionQuestions": [
+        "什么正在加速，又需要怎样避免失控或机械重复？",
+        "怎样承认感受而不被感受淹没？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-cups-09",
+      "name": "圣杯九",
+      "nameZh": "圣杯九",
+      "arcana": "cups",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 9,
+      "suitLabel": "圣杯",
+      "rankLabel": "九",
+      "keywords": [
+        "满足",
+        "享受",
+        "愿望"
+      ],
+      "symbolId": "tarot-cups-9",
+      "meaningUpright": "愿望成真、满足、情感丰盛",
+      "meaningReversed": "自我放纵、不满足",
+      "displayUpright": "当下有值得享受和肯定的成果，情感满足来自真实需要被照顾，而不只是外界认可。",
+      "displayReversed": "享受可能滑向填补空缺的放纵，拥有更多仍未带来满足；需要重新辨认真正的情感需要。",
+      "reversalMeanings": {
+        "受阻": "自我放纵、不满足",
+        "内化": "满足更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "满足或享受被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕满足的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕满足的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "水",
+      "domain": "情绪、关系与直觉",
+      "rankArchetype": "接近完成",
+      "archetype": "接近完成发生在情绪、关系与直觉这一层。",
+      "visualSymbols": [
+        "坐在长椅上的人物",
+        "弧形排列的九只杯",
+        "蓝色帷幕",
+        "满足姿态"
+      ],
+      "contextLenses": {
+        "relationship": "情感交流、依恋、共情与相互回应",
+        "work": "归属感、团队氛围与价值认同",
+        "resources": "情绪容量与支持网络",
+        "growth": "怎样承认感受而不被感受淹没"
+      },
+      "reflectionQuestions": [
+        "最后一段路需要守住什么，也可以放松什么？",
+        "怎样承认感受而不被感受淹没？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-cups-10",
+      "name": "圣杯十",
+      "nameZh": "圣杯十",
+      "arcana": "cups",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 10,
+      "suitLabel": "圣杯",
+      "rankLabel": "十",
+      "keywords": [
+        "情感圆满",
+        "家庭",
+        "和谐"
+      ],
+      "symbolId": "tarot-cups-10",
+      "meaningUpright": "家庭幸福、情感圆满、和谐",
+      "meaningReversed": "家庭矛盾、理想破碎",
+      "displayUpright": "亲密关系与归属感有机会形成稳定支持，和谐来自共同参与，而不是维持表面圆满。",
+      "displayReversed": "对圆满的期待可能与真实家庭互动产生落差，未被处理的矛盾需要被看见，而非继续维持表象。",
+      "reversalMeanings": {
+        "受阻": "家庭矛盾、理想破碎",
+        "内化": "情感圆满更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "情感圆满或家庭被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕情感圆满的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕情感圆满的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "水",
+      "domain": "情绪、关系与直觉",
+      "rankArchetype": "结果与过载",
+      "archetype": "结果与过载发生在情绪、关系与直觉这一层。",
+      "visualSymbols": [
+        "举手的伴侣",
+        "彩虹中的十只杯",
+        "嬉戏儿童",
+        "远方家园"
+      ],
+      "contextLenses": {
+        "relationship": "情感交流、依恋、共情与相互回应",
+        "work": "归属感、团队氛围与价值认同",
+        "resources": "情绪容量与支持网络",
+        "growth": "怎样承认感受而不被感受淹没"
+      },
+      "reflectionQuestions": [
+        "这份完成带来了什么成果，又产生了什么负担？",
+        "怎样承认感受而不被感受淹没？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-cups-11",
+      "name": "圣杯侍者",
+      "nameZh": "圣杯侍者",
+      "arcana": "cups",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 11,
+      "suitLabel": "圣杯",
+      "rankLabel": "侍者",
+      "keywords": [
+        "感受力",
+        "创意消息",
+        "好奇"
+      ],
+      "symbolId": "tarot-cups-11",
+      "meaningUpright": "创意、情感信息、梦想",
+      "meaningReversed": "情绪化、不切实际",
+      "displayUpright": "细腻的感受、创意或一则情感消息正在出现，保持好奇能帮助你听见尚未成形的内在声音。",
+      "displayReversed": "敏感与想象可能暂时失去边界，情绪容易替事实作答；先确认信息，再决定如何回应。",
+      "reversalMeanings": {
+        "受阻": "情绪化、不切实际",
+        "内化": "感受力更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "感受力或创意消息被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕感受力的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕感受力的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "水",
+      "domain": "情绪、关系与直觉",
+      "rankArchetype": "学习者与消息",
+      "archetype": "学习者与消息发生在情绪、关系与直觉这一层。",
+      "visualSymbols": [
+        "杯中探出的鱼",
+        "年轻侍者",
+        "海浪",
+        "蓝色衣装"
+      ],
+      "contextLenses": {
+        "relationship": "情感交流、依恋、共情与相互回应",
+        "work": "归属感、团队氛围与价值认同",
+        "resources": "情绪容量与支持网络",
+        "growth": "怎样承认感受而不被感受淹没"
+      },
+      "reflectionQuestions": [
+        "以初学者姿态，需要先观察或验证哪条信息？",
+        "怎样承认感受而不被感受淹没？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-cups-12",
+      "name": "圣杯骑士",
+      "nameZh": "圣杯骑士",
+      "arcana": "cups",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 12,
+      "suitLabel": "圣杯",
+      "rankLabel": "骑士",
+      "keywords": [
+        "浪漫",
+        "追求",
+        "想象"
+      ],
+      "symbolId": "tarot-cups-12",
+      "meaningUpright": "浪漫、魅力、情感追求",
+      "meaningReversed": "情绪化、不可靠",
+      "displayUpright": "浪漫与表达意愿正在推动靠近，真诚邀请比宏大承诺更重要，也需要观察行动是否持续。",
+      "displayReversed": "情绪起伏可能让承诺变得不稳定，动人的表达未必得到行动承接；判断时宜同时看感受与事实。",
+      "reversalMeanings": {
+        "受阻": "情绪化、不可靠",
+        "内化": "浪漫更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "浪漫或追求被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕浪漫的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕浪漫的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "水",
+      "domain": "情绪、关系与直觉",
+      "rankArchetype": "推动者与追求",
+      "archetype": "推动者与追求发生在情绪、关系与直觉这一层。",
+      "visualSymbols": [
+        "手持圣杯的骑士",
+        "缓步白马",
+        "河流",
+        "有翼头盔"
+      ],
+      "contextLenses": {
+        "relationship": "情感交流、依恋、共情与相互回应",
+        "work": "归属感、团队氛围与价值认同",
+        "resources": "情绪容量与支持网络",
+        "growth": "怎样承认感受而不被感受淹没"
+      },
+      "reflectionQuestions": [
+        "行动速度和方向是否一致，哪里需要减速核对？",
+        "怎样承认感受而不被感受淹没？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-cups-13",
+      "name": "圣杯王后",
+      "nameZh": "圣杯王后",
+      "arcana": "cups",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 13,
+      "suitLabel": "圣杯",
+      "rankLabel": "王后",
+      "keywords": [
+        "同理",
+        "直觉",
+        "情感边界"
+      ],
+      "symbolId": "tarot-cups-13",
+      "meaningUpright": "同理心、直觉、情感智慧",
+      "meaningReversed": "情绪不稳、过度敏感",
+      "displayUpright": "同理心与直觉较为敏锐，能理解细微感受；保留情感边界，才能让照顾不变成过度承接。",
+      "displayReversed": "感受力可能因过载而变得不稳定，容易把他人的情绪一并背负；先照顾自身容量和边界。",
+      "reversalMeanings": {
+        "受阻": "情绪不稳、过度敏感",
+        "内化": "同理更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "同理或直觉被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕同理的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕同理的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "水",
+      "domain": "情绪、关系与直觉",
+      "rankArchetype": "内在掌握与照料",
+      "archetype": "内在掌握与照料发生在情绪、关系与直觉这一层。",
+      "visualSymbols": [
+        "海边王座",
+        "有盖圣杯",
+        "天使与海贝纹饰",
+        "水边卵石"
+      ],
+      "contextLenses": {
+        "relationship": "情感交流、依恋、共情与相互回应",
+        "work": "归属感、团队氛围与价值认同",
+        "resources": "情绪容量与支持网络",
+        "growth": "怎样承认感受而不被感受淹没"
+      },
+      "reflectionQuestions": [
+        "怎样在照顾他人或局面的同时保留自己的中心？",
+        "怎样承认感受而不被感受淹没？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-cups-14",
+      "name": "圣杯国王",
+      "nameZh": "圣杯国王",
+      "arcana": "cups",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 14,
+      "suitLabel": "圣杯",
+      "rankLabel": "国王",
+      "keywords": [
+        "成熟情感",
+        "镇定",
+        "包容"
+      ],
+      "symbolId": "tarot-cups-14",
+      "meaningUpright": "情感成熟、智慧、平衡感性与理性",
+      "meaningReversed": "情绪操控、压抑感受",
+      "displayUpright": "成熟的情感力量在于能容纳波动而不被带走，以镇定表达感受，也为关系留下清晰空间。",
+      "displayReversed": "感受可能被压抑，或被用来间接控制局面；更坦诚地命名情绪与需求，有助于恢复平衡。",
+      "reversalMeanings": {
+        "受阻": "情绪操控、压抑感受",
+        "内化": "成熟情感更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "成熟情感或镇定被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕成熟情感的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕成熟情感的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "水",
+      "domain": "情绪、关系与直觉",
+      "rankArchetype": "外在掌握与负责",
+      "archetype": "外在掌握与负责发生在情绪、关系与直觉这一层。",
+      "visualSymbols": [
+        "水上石座",
+        "手持圣杯与权杖的国王",
+        "船只",
+        "跃出水面的鱼"
+      ],
+      "contextLenses": {
+        "relationship": "情感交流、依恋、共情与相互回应",
+        "work": "归属感、团队氛围与价值认同",
+        "resources": "情绪容量与支持网络",
+        "growth": "怎样承认感受而不被感受淹没"
+      },
+      "reflectionQuestions": [
+        "怎样使用影响力，同时承担决定带来的后果？",
+        "怎样承认感受而不被感受淹没？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-swords-01",
+      "name": "宝剑一",
+      "nameZh": "宝剑一",
+      "arcana": "swords",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 1,
+      "suitLabel": "宝剑",
+      "rankLabel": "一",
+      "keywords": [
+        "清晰",
+        "突破",
+        "判断"
+      ],
+      "symbolId": "tarot-swords-1",
+      "meaningUpright": "清晰、突破、新想法",
+      "meaningReversed": "混乱、思维受阻",
+      "displayUpright": "主题指向逐渐清晰的想法：厘清事实、命名问题，可能带来可验证的突破口。",
+      "displayReversed": "信息或思路暂时纠缠在一起，先分开事实、假设与情绪，比急着下结论更有帮助。",
+      "reversalMeanings": {
+        "受阻": "混乱、思维受阻",
+        "内化": "清晰更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "清晰或突破被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕清晰的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕清晰的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "风",
+      "domain": "思考、沟通与冲突",
+      "rankArchetype": "种子与入口",
+      "archetype": "种子与入口发生在思考、沟通与冲突这一层。",
+      "visualSymbols": [
+        "云中伸出的手",
+        "直立长剑",
+        "王冠",
+        "月桂与棕榈枝"
+      ],
+      "contextLenses": {
+        "relationship": "沟通方式、界限、误解与事实核对",
+        "work": "判断、决策、规则与信息压力",
+        "resources": "注意力与认知负荷",
+        "growth": "怎样把清晰判断与情绪承受力放在一起"
+      },
+      "reflectionQuestions": [
+        "现在真正值得开始的最小一步是什么？",
+        "怎样把清晰判断与情绪承受力放在一起？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-swords-02",
+      "name": "宝剑二",
+      "nameZh": "宝剑二",
+      "arcana": "swords",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 2,
+      "suitLabel": "宝剑",
+      "rankLabel": "二",
+      "keywords": [
+        "僵局",
+        "回避",
+        "抉择"
+      ],
+      "symbolId": "tarot-swords-2",
+      "meaningUpright": "僵局、回避、难以抉择",
+      "meaningReversed": "真相浮现、做出决定",
+      "displayUpright": "两个方向彼此牵制，维持平衡也许暂时有用，但回避关键事实会让僵局延长。",
+      "displayReversed": "原本被搁置的信息开始浮现，决定空间随之打开，同时也需要承认取舍无法完全无损。",
+      "reversalMeanings": {
+        "受阻": "真相浮现、做出决定",
+        "内化": "僵局更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "僵局或回避被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕僵局的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕僵局的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "风",
+      "domain": "思考、沟通与冲突",
+      "rankArchetype": "对照与选择",
+      "archetype": "对照与选择发生在思考、沟通与冲突这一层。",
+      "visualSymbols": [
+        "蒙眼人物",
+        "交叉双剑",
+        "海面礁石",
+        "新月"
+      ],
+      "contextLenses": {
+        "relationship": "沟通方式、界限、误解与事实核对",
+        "work": "判断、决策、规则与信息压力",
+        "resources": "注意力与认知负荷",
+        "growth": "怎样把清晰判断与情绪承受力放在一起"
+      },
+      "reflectionQuestions": [
+        "眼前两种力量需要取舍，还是需要重新配比？",
+        "怎样把清晰判断与情绪承受力放在一起？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-swords-03",
+      "name": "宝剑三",
+      "nameZh": "宝剑三",
+      "arcana": "swords",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 3,
+      "suitLabel": "宝剑",
+      "rankLabel": "三",
+      "keywords": [
+        "心痛",
+        "分离",
+        "承认事实"
+      ],
+      "symbolId": "tarot-swords-3",
+      "meaningUpright": "心碎、悲伤、失望",
+      "meaningReversed": "从痛苦中恢复、宽恕",
+      "displayUpright": "失望或分离带来的疼痛值得被承认，清楚看见伤口，是整理事实与感受的起点。",
+      "displayReversed": "重点从受伤转向修复：宽恕不等于否认伤害，而是逐步减少它对当下的牵制。",
+      "reversalMeanings": {
+        "受阻": "从痛苦中恢复、宽恕",
+        "内化": "心痛更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "心痛或分离被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕心痛的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕心痛的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "风",
+      "domain": "思考、沟通与冲突",
+      "rankArchetype": "展开与协作",
+      "archetype": "展开与协作发生在思考、沟通与冲突这一层。",
+      "visualSymbols": [
+        "被三剑刺穿的心",
+        "雨云",
+        "倾斜雨线",
+        "空旷背景"
+      ],
+      "contextLenses": {
+        "relationship": "沟通方式、界限、误解与事实核对",
+        "work": "判断、决策、规则与信息压力",
+        "resources": "注意力与认知负荷",
+        "growth": "怎样把清晰判断与情绪承受力放在一起"
+      },
+      "reflectionQuestions": [
+        "怎样让初步成果进入更大的关系或环境？",
+        "怎样把清晰判断与情绪承受力放在一起？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-swords-04",
+      "name": "宝剑四",
+      "nameZh": "宝剑四",
+      "arcana": "swords",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 4,
+      "suitLabel": "宝剑",
+      "rankLabel": "四",
+      "keywords": [
+        "休息",
+        "恢复",
+        "暂停"
+      ],
+      "symbolId": "tarot-swords-4",
+      "meaningUpright": "休息、恢复、暂时退出",
+      "meaningReversed": "强撑、重回行动",
+      "displayUpright": "暂停不是逃避，而是给身心留出恢复空间；适度退出噪音，有助于重新组织判断。",
+      "displayReversed": "休息可能一直没有真正发生，强撑或过早返回行动，容易让尚未恢复的负荷再次累积。",
+      "reversalMeanings": {
+        "受阻": "强撑、重回行动",
+        "内化": "休息更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "休息或恢复被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕休息的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕休息的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "风",
+      "domain": "思考、沟通与冲突",
+      "rankArchetype": "稳定与边界",
+      "archetype": "稳定与边界发生在思考、沟通与冲突这一层。",
+      "visualSymbols": [
+        "卧于石棺的人物",
+        "墙上三剑",
+        "下方一剑",
+        "彩绘玻璃"
+      ],
+      "contextLenses": {
+        "relationship": "沟通方式、界限、误解与事实核对",
+        "work": "判断、决策、规则与信息压力",
+        "resources": "注意力与认知负荷",
+        "growth": "怎样把清晰判断与情绪承受力放在一起"
+      },
+      "reflectionQuestions": [
+        "什么需要被保护，什么已经因为过度稳固而僵住？",
+        "怎样把清晰判断与情绪承受力放在一起？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-swords-05",
+      "name": "宝剑五",
+      "nameZh": "宝剑五",
+      "arcana": "swords",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 5,
+      "suitLabel": "宝剑",
+      "rankLabel": "五",
+      "keywords": [
+        "冲突",
+        "代价",
+        "胜负心"
+      ],
+      "symbolId": "tarot-swords-5",
+      "meaningUpright": "冲突、失败、自私的胜利",
+      "meaningReversed": "和解、放下争斗",
+      "displayUpright": "冲突中的胜负未必等于真正解决，若一方靠压制取胜，关系与信任往往会承担代价。",
+      "displayReversed": "争斗的强度开始下降，重点是分辨哪些立场值得修复，哪些胜负可以不再继续追逐。",
+      "reversalMeanings": {
+        "受阻": "和解、放下争斗",
+        "内化": "冲突更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "冲突或代价被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕冲突的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕冲突的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "风",
+      "domain": "思考、沟通与冲突",
+      "rankArchetype": "冲突与缺口",
+      "archetype": "冲突与缺口发生在思考、沟通与冲突这一层。",
+      "visualSymbols": [
+        "收剑的人物",
+        "离去的两人",
+        "散落的剑",
+        "翻卷云层"
+      ],
+      "contextLenses": {
+        "relationship": "沟通方式、界限、误解与事实核对",
+        "work": "判断、决策、规则与信息压力",
+        "resources": "注意力与认知负荷",
+        "growth": "怎样把清晰判断与情绪承受力放在一起"
+      },
+      "reflectionQuestions": [
+        "当前摩擦暴露了哪个不能再忽略的缺口？",
+        "怎样把清晰判断与情绪承受力放在一起？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-swords-06",
+      "name": "宝剑六",
+      "nameZh": "宝剑六",
+      "arcana": "swords",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 6,
+      "suitLabel": "宝剑",
+      "rankLabel": "六",
+      "keywords": [
+        "过渡",
+        "离开困局",
+        "缓慢前行"
+      ],
+      "symbolId": "tarot-swords-6",
+      "meaningUpright": "过渡、离开困境、平静旅程",
+      "meaningReversed": "无法离开、拖延转变",
+      "displayUpright": "重点在于离开持续消耗的处境，以可承受的节奏过渡，并让旧负担逐步减轻。",
+      "displayReversed": "想离开却仍被旧模式或现实条件牵住，先识别无法移动的部分，才能看见可调整的空间。",
+      "reversalMeanings": {
+        "受阻": "无法离开、拖延转变",
+        "内化": "过渡更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "过渡或离开困局被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕过渡的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕过渡的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "风",
+      "domain": "思考、沟通与冲突",
+      "rankArchetype": "调整与交换",
+      "archetype": "调整与交换发生在思考、沟通与冲突这一层。",
+      "visualSymbols": [
+        "撑船人",
+        "船中披斗篷的两人",
+        "竖立的六把剑",
+        "两侧不同水势"
+      ],
+      "contextLenses": {
+        "relationship": "沟通方式、界限、误解与事实核对",
+        "work": "判断、决策、规则与信息压力",
+        "resources": "注意力与认知负荷",
+        "growth": "怎样把清晰判断与情绪承受力放在一起"
+      },
+      "reflectionQuestions": [
+        "怎样恢复给予、接受与责任之间的平衡？",
+        "怎样把清晰判断与情绪承受力放在一起？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-swords-07",
+      "name": "宝剑七",
+      "nameZh": "宝剑七",
+      "arcana": "swords",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 7,
+      "suitLabel": "宝剑",
+      "rankLabel": "七",
+      "keywords": [
+        "策略",
+        "隐瞒",
+        "独自行动"
+      ],
+      "symbolId": "tarot-swords-7",
+      "meaningUpright": "欺骗、策略、独行其是",
+      "meaningReversed": "良心发现、揭露真相",
+      "displayUpright": "策略与谨慎能够保护行动，但隐瞒或绕开协作也会削弱信任，需要核对手段与目的是否一致。",
+      "displayReversed": "重点落在被隐藏的部分：良心压力或事实暴露，都提示重新说明动机并修正行动方式。",
+      "reversalMeanings": {
+        "受阻": "良心发现、揭露真相",
+        "内化": "策略更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "策略或隐瞒被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕策略的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕策略的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "风",
+      "domain": "思考、沟通与冲突",
+      "rankArchetype": "评估与坚持",
+      "archetype": "评估与坚持发生在思考、沟通与冲突这一层。",
+      "visualSymbols": [
+        "抱走五把剑的人物",
+        "身后两把剑",
+        "营帐",
+        "回望姿态"
+      ],
+      "contextLenses": {
+        "relationship": "沟通方式、界限、误解与事实核对",
+        "work": "判断、决策、规则与信息压力",
+        "resources": "注意力与认知负荷",
+        "growth": "怎样把清晰判断与情绪承受力放在一起"
+      },
+      "reflectionQuestions": [
+        "现在更需要继续投入，还是修正方向？",
+        "怎样把清晰判断与情绪承受力放在一起？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-swords-08",
+      "name": "宝剑八",
+      "nameZh": "宝剑八",
+      "arcana": "swords",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 8,
+      "suitLabel": "宝剑",
+      "rankLabel": "八",
+      "keywords": [
+        "自我束缚",
+        "受困",
+        "视角受限"
+      ],
+      "symbolId": "tarot-swords-8",
+      "meaningUpright": "自我束缚、受困、无力感",
+      "meaningReversed": "走出困境、找到出路",
+      "displayUpright": "受困感可能来自真实限制，也可能来自尚未验证的假设；先把两者分开，选择空间才会清楚。",
+      "displayReversed": "束缚开始出现松动的可能，关键不是一次挣脱，而是辨认一个真实可行、风险较低的出口。",
+      "reversalMeanings": {
+        "受阻": "走出困境、找到出路",
+        "内化": "自我束缚更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "自我束缚或受困被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕自我束缚的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕自我束缚的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "风",
+      "domain": "思考、沟通与冲突",
+      "rankArchetype": "推进与熟练",
+      "archetype": "推进与熟练发生在思考、沟通与冲突这一层。",
+      "visualSymbols": [
+        "蒙眼受缚的人物",
+        "环绕的八把剑",
+        "湿地",
+        "远方城堡"
+      ],
+      "contextLenses": {
+        "relationship": "沟通方式、界限、误解与事实核对",
+        "work": "判断、决策、规则与信息压力",
+        "resources": "注意力与认知负荷",
+        "growth": "怎样把清晰判断与情绪承受力放在一起"
+      },
+      "reflectionQuestions": [
+        "什么正在加速，又需要怎样避免失控或机械重复？",
+        "怎样把清晰判断与情绪承受力放在一起？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-swords-09",
+      "name": "宝剑九",
+      "nameZh": "宝剑九",
+      "arcana": "swords",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 9,
+      "suitLabel": "宝剑",
+      "rankLabel": "九",
+      "keywords": [
+        "焦虑",
+        "失眠",
+        "反复担忧"
+      ],
+      "symbolId": "tarot-swords-9",
+      "meaningUpright": "焦虑、噩梦、过度担忧",
+      "meaningReversed": "最坏时刻已过、释放恐惧",
+      "displayUpright": "反复担忧正在占用注意力，感受虽然真实，却不一定等同于事实；先为焦虑划出边界。",
+      "displayReversed": "最强烈的恐惧可能已经被看见，恢复从减少反刍、核对现实，并允许自己获得支持开始。",
+      "reversalMeanings": {
+        "受阻": "最坏时刻已过、释放恐惧",
+        "内化": "焦虑更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "焦虑或失眠被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕焦虑的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕焦虑的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "风",
+      "domain": "思考、沟通与冲突",
+      "rankArchetype": "接近完成",
+      "archetype": "接近完成发生在思考、沟通与冲突这一层。",
+      "visualSymbols": [
+        "床上掩面的人物",
+        "墙上九把剑",
+        "雕刻床板",
+        "图案被褥"
+      ],
+      "contextLenses": {
+        "relationship": "沟通方式、界限、误解与事实核对",
+        "work": "判断、决策、规则与信息压力",
+        "resources": "注意力与认知负荷",
+        "growth": "怎样把清晰判断与情绪承受力放在一起"
+      },
+      "reflectionQuestions": [
+        "最后一段路需要守住什么，也可以放松什么？",
+        "怎样把清晰判断与情绪承受力放在一起？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-swords-10",
+      "name": "宝剑十",
+      "nameZh": "宝剑十",
+      "arcana": "swords",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 10,
+      "suitLabel": "宝剑",
+      "rankLabel": "十",
+      "keywords": [
+        "终结",
+        "低谷",
+        "无法再拖延"
+      ],
+      "symbolId": "tarot-swords-10",
+      "meaningUpright": "痛苦的结局、彻底的终结",
+      "meaningReversed": "从低谷反弹、无法避免结局",
+      "displayUpright": "某个过程已经触及无法再拖延的终点，承认结束的痛感，也能阻止旧消耗继续扩大。",
+      "displayReversed": "低谷之后出现恢复空间，但不必急着证明一切已经过去，先处理残余影响并重建基本节奏。",
+      "reversalMeanings": {
+        "受阻": "从低谷反弹、无法避免结局",
+        "内化": "终结更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "终结或低谷被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕终结的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕终结的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "风",
+      "domain": "思考、沟通与冲突",
+      "rankArchetype": "结果与过载",
+      "archetype": "结果与过载发生在思考、沟通与冲突这一层。",
+      "visualSymbols": [
+        "俯卧的人物",
+        "刺入背部的十把剑",
+        "黑暗天空",
+        "远处曙光"
+      ],
+      "contextLenses": {
+        "relationship": "沟通方式、界限、误解与事实核对",
+        "work": "判断、决策、规则与信息压力",
+        "resources": "注意力与认知负荷",
+        "growth": "怎样把清晰判断与情绪承受力放在一起"
+      },
+      "reflectionQuestions": [
+        "这份完成带来了什么成果，又产生了什么负担？",
+        "怎样把清晰判断与情绪承受力放在一起？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-swords-11",
+      "name": "宝剑侍者",
+      "nameZh": "宝剑侍者",
+      "arcana": "swords",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 11,
+      "suitLabel": "宝剑",
+      "rankLabel": "侍者",
+      "keywords": [
+        "警觉",
+        "求知",
+        "沟通"
+      ],
+      "symbolId": "tarot-swords-11",
+      "meaningUpright": "好奇、警觉、消息灵通",
+      "meaningReversed": "多嘴、粗心、轻率",
+      "displayUpright": "好奇与警觉推动你搜集信息，适合多问、多查证，也要给尚未成熟的判断保留余地。",
+      "displayReversed": "信息敏感度可能滑向轻率转述或过度窥探，开口之前先确认来源、边界与实际影响。",
+      "reversalMeanings": {
+        "受阻": "多嘴、粗心、轻率",
+        "内化": "警觉更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "警觉或求知被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕警觉的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕警觉的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "风",
+      "domain": "思考、沟通与冲突",
+      "rankArchetype": "学习者与消息",
+      "archetype": "学习者与消息发生在思考、沟通与冲突这一层。",
+      "visualSymbols": [
+        "双手持剑的青年",
+        "疾风云层",
+        "飞鸟",
+        "起伏地面"
+      ],
+      "contextLenses": {
+        "relationship": "沟通方式、界限、误解与事实核对",
+        "work": "判断、决策、规则与信息压力",
+        "resources": "注意力与认知负荷",
+        "growth": "怎样把清晰判断与情绪承受力放在一起"
+      },
+      "reflectionQuestions": [
+        "以初学者姿态，需要先观察或验证哪条信息？",
+        "怎样把清晰判断与情绪承受力放在一起？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-swords-12",
+      "name": "宝剑骑士",
+      "nameZh": "宝剑骑士",
+      "arcana": "swords",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 12,
+      "suitLabel": "宝剑",
+      "rankLabel": "骑士",
+      "keywords": [
+        "果断",
+        "速度",
+        "直言"
+      ],
+      "symbolId": "tarot-swords-12",
+      "meaningUpright": "果断、行动迅速、思维敏锐",
+      "meaningReversed": "冲动、好斗、计划混乱",
+      "displayUpright": "思路与行动都在加速，果断有助于突破迟滞，但速度越快，越需要核对方向和后果。",
+      "displayReversed": "急于推进可能让敏锐变成好斗，计划与沟通容易失序，先减速能避免无谓的碰撞。",
+      "reversalMeanings": {
+        "受阻": "冲动、好斗、计划混乱",
+        "内化": "果断更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "果断或速度被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕果断的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕果断的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "风",
+      "domain": "思考、沟通与冲突",
+      "rankArchetype": "推动者与追求",
+      "archetype": "推动者与追求发生在思考、沟通与冲突这一层。",
+      "visualSymbols": [
+        "冲锋的骑士",
+        "高举长剑",
+        "疾驰白马",
+        "被风吹弯的树"
+      ],
+      "contextLenses": {
+        "relationship": "沟通方式、界限、误解与事实核对",
+        "work": "判断、决策、规则与信息压力",
+        "resources": "注意力与认知负荷",
+        "growth": "怎样把清晰判断与情绪承受力放在一起"
+      },
+      "reflectionQuestions": [
+        "行动速度和方向是否一致，哪里需要减速核对？",
+        "怎样把清晰判断与情绪承受力放在一起？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-swords-13",
+      "name": "宝剑王后",
+      "nameZh": "宝剑王后",
+      "arcana": "swords",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 13,
+      "suitLabel": "宝剑",
+      "rankLabel": "王后",
+      "keywords": [
+        "独立",
+        "清晰边界",
+        "理性"
+      ],
+      "symbolId": "tarot-swords-13",
+      "meaningUpright": "独立、清晰的判断、经历磨砺",
+      "meaningReversed": "冷酷、刻薄、悲观",
+      "displayUpright": "清晰判断来自经验与边界感，既能直面事实，也能在表达立场时保留必要的分寸。",
+      "displayReversed": "受伤后的防卫可能让理性变得冷硬或刻薄，先区分事实判断与悲观预设，边界会更准确。",
+      "reversalMeanings": {
+        "受阻": "冷酷、刻薄、悲观",
+        "内化": "独立更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "独立或清晰边界被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕独立的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕独立的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "风",
+      "domain": "思考、沟通与冲突",
+      "rankArchetype": "内在掌握与照料",
+      "archetype": "内在掌握与照料发生在思考、沟通与冲突这一层。",
+      "visualSymbols": [
+        "侧坐王后",
+        "直立长剑",
+        "伸出的左手",
+        "云与蝴蝶王冠"
+      ],
+      "contextLenses": {
+        "relationship": "沟通方式、界限、误解与事实核对",
+        "work": "判断、决策、规则与信息压力",
+        "resources": "注意力与认知负荷",
+        "growth": "怎样把清晰判断与情绪承受力放在一起"
+      },
+      "reflectionQuestions": [
+        "怎样在照顾他人或局面的同时保留自己的中心？",
+        "怎样把清晰判断与情绪承受力放在一起？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-swords-14",
+      "name": "宝剑国王",
+      "nameZh": "宝剑国王",
+      "arcana": "swords",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 14,
+      "suitLabel": "宝剑",
+      "rankLabel": "国王",
+      "keywords": [
+        "判断",
+        "原则",
+        "权威"
+      ],
+      "symbolId": "tarot-swords-14",
+      "meaningUpright": "权威、理性、道德判断",
+      "meaningReversed": "专制、冷漠、滥用权力",
+      "displayUpright": "原则与理性适合用来整理复杂信息，真正的权威也包括说明依据，并接受对决定的检验。",
+      "displayReversed": "规则若只服务于控制，判断便可能滑向专断或冷漠；重新纳入他人视角，能校正权力使用。",
+      "reversalMeanings": {
+        "受阻": "专制、冷漠、滥用权力",
+        "内化": "判断更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "判断或原则被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕判断的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕判断的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "风",
+      "domain": "思考、沟通与冲突",
+      "rankArchetype": "外在掌握与负责",
+      "archetype": "外在掌握与负责发生在思考、沟通与冲突这一层。",
+      "visualSymbols": [
+        "正面端坐的国王",
+        "直立长剑",
+        "蝴蝶纹王座",
+        "远方树木"
+      ],
+      "contextLenses": {
+        "relationship": "沟通方式、界限、误解与事实核对",
+        "work": "判断、决策、规则与信息压力",
+        "resources": "注意力与认知负荷",
+        "growth": "怎样把清晰判断与情绪承受力放在一起"
+      },
+      "reflectionQuestions": [
+        "怎样使用影响力，同时承担决定带来的后果？",
+        "怎样把清晰判断与情绪承受力放在一起？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-pentacles-01",
+      "name": "星币一",
+      "nameZh": "星币一",
+      "arcana": "pentacles",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 1,
+      "suitLabel": "星币",
+      "rankLabel": "一",
+      "keywords": [
+        "现实机会",
+        "资源",
+        "扎根"
+      ],
+      "symbolId": "tarot-pentacles-1",
+      "meaningUpright": "新财富、机会、物质基础",
+      "meaningReversed": "机会错失、财务不稳",
+      "displayUpright": "一个现实机会值得被具体评估，先确认资源、条件与最小投入，才能让可能性真正扎根。",
+      "displayReversed": "机会可能因准备不足、资源不稳或判断失焦而搁浅，先补齐基础条件比仓促投入更稳妥。",
+      "reversalMeanings": {
+        "受阻": "机会错失、财务不稳",
+        "内化": "现实机会更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "现实机会或资源被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕现实机会的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕现实机会的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "土",
+      "domain": "资源、身体与长期积累",
+      "rankArchetype": "种子与入口",
+      "archetype": "种子与入口发生在资源、身体与长期积累这一层。",
+      "visualSymbols": [
+        "云中伸出的手",
+        "星币",
+        "花园小径",
+        "花拱门与远山"
+      ],
+      "contextLenses": {
+        "relationship": "承诺如何体现在时间、照顾与现实安排里",
+        "work": "技能、回报、稳定性与长期建设",
+        "resources": "金钱、身体、时间与可用条件",
+        "growth": "怎样把价值观落实成稳定习惯"
+      },
+      "reflectionQuestions": [
+        "现在真正值得开始的最小一步是什么？",
+        "怎样把价值观落实成稳定习惯？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-pentacles-02",
+      "name": "星币二",
+      "nameZh": "星币二",
+      "arcana": "pentacles",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 2,
+      "suitLabel": "星币",
+      "rankLabel": "二",
+      "keywords": [
+        "兼顾",
+        "适应",
+        "节奏"
+      ],
+      "symbolId": "tarot-pentacles-2",
+      "meaningUpright": "平衡多项事务、适应变化",
+      "meaningReversed": "失去平衡、时间管理差",
+      "displayUpright": "多项事务需要同时照料，灵活调整节奏与优先级，能帮助有限的时间和精力保持流动。",
+      "displayReversed": "任务之间的切换已经超出承受范围，失衡不只源于能力，也可能需要删减承诺或重排时间。",
+      "reversalMeanings": {
+        "受阻": "失去平衡、时间管理差",
+        "内化": "兼顾更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "兼顾或适应被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕兼顾的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕兼顾的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "土",
+      "domain": "资源、身体与长期积累",
+      "rankArchetype": "对照与选择",
+      "archetype": "对照与选择发生在资源、身体与长期积累这一层。",
+      "visualSymbols": [
+        "舞动人物",
+        "无限带连接的两枚星币",
+        "起伏海浪",
+        "两艘船"
+      ],
+      "contextLenses": {
+        "relationship": "承诺如何体现在时间、照顾与现实安排里",
+        "work": "技能、回报、稳定性与长期建设",
+        "resources": "金钱、身体、时间与可用条件",
+        "growth": "怎样把价值观落实成稳定习惯"
+      },
+      "reflectionQuestions": [
+        "眼前两种力量需要取舍，还是需要重新配比？",
+        "怎样把价值观落实成稳定习惯？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-pentacles-03",
+      "name": "星币三",
+      "nameZh": "星币三",
+      "arcana": "pentacles",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 3,
+      "suitLabel": "星币",
+      "rankLabel": "三",
+      "keywords": [
+        "合作",
+        "技艺",
+        "质量"
+      ],
+      "symbolId": "tarot-pentacles-3",
+      "meaningUpright": "合作、技艺、团队成就",
+      "meaningReversed": "缺乏合作、工作质量低",
+      "displayUpright": "成果来自可见的技艺与清楚的协作接口，明确标准、分工和反馈，能让共同工作更扎实。",
+      "displayReversed": "合作可能卡在标准不一、沟通脱节或投入失衡，先找出质量下降的具体环节再谈责任。",
+      "reversalMeanings": {
+        "受阻": "缺乏合作、工作质量低",
+        "内化": "合作更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "合作或技艺被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕合作的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕合作的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "土",
+      "domain": "资源、身体与长期积累",
+      "rankArchetype": "展开与协作",
+      "archetype": "展开与协作发生在资源、身体与长期积累这一层。",
+      "visualSymbols": [
+        "教堂拱顶下的工匠",
+        "两位委托者",
+        "三枚星币",
+        "建筑图样"
+      ],
+      "contextLenses": {
+        "relationship": "承诺如何体现在时间、照顾与现实安排里",
+        "work": "技能、回报、稳定性与长期建设",
+        "resources": "金钱、身体、时间与可用条件",
+        "growth": "怎样把价值观落实成稳定习惯"
+      },
+      "reflectionQuestions": [
+        "怎样让初步成果进入更大的关系或环境？",
+        "怎样把价值观落实成稳定习惯？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-pentacles-04",
+      "name": "星币四",
+      "nameZh": "星币四",
+      "arcana": "pentacles",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 4,
+      "suitLabel": "星币",
+      "rankLabel": "四",
+      "keywords": [
+        "守成",
+        "控制",
+        "安全感"
+      ],
+      "symbolId": "tarot-pentacles-4",
+      "meaningUpright": "稳固、守财、控制",
+      "meaningReversed": "吝啬、害怕失去、开放",
+      "displayUpright": "守住资源能够提供安全感，但稳定也需要留有流动空间，重点是分清保护与过度控制。",
+      "displayReversed": "对失去的恐惧可能让控制变得僵硬，或开始出现松动；适度开放仍需清楚上限与退出条件。",
+      "reversalMeanings": {
+        "受阻": "吝啬、害怕失去、开放",
+        "内化": "守成更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "守成或控制被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕守成的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕守成的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "土",
+      "domain": "资源、身体与长期积累",
+      "rankArchetype": "稳定与边界",
+      "archetype": "稳定与边界发生在资源、身体与长期积累这一层。",
+      "visualSymbols": [
+        "抱紧星币的人物",
+        "头顶星币",
+        "脚下两枚星币",
+        "远方城市"
+      ],
+      "contextLenses": {
+        "relationship": "承诺如何体现在时间、照顾与现实安排里",
+        "work": "技能、回报、稳定性与长期建设",
+        "resources": "金钱、身体、时间与可用条件",
+        "growth": "怎样把价值观落实成稳定习惯"
+      },
+      "reflectionQuestions": [
+        "什么需要被保护，什么已经因为过度稳固而僵住？",
+        "怎样把价值观落实成稳定习惯？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-pentacles-05",
+      "name": "星币五",
+      "nameZh": "星币五",
+      "arcana": "pentacles",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 5,
+      "suitLabel": "星币",
+      "rankLabel": "五",
+      "keywords": [
+        "匮乏",
+        "孤立",
+        "求助"
+      ],
+      "symbolId": "tarot-pentacles-5",
+      "meaningUpright": "财务困难、被排斥、匮乏",
+      "meaningReversed": "改善处境、接受帮助",
+      "displayUpright": "匮乏感可能来自现实缺口，也可能被孤立感放大；承认困难并看见可用支持同样重要。",
+      "displayReversed": "重点转向改善处境的入口，接受帮助不等于失去自主；确认条件与边界，能让支持更可持续。",
+      "reversalMeanings": {
+        "受阻": "改善处境、接受帮助",
+        "内化": "匮乏更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "匮乏或孤立被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕匮乏的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕匮乏的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "土",
+      "domain": "资源、身体与长期积累",
+      "rankArchetype": "冲突与缺口",
+      "archetype": "冲突与缺口发生在资源、身体与长期积累这一层。",
+      "visualSymbols": [
+        "雪中行走的两人",
+        "五枚星币彩窗",
+        "拐杖",
+        "破旧衣物"
+      ],
+      "contextLenses": {
+        "relationship": "承诺如何体现在时间、照顾与现实安排里",
+        "work": "技能、回报、稳定性与长期建设",
+        "resources": "金钱、身体、时间与可用条件",
+        "growth": "怎样把价值观落实成稳定习惯"
+      },
+      "reflectionQuestions": [
+        "当前摩擦暴露了哪个不能再忽略的缺口？",
+        "怎样把价值观落实成稳定习惯？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-pentacles-06",
+      "name": "星币六",
+      "nameZh": "星币六",
+      "arcana": "pentacles",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 6,
+      "suitLabel": "星币",
+      "rankLabel": "六",
+      "keywords": [
+        "给予",
+        "接受",
+        "公平交换"
+      ],
+      "symbolId": "tarot-pentacles-6",
+      "meaningUpright": "给予与接受、慷慨、平衡",
+      "meaningReversed": "依赖、不平等、讨好",
+      "displayUpright": "给予与接受需要建立在透明条件和相对公平上，慷慨也应照顾双方的能力、边界与尊严。",
+      "displayReversed": "交换可能混入依赖、讨好或权力落差，分清谁能自由拒绝，有助于看见关系是否真正平衡。",
+      "reversalMeanings": {
+        "受阻": "依赖、不平等、讨好",
+        "内化": "给予更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "给予或接受被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕给予的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕给予的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "土",
+      "domain": "资源、身体与长期积累",
+      "rankArchetype": "调整与交换",
+      "archetype": "调整与交换发生在资源、身体与长期积累这一层。",
+      "visualSymbols": [
+        "分发钱币的人物",
+        "天平",
+        "两位跪地者",
+        "六枚星币"
+      ],
+      "contextLenses": {
+        "relationship": "承诺如何体现在时间、照顾与现实安排里",
+        "work": "技能、回报、稳定性与长期建设",
+        "resources": "金钱、身体、时间与可用条件",
+        "growth": "怎样把价值观落实成稳定习惯"
+      },
+      "reflectionQuestions": [
+        "怎样恢复给予、接受与责任之间的平衡？",
+        "怎样把价值观落实成稳定习惯？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-pentacles-07",
+      "name": "星币七",
+      "nameZh": "星币七",
+      "arcana": "pentacles",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 7,
+      "suitLabel": "星币",
+      "rankLabel": "七",
+      "keywords": [
+        "耐心",
+        "评估",
+        "长期投入"
+      ],
+      "symbolId": "tarot-pentacles-7",
+      "meaningUpright": "耐心等待、长期投资、评估",
+      "meaningReversed": "不耐烦、方向错误",
+      "displayUpright": "长期投入到了适合评估的节点，耐心并非被动等待，而是依据反馈决定继续、调整或止损。",
+      "displayReversed": "迟迟看不到成果容易引发不耐与自我否定，也可能说明方向需要校正，而非投入越多越好。",
+      "reversalMeanings": {
+        "受阻": "不耐烦、方向错误",
+        "内化": "耐心更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "耐心或评估被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕耐心的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕耐心的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "土",
+      "domain": "资源、身体与长期积累",
+      "rankArchetype": "评估与坚持",
+      "archetype": "评估与坚持发生在资源、身体与长期积累这一层。",
+      "visualSymbols": [
+        "倚靠锄头的人物",
+        "结有七枚星币的植株",
+        "低头评估",
+        "耕作地"
+      ],
+      "contextLenses": {
+        "relationship": "承诺如何体现在时间、照顾与现实安排里",
+        "work": "技能、回报、稳定性与长期建设",
+        "resources": "金钱、身体、时间与可用条件",
+        "growth": "怎样把价值观落实成稳定习惯"
+      },
+      "reflectionQuestions": [
+        "现在更需要继续投入，还是修正方向？",
+        "怎样把价值观落实成稳定习惯？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-pentacles-08",
+      "name": "星币八",
+      "nameZh": "星币八",
+      "arcana": "pentacles",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 8,
+      "suitLabel": "星币",
+      "rankLabel": "八",
+      "keywords": [
+        "练习",
+        "专注",
+        "熟练"
+      ],
+      "symbolId": "tarot-pentacles-8",
+      "meaningUpright": "专注、技艺磨练、勤劳",
+      "meaningReversed": "完美主义、重复劳动、缺乏技能",
+      "displayUpright": "稳定进步来自可重复、可反馈的练习，把目标拆成具体技能，能让勤奋逐渐转化为熟练。",
+      "displayReversed": "重复劳动未必带来成长，完美主义或缺少反馈都可能让练习停滞，需要检查方法而非只加时长。",
+      "reversalMeanings": {
+        "受阻": "完美主义、重复劳动、缺乏技能",
+        "内化": "练习更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "练习或专注被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕练习的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕练习的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "土",
+      "domain": "资源、身体与长期积累",
+      "rankArchetype": "推进与熟练",
+      "archetype": "推进与熟练发生在资源、身体与长期积累这一层。",
+      "visualSymbols": [
+        "雕刻星币的工匠",
+        "墙上六枚星币",
+        "手中与地面星币",
+        "远方城镇"
+      ],
+      "contextLenses": {
+        "relationship": "承诺如何体现在时间、照顾与现实安排里",
+        "work": "技能、回报、稳定性与长期建设",
+        "resources": "金钱、身体、时间与可用条件",
+        "growth": "怎样把价值观落实成稳定习惯"
+      },
+      "reflectionQuestions": [
+        "什么正在加速，又需要怎样避免失控或机械重复？",
+        "怎样把价值观落实成稳定习惯？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-pentacles-09",
+      "name": "星币九",
+      "nameZh": "星币九",
+      "arcana": "pentacles",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 9,
+      "suitLabel": "星币",
+      "rankLabel": "九",
+      "keywords": [
+        "独立",
+        "成果",
+        "自给自足"
+      ],
+      "symbolId": "tarot-pentacles-9",
+      "meaningUpright": "独立、物质享受、自给自足",
+      "meaningReversed": "财务依赖、轻率消费",
+      "displayUpright": "已经积累的成果支持更独立的选择，享受收获的同时，也可以看见自律与长期照料的价值。",
+      "displayReversed": "表面的舒适可能依赖他人资源或透支维持，轻率消费也会削弱自主，需要重新核对真实成本。",
+      "reversalMeanings": {
+        "受阻": "财务依赖、轻率消费",
+        "内化": "独立更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "独立或成果被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕独立的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕独立的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "土",
+      "domain": "资源、身体与长期积累",
+      "rankArchetype": "接近完成",
+      "archetype": "接近完成发生在资源、身体与长期积累这一层。",
+      "visualSymbols": [
+        "葡萄园中的人物",
+        "九枚星币",
+        "戴手套的猎鹰",
+        "蜗牛"
+      ],
+      "contextLenses": {
+        "relationship": "承诺如何体现在时间、照顾与现实安排里",
+        "work": "技能、回报、稳定性与长期建设",
+        "resources": "金钱、身体、时间与可用条件",
+        "growth": "怎样把价值观落实成稳定习惯"
+      },
+      "reflectionQuestions": [
+        "最后一段路需要守住什么，也可以放松什么？",
+        "怎样把价值观落实成稳定习惯？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-pentacles-10",
+      "name": "星币十",
+      "nameZh": "星币十",
+      "arcana": "pentacles",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 10,
+      "suitLabel": "星币",
+      "rankLabel": "十",
+      "keywords": [
+        "传承",
+        "长期稳定",
+        "共同资源"
+      ],
+      "symbolId": "tarot-pentacles-10",
+      "meaningUpright": "家族财富、长久稳定、传承",
+      "meaningReversed": "家族冲突、财务不稳定",
+      "displayUpright": "稳定不只体现在资产，也包括家人、制度与经验的延续；共同资源需要清楚责任和长期安排。",
+      "displayReversed": "家族期待、利益分配或基础不稳可能牵动关系，先分开情感承诺与现实责任，冲突会更容易被看清。",
+      "reversalMeanings": {
+        "受阻": "家族冲突、财务不稳定",
+        "内化": "传承更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "传承或长期稳定被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕传承的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕传承的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "土",
+      "domain": "资源、身体与长期积累",
+      "rankArchetype": "结果与过载",
+      "archetype": "结果与过载发生在资源、身体与长期积累这一层。",
+      "visualSymbols": [
+        "拱门下的家族",
+        "十枚星币",
+        "长者与犬",
+        "伴侣与孩子"
+      ],
+      "contextLenses": {
+        "relationship": "承诺如何体现在时间、照顾与现实安排里",
+        "work": "技能、回报、稳定性与长期建设",
+        "resources": "金钱、身体、时间与可用条件",
+        "growth": "怎样把价值观落实成稳定习惯"
+      },
+      "reflectionQuestions": [
+        "这份完成带来了什么成果，又产生了什么负担？",
+        "怎样把价值观落实成稳定习惯？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-pentacles-11",
+      "name": "星币侍者",
+      "nameZh": "星币侍者",
+      "arcana": "pentacles",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 11,
+      "suitLabel": "星币",
+      "rankLabel": "侍者",
+      "keywords": [
+        "学习",
+        "务实消息",
+        "新计划"
+      ],
+      "symbolId": "tarot-pentacles-11",
+      "meaningUpright": "上进、学习、新的物质计划",
+      "meaningReversed": "缺乏进展、空想",
+      "displayUpright": "务实的好奇心适合投入学习与新计划，从小范围验证开始，能把兴趣逐步变成可见能力。",
+      "displayReversed": "计划可能停留在想象或零散准备中，缺少持续行动与反馈，会让上进心难以转化为进展。",
+      "reversalMeanings": {
+        "受阻": "缺乏进展、空想",
+        "内化": "学习更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "学习或务实消息被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕学习的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕学习的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "土",
+      "domain": "资源、身体与长期积累",
+      "rankArchetype": "学习者与消息",
+      "archetype": "学习者与消息发生在资源、身体与长期积累这一层。",
+      "visualSymbols": [
+        "双手捧星币的青年",
+        "绿色田野",
+        "远山",
+        "专注凝视"
+      ],
+      "contextLenses": {
+        "relationship": "承诺如何体现在时间、照顾与现实安排里",
+        "work": "技能、回报、稳定性与长期建设",
+        "resources": "金钱、身体、时间与可用条件",
+        "growth": "怎样把价值观落实成稳定习惯"
+      },
+      "reflectionQuestions": [
+        "以初学者姿态，需要先观察或验证哪条信息？",
+        "怎样把价值观落实成稳定习惯？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-pentacles-12",
+      "name": "星币骑士",
+      "nameZh": "星币骑士",
+      "arcana": "pentacles",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 12,
+      "suitLabel": "星币",
+      "rankLabel": "骑士",
+      "keywords": [
+        "可靠",
+        "勤勉",
+        "稳步推进"
+      ],
+      "symbolId": "tarot-pentacles-12",
+      "meaningUpright": "勤奋、可靠、稳步前进",
+      "meaningReversed": "懒惰、停滞不前",
+      "displayUpright": "可靠来自稳定节奏与持续履行，缓慢并不等于停滞，扎实完成眼前一步比追求声势更重要。",
+      "displayReversed": "惯性可能让稳健变成停滞，或因缺乏动力而反复拖延；重新确认目标与节奏有助于恢复推进。",
+      "reversalMeanings": {
+        "受阻": "懒惰、停滞不前",
+        "内化": "可靠更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "可靠或勤勉被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕可靠的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕可靠的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "土",
+      "domain": "资源、身体与长期积累",
+      "rankArchetype": "推动者与追求",
+      "archetype": "推动者与追求发生在资源、身体与长期积累这一层。",
+      "visualSymbols": [
+        "静立的重型马",
+        "手持星币的骑士",
+        "耕地",
+        "低平地平线"
+      ],
+      "contextLenses": {
+        "relationship": "承诺如何体现在时间、照顾与现实安排里",
+        "work": "技能、回报、稳定性与长期建设",
+        "resources": "金钱、身体、时间与可用条件",
+        "growth": "怎样把价值观落实成稳定习惯"
+      },
+      "reflectionQuestions": [
+        "行动速度和方向是否一致，哪里需要减速核对？",
+        "怎样把价值观落实成稳定习惯？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-pentacles-13",
+      "name": "星币王后",
+      "nameZh": "星币王后",
+      "arcana": "pentacles",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 13,
+      "suitLabel": "星币",
+      "rankLabel": "王后",
+      "keywords": [
+        "照料",
+        "务实",
+        "丰足"
+      ],
+      "symbolId": "tarot-pentacles-13",
+      "meaningUpright": "务实、温暖、照顾家庭与事业",
+      "meaningReversed": "工作与生活失衡、物质主义",
+      "displayUpright": "务实的照料兼顾身体、资源与日常秩序，温暖并非无限付出，也包含对自身需要的尊重。",
+      "displayReversed": "照顾责任与物质压力可能挤压个人空间，失衡时容易以控制或消费补偿，需要恢复内外边界。",
+      "reversalMeanings": {
+        "受阻": "工作与生活失衡、物质主义",
+        "内化": "照料更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "照料或务实被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕照料的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕照料的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "土",
+      "domain": "资源、身体与长期积累",
+      "rankArchetype": "内在掌握与照料",
+      "archetype": "内在掌握与照料发生在资源、身体与长期积累这一层。",
+      "visualSymbols": [
+        "花园王座",
+        "怀抱星币的王后",
+        "兔子",
+        "玫瑰花架"
+      ],
+      "contextLenses": {
+        "relationship": "承诺如何体现在时间、照顾与现实安排里",
+        "work": "技能、回报、稳定性与长期建设",
+        "resources": "金钱、身体、时间与可用条件",
+        "growth": "怎样把价值观落实成稳定习惯"
+      },
+      "reflectionQuestions": [
+        "怎样在照顾他人或局面的同时保留自己的中心？",
+        "怎样把价值观落实成稳定习惯？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    },
+    {
+      "cardId": "rws-pentacles-14",
+      "name": "星币国王",
+      "nameZh": "星币国王",
+      "arcana": "pentacles",
+      "arcanaLabel": "小阿尔卡那",
+      "number": 14,
+      "suitLabel": "星币",
+      "rankLabel": "国王",
+      "keywords": [
+        "经营",
+        "稳定",
+        "资源掌握"
+      ],
+      "symbolId": "tarot-pentacles-14",
+      "meaningUpright": "成功、稳健、财富管理",
+      "meaningReversed": "顽固、物质至上、固执",
+      "displayUpright": "成熟经营重视稳定、责任与长期价值，资源掌握得越多，越需要透明规则和审慎使用。",
+      "displayReversed": "对安全与成果的执着可能变成顽固或物质至上，重新检视价值排序，能避免资源反过来主导选择。",
+      "reversalMeanings": {
+        "受阻": "顽固、物质至上、固执",
+        "内化": "经营更多发生在内在，外部暂时不容易看见或推进。",
+        "过量": "经营或稳定被过度放大，需要检查是否已经失去弹性。",
+        "延迟": "围绕经营的进展尚未成熟，需要补足条件或等待节奏。",
+        "正在松动": "原本围绕经营的卡点开始缓解，但仍需要现实行动承接。"
+      },
+      "element": "土",
+      "domain": "资源、身体与长期积累",
+      "rankArchetype": "外在掌握与负责",
+      "archetype": "外在掌握与负责发生在资源、身体与长期积累这一层。",
+      "visualSymbols": [
+        "藤蔓与公牛纹王座",
+        "手持星币与权杖的国王",
+        "葡萄",
+        "远方城堡"
+      ],
+      "contextLenses": {
+        "relationship": "承诺如何体现在时间、照顾与现实安排里",
+        "work": "技能、回报、稳定性与长期建设",
+        "resources": "金钱、身体、时间与可用条件",
+        "growth": "怎样把价值观落实成稳定习惯"
+      },
+      "reflectionQuestions": [
+        "怎样使用影响力，同时承担决定带来的后果？",
+        "怎样把价值观落实成稳定习惯？"
+      ],
+      "reversalModes": [
+        "受阻",
+        "内化",
+        "过量",
+        "延迟",
+        "正在松动"
+      ],
+      "tradition": "韦特—史密斯体系",
+      "contentVersion": "1.1.0",
+      "sourceLabel": "《塔罗图解钥匙》（1911）与团队中文编辑｜内容版 1.1",
+      "sourceRefs": [
+        "TAROT-RWS-WAITE-1911",
+        "TAROT-RWS-EDITORIAL-ZH-01"
+      ],
+      "reviewStatus": "团队逐牌初审",
+      "editorialNotice": "关键词、核心母题、即时展示句和逆位机制为团队中文编辑，不是古典原文直译。"
+    }
+  ]
+}

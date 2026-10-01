@@ -1,0 +1,101 @@
+{
+  "components": [
+    {
+      "id": "root",
+      "component": "Card",
+      "child": "body",
+      "style": {
+        "padding": 14,
+        "containerColor": "basic_container_primary",
+        "borderWidth": 0.5,
+        "borderColor": "card_border",
+        "shape": 20
+      }
+    },
+    {
+      "id": "body",
+      "component": "Column",
+      "children": ["heading-row", "summary", "list", "expand"]
+    },
+    {
+      "id": "heading-row",
+      "component": "Row",
+      "children": ["heading", "spacer", "badge"]
+    },
+    {
+      "id": "heading",
+      "component": "Text",
+      "text": "📚 图书推荐",
+      "variant": "h4"
+    },
+    {
+      "id": "spacer",
+      "component": "Box",
+      "style": { "flex": 1 }
+    },
+    {
+      "id": "badge",
+      "component": "Text",
+      "text": { "path": "/count" },
+      "variant": "caption"
+    },
+    {
+      "id": "summary",
+      "component": "Text",
+      "text": { "path": "/operation" },
+      "variant": "caption",
+      "style": { "paddingTop": 2, "paddingBottom": 8 }
+    },
+    {
+      "id": "list",
+      "component": "List",
+      "children": { "path": "/books", "componentId": "row" }
+    },
+    {
+      "id": "row",
+      "component": "Column",
+      "children": ["row-top", "row-desc"]
+    },
+    {
+      "id": "row-top",
+      "component": "Row",
+      "children": ["row-title", "row-rating"]
+    },
+    {
+      "id": "row-title",
+      "component": "Text",
+      "text": { "path": "title" },
+      "variant": "body"
+    },
+    {
+      "id": "row-rating",
+      "component": "Text",
+      "text": { "path": "rating" },
+      "variant": "caption"
+    },
+    {
+      "id": "row-desc",
+      "component": "Text",
+      "text": { "path": "author" },
+      "variant": "caption"
+    },
+    {
+      "id": "expand",
+      "component": "Button",
+      "child": "expand-label",
+      "variant": "primary",
+      "style": { "marginTop": 8 },
+      "action": {
+        "event": {
+          "name": "open_workspace",
+          "context": { "resourceUri": "https://one-agent-test-1343551737.cos.ap-guangzhou.myqcloud.com/skills/official/one_agent/book-recommender/v1.0.1/assets/ui/workspace.html?q-sign-algorithm=sha1&q-ak=AKIDEelWpQcH17dEFmvALwlUV5MeDOD7IDnnNA5nZ89Wi9JNqfsnVhv49tdQFw7WJoW4&q-sign-time=1789645536;1789649136&q-key-time=1789645536;1789649136&q-header-list=host&q-url-param-list=&q-signature=0e089a3707882c97344872ce208f84615848127f&x-cos-security-token=3pPA8ji7y3DaJYPJlWHy2ccaRFc5Piza7d67939499653364b67da3b8fa0e6277Zt_w0TBUrvdP3-E6GSfsq_2yfG6TAbt5NG76XL7iwVVu_4h1-iIjkTa_Igldsh4T-OFOvcUa1q24k7PYsjxHxb6xwkSnQj41JB5i0AyNh6Rj6_Qwu_1rPOvhLgTh1_eTWyeFlPCh9nIh3EeJILhJCE_Zl2XOVCjWjB6rx2kH-YadLzo8-XIXAuU0ASAMq64cdunU_VFm408iJw2s_uYaSTOvgEvU5xIyJKerAsWT-tAq63ID0fQ5apQ_4XPwZjmw56Yw587pipvQnaagc03oBA" }
+        }
+      }
+    },
+    {
+      "id": "expand-label",
+      "component": "Text",
+      "text": "打开完整书单"
+    }
+  ]
+}

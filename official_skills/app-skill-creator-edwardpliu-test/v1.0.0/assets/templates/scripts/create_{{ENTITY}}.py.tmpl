@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+"""新建一条{{APP_NAME}}记录。"""
+
+from __future__ import annotations
+
+from _store import Store, new_record, require_text, execute, print_model_result
+
+
+def _create_{{ENTITY}}(args: dict, store: Store) -> dict:
+    record = new_record(
+        title=require_text(args, "title"),
+        notes=str(args.get("notes") or ""),
+    )
+    store.insert(record)
+    return {"{{ENTITY}}": record}
+
+
+def create_{{ENTITY}}(args: dict) -> dict:
+    result = execute(_create_{{ENTITY}}, args)
+    print_model_result(result, "{{ENTITY}}", "count")
+    return result

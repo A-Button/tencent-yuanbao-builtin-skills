@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="体检报告解读：6 项健康问题、处理优先级与就诊建议。AI 辅助整理，不替代医生诊断。">
+<meta name="format-detection" content="telephone=no">
+<meta name="color-scheme" content="light">
+<meta name="robots" content="noindex, nofollow">
+<title>腾讯健康 · 体检报告解读 · 2026-08-20</title>
+<style>
+  :root {
+    --bg:#fff; --soft:#f7f7f5; --soft2:#f1efe8;
+    --tx:#1c1c1a; --tx2:#5f5e5a; --tx3:#888780;
+    --line:#e2e0d9;
+    --red:#a32d2d; --redbg:#fcebeb; --redln:#f09595;
+    --amb:#854f0b; --ambbg:#faeeda; --ambln:#ef9f27;
+    --blu:#185fa5; --blubg:#e6f1fb; --bluln:#85b7eb;
+    --grn:#3b6d11; --grnbg:#eaf3de; --grnln:#97c459;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;padding:28px 18px 64px;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+       font-size:14.5px;line-height:1.75;color:var(--tx);background:var(--soft)}
+  .wrap{max-width:880px;margin:0 auto}
+
+  /* ============ 顶部信息 ============ */
+  .head{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:18px}
+  .head h1{font-size:21px;font-weight:600;margin:0 0 8px}
+  .meta{font-size:12.5px;color:var(--tx3)}
+  .meta span+span::before{content:" · "}
+  .rd{margin-top:15px;padding:13px 15px;background:var(--soft);
+      border-left:3px solid var(--blu);border-radius:0 8px 8px 0;
+      font-size:13.5px;line-height:1.75;color:var(--tx2)}
+  .rd-t{font-weight:600;color:var(--blu);margin-bottom:5px;font-size:14px}
+  .rd b{color:var(--tx)}
+  /* 目录导航：转发后便于跳转 */
+  .toc{margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+  .toc-t{font-size:12px;color:var(--tx3);margin-bottom:8px;letter-spacing:.5px}
+  .toc-l{display:flex;flex-wrap:wrap;gap:7px}
+  .toc-l a{display:inline-flex;align-items:center;gap:5px;
+           padding:5px 11px 5px 8px;border-radius:7px;background:var(--soft);
+           font-size:13px;color:var(--tx2);text-decoration:none;line-height:1.3}
+  .toc-l a b{font-size:11.5px;color:var(--tx3);font-weight:600;
+             font-variant-numeric:tabular-nums}
+  .toc-l a:hover{background:var(--soft2);color:var(--tx)}
+  /* 锚点跳转时留出顶部余量 */
+  .sec,.disc{scroll-margin-top:14px}
+
+  /* ============ 大标题（章节）============ */
+  .sec{background:var(--bg);border:1px solid var(--line);border-radius:14px;margin-bottom:18px;overflow:hidden}
+  .sec-hd{display:flex;align-items:center;gap:13px;padding:16px 22px;
+          background:var(--soft);border-bottom:1px solid var(--line);
+          border-left:4px solid var(--tx)}
+  .sec-hd .no{display:inline-flex;align-items:center;justify-content:center;
+              min-width:34px;height:28px;padding:0 8px;border-radius:7px;
+              background:var(--tx);color:#fff;
+              font-size:14.5px;font-weight:600;font-variant-numeric:tabular-nums;
+              letter-spacing:.5px;flex-shrink:0}
+  .sec-hd .ttl{font-size:18.5px;font-weight:600;letter-spacing:.4px}
+  .sec-bd{padding:20px 22px}
+
+  /* ============ 小标题 ============ */
+  h3.sub{font-size:15.5px;font-weight:600;margin:26px 0 12px;padding:0 0 8px 11px;
+         border-left:4px solid var(--blu);border-bottom:1px solid var(--line);line-height:1.4}
+  h3.sub:first-child{margin-top:0}
+  h3.sub.r{border-left-color:var(--red)}
+  h3.sub.a{border-left-color:var(--ambln)}
+  h3.sub.g{border-left-color:var(--grnln)}
+  h3.sub .n2{color:var(--tx3);font-weight:500;margin-right:6px;font-variant-numeric:tabular-nums}
+  h4.sub2{font-size:14.5px;font-weight:600;margin:19px 0 9px;padding-left:11px;
+          border-left:2px solid var(--line);line-height:1.4}
+  h4.sub2 .n3{color:var(--tx3);font-weight:500;margin-right:6px;font-variant-numeric:tabular-nums}
+  /* 检查项目归属 */
+  .src{font-size:12.5px;color:var(--tx2);margin:-4px 0 11px;padding-left:11px}
+  .src b{color:var(--tx);font-weight:600}
+  .pb-src{font-size:12.5px;color:var(--tx2);margin-top:6px}
+  .pb-src b{color:var(--tx);font-weight:600}
+
+  /* ============ 问题卡（核心改动）============ */
+  .pb{border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden}
+  .pb-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+         padding:14px 16px 13px;flex-wrap:wrap}
+  .pb-name{font-size:16.5px;font-weight:600;line-height:1.45}
+  .pb-name .qual{font-weight:400;font-size:14px;opacity:.82}
+  .pb-ev{font-size:12.5px;color:var(--tx3);margin-top:5px;font-variant-numeric:tabular-nums}
+  .pb-bd{padding:0 16px 15px;border-top:1px dashed var(--line);margin-top:0;padding-top:13px}
+  .pb.r{border-left:4px solid var(--red)}    .pb.r .pb-name{color:var(--red)}
+  .pb.a{border-left:4px solid var(--ambln)}  .pb.a .pb-name{color:var(--amb)}
+  .pb.b{border-left:4px solid var(--bluln)}  .pb.b .pb-name{color:var(--blu)}
+  .pb.g{border-left:4px solid var(--grnln)}  .pb.g .pb-name{color:var(--grn)}
+
+  .badge{display:inline-block;font-size:11.5px;padding:3px 10px;border-radius:6px;
+         white-space:nowrap;font-weight:500;flex-shrink:0}
+  .b-r{color:var(--red);background:var(--redbg)}
+  .b-a{color:var(--amb);background:var(--ambbg)}
+  .b-b{color:var(--blu);background:var(--blubg)}
+  .b-g{color:var(--grn);background:var(--grnbg)}
+
+  dl.kv{display:grid;grid-template-columns:auto 1fr;gap:7px 15px;margin:0;font-size:13.5px}
+  dl.kv dt{color:var(--tx3);white-space:nowrap}
+  dl.kv dd{margin:0}
+
+  /* 三档层次：p.tx 纯文本 → .ln 左边线 → .note 底色块（仅关键处） */
+  p.tx{margin:11px 0;font-size:14px;line-height:1.8}
+  p.tx.sm{font-size:13.5px;color:var(--tx2)}
+  .ln{margin:12px 0;padding:2px 0 2px 13px;border-left:2px solid var(--line);
+      font-size:13.5px;line-height:1.75;color:var(--tx2)}
+  .ln b{color:var(--tx);font-weight:600}
+  .ln.b{border-left-color:var(--bluln)}
+  .ln.a{border-left-color:var(--ambln)}
+  .ln.g{border-left-color:var(--grnln)}
+  .ln.r{border-left-color:var(--redln)}
+  .note{background:var(--ambbg);border:1px solid var(--ambln);border-radius:9px;
+        padding:12px 15px;font-size:13.5px;margin:13px 0;color:#412402;line-height:1.75}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0}
+  th,td{text-align:left;padding:10px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--tx3);font-weight:500;background:transparent;font-size:12.5px;
+     border-bottom:1.5px solid var(--line)}
+  .up{color:var(--red);font-weight:500} .dn{color:var(--blu);font-weight:500} .ok{color:var(--grn)}
+
+  .lay{margin:10px 0;padding:2px 0 2px 13px;border-left:2px solid var(--line);
+       font-size:13.5px;line-height:1.75;color:var(--tx2)}
+  .lay b{font-weight:600;color:var(--tx)}
+  ul.t{margin:7px 0;padding-left:21px} ul.t li{margin:7px 0}
+  ul.nb{list-style:none;padding-left:0}
+  .mk{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:5px;
+      font-weight:500;margin-right:7px;white-space:nowrap;vertical-align:1px}
+  .mk-y{background:var(--grnbg);color:var(--grn)}
+  .mk-q{background:var(--ambbg);color:var(--amb)}
+  .chart{margin:12px 0 4px}
+
+  .disc{background:var(--bg);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:14px;padding:18px 22px;font-size:13px;color:var(--tx2)}
+  .disc .dh{font-size:16px;font-weight:600;color:var(--red);margin-bottom:9px;display:flex;align-items:center;gap:9px}
+  .disc .dh .no{display:inline-flex;align-items:center;justify-content:center;
+                min-width:34px;height:28px;padding:0 8px;
+                border-radius:7px;background:var(--red);color:#fff;
+                font-size:14.5px;font-weight:600;letter-spacing:.5px}
+  .foot{text-align:center;font-size:12px;color:var(--tx3);margin-top:20px;line-height:1.8}
+  @media print{
+    body{background:#fff;padding:0;font-size:11.5pt}
+    .wrap{max-width:100%}
+    .sec,.disc{break-inside:avoid;border-color:#bbb;box-shadow:none}
+    .sec-hd{background:#f4f2ec !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .note,.badge,.mk{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .toc{display:none}          /* 打印时目录无用 */
+    .tw{overflow:visible}
+    .tw table{min-width:0}
+    table{font-size:10pt}
+    a{text-decoration:none;color:inherit}
+    h3.sub,h4.sub2{break-after:avoid}
+    .pb{break-inside:avoid}
+  }
+
+  /* 手机适配：转发给家人时多在手机上阅读 */
+  @media (max-width:640px){
+    body{padding:14px 10px 40px;font-size:15px}
+    .wrap{max-width:100%}
+    .head,.sec,.disc{border-radius:11px}
+    .head{padding:17px 16px}
+    .sec-hd{padding:13px 15px;gap:10px}
+    .sec-hd .ttl{font-size:17px}
+    .sec-bd{padding:16px 15px}
+    h3.sub{font-size:15px;margin:22px 0 10px}
+    .pb-hd{padding:12px 13px 11px}
+    .pb-bd{padding:11px 13px 13px}
+    .pb-name{font-size:15.5px}
+    .disc{padding:16px}
+    /* 窄屏表格：允许横向滚动而非挤压变形 */
+    .tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:6px -15px;padding:0 15px}
+    .tw table{min-width:520px}
+    table{font-size:13px}
+    th,td{padding:9px 8px}
+    dl.kv{grid-template-columns:1fr;gap:2px 0}
+    dl.kv dt{margin-top:7px;font-size:12.5px}
+    .ln,.lay{font-size:13.5px;padding-left:11px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="head">
+  <h1>腾讯健康 · 体检报告解读</h1>
+  <p style="margin:10px 0;font-weight:700">本文为虚构演示数据，不是真实病例。所有数值、日期与人群特征均为演示判读格式而构造，不得用于任何真实健康判断。</p>
+  <div class="meta"><span>男 · 55 岁</span><span>体检套餐（生化 + 血常规 + 甲功 + 超声）</span><span>报告日期 2026-08-20</span></div>
+  <div class="rd">
+    <div class="rd-t">怎么读这份报告</div>
+    这是一份 AI 辅助整理的体检报告说明，<b>不是医院出具的诊断</b>。
+    时间有限的话，看 <b>01 报告总结</b> 和 <b>08 下一步</b> 两段就够了 ——
+    前者说明有哪些问题，后者说明该去哪个科、查什么。
+    其余章节是详细依据，可按需查阅；<b>10 参考指南</b>列出了所有判定标准的出处，可拿去与医生核对。
+  </div>
+  <nav class="toc">
+    <div class="toc-t">目录</div>
+    <div class="toc-l"><a href="#s01"><b>01</b>报告总结</a><a href="#s02"><b>02</b>处理优先级</a><a href="#s03"><b>03</b>异常指标详细解读</a><a href="#s04"><b>04</b>关联性分析</a><a href="#s05"><b>05</b>干扰因素排查</a><a href="#s06"><b>06</b>风险预测</a><a href="#s07"><b>07</b>趋势变化</a><a href="#s08"><b>08</b>下一步</a><a href="#s09"><b>09</b>生活指导</a><a href="#s10"><b>10</b>参考指南</a><a href="#s11"><b>11</b>重要提醒</a></div>
+  </nav>
+</div>
+
+<!-- ============ 01 ============ -->
+<div class="sec" id="s01">
+  <div class="sec-hd"><span class="no">01</span><span class="ttl">报告总结</span></div>
+  <div class="sec-bd">
+    <p style="margin:0 0 14px">本次报告共发现 <b>6 个健康问题</b>，其中 2 个需要两周内看专科医生。</p>
+
+    <h3 class="sub r"><span class="n2">1.1</span>需优先处理</h3>
+    <div class="pb a">
+      <div class="pb-hd">
+        <div>
+          <div class="pb-name">血糖升高<span class="qual">（糖尿病可能）</span></div>
+          <div class="pb-ev">空腹血糖 7.4 mmol/L，已达诊断线 7.0</div>
+          <div class="pb-src"><b>检查项目</b>：生化全项 · 血糖</div>
+        </div>
+        <span class="badge b-a">两周内专科</span>
+      </div>
+    </div>
+    <div class="pb a">
+      <div class="pb-hd">
+        <div>
+          <div class="pb-name">血钾偏高<span class="qual">（需先排除抽血因素）</span></div>
+          <div class="pb-ev">血钾 5.9 mmol/L，医院危险线 6.2</div>
+          <div class="pb-src"><b>检查项目</b>：生化全项 · 电解质</div>
+        </div>
+        <span class="badge b-a">两周内专科</span>
+      </div>
+    </div>
+
+    <h3 class="sub"><span class="n2">1.2</span>整体性问题</h3>
+    <p class="tx">
+      腹部肥胖、血糖高、血压高、血脂异常这 <b>4 个问题同时出现</b>，在医学上合起来叫
+      <b>代谢综合征</b>。它本身不是一种病，而是一组危险信号的组合 ——
+      每一项单看都只是轻度偏高，凑在一起，将来得心梗、脑梗的风险会明显放大。
+    </p>
+
+    <h3 class="sub g"><span class="n2">1.3</span>易被忽略的信号</h3>
+    <div class="ln a">
+      <b>甲状腺功能可能正在悄悄减退。</b>
+      TSH（脑垂体发给甲状腺的「指令信号」）三年数据是 2.1 → 3.0 → 4.0，
+      <b>三次都在正常范围内（0.27~4.2）</b>，报告上永远不会标箭头。
+      但三年持续上升了 90%，这种趋势只有对比历年报告才能发现。
+    </div>
+  </div>
+</div>
+
+<!-- ============ 02 ============ -->
+<div class="sec" id="s02">
+  <div class="sec-hd"><span class="no">02</span><span class="ttl">处理优先级</span></div>
+  <div class="sec-bd">
+
+    <h3 class="sub r"><span class="n2">2.1</span>需立即就医 · 数小时内</h3>
+    <p class="tx sm">本次没有需要立即急诊的问题。</p>
+
+    <h3 class="sub a"><span class="n2">2.2</span>两周内专科就诊 · 2 项</h3>
+    <div class="pb a">
+      <div class="pb-hd">
+        <div>
+          <div class="pb-name">血糖升高<span class="qual">（糖尿病可能）</span></div>
+          <div class="pb-ev">空腹血糖 7.4 mmol/L</div>
+          <div class="pb-src"><b>检查项目</b>：生化全项 · 血糖</div>
+        </div>
+        <span class="badge b-a">内分泌科</span>
+      </div>
+      <div class="pb-bd">
+        <dl class="kv">
+          <dt>要查什么</dt><dd>OGTT（糖耐量试验，喝糖水后测血糖）+ HbA1c（糖化血红蛋白，反映近 2~3 个月平均血糖）</dd>
+          <dt>为什么急</dt><dd>已达诊断标准，越早确诊越早干预，可显著降低并发症风险</dd>
+          <dt>同时要做</dt><dd>并发症筛查：眼底、尿微量白蛋白、神经、足部</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="pb a">
+      <div class="pb-hd">
+        <div>
+          <div class="pb-name">血钾偏高<span class="qual">（需先排除抽血因素）</span></div>
+          <div class="pb-ev">血钾 5.9 mmol/L</div>
+          <div class="pb-src"><b>检查项目</b>：生化全项 · 电解质</div>
+        </div>
+        <span class="badge b-a">肾内科</span>
+      </div>
+      <div class="pb-bd">
+        <dl class="kv">
+          <dt>要查什么</dt><dd>重新抽血复查电解质 + 心电图</dd>
+          <dt>为什么急</dt><dd>钾影响心跳节律，虽未到危险线但需确认是真高还是假象</dd>
+          <dt>提前就诊</dt><dd>若出现心慌、乏力、手脚麻木，不要等两周，立即就医</dd>
+        </dl>
+      </div>
+    </div>
+
+    <h3 class="sub"><span class="n2">2.3</span>一至三个月复查 · 3 项</h3>
+    <div class="pb b">
+      <div class="pb-hd">
+        <div>
+          <div class="pb-name">中心型肥胖</div>
+          <div class="pb-ev">腰围 92 cm · BMI 27.7 · 腰高比 0.535</div>
+          <div class="pb-src"><b>检查项目</b>：一般体格检查（身高、体重、腰围）</div>
+        </div>
+        <span class="badge b-b">内分泌科 / 营养科</span>
+      </div>
+      <div class="pb-bd">
+        <dl class="kv">
+          <dt>什么意思</dt><dd>脂肪主要堆在肚子上。这比全身均匀胖危险得多，因为内脏脂肪直接影响血糖和血脂代谢</dd>
+          <dt>目标</dt><dd>3 个月减 4 kg（82 → 78 kg），腰围降到 85 cm 以下</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="pb b">
+      <div class="pb-hd">
+        <div>
+          <div class="pb-name">血脂异常<span class="qual">（坏胆固醇未达标 + 好胆固醇偏低）</span></div>
+          <div class="pb-ev">LDL-C 3.2 · 甘油三酯 2.1 · HDL-C 1.1</div>
+          <div class="pb-src"><b>检查项目</b>：<b>血脂四项</b>（生化全项内的子项目）</div>
+        </div>
+        <span class="badge b-b">心内科</span>
+      </div>
+      <div class="pb-bd">
+        <div class="note" style="margin-top:0">
+          <b>注意：这项报告上没标箭头。</b>
+          LDL-C 3.2 在报告的正常范围（&lt;3.4）内，但因为你有糖尿病且超过 40 岁，
+          属于高风险人群，你的目标应该是 <b>&lt;2.6</b> —— 实际超标 23%。
+        </div>
+        <dl class="kv">
+          <dt>要查什么</dt><dd>血脂四项 + Lp(a)（脂蛋白 a，主要由遗传决定）+ 颈动脉超声</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="pb b">
+      <div class="pb-hd">
+        <div>
+          <div class="pb-name">肝酶升高<span class="qual">（脂肪肝可能）</span></div>
+          <div class="pb-ev">ALT 62 U/L · 超声提示轻度脂肪肝</div>
+          <div class="pb-src"><b>检查项目</b>：<b>肝功能</b>（生化全项内）+ 腹部超声</div>
+        </div>
+        <span class="badge b-b">消化内科</span>
+      </div>
+      <div class="pb-bd">
+        <dl class="kv">
+          <dt>什么意思</dt><dd>ALT 是肝细胞里的酶，肝细胞受损时会漏到血里。结合超声，最可能是脂肪肝引起</dd>
+          <dt>先做一件事</dt><dd>如果在吃红曲、纳豆类保健品，停用 1 个月后再复查 —— 这类保健品有类似降脂药的作用，会让肝酶升高</dd>
+        </dl>
+      </div>
+    </div>
+
+    <h3 class="sub g"><span class="n2">2.4</span>年度随访</h3>
+    <div class="pb g">
+      <div class="pb-hd">
+        <div>
+          <div class="pb-name">肾功能、血常规、尿常规均正常</div>
+          <div class="pb-ev">eGFR 95.1（肾脏过滤能力，90 以上正常）· 血红蛋白 148 · 尿检无异常</div>
+          <div class="pb-src"><b>检查项目</b>：肾功能（生化全项内）· 血常规 · 尿常规</div>
+        </div>
+        <span class="badge b-g">年度随访</span>
+      </div>
+    </div>
+    <div class="ln a">
+      <b>但甲状腺要提前看。</b>TSH 三年持续上升（虽然都在正常范围内），
+      建议把甲功复查提前到 <b>6 个月后</b>，并加做 TPOAb（攻击自己甲状腺的抗体）。
+    </div>
+  </div>
+</div>
+
+<!-- ============ 03 ============ -->
+<div class="sec" id="s03">
+  <div class="sec-hd"><span class="no">03</span><span class="ttl">异常指标详细解读</span></div>
+  <div class="sec-bd">
+
+    <h3 class="sub a"><span class="n2">3.1</span>血糖升高（糖尿病可能）</h3>
+    <div class="tw"><table>
+      <tr><th style="width:20%">所属项目</th><th style="width:22%">指标</th><th style="width:15%">你的值</th><th style="width:16%">正常范围</th><th>说明</th></tr>
+      <tr>
+        <td>生化全项 · 血糖</td>
+        <td>空腹血糖<br><span style="font-size:12px;color:var(--tx3)">空腹 8 小时以上测的</span></td>
+        <td class="up">7.4 mmol/L ↑</td><td>3.9 ~ 6.1</td>
+        <td>≥7.0 达糖尿病诊断标准，超出 21%</td>
+      </tr>
+    </table></div>
+    <h4 class="sub2"><span class="n3">3.1.1</span>可能是什么</h4>
+    <div class="lay"><b>最可能</b>：2 型糖尿病 —— 依据：血糖 7.4 + 腹部肥胖 + 血脂异常，这组合是典型的代谢问题</div>
+    <div class="lay"><b>需排除</b>：应激导致的临时升高 —— 需确认近期没有急性生病、手术或用激素</div>
+    <div class="ln a"><b>重要</b>：单次血糖高<b>还不能确诊</b>糖尿病，需要再测一次，或结合 OGTT / HbA1c 判断。</div>
+
+    <h3 class="sub a"><span class="n2">3.2</span>血钾偏高（需先排除抽血因素）</h3>
+    <div class="tw"><table>
+      <tr><th style="width:20%">所属项目</th><th style="width:22%">指标</th><th style="width:15%">你的值</th><th style="width:16%">正常范围</th><th>说明</th></tr>
+      <tr>
+        <td>生化全项 · 电解质</td>
+        <td>血钾 K⁺<br><span style="font-size:12px;color:var(--tx3)">影响心跳节律</span></td>
+        <td class="up">5.9 mmol/L ↑</td><td>3.5 ~ 5.3</td>
+        <td>超出 11%；医院危险线 6.2，还没到</td>
+      </tr>
+      <tr>
+        <td>生化全项 · 酶类</td>
+        <td>LDH 乳酸脱氢酶<br><span style="font-size:12px;color:var(--tx3)">溶血时会同步升高</span></td>
+        <td>258 U/L 略高</td><td>120 ~ 250</td>
+        <td>判断血样有无破损的关键线索</td>
+      </tr>
+    </table></div>
+    <h4 class="sub2"><span class="n3">3.2.1</span>可能是什么</h4>
+    <div class="lay"><b>最可能</b>：抽血时血样破损（溶血）造成的假性偏高 —— 依据：LDH 同步轻度升高，肾功能正常，你也没有相关症状</div>
+    <div class="lay"><b>需排除</b>：真的血钾高 —— 需重新规范抽血复查 + 心电图看有无特征性改变</div>
+    <div class="lay"><b>基本可排除</b>：肾脏排钾能力下降 —— 理由：eGFR 95.1 正常，无慢性肾病证据</div>
+    <div class="note">
+      <b>请确认三件事</b>，它们决定这个结果是「机器测出来的假象」还是「身体真的异常」：<br>
+      ① 这次抽血顺利吗？② 报告上有没有标注「溶血」？③ 是否在吃普利类 / 沙坦类降压药（医学名 ACEI/ARB），或含钾的利尿剂？<br>第 ③ 点的原因：<b>这两类降压药会减少肾脏排钾，本身就会让血钾升高</b>，所以在判断血钾之前必须先知道你有没有在吃。
+    </div>
+
+    <h3 class="sub b"><span class="n2">3.3</span>中心型肥胖</h3>
+    <div class="tw"><table>
+      <tr><th style="width:20%">所属项目</th><th style="width:22%">指标</th><th style="width:15%">你的值</th><th style="width:16%">正常范围</th><th>说明</th></tr>
+      <tr><td>一般体格检查</td><td>腰围</td><td class="up">92 cm ↑</td><td>男性 &lt;85</td><td>≥90 属腹型肥胖</td></tr>
+      <tr><td>一般体格检查</td><td>BMI 体重指数</td><td class="up">27.7 ↑</td><td>18.5 ~ 23.9</td><td>属超重（≥28 为肥胖）</td></tr>
+      <tr><td>计算得出</td><td>腰高比<br><span style="font-size:12px;color:var(--tx3)">腰围 ÷ 身高</span></td><td class="up">0.535 ↑</td><td>&lt;0.5</td><td>比 BMI 更能反映内脏脂肪</td></tr>
+    </table></div>
+    <div class="ln b">
+      为什么腰围比体重更重要？因为<b>内脏脂肪</b>（肚子里的脂肪）会直接干扰血糖和血脂代谢，
+      而皮下脂肪（比如大腿）影响小得多。国内的心血管风险模型 China-PAR 采用的就是腰围，不是 BMI。
+    </div>
+
+    <h3 class="sub b"><span class="n2">3.4</span>血脂异常（坏胆固醇未达标 + 好胆固醇偏低）</h3>
+    <div class="tw"><table>
+      <tr><th style="width:20%">所属项目</th><th style="width:22%">指标</th><th style="width:15%">你的值</th><th style="width:16%">标准</th><th>说明</th></tr>
+      <tr><td><b>血脂四项</b></td><td>总胆固醇 TC</td><td class="ok">5.1 mmol/L</td><td>&lt;5.2</td><td>临界，未超标</td></tr>
+      <tr>
+        <td><b>血脂四项</b></td>
+        <td><b>LDL-C</b><br><span style="font-size:12px;color:var(--tx3)">俗称坏胆固醇</span></td>
+        <td class="ok">3.2 mmol/L</td>
+        <td>报告 &lt;3.4<br><b style="color:var(--red)">你的目标 &lt;2.6</b></td>
+        <td><b>报告没标箭头，但按你的风险等级超标 23%</b></td>
+      </tr>
+      <tr>
+        <td><b>血脂四项</b></td>
+        <td>甘油三酯 TG<br><span style="font-size:12px;color:var(--tx3)">血里的中性脂肪</span></td>
+        <td class="up">2.1 mmol/L ↑</td><td>&lt;1.7</td><td>与吃得油不油、喝不喝酒关系最大</td>
+      </tr>
+      <tr>
+        <td><b>血脂四项</b></td>
+        <td>HDL-C<br><span style="font-size:12px;color:var(--tx3)">俗称好胆固醇</span></td>
+        <td class="dn">1.1 mmol/L</td><td>≥1.0（越高越好）</td><td>偏低，清理血管的能力不足</td>
+      </tr>
+      <tr>
+        <td style="color:var(--tx3)">未查 · 建议加项</td>
+        <td>Lp(a) 脂蛋白 a</td><td style="color:var(--tx3)">—</td><td>&lt;300 mg/L</td>
+        <td>主要由遗传决定，本次体检套餐未包含</td>
+      </tr>
+    </table></div>
+    <div class="ln b">
+      <b>「血脂四项」是什么？</b>它是体检套餐里的标准子项目，包含总胆固醇、LDL-C、甘油三酯、HDL-C 四个指标。
+      复查时直接跟医生说「查血脂四项」即可，不用逐个报指标名。
+    </div>
+    <div class="ln a">
+      <b>为什么会有两个标准？</b>报告上的「正常范围」是大多数健康人的统计范围；
+      而「你的目标值」是根据你的风险水平定的。你有糖尿病且超过 40 岁，属高风险人群，
+      坏胆固醇必须压得更低。这类「报告不标箭头但其实没达标」的项目，最容易被漏掉。
+    </div>
+
+    <h3 class="sub b"><span class="n2">3.5</span>肝酶升高（脂肪肝可能）</h3>
+    <div class="tw"><table>
+      <tr><th style="width:20%">所属项目</th><th style="width:22%">指标</th><th style="width:15%">你的值</th><th style="width:16%">正常范围</th><th>说明</th></tr>
+      <tr>
+        <td><b>肝功能</b></td>
+        <td><b>ALT 谷丙转氨酶</b><br><span style="font-size:12px;color:var(--tx3)">最敏感的肝损伤指标</span></td>
+        <td class="up">62 U/L ↑</td><td>9 ~ 50</td><td>轻度升高（未超 3 倍）</td>
+      </tr>
+      <tr><td><b>肝功能</b></td><td>AST 谷草转氨酶</td><td class="ok">34 U/L</td><td>15 ~ 40</td><td>正常</td></tr>
+      <tr><td>计算得出</td><td>AST/ALT 比值</td><td class="ok">0.55</td><td>—</td><td>&lt;1，倾向脂肪肝而非酒精性</td></tr>
+      <tr><td><b>肝功能</b></td><td>GGT</td><td class="ok">48 U/L</td><td>10 ~ 60</td><td>正常，酒精性可能性低</td></tr>
+      <tr><td><b>腹部超声</b></td><td>肝脏回声</td><td class="up">轻度脂肪肝</td><td>—</td><td>与肝酶升高相互印证</td></tr>
+    </table></div>
+    <div class="lay"><b>最可能</b>：非酒精性脂肪肝 —— 依据：AST/ALT &lt;1 + 超声提示脂肪肝 + 超重 + 血糖血脂异常</div>
+    <div class="lay"><b>需排除</b>：药物或保健品引起 —— 红曲、纳豆制品有类他汀作用，需停用 1 个月后复查</div>
+
+    <h3 class="sub g"><span class="n2">3.6</span>血压偏高（临界）</h3>
+    <div class="tw"><table>
+      <tr><th style="width:20%">所属项目</th><th style="width:22%">指标</th><th style="width:15%">你的值</th><th style="width:16%">标准</th><th>说明</th></tr>
+      <tr><td>一般体格检查</td><td>血压</td><td class="up">135/86 mmHg</td><td>&lt;130/80（糖尿病者）</td><td>未达高血压诊断线（140/90），但超过你的目标</td></tr>
+    </table></div>
+    <div class="ln b">单次测量不能诊断高血压。建议连续 7 天在家早晚各测一次并记录，就诊时带给医生。</div>
+  </div>
+</div>
+
+<!-- ============ 04 ============ -->
+<div class="sec" id="s04">
+  <div class="sec-hd"><span class="no">04</span><span class="ttl">关联性分析</span></div>
+  <div class="sec-bd">
+
+    <h3 class="sub a"><span class="n2">4.1</span>命中「代谢综合征」，4 项达标（满足 3 项即可诊断）</h3>
+    <p class="tx" style="margin-top:0">
+      代谢综合征指的是腹部肥胖、高血糖、高血压、血脂异常这几个问题同时出现的状态。
+      它<b>本身不是一种病</b>，而是一组危险信号的组合。
+    </p>
+    <div class="tw"><table>
+      <tr><th style="width:22%">组分</th><th style="width:20%">所属项目</th><th style="width:16%">诊断阈值</th><th style="width:15%">你的值</th><th>是否命中</th></tr>
+      <tr><td>腹部肥胖<br><span style="font-size:12px;color:var(--tx3)">看腰围，不看体重</span></td><td>一般体格检查</td><td>男 ≥90 cm</td><td>92 cm</td><td class="up">命中</td></tr>
+      <tr><td>高血糖</td><td>生化全项 · 血糖</td><td>空腹 ≥6.1</td><td>7.4 mmol/L</td><td class="up">命中</td></tr>
+      <tr><td>高血压</td><td>一般体格检查</td><td>≥130/85</td><td>135/86</td><td class="up">命中</td></tr>
+      <tr><td>甘油三酯偏高<br><span style="font-size:12px;color:var(--tx3)">血里的中性脂肪</span></td><td><b>血脂四项</b></td><td>≥1.7</td><td>2.1 mmol/L</td><td class="up">命中</td></tr>
+      <tr><td>好胆固醇偏低<br><span style="font-size:12px;color:var(--tx3)">HDL-C，负责清理血管</span></td><td><b>血脂四项</b></td><td>&lt;1.04</td><td>1.1 mmol/L</td><td class="ok">未命中</td></tr>
+    </table></div>
+    <div class="ln a">
+      <b>为什么组合起来才重要？</b>每一项单看都「只是轻度偏高」，很容易被忽略。
+      但四项同时存在时，心血管事件风险<b>远超各项风险的简单相加</b>。
+      这也是为什么必须把几项异常放在一起看，而不是逐条独立解释。
+    </div>
+
+    <h3 class="sub b"><span class="n2">4.2</span>问题之间的因果关系</h3>
+    <div class="lay">
+      <b>内脏脂肪堆积</b>（腰围 92）
+      → 身体对胰岛素变迟钝（胰岛素抵抗）
+      → <b>血糖升高</b>（7.4）+ <b>甘油三酯升高</b>（2.1）+ <b>好胆固醇下降</b>（1.1）
+      → 脂肪同时堆积在肝脏 → <b>肝酶升高</b>（ALT 62）
+    </div>
+    <div class="ln b">
+      这条链条说明：<b>减腰围是这几个问题的共同上游</b>。
+      腰围降下来，血糖、血脂、肝酶往往会同步改善 —— 这就是为什么第 09 段把减重放在第一位。
+    </div>
+
+    <h3 class="sub g"><span class="n2">4.3</span>由此触发的处置调整</h3>
+    <ul class="t">
+      <li>坏胆固醇的风险等级<b>升为高危</b>，目标值从 &lt;3.4 下调到 <b>&lt;2.6</b></li>
+      <li>需评估脂肪肝程度（已算 FIB-4 肝纤维化评分，见第 06 段）</li>
+      <li>建议加查尿酸，以及 UACR（尿里的微量白蛋白，肾脏受损的早期信号）</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============ 05 ============ -->
+<div class="sec" id="s05">
+  <div class="sec-hd"><span class="no">05</span><span class="ttl">干扰因素排查</span></div>
+  <div class="sec-bd">
+    <p><span class="mk mk-y">已排除</span> 近期剧烈运动、非空腹采血</p>
+    <p><span class="mk mk-q">待确认</span> 抽血时血样破损即溶血（血钾 5.9 · 核对报告有无「溶血」标注，并规范复查）、红曲 / 纳豆类保健品（肝酶 · 若在服用，停 1 个月后复查）、普利类 / 沙坦类降压药 ACEI/ARB（血钾 5.9 · 提供完整用药清单）</p>
+    <p><b>信息缺口</b>：完整用药与保健品清单（含剂量）、近期体重变化趋势、有无多饮多尿乏力等症状</p>
+  </div>
+</div>
+
+<!-- ============ 06 ============ -->
+<div class="sec" id="s06">
+  <div class="sec-hd"><span class="no">06</span><span class="ttl">风险预测</span></div>
+  <div class="sec-bd">
+    <h3 class="sub r"><span class="n2">6.1</span>10 年心脑血管事件风险</h3>
+    <div class="tw"><table>
+      <tr><th style="width:34%">计算模型</th><th style="width:18%">结果</th><th style="width:16%">分层</th><th>说明</th></tr>
+      <tr>
+        <td><b>China-PAR</b><br><span style="font-size:12px;color:var(--tx3)">中国人群模型 · 主要结论</span></td>
+        <td class="up"><b>8.72%</b></td><td class="up"><b>中危</b></td>
+        <td>低危 &lt;5% / 中危 5~10% / 高危 ≥10%</td>
+      </tr>
+      <tr>
+        <td>ACC/AHA PCE<br><span style="font-size:12px;color:var(--tx3)">美国模型 · 仅作对照</span></td>
+        <td>14.18%</td><td>高危</td>
+        <td>对中国人群倾向高估</td>
+      </tr>
+    </table></div>
+    <div class="ln a">
+      <b>两个模型差了 63%，为什么以中国模型为准？</b>
+      China-PAR 的原始研究已证实美国 PCE 模型不适用于中国人群。
+      所以本次结论按 China-PAR 定为<b>中危</b>。
+    </div>
+    <div class="ln a">
+      <b>但你的实际风险等级是「高危」。</b>因为你已有糖尿病且年龄 ≥40，
+      按《中国血脂管理指南 2023》可直接归入高危 —— 风险等级取「计算结果」与「临床条件」中的<b>较高档</b>。
+      这就是为什么坏胆固醇目标定为 &lt;2.6。
+    </div>
+
+    <h3 class="sub b"><span class="n2">6.2</span>其他量化评估</h3>
+    <div class="tw"><table>
+      <tr><th style="width:34%">指标</th><th style="width:18%">结果</th><th style="width:16%">判定</th><th>说明</th></tr>
+      <tr><td>eGFR 肾脏过滤能力</td><td class="ok">95.1</td><td class="ok">正常</td><td>90 以上正常，肾功能良好</td></tr>
+      <tr><td>FIB-4 肝脏变硬程度<br><span style="font-size:12px;color:var(--tx3)">估算有没有纤维化</span></td><td class="ok">1.27</td><td class="ok">低风险</td><td>&lt;1.30 可基本排除进展性肝纤维化</td></tr>
+      <tr><td>AIP 血脂危险指数<br><span style="font-size:12px;color:var(--tx3)">反映小而密坏颗粒多不多</span></td><td class="up">0.281</td><td class="up">高风险</td><td>&gt;0.24 属高风险，提示残余风险</td></tr>
+      <tr><td>腰高比</td><td class="up">0.535</td><td class="up">腹型肥胖</td><td>&lt;0.5 正常</td></tr>
+    </table></div>
+    <div class="ln g">
+      好消息：<b>肝脏和肾脏目前都没有实质性损伤</b>（FIB-4 低风险、eGFR 正常）。
+      现在干预，这两个器官完全可以保住。
+    </div>
+  </div>
+</div>
+
+<!-- ============ 07 ============ -->
+<div class="sec" id="s07">
+  <div class="sec-hd"><span class="no">07</span><span class="ttl">趋势变化</span></div>
+  <div class="sec-bd">
+    <h3 class="sub r"><span class="n2">7.1</span>三年趋势</h3>
+    <div class="tw"><table>
+      <tr><th style="width:23%">指标</th><th style="width:17%">所属项目</th><th>2024-08</th><th>2025-08</th><th>2026-08</th><th style="width:11%">变化</th><th style="width:14%">趋势</th></tr>
+      <tr><td>空腹血糖</td><td>生化全项 · 血糖</td><td>6.0</td><td>6.7</td><td class="up">7.4</td><td class="up">+23%</td><td class="up">持续恶化</td></tr>
+      <tr><td>TSH 甲状腺指令信号</td><td><b>甲功三项</b></td><td>2.1</td><td>3.0</td><td>4.0</td><td class="up">+90%</td><td class="up">持续上升</td></tr>
+      <tr><td>LDL-C 坏胆固醇</td><td><b>血脂四项</b></td><td>2.8</td><td>3.0</td><td>3.2</td><td class="up">+14%</td><td class="up">缓慢恶化</td></tr>
+      <tr><td>腰围 cm</td><td>一般体格检查</td><td>86</td><td>89</td><td class="up">92</td><td class="up">+7%</td><td class="up">持续增长</td></tr>
+      <tr><td>ALT 肝酶</td><td><b>肝功能</b></td><td>58</td><td>60</td><td>62</td><td>+7%</td><td>基本稳定</td></tr>
+    </table></div>
+    <div class="chart">
+      <svg viewBox="0 0 640 250" width="100%" style="display:block" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="三年趋势相对变化图">
+      <line x1="46" y1="208.0" x2="624" y2="208.0" stroke="#eeece5" stroke-width="1"/>
+      <text x="39" y="212.0" text-anchor="end" font-size="11" fill="#888780" font-family="-apple-system,PingFang SC,sans-serif">+0%</text>
+      <line x1="46" y1="163.3" x2="624" y2="163.3" stroke="#eeece5" stroke-width="1"/>
+      <text x="39" y="167.3" text-anchor="end" font-size="11" fill="#888780" font-family="-apple-system,PingFang SC,sans-serif">+25%</text>
+      <line x1="46" y1="118.6" x2="624" y2="118.6" stroke="#eeece5" stroke-width="1"/>
+      <text x="39" y="122.6" text-anchor="end" font-size="11" fill="#888780" font-family="-apple-system,PingFang SC,sans-serif">+50%</text>
+      <line x1="46" y1="73.9" x2="624" y2="73.9" stroke="#eeece5" stroke-width="1"/>
+      <text x="39" y="77.9" text-anchor="end" font-size="11" fill="#888780" font-family="-apple-system,PingFang SC,sans-serif">+75%</text>
+      <line x1="46" y1="29.2" x2="624" y2="29.2" stroke="#eeece5" stroke-width="1"/>
+      <text x="39" y="33.2" text-anchor="end" font-size="11" fill="#888780" font-family="-apple-system,PingFang SC,sans-serif">+100%</text>
+      <text x="46.0" y="228" text-anchor="middle" font-size="11.5" fill="#888780" font-family="-apple-system,PingFang SC,sans-serif">2024-08</text>
+      <text x="335.0" y="228" text-anchor="middle" font-size="11.5" fill="#888780" font-family="-apple-system,PingFang SC,sans-serif">2025-08</text>
+      <text x="624.0" y="228" text-anchor="middle" font-size="11.5" fill="#888780" font-family="-apple-system,PingFang SC,sans-serif">2026-08</text>
+      <polyline points="46.0,208.0 335.0,187.1 624.0,166.3" fill="none" stroke="#a32d2d" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="46.0" cy="208.0" r="4" fill="#fff" stroke="#a32d2d" stroke-width="2.5"/>
+      <circle cx="335.0" cy="187.1" r="4" fill="#fff" stroke="#a32d2d" stroke-width="2.5"/>
+      <circle cx="624.0" cy="166.3" r="4" fill="#fff" stroke="#a32d2d" stroke-width="2.5"/>
+      <text x="624.0" y="155.3" text-anchor="end" font-size="11.5" font-weight="600" fill="#a32d2d" font-family="-apple-system,PingFang SC,sans-serif">7.4</text>
+      <polyline points="46.0,208.0 335.0,131.4 624.0,46.3" fill="none" stroke="#854f0b" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="46.0" cy="208.0" r="4" fill="#fff" stroke="#854f0b" stroke-width="2.5"/>
+      <circle cx="335.0" cy="131.4" r="4" fill="#fff" stroke="#854f0b" stroke-width="2.5"/>
+      <circle cx="624.0" cy="46.3" r="4" fill="#fff" stroke="#854f0b" stroke-width="2.5"/>
+      <text x="624.0" y="35.3" text-anchor="end" font-size="11.5" font-weight="600" fill="#854f0b" font-family="-apple-system,PingFang SC,sans-serif">4.0</text>
+      <polyline points="46.0,208.0 335.0,195.2 624.0,182.5" fill="none" stroke="#185fa5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="46.0" cy="208.0" r="4" fill="#fff" stroke="#185fa5" stroke-width="2.5"/>
+      <circle cx="335.0" cy="195.2" r="4" fill="#fff" stroke="#185fa5" stroke-width="2.5"/>
+      <circle cx="624.0" cy="182.5" r="4" fill="#fff" stroke="#185fa5" stroke-width="2.5"/>
+      <text x="624.0" y="171.5" text-anchor="end" font-size="11.5" font-weight="600" fill="#185fa5" font-family="-apple-system,PingFang SC,sans-serif">3.2</text>
+      <rect x="46" y="234" width="11" height="3" rx="1.5" fill="#a32d2d"/>
+      <text x="62" y="239" font-size="11.5" fill="#5f5e5a" font-family="-apple-system,PingFang SC,sans-serif">空腹血糖 mmol/L</text>
+      <rect x="163.2" y="234" width="11" height="3" rx="1.5" fill="#854f0b"/>
+      <text x="179.2" y="239" font-size="11.5" fill="#5f5e5a" font-family="-apple-system,PingFang SC,sans-serif">TSH mIU/L</text>
+      <rect x="266.0" y="234" width="11" height="3" rx="1.5" fill="#185fa5"/>
+      <text x="282.0" y="239" font-size="11.5" fill="#5f5e5a" font-family="-apple-system,PingFang SC,sans-serif">LDL-C mmol/L</text>
+      </svg>
+    </div>
+
+    <h3 class="sub a"><span class="n2">7.2</span>关键发现 · 单次报告无法体现</h3>
+    <div class="note" style="margin-top:0">
+      <b>甲状腺功能可能正在悄悄减退。</b><br>
+      TSH 三次结果 2.1 → 3.0 → 4.0，<b>全部在正常范围内（0.27~4.2）</b>，
+      单看任何一次都「没问题」，报告也不会标箭头。<br>
+      但三年持续上升 90%，提示甲状腺的储备能力可能在下降。
+      <b>这类信号只有做纵向对比才能发现</b> —— 建议加做 TPOAb 并把甲功复查提前到 6 个月。
+    </div>
+
+    <h3 class="sub b"><span class="n2">7.3</span>随访等级调整</h3>
+    <div class="ln a" style="margin-top:0">
+      <b>血糖</b>连续两次恶化且累计变化 23%（超过 20% 阈值），
+      按趋势规则从「一至三个月复查」<b>升级为「两周内专科就诊」</b>。
+    </div>
+    <div class="lay">
+      <b>另一条线索</b>：腰围从 86 → 92 cm，三年长了 6 cm，与血糖、血脂的恶化时间线完全吻合。
+      这进一步印证了「内脏脂肪是上游问题」的判断。
+    </div>
+  </div>
+</div>
+
+<!-- ============ 08 ============ -->
+<div class="sec" id="s08">
+  <div class="sec-hd"><span class="no">08</span><span class="ttl">下一步</span></div>
+  <div class="sec-bd">
+    <h3 class="sub a"><span class="n2">8.1</span>两周内 · 内分泌科（首要）</h3>
+    <dl class="kv">
+      <dt>为什么</dt><dd>血糖升高（糖尿病可能），需确诊</dd>
+      <dt>要求做</dt><dd>OGTT 糖耐量试验、HbA1c 糖化血红蛋白</dd>
+      <dt>顺便做</dt><dd>并发症筛查：眼底、尿微量白蛋白（UACR）、神经、足部检查</dd>
+      <dt>顺便问</dt><dd>血脂目标值应该定多少？需要开始吃药吗？</dd>
+    </dl>
+
+    <h3 class="sub a"><span class="n2">8.2</span>两周内 · 肾内科（可与上项合并就诊）</h3>
+    <dl class="kv">
+      <dt>为什么</dt><dd>血钾 5.9 偏高，需确认是真高还是抽血假象</dd>
+      <dt>要求做</dt><dd>重新规范抽血复查电解质 + 心电图</dd>
+      <dt>务必告知</dt><dd>正在服用的所有药物与保健品</dd>
+    </dl>
+
+    <h3 class="sub b"><span class="n2">8.3</span>一至三个月内</h3>
+    <div class="tw"><table>
+      <tr><th style="width:30%">问题</th><th style="width:24%">科室</th><th>要做什么</th></tr>
+      <tr><td>血脂异常</td><td>心内科</td><td>血脂四项 + Lp(a) + 颈动脉超声；3 个月生活方式干预后复查</td></tr>
+      <tr><td>肝酶升高</td><td>消化内科</td><td>肝炎标志物、腹部超声；先停红曲类保健品 1 个月</td></tr>
+      <tr><td>中心型肥胖</td><td>内分泌科 / 营养科</td><td>体成分分析；3 个月减重 5% 后复评</td></tr>
+    </table></div>
+
+    <h3 class="sub g"><span class="n2">8.4</span>六个月后 · 提前项目</h3>
+    <dl class="kv">
+      <dt>甲状腺功能</dt><dd>因三年趋势持续上升，从年度复查提前至 6 个月，并加做 TPOAb</dd>
+    </dl>
+
+    <h3 class="sub"><span class="n2">8.5</span>就诊准备清单</h3>
+    <div class="lay">
+      <b>一定要带</b>：本次完整报告原件（含超声图文）｜<b>近三年的体检报告</b>（医生看趋势比看单次更有价值）｜
+      正在服用的全部药物与保健品清单（含剂量）｜近期症状记录
+    </div>
+    <h4 class="sub2"><span class="n3">8.5.1</span>跟医生怎么说</h4>
+    <p class="tx sm" style="margin-top:0">按<b>检查项目</b>说，比只报指标名有效 —— 医生能直接判断要复查什么。</p>
+    <div class="tw"><table>
+      <tr><th style="width:52%">这样说</th><th>而不是</th></tr>
+      <tr><td>「<b>血脂四项</b>里坏胆固醇 3.2，我有糖尿病要压到 2.6 以下」</td><td>「我 LDL 高」</td></tr>
+      <tr><td>「<b>生化全项</b>里血钾 5.9，想确认是不是溶血」</td><td>「我钾高」</td></tr>
+      <tr><td>「<b>甲功三项</b>的 TSH 三年从 2.1 涨到 4.0」</td><td>「我甲状腺有问题」</td></tr>
+    </table></div>
+    <div class="note">
+      <b>不要等到复查时间。</b>如果出现心慌、明显乏力、手脚麻木、多饮多尿加重、
+      体重短期内明显下降等情况，请立即就医。
+    </div>
+  </div>
+</div>
+
+<!-- ============ 09 ============ -->
+<div class="sec" id="s09">
+  <div class="sec-hd"><span class="no">09</span><span class="ttl">生活指导</span></div>
+  <div class="sec-bd">
+    <p class="tx" style="margin-top:0">
+      <b>先说重点</b>：第 04 段分析出「内脏脂肪是上游问题」，所以
+      <b>减腰围是性价比最高的一件事</b> —— 腰围降下来，血糖、血脂、肝酶往往同步改善。
+    </p>
+
+    <h3 class="sub r"><span class="n2">9.1</span>第一优先 · 减少腹部脂肪</h3>
+    <div class="tw"><table>
+      <tr><th style="width:22%">项目</th><th style="width:44%">具体执行方案</th><th>预期效果</th></tr>
+      <tr><td>减重目标</td><td>3 个月减 4 kg（82 → 78 kg），即每周 0.3~0.5 kg。不要更快</td><td>腰围降 3~5 cm</td></tr>
+      <tr><td>主食控量</td><td>精制米面每餐减到 1 拳（约 75 g 熟重），其中 1/3 换成杂粮豆类</td><td>空腹血糖降 0.5~1.0</td></tr>
+      <tr><td>戒含糖饮料</td><td>完全停含糖饮料、果汁、奶茶。改喝水、无糖茶</td><td>甘油三酯降 15~20%</td></tr>
+    </table></div>
+
+    <h3 class="sub a"><span class="n2">9.2</span>第二优先 · 血脂管理</h3>
+    <div class="tw"><table>
+      <tr><th style="width:22%">项目</th><th style="width:44%">具体执行方案</th><th>预期效果</th></tr>
+      <tr><td>控制油脂</td><td>烹调油每天 ≤25 g（约 2.5 汤匙）。少用煎炸，多用蒸煮拌</td><td>坏胆固醇降 5~10%</td></tr>
+      <tr><td>调整蛋白来源</td><td>每周红肉（猪牛羊）≤3 次，增加深海鱼 2 次、豆制品每天 1 份</td><td>好胆固醇上升</td></tr>
+      <tr><td>增加膳食纤维</td><td>每天蔬菜 500 g（其中深色占一半），水果 200 g（选低糖的）</td><td>血糖血脂双改善</td></tr>
+    </table></div>
+
+    <h3 class="sub b"><span class="n2">9.3</span>第三优先 · 运动干预</h3>
+    <div class="tw"><table>
+      <tr><th style="width:22%">项目</th><th style="width:44%">具体执行方案</th><th>预期效果</th></tr>
+      <tr><td>有氧运动</td><td>每天快走 6000 步起步，4 周内加到 8000 步。饭后半小时走 20 分钟最有效</td><td>降餐后血糖</td></tr>
+      <tr><td>抗阻训练</td><td>每周 2 次，每次 20 分钟（弹力带、哑铃、自重深蹲均可）</td><td>提高胰岛素敏感性</td></tr>
+      <tr><td>减少久坐</td><td>每坐 1 小时起身活动 3 分钟</td><td>改善代谢</td></tr>
+    </table></div>
+
+    <h3 class="sub g"><span class="n2">9.4</span>其他调整</h3>
+    <div class="tw"><table>
+      <tr><th style="width:22%">项目</th><th style="width:44%">具体执行方案</th><th>预期效果</th></tr>
+      <tr><td>停用保健品</td><td>停用红曲 / 纳豆类保健品 1 个月（会干扰肝功能判读）</td><td>弄清肝酶升高真正原因</td></tr>
+      <tr><td>睡眠</td><td>每天 7 小时以上，尽量 23 点前入睡</td><td>睡眠不足会直接升血糖</td></tr>
+    </table></div>
+
+    <div class="note">
+      <b>但这些不能代替就医。</b>血钾复查和糖尿病确诊<b>必须在两周内去医院</b>，
+      调整生活方式无法替代。生活方式干预针对的是血糖、血脂、肝酶、腰围的<b>长期改善</b>。
+    </div>
+  </div>
+</div>
+
+<!-- ============ 10 ============ -->
+<div class="sec" id="s10">
+  <div class="sec-hd"><span class="no">10</span><span class="ttl">参考指南</span></div>
+  <div class="sec-bd">
+    <p class="tx" style="margin-top:0">本次解读所有判定标准均来自下列权威指南，<b>未使用任何自行设定的阈值</b>。
+    你可以据此向医生核对，或自行查阅原文。</p>
+
+    <h3 class="sub b"><span class="n2">10.1</span>本次判读用到的指南</h3>
+    <div class="tw"><table>
+      <tr><th style="width:38%">指南名称</th><th style="width:26%">发布方</th><th>本次用于判定</th></tr>
+      <tr>
+        <td><b>中国血脂管理指南（2023年）</b></td>
+        <td>中国血脂管理指南修订联合专家委员会</td>
+        <td>坏胆固醇个体目标值 &lt;2.6、危险分层升级为高危</td>
+      </tr>
+      <tr>
+        <td><b>中国糖尿病防治指南（2024版）</b></td>
+        <td>中华医学会糖尿病学分会</td>
+        <td>空腹血糖 ≥7.0 达诊断阈值、需重复检测确诊</td>
+      </tr>
+      <tr>
+        <td><b>中国心血管病风险评估和管理指南（2019）</b></td>
+        <td>编写联合委员会</td>
+        <td>China-PAR 模型、10 年风险中危区间 5%~10%</td>
+      </tr>
+      <tr>
+        <td><b>肥胖症诊疗指南（2024年版）</b></td>
+        <td>国家卫生健康委员会</td>
+        <td>BMI 中国分级、男性腰围 ≥90 cm 判定腹部肥胖</td>
+      </tr>
+      <tr>
+        <td><b>中国代谢综合征诊断标准</b></td>
+        <td>中华医学会糖尿病学分会</td>
+        <td>五项组分阈值、满足 3 项即可诊断</td>
+      </tr>
+      <tr>
+        <td><b>全国临床检验操作规程（第4版）</b></td>
+        <td>国家卫生健康委医政司</td>
+        <td>血钾、肝酶等参考区间；溶血对血钾的干扰判断</td>
+      </tr>
+      <tr>
+        <td><b>非酒精性脂肪性肝病防治指南（2018更新版）</b></td>
+        <td>中华医学会肝病学分会</td>
+        <td>脂肪肝判定、AST/ALT 比值鉴别思路</td>
+      </tr>
+      <tr>
+        <td><b>中国甲状腺疾病诊治指南</b></td>
+        <td>中华医学会内分泌学分会</td>
+        <td>TSH 判读、亚临床甲减的观察与复查建议</td>
+      </tr>
+    </table></div>
+
+    <h3 class="sub"><span class="n2">10.2</span>关键数值的出处</h3>
+    <p class="tx sm" style="margin-top:0">报告里每一个「达标 / 未达标」的判断，都能追到具体来源。</p>
+    <div class="tw"><table>
+      <tr><th style="width:30%">本报告中的判定</th><th style="width:22%">用的数值</th><th>来源</th></tr>
+      <tr><td>坏胆固醇「未达标」</td><td>目标 &lt;2.6 mmol/L</td><td>血脂指南 2023 —— 糖尿病合并年龄 ≥40 岁归入高危</td></tr>
+      <tr><td>血糖「已达诊断线」</td><td>空腹 ≥7.0 mmol/L</td><td>中国糖尿病防治指南（2024版）</td></tr>
+      <tr><td>腹部肥胖</td><td>男性腰围 ≥90 cm</td><td>肥胖症诊疗指南 2024（中国标准，非国际 ≥94 cm）</td></tr>
+      <tr><td>10 年风险「中危」</td><td>5% ~ 10%</td><td>心血管风险评估指南 2019</td></tr>
+      <tr><td>血压「超过你的目标」</td><td>&lt;130/80 mmHg</td><td>中国糖尿病防治指南（2024版）（糖尿病患者更严目标）</td></tr>
+      <tr><td>血钾接近危险线</td><td>危急值 6.2 mmol/L</td><td>临床危急值报告制度（国内通行目录）</td></tr>
+    </table></div>
+
+    <h3 class="sub a"><span class="n2">10.3</span>使用这些标准时的三点说明</h3>
+    <div class="ln a">
+      <b>一、优先用中国标准。</b>同一个指标，中外标准常常不同 ——
+      腹部肥胖的腰围线，中国是 90 cm，国际标准是 94 cm；按国际标准判，你这次就「不算」腹部肥胖了。
+      本报告一律以中国指南为准。
+    </div>
+    <div class="ln a">
+      <b>二、风险模型换了会差很多。</b>本次用中国人群模型 China-PAR 算出中危（8.72%），
+      而美国 PCE 模型算出 14.18%（高危），相差 63%。China-PAR 的原始研究已证实 PCE 不适用于中国人群，
+      所以<b>结论以 China-PAR 为准</b>，PCE 仅作对照。
+    </div>
+    <div class="ln a">
+      <b>三、报告自带的参考范围优先。</b>不同医院用的检测方法不同，参考范围会有差异。
+      如果你的报告上印了参考范围，判读时<b>以报告为准</b>；只有报告没印时，才用上述指南的通用区间兜底。
+    </div>
+    <div class="ln">
+      <b>时效提示</b>：以上为 2026 年 8 月的指南版本。医学指南更新较快（血脂目标值近年持续下调），
+      如涉及重要治疗决策，请以就诊时的最新版本为准。
+    </div>
+  </div>
+</div>
+
+<!-- ============ 11 ============ -->
+<div class="disc" id="s11">
+  <div class="dh"><span class="no">11</span><span>重要提醒</span></div>
+  本报告为基于所提供检验数据的健康信息解读，<b style="color:var(--red)">不是医疗诊断，不能替代医生面诊</b>。
+  所有指标判读均需结合症状、体征、既往病史与用药情况，由执业医师综合判断。
+  报告中的问题命名（如「糖尿病可能」）仅表示<b>需要进一步检查以明确</b>，不代表已确诊。
+  分级、概率区间与随访建议仅供参考，具体诊疗方案请遵医嘱。<br><br>
+  若出现症状加重或新发不适，请不要等待建议的复查时间，立即就医。
+  本解读全程在本地完成，健康数据未上传任何第三方服务。
+</div>
+
+<div class="foot">
+  单个网页文件，可保存、打印或转发；不联网，也不含姓名等身份信息<br>
+  <span style="opacity:.85">生成时间 2026-08-28 · 判定标准出处见 10 参考指南 · 不替代医生诊断</span>
+</div>
+</div>
+
+</body>
+</html>

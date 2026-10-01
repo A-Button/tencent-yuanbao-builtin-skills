@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+@page { size: A4; margin: 0; }
+* { margin:0; padding:0; box-sizing:border-box; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+:root{
+  --ink:#1c2b33; --sub:#5a6b72; --line:#e3e0d8; --paper:#f7f4ec;
+  --sea:#1f6f8b; --sea-deep:#15495c; --sand:#d9b26a; --coral:#e0654a; --soft:#eef1ee;
+}
+body{ font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; color:var(--ink); background:#fff; line-height:1.7; }
+.page{ width:210mm; height:297mm; padding:18mm 16mm; position:relative; overflow:hidden; page-break-after:always; }
+.page:last-child{ page-break-after:auto; }
+.en{ font-family:"Helvetica Neue",Arial,sans-serif; letter-spacing:.18em; }
+
+/* running header */
+.rh{ display:flex; justify-content:space-between; align-items:baseline; font-size:9px; letter-spacing:.22em; color:var(--sub); border-bottom:1px solid var(--line); padding-bottom:6px; margin-bottom:22px; text-transform:uppercase; }
+
+/* ---------- COVER ---------- */
+.cover{ background:linear-gradient(160deg,#15495c 0%,#1f6f8b 55%,#2e8ba3 100%); color:#fff; padding:0; }
+.cover-inner{ height:100%; padding:22mm 18mm; display:flex; flex-direction:column; }
+.cover .kicker{ font-size:11px; letter-spacing:.4em; opacity:.8; }
+.cover h1.en{ font-size:64px; line-height:.98; font-weight:800; margin-top:auto; }
+.cover .zh-title{ font-size:30px; font-weight:700; margin-top:14px; letter-spacing:.04em; }
+.cover .dates{ font-size:16px; opacity:.92; margin-top:18px; letter-spacing:.05em; }
+.cover .meta{ font-size:13px; opacity:.78; margin-top:6px; letter-spacing:.08em; }
+.cover .photo{ flex:1; margin:26px 0; border:1px dashed rgba(255,255,255,.4); border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:11px; letter-spacing:.2em; color:rgba(255,255,255,.6); }
+.cover .footer-line{ display:flex; justify-content:space-between; font-size:10px; letter-spacing:.2em; opacity:.7; border-top:1px solid rgba(255,255,255,.3); padding-top:12px; }
+
+/* section title block */
+.sec-head{ margin-bottom:18px; }
+.sec-head .en{ font-size:13px; color:var(--sea); font-weight:700; }
+.sec-head h2{ font-size:25px; font-weight:700; margin-top:2px; }
+.sec-head p{ font-size:12px; color:var(--sub); margin-top:3px; }
+
+/* overview cards */
+.ov-day{ display:grid; grid-template-columns:54px 1fr; gap:14px; padding:14px 0; border-bottom:1px solid var(--line); }
+.ov-num{ font-size:30px; font-weight:800; color:var(--sea); line-height:1; }
+.ov-num small{ display:block; font-size:9px; letter-spacing:.2em; color:var(--sub); margin-top:4px; }
+.ov-day h3{ font-size:16px; }
+.ov-day .desc{ font-size:12px; color:var(--sub); margin:4px 0 8px; }
+.ov-tags{ display:flex; flex-wrap:wrap; gap:6px; }
+.tag{ font-size:10px; background:var(--soft); color:var(--sea-deep); padding:3px 9px; border-radius:20px; }
+.tag b{ color:var(--sub); font-weight:400; margin-right:4px; }
+
+/* daily page */
+.day-hd{ background:var(--soft); border-left:4px solid var(--sea); padding:14px 16px; margin-bottom:6px; border-radius:0 4px 4px 0; }
+.day-hd .d-date{ font-size:11px; letter-spacing:.15em; color:var(--sea); font-weight:700; }
+.day-hd h2{ font-size:23px; margin:3px 0; }
+.day-hd .d-sub{ font-size:12px; color:var(--sub); }
+.day-weather{ display:flex; gap:18px; font-size:11px; color:var(--sub); margin:10px 2px 16px; }
+.day-weather b{ color:var(--ink); }
+.day-photo{ height:86px; border:1px dashed var(--line); border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:10px; letter-spacing:.18em; color:#b8b2a4; margin-bottom:18px; }
+
+.stop{ display:grid; grid-template-columns:62px 1fr; gap:14px; margin-bottom:16px; }
+.stop-time{ text-align:right; }
+.stop-time .t{ font-size:15px; font-weight:700; color:var(--sea-deep); }
+.stop-time .no{ font-size:9px; letter-spacing:.15em; color:var(--sand); font-weight:700; margin-top:2px; }
+.stop-body{ border-left:2px solid var(--line); padding-left:16px; position:relative; }
+.stop-body::before{ content:""; position:absolute; left:-5px; top:5px; width:8px; height:8px; border-radius:50%; background:var(--sea); }
+.stop-body h4{ font-size:15px; }
+.stop-body .s-desc{ font-size:12px; color:var(--sub); margin:4px 0 8px; }
+.s-info{ display:flex; flex-wrap:wrap; gap:14px; font-size:10.5px; color:var(--sub); }
+.s-info span b{ color:var(--sea-deep); font-weight:600; margin-right:3px; }
+.s-tip{ font-size:10.5px; color:var(--coral); margin-top:6px; }
+.s-tip::before{ content:"贴士  "; font-weight:700; letter-spacing:.05em; }
+
+/* figures */
+.fig-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-top:8px; }
+.fig{ background:var(--soft); border-radius:6px; padding:26px 20px; text-align:center; }
+.fig .big{ font-size:40px; font-weight:800; color:var(--sea); line-height:1; }
+.fig .big small{ font-size:15px; }
+.fig .lb{ font-size:11px; color:var(--sub); margin-top:8px; letter-spacing:.05em; }
+
+/* budget */
+.bd-row{ display:grid; grid-template-columns:1fr auto; gap:10px; padding:11px 0; border-bottom:1px solid var(--line); font-size:13px; align-items:baseline; }
+.bd-row .lab b{ font-size:13px; } .bd-row .lab span{ font-size:11px; color:var(--sub); margin-left:8px; }
+.bd-row .amt{ font-weight:700; color:var(--sea-deep); }
+.bd-total{ display:grid; grid-template-columns:1fr auto; padding:14px 16px; background:var(--sea); color:#fff; border-radius:6px; margin-top:14px; font-size:15px; font-weight:700; }
+.bar-wrap{ margin-top:20px; }
+.bar{ display:flex; height:30px; border-radius:6px; overflow:hidden; font-size:9px; color:#fff; }
+.bar div{ display:flex; align-items:center; justify-content:center; }
+.bar-legend{ display:flex; flex-wrap:wrap; gap:14px; margin-top:12px; font-size:10.5px; color:var(--sub); }
+.bar-legend i{ display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:5px; vertical-align:middle; }
+
+/* compare */
+.cmp{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.cmp-card{ border:1px solid var(--line); border-radius:8px; padding:20px; }
+.cmp-card.rec{ border-color:var(--sea); background:var(--soft); }
+.cmp-card .badge{ font-size:9px; letter-spacing:.15em; color:var(--sea); font-weight:700; }
+.cmp-card h3{ font-size:17px; margin:6px 0 12px; }
+.cmp-card li{ list-style:none; font-size:11.5px; color:var(--sub); padding:5px 0; border-bottom:1px dashed var(--line); }
+.cmp-card li.con{ color:var(--coral); }
+
+/* checklist */
+.ck-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px 28px; margin-top:6px; }
+.ck-item{ font-size:12px; padding:9px 0; border-bottom:1px solid var(--line); }
+.ck-item::before{ content:"✓"; color:var(--sea); font-weight:700; margin-right:10px; }
+.reminder{ margin-top:20px; background:var(--soft); border-radius:6px; padding:16px; font-size:12px; color:var(--sea-deep); }
+.reminder b{ display:block; margin-bottom:4px; }
+
+/* notes */
+.note-row{ display:grid; grid-template-columns:96px 1fr; gap:14px; padding:12px 0; border-bottom:1px solid var(--line); font-size:12px; }
+.note-row .nk{ font-weight:700; color:var(--sea-deep); font-size:11.5px; }
+.note-row .nv{ color:var(--sub); }
+.emg{ margin-top:18px; background:var(--sea-deep); color:#fff; border-radius:8px; padding:18px; }
+.emg .et{ font-size:11px; letter-spacing:.2em; opacity:.8; margin-bottom:12px; }
+.emg-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+.emg-grid div b{ font-size:9px; opacity:.7; display:block; letter-spacing:.1em; }
+.emg-grid div span{ font-size:16px; font-weight:700; }
+
+/* highlight */
+.hl{ background:linear-gradient(160deg,#15495c,#2e8ba3); color:#fff; }
+.hl .hl-photo{ height:135mm; border:1px dashed rgba(255,255,255,.4); border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:11px; letter-spacing:.2em; color:rgba(255,255,255,.6); margin-bottom:24px; }
+.hl .en-big{ font-size:14px; letter-spacing:.3em; opacity:.85; }
+.hl h2{ font-size:30px; margin:6px 0 14px; }
+.hl p{ font-size:13px; line-height:1.9; opacity:.92; max-width:90%; }
+</style>
+</head>
+<body>
+
+<!-- ===== COVER ===== -->
+<section class="page cover">
+  <div class="cover-inner">
+    <div class="kicker en">PLAN LESS · WANDER MORE — ITINERARY</div>
+    <div class="photo">封面大图占位 · 直岛草间弥生「南瓜」与濑户内海（竖构图）[ COVER ]</div>
+    <h1 class="en">Setouchi<br>Art Sea.</h1>
+    <div class="zh-title">濑户内海 · 艺术与岛屿五日漫游</div>
+    <div class="dates en">2026.10.02 — 10.06</div>
+    <div class="meta">2 位旅行者　·　自由行　·　跳岛 + 艺术祭线</div>
+    <div class="footer-line">
+      <span class="en">OKAYAMA / TAKAMATSU GATEWAY</span>
+      <span class="en">NAOSHIMA · TESHIMA · INUJIMA</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== OVERVIEW ===== -->
+<section class="page">
+  <div class="rh"><span>Trip Overview · 行程总览</span><span class="en">02 / 13</span></div>
+  <div class="sec-head">
+    <div class="en">OVERVIEW</div>
+    <h2>五天行程总览</h2>
+    <p>一图看懂每日主线 · 以高松为据点跳岛，串联直岛 / 丰岛 / 犬岛三大艺术之岛</p>
+  </div>
+
+  <div class="ov-day">
+    <div class="ov-num">01<small>DAY</small></div>
+    <div>
+      <h3>抵达 · 高松落脚</h3>
+      <div class="desc">关西/冈山转入高松，傍晚漫步栗林公园与港湾，校准跳岛节奏。</div>
+      <div class="ov-tags"><span class="tag"><b>交通</b>冈山→高松 Marine Liner 55分</span><span class="tag"><b>餐饮</b>晚餐：高松骨付鸡</span><span class="tag"><b>区域</b>高松市区 / 港口</span></div>
+    </div>
+  </div>
+  <div class="ov-day">
+    <div class="ov-num">02<small>DAY</small></div>
+    <div>
+      <h3>直岛艺术线</h3>
+      <div class="desc">地中美术馆、Benesse House、本村家 Project、黄南瓜，安藤忠雄的清水混凝土与海。</div>
+      <div class="ov-tags"><span class="tag"><b>交通</b>高松港→宫浦港 渡轮50分</span><span class="tag"><b>餐饮</b>午餐：岛厨房定食</span><span class="tag"><b>区域</b>直岛</span></div>
+    </div>
+  </div>
+  <div class="ov-day">
+    <div class="ov-num">03<small>DAY</small></div>
+    <div>
+      <h3>丰岛静谧线</h3>
+      <div class="desc">丰岛美术馆水滴空间、心脏音档案馆，骑电动单车穿越梯田与海岸。</div>
+      <div class="ov-tags"><span class="tag"><b>交通</b>高松港→家浦港 渡轮35分</span><span class="tag"><b>餐饮</b>午餐：岛上食堂海鲜</span><span class="tag"><b>区域</b>丰岛</span></div>
+    </div>
+  </div>
+  <div class="ov-day">
+    <div class="ov-num">04<small>DAY</small></div>
+    <div>
+      <h3>犬岛工业遗迹线</h3>
+      <div class="desc">犬岛精炼所美术馆，废墟炼铜厂改造的环保艺术，家 Project 散落聚落。</div>
+      <div class="ov-tags"><span class="tag"><b>交通</b>宝传港→犬岛 渡轮10分</span><span class="tag"><b>餐饮</b>午餐：犬岛咖啡轻食</span><span class="tag"><b>区域</b>犬岛 / 冈山方向</span></div>
+    </div>
+  </div>
+  <div class="ov-day">
+    <div class="ov-num">05<small>DAY</small></div>
+    <div>
+      <h3>高松收尾 · 返程</h3>
+      <div class="desc">屋岛展望、商店街觅食与伴手礼，午后由冈山/高松离境。</div>
+      <div class="ov-tags"><span class="tag"><b>交通</b>高松→冈山 返机场</span><span class="tag"><b>餐饮</b>早餐：高松站乌冬</span><span class="tag"><b>区域</b>屋岛 / 高松站</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DAY 01 ===== -->
+<section class="page">
+  <div class="rh"><span>Day 01 · Daily Plan</span><span class="en">03 / 13</span></div>
+  <div class="day-hd">
+    <div class="d-date">10.02 周五</div>
+    <h2>抵达与高松之夜</h2>
+    <div class="d-sub">落地后的第一段漫步，慢慢进入濑户内的节奏</div>
+  </div>
+  <div class="day-weather"><span>☀ <b>晴转多云</b></span><span>气温 <b>20–27°C</b></span><span>海风微凉，备薄外套</span></div>
+  <div class="day-photo">町景占位 · 栗林公园池庭 / 高松港红灯塔黄昏 [ DAY ]</div>
+
+  <div class="stop">
+    <div class="stop-time"><div class="t">13:00</div><div class="no">NO.01</div></div>
+    <div class="stop-body">
+      <h4>冈山机场 / 站 → 高松</h4>
+      <div class="s-desc">由冈山乘 JR Marine Liner 跨濑户大桥进入高松，先到酒店寄存行李。</div>
+      <div class="s-info"><span><b>交通</b>Marine Liner 约55分</span><span><b>费用</b>¥1,660 / 人</span><span><b>票务</b>无需预约，自由席充足</span></div>
+      <div class="s-tip">跨海大桥段坐右侧，可俯瞰濑户内海与岛影。</div>
+    </div>
+  </div>
+  <div class="stop">
+    <div class="stop-time"><div class="t">15:30</div><div class="no">NO.02</div></div>
+    <div class="stop-body">
+      <h4>栗林公园</h4>
+      <div class="s-desc">江户回游式名园，六座池塘与假山借紫云山为景，秋日午后光线最柔。</div>
+      <div class="s-info"><span><b>交通</b>高松站电车10分</span><span><b>费用</b>门票 ¥410 / 人</span><span><b>开放</b>至 17:00（10月）</span></div>
+      <div class="s-tip">船游南湖 ¥620 额外收费，黄昏班次景致最佳。</div>
+    </div>
+  </div>
+  <div class="stop">
+    <div class="stop-time"><div class="t">18:30</div><div class="no">NO.03</div></div>
+    <div class="stop-body">
+      <h4>晚餐 · 骨付鸟 + 港湾夜景</h4>
+      <div class="s-desc">高松名物香烤带骨鸡腿（一鹤 / 寄鸟味鸟），配生啤，再到 Sunport 港湾吹风。</div>
+      <div class="s-info"><span><b>交通</b>市区步行</span><span><b>费用</b>约 ¥2,500 / 人</span><span><b>票务</b>热门店建议早到排号</span></div>
+      <div class="s-tip">「亲鸟」嚼劲足、「雏鸟」嫩，两人可各点一种分食。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DAY 02 ===== -->
+<section class="page">
+  <div class="rh"><span>Day 02 · Daily Plan</span><span class="en">04 / 13</span></div>
+  <div class="day-hd">
+    <div class="d-date">10.03 周六</div>
+    <h2>直岛艺术线</h2>
+    <div class="d-sub">清水混凝土、地中光影与海边南瓜，跳岛行程的高潮</div>
+  </div>
+  <div class="day-weather"><span>☀ <b>晴</b></span><span>气温 <b>19–26°C</b></span><span>岛上日照强，备防晒</span></div>
+  <div class="day-photo">岛景占位 · 草间弥生黄南瓜 / 地中美术馆清水混凝土回廊 [ DAY ]</div>
+
+  <div class="stop">
+    <div class="stop-time"><div class="t">08:12</div><div class="no">NO.01</div></div>
+    <div class="stop-body">
+      <h4>高松港 → 宫浦港（直岛）</h4>
+      <div class="s-desc">搭四国汽船渡轮跨海登岛，甲板看濑户内海岛屿群与往来货轮。</div>
+      <div class="s-info"><span><b>交通</b>渡轮约50分</span><span><b>费用</b>¥520 / 人（单程）</span><span><b>票务</b>当日码头购票即可</span></div>
+      <div class="s-tip">务必赶早班船，地中美术馆需预约入场，迟到难补。</div>
+    </div>
+  </div>
+  <div class="stop">
+    <div class="stop-time"><div class="t">10:00</div><div class="no">NO.02</div></div>
+    <div class="stop-body">
+      <h4>地中美术馆</h4>
+      <div class="s-desc">安藤忠雄埋入山体的建筑，自然光照亮莫奈睡莲与 James Turrell 光之空间。</div>
+      <div class="s-info"><span><b>交通</b>町营巴士 + 步行</span><span><b>费用</b>¥2,100 / 人</span><span><b>票务</b>须官网提前预约时段</span></div>
+      <div class="s-tip">馆内全程禁止拍照，请放慢脚步用眼睛记录。</div>
+    </div>
+  </div>
+  <div class="stop">
+    <div class="stop-time"><div class="t">13:00</div><div class="no">NO.03</div></div>
+    <div class="stop-body">
+      <h4>午餐 + 本村家 Project</h4>
+      <div class="s-desc">岛厨房地产食材定食后，步行本村地区，参观「角屋」「南寺」等老宅改造艺术。</div>
+      <div class="s-info"><span><b>交通</b>步行 / 巴士</span><span><b>费用</b>共通票 ¥1,050</span><span><b>票务</b>南寺需现场排队入场</span></div>
+      <div class="s-tip">南寺暗室适应黑暗约需5分钟，耐心等光显现。</div>
+    </div>
+  </div>
+  <div class="stop">
+    <div class="stop-time"><div class="t">16:30</div><div class="no">NO.04</div></div>
+    <div class="stop-body">
+      <h4>黄南瓜 & 海岸黄昏</h4>
+      <div class="s-desc">草间弥生标志性黄南瓜立于栈桥，落日染海，是直岛的经典收尾画面。</div>
+      <div class="s-info"><span><b>交通</b>宫浦港步行5分</span><span><b>费用</b>免费</span><span><b>返程</b>末班渡轮 19:00 前</span></div>
+      <div class="s-tip">傍晚人多需排队拍照，错峰在17:30后光线更暖、人更少。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DAY 03 ===== -->
+<section class="page">
+  <div class="rh"><span>Day 03 · Daily Plan</span><span class="en">05 / 13</span></div>
+  <div class="day-hd">
+    <div class="d-date">10.04 周日</div>
+    <h2>丰岛静谧线</h2>
+    <div class="d-sub">骑行梯田与海岸，在水滴建筑里听见寂静</div>
+  </div>
+  <div class="day-weather"><span>⛅ <b>多云</b></span><span>气温 <b>18–25°C</b></span><span>海上风稍大</span></div>
+  <div class="day-photo">岛景占位 · 丰岛美术馆水滴混凝土壳 / 唐柜梯田眺海 [ DAY ]</div>
+
+  <div class="stop">
+    <div class="stop-time"><div class="t">08:40</div><div class="no">NO.01</div></div>
+    <div class="stop-body">
+      <h4>高松港 → 家浦港（丰岛）</h4>
+      <div class="s-desc">高速船登丰岛，岛上租电动助力单车，是穿行梯田与海岸的最佳方式。</div>
+      <div class="s-info"><span><b>交通</b>高速船约35分</span><span><b>费用</b>¥1,350 / 人</span><span><b>票务</b>旺季周末建议提前订船票</span></div>
+      <div class="s-tip">家浦港口即有租车点，电动单车 ¥1,000/日，务必早到避免租罄。</div>
+    </div>
+  </div>
+  <div class="stop">
+    <div class="stop-time"><div class="t">10:00</div><div class="no">NO.02</div></div>
+    <div class="stop-body">
+      <h4>丰岛美术馆</h4>
+      <div class="s-desc">内藤礼 × 西泽立卫的水滴形混凝土壳，地面渗出的水珠随机汇流，极致的留白。</div>
+      <div class="s-info"><span><b>交通</b>单车上坡15分</span><span><b>费用</b>¥1,570 / 人</span><span><b>票务</b>官网预约时段制</span></div>
+      <div class="s-tip">入馆脱鞋静音，建议预留1小时静坐，是全程最安静的体验。</div>
+    </div>
+  </div>
+  <div class="stop">
+    <div class="stop-time"><div class="t">12:30</div><div class="no">NO.03</div></div>
+    <div class="stop-body">
+      <h4>午餐 · 岛食堂海鲜</h4>
+      <div class="s-desc">唐柜地区小食堂，用当日捕捞与岛产蔬菜，露台正对梯田与海。</div>
+      <div class="s-info"><span><b>交通</b>单车5分</span><span><b>费用</b>约 ¥2,000 / 人</span><span><b>票务</b>店少需排队，可错峰11:30到</span></div>
+      <div class="s-tip">岛上餐厅普遍 14:00 后陆续打烊，别拖太晚。</div>
+    </div>
+  </div>
+  <div class="stop">
+    <div class="stop-time"><div class="t">14:30</div><div class="no">NO.04</div></div>
+    <div class="stop-body">
+      <h4>心脏音档案馆</h4>
+      <div class="s-desc">Christian Boltanski 收录世界各地心跳声，黑暗长廊里灯随心跳明灭，可录入自己的心音。</div>
+      <div class="s-info"><span><b>交通</b>单车至岛东端</span><span><b>费用</b>¥1,570 / 人</span><span><b>返程</b>家浦港末班船 16:50 前</span></div>
+      <div class="s-tip">位置偏东，留足骑行返港时间，错过末班船岛上住宿稀缺。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DAY 04 ===== -->
+<section class="page">
+  <div class="rh"><span>Day 04 · Daily Plan</span><span class="en">06 / 13</span></div>
+  <div class="day-hd">
+    <div class="d-date">10.05 周一</div>
+    <h2>犬岛工业遗迹线</h2>
+    <div class="d-sub">废墟炼铜厂里的环保艺术，最小却最独特的一座岛</div>
+  </div>
+  <div class="day-weather"><span>☀ <b>晴</b></span><span>气温 <b>19–26°C</b></span><span>岛小遮荫少</span></div>
+  <div class="day-photo">岛景占位 · 犬岛精炼所红砖烟囱 / 家 Project 透明亭 [ DAY ]</div>
+
+  <div class="stop">
+    <div class="stop-time"><div class="t">08:30</div><div class="no">NO.01</div></div>
+    <div class="stop-body">
+      <h4>高松 → 冈山 → 宝传港</h4>
+      <div class="s-desc">犬岛由冈山一侧进出更顺：电车至西大寺转巴士到宝传港，再搭小渡轮登岛。</div>
+      <div class="s-info"><span><b>交通</b>电车+巴士约90分</span><span><b>费用</b>约 ¥1,500 / 人</span><span><b>票务</b>宝传港→犬岛渡轮 ¥400</span></div>
+      <div class="s-tip">犬岛渡轮班次少（约2小时一班），务必先查准当日时刻表。</div>
+    </div>
+  </div>
+  <div class="stop">
+    <div class="stop-time"><div class="t">11:00</div><div class="no">NO.02</div></div>
+    <div class="stop-body">
+      <h4>犬岛精炼所美术馆</h4>
+      <div class="s-desc">三分一博志利用百年废铜厂遗迹，以自然通风采光运作，展出柳幸典对三岛由纪夫的回应。</div>
+      <div class="s-info"><span><b>交通</b>港口步行5分</span><span><b>费用</b>共通票 ¥2,100</span><span><b>票务</b>含家 Project，现场购票</span></div>
+      <div class="s-tip">镜面迷宫通道单向行走，留意指示避免逆行碰头。</div>
+    </div>
+  </div>
+  <div class="stop">
+    <div class="stop-time"><div class="t">13:00</div><div class="no">NO.03</div></div>
+    <div class="stop-body">
+      <h4>午餐 + 家 Project 散步</h4>
+      <div class="s-desc">岛上咖啡轻食后，沿聚落寻访 F 邸、S 邸等透明与镜面小亭，散落于民居之间。</div>
+      <div class="s-info"><span><b>交通</b>步行</span><span><b>费用</b>含于共通票</span><span><b>票务</b>各亭凭票入</span></div>
+      <div class="s-tip">全岛步行可达，建议2小时慢逛，岛猫常出没。</div>
+    </div>
+  </div>
+  <div class="stop">
+    <div class="stop-time"><div class="t">15:40</div><div class="no">NO.04</div></div>
+    <div class="stop-body">
+      <h4>返程高松</h4>
+      <div class="s-desc">搭渡轮回宝传港，原路经冈山返回高松，途中可在冈山站补给晚餐。</div>
+      <div class="s-info"><span><b>交通</b>渡轮+电车约2小时</span><span><b>费用</b>约 ¥1,900 / 人</span><span><b>返程</b>留意末班渡轮约16:30</span></div>
+      <div class="s-tip">若体力允许，可在冈山后乐园短停，与犬岛废墟形成对照。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DAY 05 ===== -->
+<section class="page">
+  <div class="rh"><span>Day 05 · Daily Plan</span><span class="en">07 / 13</span></div>
+  <div class="day-hd">
+    <div class="d-date">10.06 周二</div>
+    <h2>高松收尾 · 返程</h2>
+    <div class="d-sub">把濑户内的味道与记忆打包带走</div>
+  </div>
+  <div class="day-weather"><span>☀ <b>晴</b></span><span>气温 <b>20–27°C</b></span><span>适宜轻装</span></div>
+  <div class="day-photo">町景占位 · 屋岛山顶眺望濑户内海 / 高松中央商店街拱廊 [ DAY ]</div>
+
+  <div class="stop">
+    <div class="stop-time"><div class="t">08:30</div><div class="no">NO.01</div></div>
+    <div class="stop-body">
+      <h4>屋岛展望</h4>
+      <div class="s-desc">登上桌状熔岩台地屋岛，山顶展望台俯瞰濑户内海全景与高松市区。</div>
+      <div class="s-info"><span><b>交通</b>巴士 / 出租约30分</span><span><b>费用</b>免费（展望）</span><span><b>票务</b>新景观设施 Yashima 免费</span></div>
+      <div class="s-tip">「掷瓦」祈福投陶片入海是当地传统，山顶小摊有售。</div>
+    </div>
+  </div>
+  <div class="stop">
+    <div class="stop-time"><div class="t">11:00</div><div class="no">NO.02</div></div>
+    <div class="stop-body">
+      <h4>本场赞岐乌冬 + 商店街</h4>
+      <div class="s-desc">香川是乌冬王国，找一家自助制面老铺体验，再逛中央商店街采购伴手礼。</div>
+      <div class="s-info"><span><b>交通</b>市区步行</span><span><b>费用</b>乌冬约 ¥600 + 购物</span><span><b>票务</b>无</span></div>
+      <div class="s-tip">「橄榄牛」「和三盆」「濑户内柠檬」点心是高松特色伴手礼。</div>
+    </div>
+  </div>
+  <div class="stop">
+    <div class="stop-time"><div class="t">14:00</div><div class="no">NO.03</div></div>
+    <div class="stop-body">
+      <h4>高松 → 冈山 → 返程</h4>
+      <div class="s-desc">取回寄存行李，乘 Marine Liner 返冈山接驳机场或新干线，从容离境。</div>
+      <div class="s-info"><span><b>交通</b>Marine Liner 约55分</span><span><b>费用</b>¥1,660 / 人</span><span><b>票务</b>国际段建议提前3小时到</span></div>
+      <div class="s-tip">冈山站可买「吉备团子」当最后伴手礼。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FIGURES ===== -->
+<section class="page">
+  <div class="rh"><span>By The Numbers · 关键数据</span><span class="en">08 / 13</span></div>
+  <div class="sec-head"><div class="en">FIGURES</div><h2>关键数据一览</h2><p>让计划心里有数</p></div>
+  <div class="fig-grid">
+    <div class="fig"><div class="big">5<small> Days</small></div><div class="lb">行程天数</div></div>
+    <div class="fig"><div class="big">¥9.6<small>K</small></div><div class="lb">人均预算</div></div>
+    <div class="fig"><div class="big">3<small> Isles</small></div><div class="lb">艺术之岛</div></div>
+    <div class="fig"><div class="big">6<small> Ferries</small></div><div class="lb">渡轮航段</div></div>
+    <div class="fig"><div class="big">14<small> Spots</small></div><div class="lb">计划景点</div></div>
+    <div class="fig"><div class="big">5<small> 美术馆</small></div><div class="lb">核心场馆</div></div>
+  </div>
+</section>
+
+<!-- ===== BUDGET ===== -->
+<section class="page">
+  <div class="rh"><span>Budget · 预算明细</span><span class="en">09 / 13</span></div>
+  <div class="sec-head"><div class="en">BUDGET</div><h2>人均预算明细</h2><p>估算值，按实际消费浮动（不含国际机票）</p></div>
+  <div class="bd-row"><div class="lab"><b>住宿 4 晚</b><span>高松站前商务酒店 ¥600/晚</span></div><div class="amt">¥2,400</div></div>
+  <div class="bd-row"><div class="lab"><b>美术馆 / 门票</b><span>地中·丰岛·犬岛共通等</span></div><div class="amt">¥2,000</div></div>
+  <div class="bd-row"><div class="lab"><b>渡轮 / 岛内交通</b><span>跳岛船票 + 单车 + 巴士</span></div><div class="amt">¥1,800</div></div>
+  <div class="bd-row"><div class="lab"><b>餐饮</b><span>骨付鸡 / 乌冬 / 岛食堂 5 天</span></div><div class="amt">¥1,800</div></div>
+  <div class="bd-row"><div class="lab"><b>市区交通</b><span>Marine Liner 往返 + 电车</span></div><div class="amt">¥800</div></div>
+  <div class="bd-row"><div class="lab"><b>购物 / 杂费</b><span>伴手礼与备用</span></div><div class="amt">¥800</div></div>
+  <div class="bd-total"><div>人均合计 TOTAL / PERSON</div><div>¥9,600</div></div>
+
+  <div class="bar-wrap">
+    <div class="bar">
+      <div style="width:25%;background:#15495c">25%</div>
+      <div style="width:21%;background:#1f6f8b">21%</div>
+      <div style="width:19%;background:#2e8ba3">19%</div>
+      <div style="width:19%;background:#d9b26a">19%</div>
+      <div style="width:8%;background:#e0654a">8%</div>
+      <div style="width:8%;background:#9aa7ab">8%</div>
+    </div>
+    <div class="bar-legend">
+      <span><i style="background:#15495c"></i>住宿</span>
+      <span><i style="background:#1f6f8b"></i>门票</span>
+      <span><i style="background:#2e8ba3"></i>渡轮/岛内</span>
+      <span><i style="background:#d9b26a"></i>餐饮</span>
+      <span><i style="background:#e0654a"></i>市区交通</span>
+      <span><i style="background:#9aa7ab"></i>购物杂费</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COMPARE ===== -->
+<section class="page">
+  <div class="rh"><span>Options · 方案对比</span><span class="en">10 / 13</span></div>
+  <div class="sec-head"><div class="en">COMPARE</div><h2>住宿方案</h2><p>两种据点二选一 · 按跳岛节奏与预算取舍</p></div>
+  <div class="cmp">
+    <div class="cmp-card rec">
+      <div class="badge en">PLAN A · 推荐</div>
+      <h3>高松站前酒店</h3>
+      <ul>
+        <li>紧邻高松港，跳岛进出最方便</li>
+        <li>所有渡轮当日往返均以此为枢纽</li>
+        <li>¥600 / 晚，性价比高</li>
+        <li>商店街、餐饮密集，夜生活便利</li>
+        <li class="con">缺点：海岛氛围感弱，偏城市</li>
+      </ul>
+    </div>
+    <div class="cmp-card">
+      <div class="badge en">PLAN B</div>
+      <h3>直岛 Benesse House</h3>
+      <ul>
+        <li>住进美术馆，夜晚独享艺术空间</li>
+        <li>濑户内海一线海景与建筑体验</li>
+        <li>¥3,500+ / 晚，需早预订</li>
+        <li>适合深度艺术、慢节奏</li>
+        <li class="con">缺点：跳丰岛/犬岛需多次折返高松，交通成本高</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CHECKLIST ===== -->
+<section class="page">
+  <div class="rh"><span>Checklist · 出行清单</span><span class="en">11 / 13</span></div>
+  <div class="sec-head"><div class="en">PACKING & TODO</div><h2>出行清单</h2><p>出发前逐项打勾</p></div>
+  <div class="ck-grid">
+    <div class="ck-item">护照 / 签证 / 机票打印件</div>
+    <div class="ck-item">地中 & 丰岛美术馆预约凭证</div>
+    <div class="ck-item">薄外套（海上风凉、昼夜温差）</div>
+    <div class="ck-item">舒适步行鞋（岛上多步行骑行）</div>
+    <div class="ck-item">防晒霜 / 帽子 / 墨镜</div>
+    <div class="ck-item">犬岛渡轮当日时刻表截图</div>
+    <div class="ck-item">现金 ¥30,000 备用（岛上多收现金）</div>
+    <div class="ck-item">ICOCA 交通卡 / 零钱</div>
+    <div class="ck-item">便携充电宝 / 转换插头</div>
+    <div class="ck-item">常用药 / 创可贴 / 雨具</div>
+    <div class="ck-item">海外医疗保险保单</div>
+    <div class="ck-item">手机境外流量 / eSIM 已开通</div>
+  </div>
+  <div class="reminder">
+    <b>REMINDER · 温馨提示</b>
+    濑户内海各美术馆周一/周二常有闭馆日（如丰岛美术馆周二闭馆，本程已避开），出发前务必再次核对各馆 2026 年10月的开放日历与预约时段。
+  </div>
+</section>
+
+<!-- ===== NOTES ===== -->
+<section class="page">
+  <div class="rh"><span>Travel Notes · 行前须知</span><span class="en">12 / 13</span></div>
+  <div class="sec-head"><div class="en">NOTES</div><h2>行前须知与应急信息</h2><p>收好备用</p></div>
+  <div class="note-row"><div class="nk">最佳季节</div><div class="nv">10月初濑户内海气候温和少雨，海风舒爽，是跳岛与户外艺术体验的黄金期；非艺术祭年人潮较缓。</div></div>
+  <div class="note-row"><div class="nk">跳岛要点</div><div class="nv">以高松港为枢纽，渡轮班次有限且季节调整，每段务必提前查四国汽船 / 丰岛航路官方时刻表，赶早班船。</div></div>
+  <div class="note-row"><div class="nk">预约制场馆</div><div class="nv">地中美术馆、丰岛美术馆为时段预约制，须官网提前购票；地中馆内全程禁拍照。</div></div>
+  <div class="note-row"><div class="nk">支付方式</div><div class="nv">高松市区可刷卡，但岛上美术馆、食堂、渡轮常仅收现金，务必备足日元现金。</div></div>
+  <div class="note-row"><div class="nk">闭馆提醒</div><div class="nv">多数美术馆周一闭馆，丰岛美术馆周二闭馆；行程已据此排布，变更前请复核。</div></div>
+  <div class="emg">
+    <div class="et en">EMERGENCY · 应急联系</div>
+    <div class="emg-grid">
+      <div><b>报警</b><span>110</span></div>
+      <div><b>火警 / 急救</b><span>119</span></div>
+      <div><b>中国驻大阪总领馆</b><span>+81-6-6445-9427</span></div>
+      <div><b>旅行保险 24H</b><span>见保单背面</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HIGHLIGHT ===== -->
+<section class="page hl">
+  <div class="hl-photo">图片占位 · 直岛黄南瓜立于栈桥，落日熔金的濑户内海 [ HERO ]</div>
+  <div class="en-big">NAOSHIMA YELLOW PUMPKIN</div>
+  <h2>直岛 · 海边的黄南瓜</h2>
+  <p>当渡轮缓缓靠近宫浦港，草间弥生的黄南瓜便从栈桥尽头浮现，圆点在海风里像一段不褪色的记忆。建议在傍晚 17:30 后前来，旅行团散去、夕照转暖，南瓜、海与远岛被同一束金光收拢——这是濑户内海留给跳岛者最温柔的句点。</p>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,399 @@
+{
+  "_comment": [
+    "动作资料是随包静态数据，不是用户数据：它不进 sqlite，也不由任何 tool 写入。",
+    "要加一个动作，在 exercises 里加一条即可 —— plan_session 只接受这里出现过的 key，",
+    "这样「动作详情」永远有内容可显示。",
+    "rep_unit 区分「次」和「秒」：平板支撑那类按时间计，但 session_exercises 的 reps",
+    "仍是整数，单位由这里的静态资料决定，不占数据库列。",
+    "demo_url 目前一律留空，UI 显示占位；接入真实演示视频后填这里，不要写进代码。",
+    "",
+    "met 是这个动作的代谢当量，取自 Compendium of Physical Activities 的阻力训练条目：",
+    "轻中度阻力训练 3.5、深蹲硬拉类 5.0、剧烈自重动作 8.0、静态核心 3.8。",
+    "注意它**不是**按「动作时长」逐个乘出来的：阻力训练里组间休息占大头，逐动作乘会",
+    "漏掉休息、做出一个看起来比实际精确的数。真正的算法是取整节课的时长乘一个课级 MET，",
+    "课级 MET 由本节各动作的 met 按组数加权平均得到。详见 _domain.py 的 session_met()。"
+  ],
+  "exercises": [
+    {
+      "key": "goblet_squat",
+      "name": "深蹲",
+      "muscles": "股四头肌 · 臀大肌",
+      "breathing": "下蹲吸气，起身呼气",
+      "difficulty": "初级",
+      "mistakes": "膝盖内扣 / 起身时腰先起",
+      "demo_url": "",
+      "default_sets": 3,
+      "default_reps": 12,
+      "rep_unit": "次",
+      "load_options": [
+        "徒手",
+        "5kg壶铃",
+        "8kg壶铃",
+        "12kg壶铃"
+      ],
+      "default_load_text": "徒手",
+      "met": 5.0
+    },
+    {
+      "key": "bulgarian_split_squat",
+      "name": "保加利亚分腿蹲",
+      "muscles": "股四头肌 · 臀大肌",
+      "breathing": "下蹲吸气，蹬起呼气",
+      "difficulty": "中级",
+      "mistakes": "前脚掌离地 / 后腿借力蹬起",
+      "demo_url": "",
+      "default_sets": 3,
+      "default_reps": 10,
+      "rep_unit": "次",
+      "load_options": [
+        "徒手",
+        "3kg哑铃",
+        "5kg哑铃",
+        "8kg哑铃"
+      ],
+      "default_load_text": "徒手",
+      "met": 5.0
+    },
+    {
+      "key": "romanian_deadlift",
+      "name": "罗马尼亚硬拉",
+      "muscles": "臀部 · 腘绳肌",
+      "breathing": "下放吸气，起身呼气",
+      "difficulty": "初级",
+      "mistakes": "背部弓起 / 膝盖过度弯曲",
+      "demo_url": "",
+      "default_sets": 4,
+      "default_reps": 12,
+      "rep_unit": "次",
+      "load_options": [
+        "徒手",
+        "5kg壶铃",
+        "8kg壶铃",
+        "12kg壶铃"
+      ],
+      "default_load_text": "5kg壶铃",
+      "met": 5.0
+    },
+    {
+      "key": "hip_thrust",
+      "name": "臀推",
+      "muscles": "臀大肌",
+      "breathing": "顶髋呼气，下放吸气",
+      "difficulty": "中级",
+      "mistakes": "顶髋时塌腰 / 下巴抬起带动颈部发力",
+      "demo_url": "",
+      "default_sets": 4,
+      "default_reps": 12,
+      "rep_unit": "次",
+      "load_options": [
+        "徒手",
+        "8kg壶铃",
+        "12kg壶铃",
+        "20kg杠铃"
+      ],
+      "default_load_text": "徒手",
+      "met": 5.0
+    },
+    {
+      "key": "glute_bridge",
+      "name": "臀桥",
+      "muscles": "臀大肌 · 核心",
+      "breathing": "顶髋呼气，下放吸气",
+      "difficulty": "初级",
+      "mistakes": "腰部代偿顶起 / 顶点没有夹臀",
+      "demo_url": "",
+      "default_sets": 4,
+      "default_reps": 15,
+      "rep_unit": "次",
+      "load_options": [
+        "徒手",
+        "90磅臀圈",
+        "120磅臀圈"
+      ],
+      "default_load_text": "120磅臀圈",
+      "met": 3.5
+    },
+    {
+      "key": "walking_lunge",
+      "name": "行进箭步蹲",
+      "muscles": "股四头肌 · 臀大肌",
+      "breathing": "下蹲吸气，迈出呼气",
+      "difficulty": "初级",
+      "mistakes": "步幅过小导致膝盖超过脚尖 / 上身前倾",
+      "demo_url": "",
+      "default_sets": 3,
+      "default_reps": 12,
+      "rep_unit": "次",
+      "load_options": [
+        "徒手",
+        "3kg哑铃",
+        "5kg哑铃"
+      ],
+      "default_load_text": "徒手",
+      "met": 5.0
+    },
+    {
+      "key": "push_up",
+      "name": "俯卧撑",
+      "muscles": "胸大肌 · 三头肌",
+      "breathing": "下放吸气，推起呼气",
+      "difficulty": "初级",
+      "mistakes": "塌腰 / 手肘完全外展成一条直线",
+      "demo_url": "",
+      "default_sets": 3,
+      "default_reps": 12,
+      "rep_unit": "次",
+      "load_options": [
+        "跪姿",
+        "标准",
+        "抬高双脚"
+      ],
+      "default_load_text": "标准",
+      "met": 3.8
+    },
+    {
+      "key": "dumbbell_bench_press",
+      "name": "哑铃卧推",
+      "muscles": "胸大肌 · 三头肌",
+      "breathing": "下放吸气，推起呼气",
+      "difficulty": "中级",
+      "mistakes": "手肘沉到远低于躯干 / 推起时两臂相撞",
+      "demo_url": "",
+      "default_sets": 4,
+      "default_reps": 10,
+      "rep_unit": "次",
+      "load_options": [
+        "5kg哑铃",
+        "8kg哑铃",
+        "12kg哑铃"
+      ],
+      "default_load_text": "8kg哑铃",
+      "met": 5.0
+    },
+    {
+      "key": "bent_over_row",
+      "name": "俯身划船",
+      "muscles": "背阔肌 · 中背部",
+      "breathing": "拉起呼气，下放吸气",
+      "difficulty": "中级",
+      "mistakes": "靠上身摆动借力 / 含胸不收肩胛",
+      "demo_url": "",
+      "default_sets": 4,
+      "default_reps": 12,
+      "rep_unit": "次",
+      "load_options": [
+        "5kg哑铃",
+        "8kg哑铃",
+        "12kg哑铃"
+      ],
+      "default_load_text": "8kg哑铃",
+      "met": 5.0
+    },
+    {
+      "key": "lat_pulldown",
+      "name": "高位下拉",
+      "muscles": "背阔肌",
+      "breathing": "下拉呼气，还原吸气",
+      "difficulty": "初级",
+      "mistakes": "后仰过多靠体重下拉 / 还原时放任回弹",
+      "demo_url": "",
+      "default_sets": 4,
+      "default_reps": 12,
+      "rep_unit": "次",
+      "load_options": [
+        "弹力带",
+        "20kg",
+        "30kg",
+        "40kg"
+      ],
+      "default_load_text": "弹力带",
+      "met": 5.0
+    },
+    {
+      "key": "bent_over_fly",
+      "name": "俯身飞鸟",
+      "muscles": "三角肌后束 · 中背部",
+      "breathing": "展臂呼气，回落吸气",
+      "difficulty": "初级",
+      "mistakes": "耸肩借力 / 手肘完全锁死",
+      "demo_url": "",
+      "default_sets": 4,
+      "default_reps": 12,
+      "rep_unit": "次",
+      "load_options": [
+        "徒手",
+        "1.5kg哑铃",
+        "3kg哑铃",
+        "5kg哑铃"
+      ],
+      "default_load_text": "1.5kg哑铃",
+      "met": 3.5
+    },
+    {
+      "key": "overhead_press",
+      "name": "站姿推举",
+      "muscles": "三角肌前束 · 三头肌",
+      "breathing": "推起呼气，下放吸气",
+      "difficulty": "中级",
+      "mistakes": "推举时塌腰顶胯 / 手腕后折",
+      "demo_url": "",
+      "default_sets": 4,
+      "default_reps": 10,
+      "rep_unit": "次",
+      "load_options": [
+        "3kg哑铃",
+        "5kg哑铃",
+        "8kg哑铃"
+      ],
+      "default_load_text": "5kg哑铃",
+      "met": 5.0
+    },
+    {
+      "key": "lateral_raise",
+      "name": "侧平举",
+      "muscles": "三角肌中束",
+      "breathing": "抬起呼气，下放吸气",
+      "difficulty": "初级",
+      "mistakes": "抬过肩导致耸肩 / 靠甩动惯性带起",
+      "demo_url": "",
+      "default_sets": 3,
+      "default_reps": 15,
+      "rep_unit": "次",
+      "load_options": [
+        "徒手",
+        "1.5kg哑铃",
+        "3kg哑铃",
+        "5kg哑铃"
+      ],
+      "default_load_text": "3kg哑铃",
+      "met": 3.5
+    },
+    {
+      "key": "bicep_curl",
+      "name": "哑铃弯举",
+      "muscles": "肱二头肌",
+      "breathing": "弯举呼气，下放吸气",
+      "difficulty": "初级",
+      "mistakes": "手肘离开体侧前后摆 / 下放时直接松掉",
+      "demo_url": "",
+      "default_sets": 3,
+      "default_reps": 12,
+      "rep_unit": "次",
+      "load_options": [
+        "3kg哑铃",
+        "5kg哑铃",
+        "8kg哑铃"
+      ],
+      "default_load_text": "5kg哑铃",
+      "met": 3.5
+    },
+    {
+      "key": "triceps_extension",
+      "name": "臂屈伸",
+      "muscles": "肱三头肌",
+      "breathing": "伸直呼气，屈臂吸气",
+      "difficulty": "初级",
+      "mistakes": "大臂跟着晃 / 手肘外翻",
+      "demo_url": "",
+      "default_sets": 3,
+      "default_reps": 12,
+      "rep_unit": "次",
+      "load_options": [
+        "徒手",
+        "3kg哑铃",
+        "5kg哑铃"
+      ],
+      "default_load_text": "3kg哑铃",
+      "met": 3.5
+    },
+    {
+      "key": "plank",
+      "name": "平板支撑",
+      "muscles": "腹横肌 · 核心",
+      "breathing": "全程均匀呼吸，不要憋气",
+      "difficulty": "初级",
+      "mistakes": "塌腰或撅臀 / 头部下垂",
+      "demo_url": "",
+      "default_sets": 3,
+      "default_reps": 40,
+      "rep_unit": "秒",
+      "load_options": [
+        "跪姿",
+        "标准",
+        "单侧抬手"
+      ],
+      "default_load_text": "标准",
+      "met": 3.8
+    },
+    {
+      "key": "side_plank",
+      "name": "侧平板",
+      "muscles": "腹斜肌 · 核心",
+      "breathing": "全程均匀呼吸，不要憋气",
+      "difficulty": "中级",
+      "mistakes": "髋部下沉 / 支撑肩耸起",
+      "demo_url": "",
+      "default_sets": 3,
+      "default_reps": 30,
+      "rep_unit": "秒",
+      "load_options": [
+        "屈膝",
+        "标准"
+      ],
+      "default_load_text": "标准",
+      "met": 3.8
+    },
+    {
+      "key": "dead_bug",
+      "name": "死虫",
+      "muscles": "腹横肌 · 核心",
+      "breathing": "伸展呼气，回收吸气",
+      "difficulty": "初级",
+      "mistakes": "腰部离开地面 / 动作过快失去控制",
+      "demo_url": "",
+      "default_sets": 3,
+      "default_reps": 12,
+      "rep_unit": "次",
+      "load_options": [
+        "徒手"
+      ],
+      "default_load_text": "徒手",
+      "met": 3.0
+    },
+    {
+      "key": "slider_mountain_climber",
+      "name": "滑行盘登山跑",
+      "muscles": "核心 · 髋屈肌",
+      "breathing": "全程均匀呼吸，不要憋气",
+      "difficulty": "中级",
+      "mistakes": "塌腰翘臀 / 肩超过手腕",
+      "demo_url": "",
+      "default_sets": 3,
+      "default_reps": 30,
+      "rep_unit": "秒",
+      "load_options": [
+        "滑行盘",
+        "毛巾替代"
+      ],
+      "default_load_text": "",
+      "met": 8.0
+    },
+    {
+      "key": "ab_wheel_kneeling_rollout",
+      "name": "健腹轮跪姿滚动",
+      "muscles": "腹直肌 · 核心",
+      "breathing": "推出吸气，收回呼气",
+      "difficulty": "中级",
+      "mistakes": "腰部塌陷 / 推出过远失控",
+      "demo_url": "",
+      "default_sets": 3,
+      "default_reps": 8,
+      "rep_unit": "次",
+      "load_options": [
+        "健腹轮"
+      ],
+      "default_load_text": "",
+      "met": 5.0
+    }
+  ]
+}

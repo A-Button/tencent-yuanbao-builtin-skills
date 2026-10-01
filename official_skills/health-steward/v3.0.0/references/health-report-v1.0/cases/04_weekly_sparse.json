@@ -1,0 +1,55 @@
+{
+  "report_type": "weekly",
+  "week_start": "2026-09-14",
+  "week_end": "2026-09-20",
+  "profile": {
+    "height_cm": 175,
+    "weight_kg": 70,
+    "age": 30,
+    "sex": "male",
+    "goal": "maintain"
+  },
+  "days": [
+    {
+      "date": "2026-09-15",
+      "weekday": "周二",
+      "is_valid_day": true,
+      "meals": {
+        "breakfast": {"summary": "水煮蛋2个、无糖豆浆250ml", "kcal": 380},
+        "lunch": {"summary": "鸡胸肉饭、西兰花", "kcal": 760},
+        "dinner": {"summary": "清蒸鱼1条、青菜2小碗、米饭半小碗", "kcal": 680}
+      },
+      "exercise_slots": {
+        "noon": null,
+        "commute": null,
+        "evening": {"summary": "快走40分钟", "kcal": 168}
+      },
+      "intake_kcal": 1820,
+      "bmr_kcal": 1649,
+      "daily_activity_kcal": 300,
+      "active_kcal": 168,
+      "total_burn_kcal": 2117
+    },
+    {
+      "date": "2026-09-18",
+      "weekday": "周五",
+      "is_valid_day": true,
+      "meals": {
+        "breakfast": {"summary": "燕麦40g、牛奶250ml", "kcal": 360},
+        "lunch": {"summary": "牛肉面1碗、卤蛋1个", "kcal": 760},
+        "dinner": null
+      },
+      "exercise_slots": {
+        "noon": null,
+        "commute": null,
+        "evening": {"summary": "下肢力量30分钟", "kcal": 160}
+      },
+      "intake_kcal": 1120,
+      "bmr_kcal": 1649,
+      "daily_activity_kcal": 280,
+      "active_kcal": 160,
+      "total_burn_kcal": 2089
+    }
+  ],
+  "next_week_plan": null
+}

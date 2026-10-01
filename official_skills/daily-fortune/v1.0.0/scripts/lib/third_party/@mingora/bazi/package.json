@@ -1,0 +1,84 @@
+{
+  "name": "@mingora/bazi",
+  "version": "0.1.0",
+  "description": "The production BaZi calculation engine behind Mingora, with typed Four Pillars, true solar time, Da Yun, and Five Element analysis.",
+  "homepage": "https://mingora.app/bazi-calculator",
+  "author": {
+    "name": "Mingora",
+    "url": "https://mingora.app/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mingora-app/bazi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mingora-app/bazi/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./relationship": {
+      "types": "./dist/relationship.d.ts",
+      "import": "./dist/relationship.js"
+    }
+  },
+  "files": [
+    "dist",
+    "assets",
+    "README.md",
+    "README.zh-CN.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "CODE_OF_CONDUCT.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "docs:dev": "vite --config vite.config.ts",
+    "docs:build": "vite build --config vite.config.ts",
+    "docs:preview": "vite preview --config vite.config.ts",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "test:coverage": "c8 --check-coverage --lines 95 --statements 95 --functions 95 --branches 80 node --import tsx --test tests/*.test.ts",
+    "prepublishOnly": "pnpm check && pnpm test && pnpm build"
+  },
+  "keywords": [
+    "mingora",
+    "bazi",
+    "ba-zi",
+    "four-pillars",
+    "four-pillars-of-destiny",
+    "eight-characters",
+    "true-solar-time",
+    "da-yun",
+    "five-elements",
+    "typescript",
+    "chinese-calendar"
+  ],
+  "sideEffects": false,
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "packageManager": "pnpm@10.33.2",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "lunar-javascript": "1.7.7"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "c8": "^10.1.3",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "vite": "^6.1.0"
+  }
+}

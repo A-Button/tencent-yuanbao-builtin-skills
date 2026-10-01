@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>函件公文模板</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: #e9ecef;
+    font-family: "Songti SC", "STSong", serif;
+    color: #000;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* A4 严格锁定每页高度 = 297mm，上32/下30/左28/右26
+     固定 height + overflow:hidden 保证每页就是一张 A4，
+     内容量已逐页测量确保不触底、不裁切 */
+  .page {
+    position: relative;
+    width: 210mm;
+    height: 297mm;
+    background: #fff;
+    margin: 8mm auto;
+    padding: 32mm 26mm 30mm 28mm;
+    box-shadow: 0 2px 14px rgba(0,0,0,.16);
+    overflow: hidden;
+  }
+  /* 版心内容容器：高度=可用区，便于测量 */
+  .content { height: 235mm; position: relative; }  /* 297-32-30=235mm */
+
+  @media print {
+    html, body { background: #fff; }
+    .page { margin: 0; box-shadow: none; page-break-after: always; }
+    .page:last-child { page-break-after: auto; }
+  }
+
+  .fs   { font-family: "FangSong", "STFangsong", "Songti SC", serif; }
+  .hei  { font-family: "Heiti SC", "STHeiti", "Hiragino Sans GB", sans-serif; }
+  .kai  { font-family: "Kaiti SC", "STKaiti", "Kaiti", serif; }
+
+  /* 版头 */
+  .letterhead { text-align: center; }
+  .issuer {
+    font-family: "Songti SC", "STSong", serif;
+    font-weight: 700; color: #c8161d;
+    font-size: 24pt; letter-spacing: 5px; line-height: 1.15;
+  }
+  .issuer .small { font-size: 18pt; letter-spacing: 3px; }
+
+  .head-meta {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    font-family: "FangSong", "STFangsong", serif;
+    font-size: 11.5pt; margin-top: 4mm;
+  }
+
+  .red-line { border: none; border-top: 2pt solid #c8161d; margin: 1.5mm 0 0 0; }
+
+  /* 标题 */
+  .doc-title { text-align: center; margin: 6mm 0 5mm 0; }
+  .doc-title h1 {
+    font-family: "Songti SC", "STSong", serif;
+    font-weight: 700; font-size: 17pt; line-height: 1.45; letter-spacing: 1px;
+  }
+
+  .addressee {
+    font-family: "FangSong", "STFangsong", serif;
+    font-size: 12pt; margin: 0 0 2mm 0; line-height: 1.5;
+  }
+
+  /* 正文 */
+  .body { font-family: "FangSong", "STFangsong", serif; font-size: 11.5pt; line-height: 1.62; }
+  .body p { text-indent: 2em; margin-bottom: 1.6mm; text-align: justify; }
+
+  .lv1 { font-family: "Heiti SC", "STHeiti", sans-serif; font-weight: 700; font-size: 12pt;   text-indent: 2em; margin: 2.6mm 0 1.2mm; }
+  .lv2 { font-family: "Kaiti SC", "STKaiti", serif;      font-weight: 700; font-size: 11.5pt; text-indent: 2em; margin: 1.8mm 0 0.9mm; }
+  .lv3 { font-weight: 700; font-size: 11.5pt; text-indent: 2em; margin: 1.2mm 0 0.6mm; }
+  .lv4 { font-size: 11.5pt; text-indent: 2em; margin: 0.6mm 0; }
+
+  /* 表格 */
+  table.gov {
+    width: 100%; border-collapse: collapse; margin: 2.5mm 0;
+    font-family: "FangSong", "STFangsong", serif; font-size: 10.5pt;
+  }
+  table.gov th, table.gov td {
+    border: 0.6pt solid #000; padding: 4px 6px; text-align: center; line-height: 1.4;
+  }
+  table.gov th {
+    font-family: "Heiti SC", "STHeiti", sans-serif; font-weight: 700; background: #f3f3f3;
+  }
+  table.gov td.left { text-align: left; text-indent: 0; }
+
+  /* 落款 */
+  .signoff {
+    margin-top: 10mm; text-align: right;
+    font-family: "FangSong", "STFangsong", serif;
+    font-size: 11.5pt; line-height: 1.8; position: relative;
+  }
+  .signoff .org  { letter-spacing: 1px; padding-right: 3em; }
+  .signoff .date { padding-right: 3em; }
+  .seal {
+    position: absolute; right: 6mm; top: 2mm;
+    width: 30mm; height: 30mm;
+    border: 1.8pt solid #c8161d; border-radius: 50%;
+    color: #c8161d;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    font-family: "Songti SC", serif; font-size: 7.5pt; line-height: 1.3;
+    opacity: .42; transform: rotate(-8deg); pointer-events: none;
+  }
+
+  /* 版记 */
+  .versionrecord {
+    margin-top: 16mm;
+    font-family: "FangSong", "STFangsong", serif; font-size: 10pt; line-height: 1.6;
+  }
+  .vr-line { border-top: 0.8pt solid #000; }
+  .vr-row { display: flex; justify-content: space-between; padding: 0.8mm 0; }
+  .vr-row.cc { display: block; padding: 0.8mm 0; }
+
+  /* 页码：固定在页面底部标准位置（距页底约 12mm，即版心下边界附近） */
+  .pagefoot {
+    position: absolute; bottom: 12mm; left: 0; right: 0; text-align: center;
+    font-family: "Songti SC", serif; font-size: 10.5pt;
+  }
+  .pagefoot .num { display: inline-block; padding: 0 14px; }
+
+  .tpl-note {
+    position: absolute; top: 5mm; right: 26mm;
+    font-family: "Heiti SC", "STHeiti", sans-serif;
+    font-size: 7pt; color: #b0b0b0; letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 第 1 页：版头 + 标题 + 一、背景意义 ============ -->
+<div class="page">
+  <div class="tpl-note">公文格式 · 函（GB/T 9704）</div>
+
+  <div class="letterhead">
+    <div class="issuer">华信科技发展<span class="small">有限公司</span></div>
+  </div>
+  <div class="head-meta">
+    <div class="doc-number">华信发〔2026〕18号</div>
+    <div class="signer">签发人：周明远</div>
+  </div>
+  <hr class="red-line">
+
+  <div class="doc-title">
+    <h1>关于商洽建立智能制造产业链<br>战略合作关系的函</h1>
+  </div>
+  <div class="addressee">远东重工集团有限公司：</div>
+
+  <div class="body">
+    <p>近年来，随着新一代信息技术与先进制造业深度融合，智能制造已成为推动产业升级、培育发展新动能的重要引擎。我公司长期专注于工业软件、智能传感与数据中台领域的研发与应用，已形成较为完整的技术体系和服务能力，服务客户遍及电子、汽车、能源等多个行业。贵集团在高端装备制造、精密加工与系统集成方面积淀深厚、声誉卓著，是行业内具有重要影响力的骨干企业。为充分发挥双方优势、实现资源共享与协同发展，现就建立智能制造产业链战略合作关系事宜函商如下。</p>
+
+    <div class="lv1">一、合作背景与意义</div>
+    <p>当前，制造业正加速向数字化、网络化、智能化方向演进，产业链上下游协同创新已成为企业实现高质量发展的必由之路。建立长期稳定的战略合作关系，对双方而言具有重要的现实意义和战略价值，既符合行业发展的客观规律，也契合双方各自的发展战略与长远利益。</p>
+
+    <div class="lv2">（一）顺应产业发展趋势</div>
+    <p>智能制造是制造强国建设的主攻方向。双方携手布局产业链关键环节，有利于把握行业发展先机，提升整体竞争力，共同应对市场环境的深刻变化，在新一轮产业变革中赢得主动。当前国内外市场竞争日趋激烈，单一企业凭借自身力量已难以覆盖技术、市场、资金等各个维度，唯有通过开放合作、协同创新，方能在激烈竞争中行稳致远。</p>
+
+    <div class="lv2">（二）实现优势互补</div>
+    <p>我公司的软件与数据能力同贵集团的装备与制造能力高度契合，合作可形成“软硬结合、虚实联动”的完整解决方案，能够覆盖从研发设计到生产运维的全链条环节，为双方协同发展奠定坚实基础。双方在客户群体、技术储备、人才结构等方面亦具有较强的互补性，合作空间广阔、潜力巨大。</p>
+
+    <div class="lv2">（三）共担发展责任</div>
+    <p>双方均肩负推动行业进步、服务实体经济的使命。通过深度合作，能够汇聚双方资源与智慧，加快关键技术成果转化，为区域产业转型升级贡献更大力量，共同营造开放协同、互利共赢的产业生态，努力实现经济效益与社会效益的有机统一。</p>
+  </div>
+
+  <div class="pagefoot"><span class="num">— 1 —</span></div>
+</div>
+
+
+<!-- ============ 第 2 页：优势互补细分 + 二、合作主要内容（含表格） ============ -->
+<div class="page">
+  <div class="body" style="margin-top:0;">
+    <p style="text-indent:2em;margin-top:0;">承前所述，就实现优势互补而言，双方的协同主要体现在技术与市场两个层面，现分述如下：</p>
+
+    <div class="lv3">1. 技术层面</div>
+    <p style="text-indent:2em;margin-bottom:0.9mm;">围绕工业互联网平台、数字孪生与智能产线，共建联合实验室，开展核心技术联合攻关，逐步形成自主可控的关键技术体系。重点推进方向包括：</p>
+    <div class="lv4">（1）设备数据采集与边缘计算的标准化对接；</div>
+    <div class="lv4">（2）面向典型工艺场景的算法模型训练与优化；</div>
+    <div class="lv4">（3）生产过程质量在线检测与预测性维护；</div>
+    <div class="lv4">（4）工业大数据治理与安全防护体系建设。</div>
+
+    <div class="lv3">2. 市场层面</div>
+    <p style="text-indent:2em;">共享客户资源与销售渠道，联合开拓长三角及中西部重点工业园区市场，形成品牌合力，进一步扩大双方在行业内的影响力与市场份额，并积极探索“技术+服务+运营”的一体化商业模式，不断拓展合作的广度与深度。</p>
+
+    <div class="lv1">二、合作主要内容</div>
+    <p>经双方前期初步研究并充分酝酿，建议在以下重点领域率先开展务实合作，做到目标明确、责任清晰、措施有力。各项合作的具体内容、牵头方与责任分工拟定如下表，后续可在框架协议中进一步细化完善：</p>
+
+    <table class="gov">
+      <thead>
+        <tr><th style="width:9%">序号</th><th style="width:24%">合作领域</th><th>主要工作内容</th><th style="width:18%">牵头方</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>联合研发</td><td class="left">共建智能制造联合实验室，开展关键共性技术攻关</td><td>双方</td></tr>
+        <tr><td>2</td><td>示范应用</td><td class="left">在贵集团两条典型产线开展数字化、智能化改造试点</td><td>远东重工</td></tr>
+        <tr><td>3</td><td>平台建设</td><td class="left">部署工业互联网平台及数据中台，打通生产数据链路</td><td>华信科技</td></tr>
+        <tr><td>4</td><td>人才培养</td><td class="left">联合培养复合型技术与管理人才，建立人才交流机制</td><td>双方</td></tr>
+        <tr><td>5</td><td>标准制定</td><td class="left">共同参与行业标准与团体标准的研究和起草工作</td><td>双方</td></tr>
+      </tbody>
+    </table>
+
+    <p>合作各方应充分发挥自身优势，按照“统一规划、分步实施、互利共赢”的原则，扎实推进上述各项工作，力争形成一批可复制、可推广的示范成果，为产业链协同发展提供有力支撑，努力打造产业链上下游协同创新的标杆典范。在推进过程中，双方应坚持需求导向与问题导向相结合，注重阶段性成果的总结与提炼，及时复盘优化合作路径，确保各领域工作衔接顺畅、整体推进有序，为后续深化合作积累经验、夯实基础。</p>
+  </div>
+
+  <div class="pagefoot"><span class="num">— 2 —</span></div>
+</div>
+
+
+<!-- ============ 第 3 页：三、请求事项 + 落款 ============ -->
+<div class="page">
+  <div class="body" style="margin-top:0;">
+    <div class="lv1" style="margin-top:0;">三、有关请求事项</div>
+    <p>合作的顺利推进，离不开双方在组织、资源与机制等方面的紧密配合。为推动各项合作事项尽快落地见效，经我公司研究，现就近期需协同推进的工作向贵集团提出如下请求，恳请予以大力支持与协助：</p>
+    <div class="lv2">（一）关于联络机制</div>
+    <p>请贵集团指定一名分管领导及对口职能部门，作为双方日常沟通、信息互通与工作对接的固定联系窗口，确保协作渠道畅通高效，重要事项能够及时响应、有效衔接。</p>
+    <div class="lv2">（二）关于现场调研</div>
+    <p>请协助安排我方技术团队于近期赴贵集团生产现场，开展为期一周的实地调研，全面了解现有产线工艺、设备状况及数字化基础，为后续方案设计与改造实施提供可靠依据。</p>
+    <div class="lv2">（三）关于协议签署</div>
+    <p>建议双方于本年第三季度完成框架合作协议的协商与签署，并适时召开首次联合工作会议，明确年度合作目标、重点任务与时间节点，建立清晰的责任清单与考核机制。</p>
+    <div class="lv2">（四）关于资源保障</div>
+    <p>请贵集团在场地、数据、专业人员等方面给予必要配合，我公司亦将同步配置专项团队与技术资源，确保各项工作高质高效推进，共同保障合作目标如期实现。</p>
+    <div class="lv2">（五）关于信息共享</div>
+    <p>建议双方建立常态化的信息通报与共享机制，定期交换行业动态、技术进展与市场信息，在确保各自商业秘密与数据安全的前提下，最大限度发挥信息协同效应，为科学决策提供支撑。</p>
+
+    <p>我公司高度重视与贵集团的此次合作，已成立专门工作小组负责对接落实，并将合作事项列入年度重点工作计划。我们真诚期待与贵集团建立长期、稳定、互信的战略伙伴关系，在智能制造领域开展全方位、多层次、宽领域的深度合作，携手推动双方实现更高质量、更有效率、更可持续的发展。</p>
+    <p>以上各项请求，妥否，请函复。如蒙应允，我公司将第一时间指派专人对接，全力做好各项保障与服务工作，与贵集团携手开创合作共赢的良好局面。</p>
+    <p>专此函达，敬请研复。</p>
+  </div>
+
+  <!-- 落款 -->
+  <div class="signoff" style="margin-top:12mm;">
+    <div class="org">华信科技发展有限公司</div>
+    <div class="date">2026年6月11日</div>
+    <div class="seal">华信科技发展<br>有限公司<br>★ 公文专用章</div>
+  </div>
+
+  <div class="pagefoot"><span class="num">— 3 —</span></div>
+</div>
+
+
+<!-- ============ 第 4 页：附件 + 版记 ============ -->
+<div class="page">
+  <div class="body" style="margin-top:0;">
+    <p style="text-indent:0;font-weight:700;" class="hei">附件</p>
+    <p style="text-indent:0;font-weight:700;margin:2mm 0 1.5mm;" class="hei">智能制造产业链战略合作框架要点（建议稿）</p>
+
+    <div class="lv1">一、合作期限</div>
+    <p>本框架合作期限拟定为三年，自双方正式签署协议之日起计算；期满前三个月，经双方协商一致可续签，续签事宜由双方另行协商确定。</p>
+
+    <div class="lv1">二、组织保障</div>
+    <div class="lv2">（一）建立联合工作委员会</div>
+    <p>由双方分管领导任主任委员，下设技术、市场、运营三个专项工作组，定期召开协调会议，研究解决合作推进中的重大问题。</p>
+    <div class="lv2">（二）设立专项推进机制</div>
+    <p>各专项工作组按月报送进展，重大事项及时上报联合工作委员会研究决定，确保各项任务有序落地、闭环管理。</p>
+
+    <div class="lv1">三、知识产权</div>
+    <p>合作期间共同研发形成的知识产权，原则上由双方共有；具体权属、使用与收益分配，由专项协议另行约定，充分保障双方合法权益，避免后续争议。</p>
+
+    <div class="lv1">四、保密约定</div>
+    <p>双方应对在合作过程中知悉的对方技术秘密、商业秘密及其他保密信息承担保密义务，未经对方书面同意，不得向任何第三方披露或用于本合作以外的用途。保密义务在合作终止后继续有效。</p>
+
+    <div class="lv1">五、争议解决</div>
+    <p>因执行本框架要点及后续协议所产生的争议，双方应本着友好协商、互谅互让的原则妥善解决；协商不成的，可提交双方所在地有管辖权的人民法院依法处理。</p>
+
+    <div class="lv1">六、其他事项</div>
+    <p>本框架要点为合作意向性文件，不构成法律约束；具体权利义务以双方正式签署的书面协议为准。未尽事宜，由双方友好协商解决。本要点一式两份，双方各执一份，具有同等效力，自双方签署之日起生效。</p>
+  </div>
+
+  <!-- 版记 -->
+  <div class="versionrecord">
+    <div class="vr-line"></div>
+    <div class="vr-row cc">抄送：华信科技发展有限公司董事会，市工业和信息化局。</div>
+    <div class="vr-line"></div>
+    <div class="vr-row">
+      <span>华信科技发展有限公司办公室</span>
+      <span>2026年6月11日印发</span>
+    </div>
+    <div class="vr-line"></div>
+  </div>
+
+  <div class="pagefoot"><span class="num">— 4 —</span></div>
+</div>
+
+</body>
+</html>

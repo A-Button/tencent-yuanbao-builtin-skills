@@ -1,0 +1,12 @@
+# docx 技能运行所需的第三方 Python 包（兜底清单）。
+#
+# 常用依赖通常已随环境预制；ensure_deps.py 只补装"完全缺失"的包，
+# 不升级/降级已存在版本，避免与共享环境里其他技能的版本冲突。
+# 约束保持宽松（>=），交由共享环境统一解析兼容版本。
+#
+# 安装源：ensure_deps.py 走普通 pip，沿用预装环境的 pip 配置；
+# 镜像源（如国内加速）由桌面端预装 Python 环境负责，脚本不介入。
+
+python-docx>=1.2    # 主要工作方式：docxlib 全部 helper、new_doc.py、comment.py、docx_edit.py
+lxml>=4.9           # tracked changes / comments 的底层 XML 操作：docxlib/*、validators/*
+defusedxml>=0.7     # 安全 XML 解析：office/validators/*.py、office/preflight.py

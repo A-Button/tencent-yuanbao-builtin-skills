@@ -1,0 +1,79 @@
+{
+  "_comment": [
+    "对话流里的卡片：A2UI 组件树。宿主把它包成 createSurface + updateComponents 喂给引擎。",
+    "顶层只放 components 数组，不要写 version / surfaceId / messages —— 那些由宿主合成。",
+    "绑定路径以 tool 出参为根：handler 打出 {\"{{ENTITY_PLURAL}}\": [...], \"count\": N}，",
+    "所以这里写 /count、/{{ENTITY_PLURAL}}；List 项内部用相对路径（title 而非 /title）。",
+    "改组件前先读 references/a2ui_card.md，组件名和属性必须来自 catalog。"
+  ],
+  "components": [
+    {
+      "id": "root",
+      "component": "Card",
+      "child": "body",
+      "style": {
+        "padding": 14,
+        "containerColor": "basic_container_primary",
+        "borderWidth": 0.5,
+        "borderColor": "card_border",
+        "shape": 20
+      }
+    },
+    {
+      "id": "body",
+      "component": "Column",
+      "children": ["heading", "summary", "list", "expand"]
+    },
+    {
+      "id": "heading",
+      "component": "Text",
+      "text": "{{APP_NAME}}",
+      "variant": "h4"
+    },
+    {
+      "id": "summary",
+      "component": "Text",
+      "text": { "path": "/count" },
+      "variant": "body"
+    },
+    {
+      "id": "list",
+      "component": "List",
+      "children": { "path": "/{{ENTITY_PLURAL}}", "componentId": "row" }
+    },
+    {
+      "id": "row",
+      "component": "Column",
+      "children": ["row-title", "row-notes"]
+    },
+    {
+      "id": "row-title",
+      "component": "Text",
+      "text": { "path": "title" },
+      "variant": "body"
+    },
+    {
+      "id": "row-notes",
+      "component": "Text",
+      "text": { "path": "notes" },
+      "variant": "caption"
+    },
+    {
+      "id": "expand",
+      "component": "Button",
+      "child": "expand-label",
+      "variant": "primary",
+      "action": {
+        "event": {
+          "name": "open_workspace",
+          "context": { "resourceUri": "{{WORKSPACE_URI}}" }
+        }
+      }
+    },
+    {
+      "id": "expand-label",
+      "component": "Text",
+      "text": "查看全部"
+    }
+  ]
+}

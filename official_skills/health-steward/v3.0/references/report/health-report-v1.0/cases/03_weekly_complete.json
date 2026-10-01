@@ -1,0 +1,106 @@
+{
+  "report_type": "weekly",
+  "week_start": "2026-09-14",
+  "week_end": "2026-09-20",
+  "profile": {
+    "height_cm": 175,
+    "weight_kg": 70,
+    "age": 30,
+    "sex": "male",
+    "goal": "fat_loss",
+    "target_kcal": 2100,
+    "target_protein_g": 90,
+    "target_fat_g": 70,
+    "target_carb_g": 250
+  },
+  "days": [
+    {
+      "date": "2026-09-14", "weekday": "周一", "is_valid_day": true,
+      "meals": {
+        "breakfast": {"summary": "水煮蛋2个、无糖豆浆250ml", "kcal": 420},
+        "lunch": {"summary": "鸡胸肉150g、糙米饭1小碗、西兰花2小碗", "kcal": 760},
+        "dinner": {"summary": "清蒸鱼1条、青菜2小碗、米饭半小碗", "kcal": 720}
+      },
+      "nutrition": {"protein_g": 92, "fat_g": 58, "carb_g": 228},
+      "exercise_slots": {"noon": null, "commute": null, "evening": {"summary": "快走40分钟，4.2km", "kcal": 168}},
+      "intake_kcal": 1900, "bmr_kcal": 1649, "daily_activity_kcal": 300, "active_kcal": 168, "total_burn_kcal": 2117
+    },
+    {
+      "date": "2026-09-15", "weekday": "周二", "is_valid_day": true,
+      "meals": {
+        "breakfast": {"summary": "燕麦40g、牛奶250ml、香蕉1根", "kcal": 460},
+        "lunch": {"summary": "麻辣香锅1份、米饭1小碗", "kcal": 940},
+        "dinner": {"summary": "蒸饺8个、橙子1个", "kcal": 650}
+      },
+      "nutrition": {"protein_g": 76, "fat_g": 72, "carb_g": 270},
+      "exercise_slots": {"noon": null, "commute": null, "evening": {"summary": "上肢力量35分钟", "kcal": 151}},
+      "intake_kcal": 2050, "bmr_kcal": 1649, "daily_activity_kcal": 300, "active_kcal": 151, "total_burn_kcal": 2100
+    },
+    {
+      "date": "2026-09-16", "weekday": "周三", "is_valid_day": true,
+      "meals": {
+        "breakfast": {"summary": "全麦鸡蛋三明治、美式咖啡", "kcal": 410},
+        "lunch": {"summary": "鱼排150g、杂粮饭1小碗、时蔬2小碗", "kcal": 760},
+        "dinner": {"summary": "番茄鸡蛋汤、菌菇青菜、红薯半个", "kcal": 610}
+      },
+      "nutrition": {"protein_g": 88, "fat_g": 54, "carb_g": 215},
+      "exercise_slots": {"noon": {"summary": "肩颈髋拉伸8分钟", "kcal": 30}, "commute": null, "evening": {"summary": "睡前拉伸12分钟", "kcal": 40}},
+      "intake_kcal": 1780, "bmr_kcal": 1649, "daily_activity_kcal": 461, "active_kcal": 70, "total_burn_kcal": 2180
+    },
+    {
+      "date": "2026-09-17", "weekday": "周四", "is_valid_day": true,
+      "meals": {
+        "breakfast": {"summary": "拿铁1杯、可颂1个", "kcal": 520},
+        "lunch": {"summary": "牛肉面1碗、卤蛋1个", "kcal": 780},
+        "dinner": {"summary": "烤肉聚餐、芝士蛋糕1块", "kcal": 1000}
+      },
+      "nutrition": {"protein_g": 81, "fat_g": 88, "carb_g": 286},
+      "exercise_slots": {"noon": null, "commute": {"summary": "慢跑30分钟，4.6km", "kcal": 250}, "evening": null},
+      "intake_kcal": 2300, "bmr_kcal": 1649, "daily_activity_kcal": 201, "active_kcal": 250, "total_burn_kcal": 2100
+    },
+    {
+      "date": "2026-09-18", "weekday": "周五", "is_valid_day": true,
+      "meals": {
+        "breakfast": {"summary": "牛奶250ml、水煮蛋1个", "kcal": 350},
+        "lunch": {"summary": "鸡肉轻食碗、玉米半根", "kcal": 720},
+        "dinner": {"summary": "家常豆腐、青菜2小碗、米饭半小碗", "kcal": 880}
+      },
+      "nutrition": {"protein_g": 84, "fat_g": 67, "carb_g": 248},
+      "exercise_slots": {"noon": null, "commute": null, "evening": {"summary": "下肢力量30分钟", "kcal": 160}},
+      "intake_kcal": 1950, "bmr_kcal": 1649, "daily_activity_kcal": 311, "active_kcal": 160, "total_burn_kcal": 2120
+    },
+    {
+      "date": "2026-09-19", "weekday": "周六", "is_valid_day": true,
+      "meals": {
+        "breakfast": {"summary": "水饺10个、无糖茶", "kcal": 560},
+        "lunch": {"summary": "烤肉聚餐、生菜2小碗、主食半小碗", "kcal": 1120},
+        "dinner": {"summary": "啤酒2杯、串烧1份", "kcal": 870}
+      },
+      "nutrition": {"protein_g": 98, "fat_g": 102, "carb_g": 295},
+      "exercise_slots": {"noon": {"summary": "羽毛球60分钟", "kcal": 360}, "commute": null, "evening": null},
+      "intake_kcal": 2550, "bmr_kcal": 1649, "daily_activity_kcal": 291, "active_kcal": 360, "total_burn_kcal": 2300
+    },
+    {
+      "date": "2026-09-20", "weekday": "周日", "is_valid_day": true,
+      "meals": {
+        "breakfast": {"summary": "红薯1个、无糖酸奶200g", "kcal": 390},
+        "lunch": {"summary": "菌菇鸡肉汤饭1碗、时蔬2小碗", "kcal": 780},
+        "dinner": {"summary": "蒸蛋1份、凉拌黄瓜1盘、米饭半小碗", "kcal": 680}
+      },
+      "nutrition": {"protein_g": 86, "fat_g": 51, "carb_g": 222},
+      "exercise_slots": {"noon": null, "commute": null, "evening": null},
+      "intake_kcal": 1850, "bmr_kcal": 1649, "daily_activity_kcal": 401, "active_kcal": 0, "total_burn_kcal": 2050
+    }
+  ],
+  "next_week_plan": {
+    "days": [
+      {"weekday": "周一", "breakfast": "鸡蛋2个、无糖酸奶200g、全麦面包2片", "lunch": "鸡胸肉150g、糙米饭1小碗约150g、西兰花2小碗约300g", "dinner": "清蒸鱼1条约250g、青菜2小碗约300g、米饭半小碗约80g", "movement": "午饭后快走15分钟", "target_balance_kcal": -250},
+      {"weekday": "周二", "breakfast": "无糖豆浆250ml、茶叶蛋2个、玉米半根", "lunch": "牛肉150g、米饭1小碗约150g、彩椒西芹2小碗约300g", "dinner": "凉拌豆腐200g、虾仁炒蛋1份、绿叶菜1小碗", "movement": "提前一站下车", "target_balance_kcal": -250},
+      {"weekday": "周三", "breakfast": "燕麦40g、牛奶250ml、蓝莓100g", "lunch": "鱼排150g、杂粮饭1小碗约150g、时蔬2小碗约300g", "dinner": "番茄鸡蛋汤1碗、菌菇青菜1盘、红薯半个", "movement": "午饭后快走20分钟", "target_balance_kcal": -300},
+      {"weekday": "周四", "breakfast": "全麦鸡蛋三明治1份、美式咖啡1杯", "lunch": "豆腐鸡肉便当1份、米饭1小碗约150g、蔬菜2小碗约300g", "dinner": "牛肉蔬菜汤面1碗，面留四分之一", "movement": "下班慢跑30分钟", "target_balance_kcal": -350},
+      {"weekday": "周五", "breakfast": "水煮蛋2个、无糖豆浆250ml、苹果半个", "lunch": "虾仁饭1份、绿叶菜2小碗约300g", "dinner": "鸡肉沙拉1份、南瓜150g、无糖酸奶200g", "movement": "下肢力量30分钟", "target_balance_kcal": -300},
+      {"weekday": "周六", "breakfast": "红薯1个、无糖酸奶200g、鸡蛋1个", "lunch": "烤肉瘦肉150g、生菜2小碗约200g、主食半小碗约80g", "dinner": "清汤蔬菜1碗、豆腐200g", "movement": "羽毛球60分钟", "target_balance_kcal": -250},
+      {"weekday": "周日", "breakfast": "燕麦牛奶1碗、鸡蛋2个、猕猴桃1个", "lunch": "菌菇鸡肉汤饭1碗、时蔬2小碗约300g", "dinner": "清蒸鱼1条约250g、凉拌黄瓜1盘、米饭半小碗约80g", "movement": "恢复拉伸20分钟", "target_balance_kcal": -200}
+    ]
+  }
+}

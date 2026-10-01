@@ -1,0 +1,4 @@
+interface:
+  display_name: "历史对话剧本生成"
+  short_description: "规划多Session主线、关联分支与无关干扰，生成仿真历史和独立评分报告"
+  default_prompt: "使用 $synthetic-history-script，先确认主题、Skill定义、Session数与长度，以及是否加入关联分支和无关干扰，再生成大纲、完整历史、留出问题及独立评分报告。"

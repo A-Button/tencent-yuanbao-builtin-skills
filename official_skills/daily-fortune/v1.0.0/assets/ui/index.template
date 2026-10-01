@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>每日运势</title>
+<style>
+  /* 全部样式自包含：iframe 里没有同源服务器，CSP 也会拦掉外部 CDN。 */
+  :root {
+    --bg: var(--mcp-color-background, #f4f1ea);
+    --fg: var(--mcp-color-text, #211d1a);
+    --muted: #8a8175;
+    --line: #e7dfcd;
+    --card: var(--mcp-color-surface, #fffdf7);
+    --accent: #8c6818;
+    --accent-soft: #f5ecd8;
+    --hero-a: #2b261d;
+    --hero-b: #58451b;
+    --hero-fg: #f7efd8;
+    --danger: #c2483c;
+    --ok: #4b7f52;
+  }
+  [data-theme="dark"] {
+    --bg: var(--mcp-color-background, #171613);
+    --fg: var(--mcp-color-text, #ece7dc);
+    --muted: #9a9285;
+    --line: #332f27;
+    --card: var(--mcp-color-surface, #221f1a);
+    --accent: #d9b45f;
+    --accent-soft: #2f2a1d;
+    --hero-a: #1c1913;
+    --hero-b: #3a2f14;
+    --hero-fg: #f0e5c4;
+    --danger: #e0796d;
+    --ok: #7fb388;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0 0 calc(16px + var(--safe-bottom, 0px));
+    font: 14px/1.6 -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: var(--fg);
+    background: var(--bg);
+  }
+  .page { max-width: 520px; margin: 0 auto; padding: 14px 14px 4px; }
+  .hero {
+    padding: 14px 16px 16px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--hero-a), var(--hero-b));
+    color: var(--hero-fg);
+  }
+  .brand { display: block; font-size: 11px; letter-spacing: .04em; opacity: .85; }
+  .hero h1 { margin: 8px 0 10px; font-size: 19px; font-weight: 700; }
+  .hero .summary { margin: 10px 0 0; font-size: 12px; line-height: 1.6; opacity: .92; }
+  .seg { display: flex; flex-wrap: wrap; gap: 6px; }
+  .seg button {
+    font: inherit; font-size: 12px; padding: 5px 12px; border-radius: 999px; cursor: pointer;
+    color: var(--hero-fg); background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .2);
+  }
+  .seg button[aria-pressed="true"] { background: #d9b45f; border-color: #d9b45f; color: #2b261d; font-weight: 600; }
+  .seg.light button {
+    color: var(--fg); background: var(--card); border: 1px solid var(--line);
+  }
+  .seg.light button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button:disabled { opacity: .55; cursor: default; }
+  .hint { font-size: 11px; color: var(--muted); }
+
+  .scoreRow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .scoreBox { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; }
+  .scoreBox b { display: block; font-size: 11px; font-weight: 500; color: var(--muted); }
+  .scoreBox .value { font-size: 21px; font-weight: 800; color: var(--accent); }
+  .scoreBox .sub { display: block; font-size: 10px; color: var(--muted); }
+  .overview {
+    margin-top: 10px; padding: 10px 12px; font-size: 13px; line-height: 1.7;
+    background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 4px 12px 12px 4px;
+  }
+  .luckGrid { margin-top: 10px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .luck { background: var(--card); border: 1px solid var(--line); border-radius: 13px; padding: 9px 10px; }
+  .luck small { display: block; font-size: 10px; color: var(--muted); margin-bottom: 3px; }
+  .luck .val { font-size: 12px; font-weight: 600; word-break: break-word; }
+  .swatches { display: flex; gap: 4px; margin-bottom: 4px; }
+  .sw { width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--line); }
+  .adviceGrid { margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .advice { background: var(--card); border: 1px solid var(--line); border-radius: 13px; padding: 10px 12px; font-size: 12px; line-height: 1.6; }
+  .advice b { display: block; margin-bottom: 4px; font-size: 12px; color: var(--accent); }
+  .insightBox { margin-top: 10px; background: var(--accent-soft); border-radius: 13px; padding: 10px 12px; }
+  .insightBox .title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .insightBox p { margin: 0; font-size: 12px; line-height: 1.7; color: var(--fg); }
+  .transit { margin-top: 10px; font-size: 11px; line-height: 1.8; color: var(--muted); }
+  .transit b { color: var(--accent); font-weight: 600; }
+  .evid { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 5px; }
+  .evid span {
+    font-size: 10px; padding: 3px 8px; border-radius: 999px;
+    background: var(--card); border: 1px solid var(--line); color: var(--muted);
+  }
+  .tip {
+    margin: 12px 0 0; padding: 8px 10px; font-size: 11px; line-height: 1.6; color: var(--muted);
+    background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 4px;
+  }
+  .empty { padding: 28px 16px; text-align: center; color: var(--muted); font-size: 13px; line-height: 1.7; }
+  .error { padding: 20px 16px; text-align: center; color: var(--danger); font-size: 13px; line-height: 1.7; }
+  .toast {
+    position: sticky; bottom: 8px; margin: 10px auto 0; max-width: 420px;
+    padding: 8px 12px; border-radius: 10px; font-size: 12px; text-align: center;
+    background: var(--accent-soft); color: var(--fg); border: 1px solid var(--line);
+  }
+  .toast[hidden] { display: none; }
+  .busy { opacity: .6; }
+  [data-touch="true"] .seg button { padding: 9px 14px; }
+  @media (max-width: 380px) {
+    .scoreRow, .adviceGrid { grid-template-columns: 1fr; }
+    .luckGrid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="hero">
+    <span class="brand">元宝私人大师 · 每日运势</span>
+    <h1 id="title">今日运势概述</h1>
+    <div class="seg" id="timeSeg"></div>
+    <p class="summary" id="summary">正在生成运势…</p>
+  </header>
+
+  <div id="stage"><div class="empty">正在生成运势…</div></div>
+  <div class="toast" id="toast" hidden></div>
+</div>
+
+<!-- MCP_BRIDGE_START -->
+<script>
+/*__MCP_BRIDGE__*/
+</script>
+<!-- MCP_BRIDGE_END -->
+
+<script>
+(function () {
+  var bridge = window.DailyFortuneBridge;
+  var TOOL = "daily_fortune";
+  var TIME_LABEL = { today: "今日", week: "本周", month: "本月", year: "今年" };
+  var TOPIC_LABEL = { career: "事业/学习", love: "感情", wealth: "财富", social: "人际" };
+
+  var stage = document.getElementById("stage");
+  var titleEl = document.getElementById("title");
+  var summaryEl = document.getElementById("summary");
+  var timeSeg = document.getElementById("timeSeg");
+  var toastEl = document.getElementById("toast");
+
+  var state = { data: null, timekey: "today", topickey: "career", busy: false, instanceId: "" };
+
+  function el(tag, className, text) {
+    var node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined && text !== null) node.textContent = String(text);
+    return node;
+  }
+
+  function applyHostContext(context) {
+    var ctx = context || {};
+    document.documentElement.dataset.theme = ctx.theme === "dark" ? "dark" : "light";
+    var caps = ctx.deviceCapabilities || {};
+    document.body.dataset.touch = caps.touch ? "true" : "false";
+    var insets = ctx.safeAreaInsets || {};
+    document.body.style.setProperty("--safe-bottom", (insets.bottom || 0) + "px");
+    applyInstanceId(ctx.instanceId || ctx.cardInstanceId);
+  }
+
+  // 实例标识由宿主下发（同一会话里每张卡一个，重启后保持稳定）。
+  // 宿主尚未支持时这里拿到空值，卡片行为与旧版完全一致，只是少了路由信息。
+  function applyInstanceId(value) {
+    var next = typeof value === "string" ? value.trim() : "";
+    if (!next || next === state.instanceId) return;
+    state.instanceId = next;
+    document.documentElement.dataset.instanceId = next;
+  }
+
+  function normalize(payload) {
+    if (!payload) return null;
+    return payload.structuredContent || payload;
+  }
+
+  function toast(message) {
+    if (!message) { toastEl.hidden = true; return; }
+    toastEl.textContent = message;   // 用户/引擎内容一律 textContent
+    toastEl.hidden = false;
+  }
+
+  function renderSeg(host, defs, activeKey, onPick, light) {
+    host.textContent = "";
+    host.className = "seg" + (light ? " light" : "");
+    defs.forEach(function (def) {
+      var btn = el("button", null, def.label);
+      btn.type = "button";
+      btn.dataset.key = def.key;
+      btn.setAttribute("aria-pressed", def.key === activeKey ? "true" : "false");
+      btn.disabled = state.busy;
+      btn.addEventListener("click", function () { onPick(def.key); });
+      host.appendChild(btn);
+    });
+  }
+
+  function renderCard(card) {
+    stage.textContent = "";
+    if (!card) return;
+
+    var scoreRow = el("div", "scoreRow");
+    var box1 = el("div", "scoreBox");
+    box1.appendChild(el("b", null, "整体指数"));
+    var sc = card.score || {};
+    box1.appendChild(el("div", "value", sc.value === undefined || sc.value === null ? "–" : sc.value));
+    box1.appendChild(el("span", "sub", (sc.label || "") + (sc.scale ? " · 区间 " + sc.scale : "")));
+    var box2 = el("div", "scoreBox");
+    var kw = card.keyword || {};
+    box2.appendChild(el("b", null, kw.label || "关键词"));
+    box2.appendChild(el("div", "value", kw.value || "–"));
+    box2.appendChild(el("span", "sub", kw.desc || ""));
+    scoreRow.appendChild(box1);
+    scoreRow.appendChild(box2);
+    stage.appendChild(scoreRow);
+
+    if (card.overview) stage.appendChild(el("div", "overview", card.overview));
+
+    var l = card.lucky || {};
+    var luckDefs = [
+      { label: "幸运色", value: l.color, hex: l.colorHex },
+      { label: "幸运时段", value: l.time, glyph: l.timeGlyph },
+      { label: "幸运方位", value: l.direction, glyph: l.directionGlyph },
+      { label: "幸运数字", value: l.number, glyph: l.numberGlyph },
+      { label: "幸运食物", value: l.food, glyph: l.foodGlyph },
+      { label: "幸运配饰", value: l.accessory, glyph: l.accessoryGlyph }
+    ];
+    var grid = el("div", "luckGrid");
+    luckDefs.forEach(function (def) {
+      var cell = el("div", "luck");
+      cell.appendChild(el("small", null, def.label));
+      if (def.hex && def.hex.length) {
+        var swatches = el("div", "swatches");
+        def.hex.forEach(function (hex) {
+          var sw = el("span", "sw");
+          sw.style.background = hex;
+          swatches.appendChild(sw);
+        });
+        cell.appendChild(swatches);
+      }
+      cell.appendChild(el("div", "val", (def.glyph ? def.glyph + " " : "") + (def.value || "–")));
+      grid.appendChild(cell);
+    });
+    stage.appendChild(grid);
+
+    var ad = card.advice || {};
+    if (ad.do || ad.avoid) {
+      var adviceGrid = el("div", "adviceGrid");
+      var doBox = el("div", "advice");
+      doBox.appendChild(el("b", null, "建议"));
+      doBox.appendChild(el("div", null, ad.do || "–"));
+      var avoidBox = el("div", "advice");
+      avoidBox.appendChild(el("b", null, "避免"));
+      avoidBox.appendChild(el("div", null, ad.avoid || "–"));
+      adviceGrid.appendChild(doBox);
+      adviceGrid.appendChild(avoidBox);
+      stage.appendChild(adviceGrid);
+    }
+
+    var ins = card.insight || {};
+    var insightPanel = el("div", "insightBox");
+    var head = el("div");
+    head.style.display = "flex";
+    head.style.justifyContent = "space-between";
+    head.style.alignItems = "baseline";
+    head.appendChild(el("div", "title", ins.title || "重点解读"));
+    head.appendChild(el("span", "hint", ins.meta || ""));
+    insightPanel.appendChild(head);
+    var topicSeg = el("div", "seg light");
+    insightPanel.appendChild(topicSeg);
+    insightPanel.appendChild(el("p", null, ins.body || ""));
+    stage.appendChild(insightPanel);
+
+    renderSeg(topicSeg, [
+      { key: "career", label: TOPIC_LABEL.career },
+      { key: "love", label: TOPIC_LABEL.love },
+      { key: "wealth", label: TOPIC_LABEL.wealth },
+      { key: "social", label: TOPIC_LABEL.social }
+    ], state.topickey, pickTopic, true);
+
+    var tr = card.transit || {}, bz = card.bazi || {};
+    var bits = [];
+    if (tr.yearGanZhi || tr.monthGanZhi || tr.dayGanZhi) {
+      bits.push(["年", "月", "日"].map(function (suffix, i) {
+        var gz = [tr.yearGanZhi, tr.monthGanZhi, tr.dayGanZhi][i];
+        return gz ? gz + suffix : "";
+      }).filter(Boolean).join(" "));
+    }
+    if (bz.dayMaster) bits.push("日主 " + bz.dayMaster + (bz.dayMasterElement ? "（" + bz.dayMasterElement + "）" : ""));
+    if (bz.pillars) {
+      bits.push([bz.pillars.year, bz.pillars.month, bz.pillars.day, bz.pillars.hour].filter(Boolean).join(" "));
+    }
+    if (bits.length) {
+      var transitEl = el("div", "transit");
+      transitEl.appendChild(el("span", null, "流期 "));
+      var strong = el("b", null, bits.join(" ｜ "));
+      transitEl.appendChild(strong);
+      stage.appendChild(transitEl);
+    }
+
+    if (card.evidence && card.evidence.length) {
+      var evid = el("div", "evid");
+      card.evidence.slice(0, 4).forEach(function (text) { evid.appendChild(el("span", null, text)); });
+      stage.appendChild(evid);
+    }
+
+    stage.appendChild(el("p", "tip", "每日运势属于传统文化与娱乐性参考；健康、投资、法律及职业选择请以专业信息为准。"));
+  }
+
+  function render() {
+    var data = state.data;
+    if (!data) {
+      stage.textContent = "";
+      stage.appendChild(el("div", "empty", "正在生成运势…"));
+      return;
+    }
+    titleEl.textContent = (data.card && data.card.title) || (TIME_LABEL[state.timekey] + "运势概述");
+    summaryEl.textContent = (data.card && data.card.summary) || "";
+    renderSeg(timeSeg, [
+      { key: "today", label: "今日" },
+      { key: "week", label: "本周" },
+      { key: "month", label: "本月" },
+      { key: "year", label: "今年" }
+    ], state.timekey, pickTime, false);
+
+    if (data.needs_profile) {
+      stage.textContent = "";
+      stage.appendChild(el("div", "empty", data.profile_message || "还没有出生档案，无法生成运势卡片。"));
+      return;
+    }
+    if (!data.card) {
+      stage.textContent = "";
+      stage.appendChild(el("div", "error", data.card_error || "暂时无法生成卡片，请稍后再试。"));
+      return;
+    }
+    renderCard(data.card);
+  }
+
+  // 引擎一次性下发 16 张卡（4 时间维度 × 4 主题）。有这份数据时切换就在本地完成，
+  // 不再向宿主发起 tools/call —— 宿主对 UI 主动调用的支持并不一致，
+  // 有的不响应（按钮一直转）、有的直接拒绝，依赖它会出现"点了没反应"。
+  function localCard(timekey, topickey) {
+    var cards = state.data && state.data.cards;
+    if (!cards) return null;
+    var byTopic = cards[timekey];
+    return (byTopic && byTopic[topickey]) || null;
+  }
+
+  function switchLocally(timekey, topickey) {
+    var card = localCard(timekey, topickey);
+    if (!card) return false;
+    state.timekey = timekey;
+    state.topickey = topickey;
+    state.data.card = card;
+    state.data.timekey = timekey;
+    state.data.topickey = topickey;
+    render();
+    return true;
+  }
+
+  function pickTime(key) {
+    if (key === state.timekey || state.busy) return;
+    if (switchLocally(key, state.topickey)) return;
+    state.timekey = key;
+    render();
+    call("get_card", { timekey: key, topickey: state.topickey });
+  }
+
+  function pickTopic(key) {
+    if (key === state.topickey || state.busy) return;
+    if (switchLocally(state.timekey, key)) return;
+    state.topickey = key;
+    render();
+    call("get_card", { timekey: state.timekey, topickey: key });
+  }
+
+  function apply(payload) {
+    var body = normalize(payload);
+    if (!body) return;
+    if (body.phase === "error") {
+      // 已有数据时不要让一次失败清空界面。
+      if (!state.data) {
+        stage.textContent = "";
+        stage.appendChild(el("div", "error", body.message || "操作失败"));
+      }
+      toast(body.message || "操作失败");
+      return;
+    }
+    var data = body.data;
+    if (!data) return;
+    // 兜底：宿主若在首屏 hostContext 之后才下发实例标识，这里补登记一次。
+    if (!state.instanceId && data.instanceId) applyInstanceId(data.instanceId);
+    state.data = data;
+    state.timekey = data.timekey || state.timekey;
+    state.topickey = data.topickey || state.topickey;
+    // 卡片本身已经说明一切，成功时不再弹提示条；这里只负责把它收起来，
+    // 避免上一次的失败提示一直挂在底部。
+    toast("");
+    render();
+  }
+
+  function call(operation, args) {
+    if (state.busy || bridge.isPreview) return Promise.resolve();
+    state.busy = true;
+    render();
+    var payload = { operation: operation };
+    Object.keys(args || {}).forEach(function (key) { payload[key] = args[key]; });
+    // 带上实例标识，宿主才能把结果送回这张卡而不是别的卡。
+    if (state.instanceId) payload.instanceId = state.instanceId;
+    // 宿主不响应时 promise 会一直挂着，按钮就永远处于 busy 状态。
+    // 加超时兜底，至少把错误说出来并恢复可点击。
+    var timedOut = false;
+    var timer = setTimeout(function () {
+      timedOut = true;
+      state.busy = false;
+      render();
+      toast("宿主没有响应，请稍后再试。");
+    }, 12000);
+    return bridge.callTool(TOOL, payload)
+      .then(function (result) {
+        clearTimeout(timer);
+        if (timedOut) return;
+        // 成功时只上屏卡片：卡片自身已说明一切，不再弹底部提示条。
+        apply(result);
+      })
+      .catch(function (error) {
+        toast(error && error.message ? error.message : "调用失败");
+      })
+      .then(function () {
+        state.busy = false;
+        render();
+      });
+  }
+
+  // 预览模式不连接宿主：塞一份示例快照，只用来看布局与主题。
+  var PREVIEW_SNAPSHOT = {
+    phase: "result",
+    data: {
+      subject: "self",
+      timekey: "today",
+      topickey: "career",
+      needs_profile: false,
+      card: {
+        title: "今日运势概述",
+        summary: "预览数据：把已有计划拆成清晰步骤，不宜在信息不全时做过度承诺。",
+        score: { value: 72, scale: "45–88", label: "稳中求进" },
+        keyword: { label: "今日关键词", value: "确认", desc: "先完成第一版" },
+        overview: "预览数据。你的日主属金，今日宜借土气。如金石坚刚，主义、主决断：刚毅讲原则、重秩序。",
+        lucky: {
+          color: "米黄色、棕黄色", colorHex: ["#f0e0a8", "#c8a165"],
+          time: "07:00–09:00、13:00–15:00", timeGlyph: "⏰",
+          direction: "中央", directionGlyph: "🏛️",
+          number: "5、0", numberGlyph: "🎲",
+          food: "谷物薯类、南瓜山药、黄色食物", foodGlyph: "🌾",
+          accessory: "陶瓷、石质或暖黄配饰", accessoryGlyph: "🏺"
+        },
+        advice: { do: "预览数据：先确认信息与边界，再完成一个确定步骤。", avoid: "预览数据：避免只做准备不推进。" },
+        insight: { title: "今日事业/学习", body: "预览数据：宜把事业目标拆成可执行清单，先完成第一版。", meta: "今日 · 事业/学习" },
+        transit: { yearGanZhi: "丙午", monthGanZhi: "丁酉", dayGanZhi: "甲子", timekey: "today" },
+        bazi: { dayMaster: "庚", dayMasterElement: "金", pillars: { year: "庚辰", month: "戊寅", day: "庚午", hour: "戊寅" } },
+        evidence: ["流期天干为日主生助五行，加 8 分", "日支与流期地支六合，加 5 分"]
+      }
+    }
+  };
+
+  bridge.onHostContextChanged(applyHostContext);
+  bridge.onToolResult(apply);
+
+  // 首屏读取必须等 ready，此前 callTool 还没有可用的 transport。
+  bridge.ready.then(function () {
+    applyHostContext(bridge.getHostContext());
+    if (bridge.isPreview) {
+      apply({ structuredContent: PREVIEW_SNAPSHOT });
+      return;
+    }
+    // 宿主若已在握手期间推过结果，apply 已经渲染过，就不必再拉一次。
+    if (!state.data) call("get_card", { timekey: state.timekey, topickey: state.topickey });
+  });
+})();
+</script>
+</body>
+</html>

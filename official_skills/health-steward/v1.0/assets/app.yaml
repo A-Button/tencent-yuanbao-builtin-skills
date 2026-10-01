@@ -1,0 +1,1582 @@
+id: health-steward
+name: 健康管家
+version: v1.0
+description: 运动训练、饮食记录、健康日报与周报。训练和饮食出 A2UI 卡，日报周报出 HTML 产物。
+resources:
+- uri: ai_apps.skills.health_steward_workout_res
+  name: 运动训练
+  description: 今日训练摘要卡片
+  path: assets/ui/workout.card.json
+  mimeType: application/a2ui+json
+  dataMode: keep_latest
+- uri: ai_apps.skills.diet_assistant_res
+  name: 今日饮食记录
+  description: 今日饮食卡：一餐的标题、时间、实拍和食物清单，展开进详情页。
+  path: assets/ui/diet.card.json
+  mimeType: application/a2ui+json
+  dataMode: keep_latest
+tools:
+- name: diet_record
+  title: 记一餐
+  description: 落库一餐并出饮食卡。用户已经吃了、或只发了食物图没说「只算不记」时用。只需逐项估营养，合计与 4-4-9 核验由脚本算；同一餐再记一次是新建一条，不合并。
+  inputSchema:
+    type: object
+    properties:
+      items:
+        type: array
+        minItems: 1
+        description: 本餐食物，一样一项。每项必填 name、portion 和 kcal / protein_g / fat_g / carb_g / sodium_mg 五个估值；合计与 4-4-9
+          核验由脚本算，不要传 totals。
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            portion:
+              type: string
+              maxLength: 3
+              description: 份量词，最多 3 个字：「1个」「一份」「一碗」「半份」。拼进卡面那行「白米饭 × 一碗」；克重写进正文。
+            emoji:
+              type: string
+              description: 可选，卡面不画，传了照存。
+            origin:
+              type: string
+              description: 可选，卡面不画，传了照存。
+            kcal:
+              type: number
+              minimum: 0
+            protein_g:
+              type: number
+              minimum: 0
+            fat_g:
+              type: number
+              minimum: 0
+            carb_g:
+              type: number
+              minimum: 0
+            sodium_mg:
+              type: number
+              minimum: 0
+            story:
+              type: string
+              maxLength: 400
+              description: 可选，卡面不画，传了照存。
+            data_source:
+              type: string
+              description: 可选，卡面不画，传了照存。
+            assumptions:
+              type: string
+              description: 可选，卡面不画，传了照存。
+          required:
+          - name
+          - portion
+          - kcal
+          - protein_g
+          - fat_g
+          - carb_g
+          - sodium_mg
+          additionalProperties: false
+      title:
+        type: string
+        maxLength: 40
+        description: 可选。短标题，只用来在 diet_day 的列表里认出这一餐；不给就按食物名补。带「午餐：」这类前缀会被自动去掉。
+      sceneOneliner:
+        type: string
+        maxLength: 200
+        description: 可选。一句场景白描，不上卡，传了照存。
+      aiPrice:
+        type: number
+        minimum: 0
+        description: 可选。这一餐的估价（元），不上卡，传了照存。
+      narrative:
+        type: object
+        description: 可选。正文里的解读段落，不上卡，传了照存；不传不影响出卡。
+        properties:
+          key_signals:
+            type: array
+            items:
+              type: string
+          metabolism:
+            type: string
+          care:
+            type: string
+          followup:
+            type: string
+        additionalProperties: false
+      photoUrl:
+        type: string
+        description: '用户上传照片的引用，**本轮有图就必填**。
+
+          两种取值，看当前这条消息里给的是哪种，原样抄，不要转换： 沙箱路径（`/data/inputs/xxx.jpg`，来自 [user_image_path]）或 http(s) 地址（短链 / COS 长链，来自
+          [user_image_url]）。两种都有时抄 URL。 路径会由宿主在出卡时换成长效地址，你不需要、也没办法自己换。
+
+          只抄当前这条消息里的那一个，不要从历史消息里翻。 缺省为 null：档案里仍是 null，出卡时填兜底图、角标「无图」。
+
+          '
+      eatenAt:
+        type: string
+        description: 'ISO 8601 用餐时间。优先级：用户说的钟点 > 照片拍摄时间 > 上传时刻（缺省）。 有拍摄时间时填 capture time，并配 eatenAtSource=photo。
+
+          '
+      eatenAtSource:
+        type: string
+        enum:
+        - photo
+        - upload
+        - user
+        description: user=用户口述；photo=照片拍摄时间；upload=上传时刻（默认）。
+      mealType:
+        type: string
+        enum:
+        - breakfast
+        - beverage
+        - lunch
+        - afternoon_tea
+        - dinner
+        - midnight
+        description: '餐次槽位。优先级：用户明确说了哪一餐 > 按 eatenAt 时间窗派生 > 上传时刻派生。用户说「这是午餐」时必须显式传 lunch。
+
+          '
+      beverageOnly:
+        type: boolean
+        description: 本餐只有饮品时置 true，直接归 beverage 且不并入任何一餐。
+      nutrients:
+        type: array
+        items:
+          type: string
+        description: 可选。主要营养成分标签，传了照存。
+    required:
+    - items
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/record_meal.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_diet_res
+      visibility:
+      - model
+      - app
+    runtime: diet
+    aliases:
+    - record_meal
+    legacy_params:
+    - sceneOneliner
+    - aiPrice
+    - narrative
+    - nutrients
+    - items.emoji
+    - items.origin
+    - items.story
+    - items.data_source
+    - items.assumptions
+- name: diet_estimate
+  title: 测算一餐
+  description: 只算营养、不落库，卡片照出。明确只问热量（菜谱、配料表、生食材、纯文字「多少卡」）时用。
+  inputSchema:
+    type: object
+    properties:
+      items:
+        type: array
+        minItems: 1
+        description: 本餐食物，一样一项。每项必填 name、portion 和 kcal / protein_g / fat_g / carb_g / sodium_mg 五个估值；合计与 4-4-9
+          核验由脚本算，不要传 totals。
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            portion:
+              type: string
+              maxLength: 3
+              description: 份量词，最多 3 个字：「1个」「一份」「一碗」「半份」。拼进卡面那行「白米饭 × 一碗」；克重写进正文。
+            emoji:
+              type: string
+              description: 可选，卡面不画，传了照存。
+            origin:
+              type: string
+              description: 可选，卡面不画，传了照存。
+            kcal:
+              type: number
+              minimum: 0
+            protein_g:
+              type: number
+              minimum: 0
+            fat_g:
+              type: number
+              minimum: 0
+            carb_g:
+              type: number
+              minimum: 0
+            sodium_mg:
+              type: number
+              minimum: 0
+            story:
+              type: string
+              maxLength: 400
+              description: 可选，卡面不画，传了照存。
+            data_source:
+              type: string
+              description: 可选，卡面不画，传了照存。
+            assumptions:
+              type: string
+              description: 可选，卡面不画，传了照存。
+          required:
+          - name
+          - portion
+          - kcal
+          - protein_g
+          - fat_g
+          - carb_g
+          - sodium_mg
+          additionalProperties: false
+      title:
+        type: string
+        maxLength: 40
+        description: 可选。短标题，只用来在 diet_day 的列表里认出这一餐；不给就按食物名补。带「午餐：」这类前缀会被自动去掉。
+      sceneOneliner:
+        type: string
+        maxLength: 200
+        description: 可选。一句场景白描，不上卡，传了照存。
+      aiPrice:
+        type: number
+        minimum: 0
+        description: 可选。这一餐的估价（元），不上卡，传了照存。
+      narrative:
+        type: object
+        description: 可选。正文里的解读段落，不上卡，传了照存；不传不影响出卡。
+        properties:
+          key_signals:
+            type: array
+            items:
+              type: string
+          metabolism:
+            type: string
+          care:
+            type: string
+          followup:
+            type: string
+        additionalProperties: false
+      photoUrl:
+        type: string
+        description: '用户上传照片的引用，**本轮有图就必填**。
+
+          两种取值，看当前这条消息里给的是哪种，原样抄，不要转换： 沙箱路径（`/data/inputs/xxx.jpg`，来自 [user_image_path]）或 http(s) 地址（短链 / COS 长链，来自
+          [user_image_url]）。两种都有时抄 URL。 路径会由宿主在出卡时换成长效地址，你不需要、也没办法自己换。
+
+          只抄当前这条消息里的那一个，不要从历史消息里翻。 缺省为 null：档案里仍是 null，出卡时填兜底图、角标「无图」。
+
+          '
+    required:
+    - items
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/estimate_meal.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_diet_res
+      visibility:
+      - model
+      - app
+    runtime: diet
+    aliases:
+    - estimate_meal
+    legacy_params:
+    - sceneOneliner
+    - aiPrice
+    - narrative
+    - items.emoji
+    - items.origin
+    - items.story
+    - items.data_source
+    - items.assumptions
+- name: diet_day
+  title: 看某天吃了什么
+  description: 看某一天吃了什么：每餐的时间、食物、热量与宏量，以及跳过的餐次，并出饮食卡。不传日期就是今天；当天没有记录时卡片画成空态，回执带 card_empty。
+  inputSchema:
+    type: object
+    properties:
+      date:
+        type: string
+        description: 日期，格式 YYYY-MM-DD，缺省为今天。
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/get_day.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_diet_res
+      visibility:
+      - model
+      - app
+    runtime: diet
+    aliases:
+    - get_day
+- name: diet_skip
+  title: 跳过一餐
+  description: 把早/午/晚某一餐标成跳过，不进热量合计，卡片那一行变成「已跳过」。用户说「不吃了」时立刻调。
+  inputSchema:
+    type: object
+    properties:
+      mealType:
+        type: string
+        enum:
+        - breakfast
+        - lunch
+        - dinner
+        description: 要跳过的正餐槽位。
+      date:
+        type: string
+        description: 日期，格式 YYYY-MM-DD，缺省为今天。
+    required:
+    - mealType
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/skip_meal.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_diet_res
+      visibility:
+      - model
+      - app
+    runtime: diet
+    aliases:
+    - skip_meal
+- name: diet_stats
+  title: 饮食统计
+  description: 近 1 天或 7 天的饮食统计：日均热量与宏量、规律性评分。
+  inputSchema:
+    type: object
+    properties:
+      period:
+        type: string
+        enum:
+        - day
+        - week
+        description: 统计档位，缺省 week。
+      date:
+        type: string
+        description: 日期，格式 YYYY-MM-DD，缺省为今天。
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/get_stats.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_diet_res
+      visibility:
+      - model
+      - app
+    runtime: diet
+    aliases:
+    - get_stats
+- name: diet_update
+  title: 改一餐
+  description: 改已落库那条记错的地方；items 改了会重算合计。又吃了一样东西不是改，是再记一条。
+  inputSchema:
+    type: object
+    properties:
+      mealId:
+        type: string
+        minLength: 1
+        description: 记录 id，须复用工具返回值里的 meal_id，不要自己编。
+      patch:
+        type: object
+        minProperties: 1
+        description: 字段级改动，只允许修改下列业务字段。
+        properties:
+          eaten_at:
+            type: string
+          eaten_at_source:
+            type: string
+            enum:
+            - photo
+            - upload
+            - user
+          meal_type:
+            type: string
+            enum:
+            - breakfast
+            - beverage
+            - lunch
+            - afternoon_tea
+            - dinner
+            - midnight
+          title:
+            type: string
+            maxLength: 40
+          scene_oneliner:
+            type: string
+            maxLength: 200
+          items:
+            type: array
+            minItems: 1
+            description: '本餐食物清单。每项必填 name / portion / emoji / origin 以及 kcal / protein_g / fat_g / carb_g / sodium_mg
+              五个营养估值； story / data_source / assumptions 可选但强烈建议补齐，卡片的食物 详情列表要用。
+
+              '
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                portion:
+                  type: string
+                  maxLength: 3
+                  description: '份量单位，直接渲染在卡片食物列表右栏，**最多 3 个字**： 「1个」「一份」「一碗」「一杯」「半份」「一小把」。 不要填克重或毫升（「约250g」这种是计量不是份量，会被契约挡掉）。
+                    括号补充也算进这 3 个字，「半包（50g）」同样会被退回。 克重折算、部位假设一律写进 assumptions，不要塞这里。
+
+                    '
+                emoji:
+                  type: string
+                origin:
+                  type: string
+                kcal:
+                  type: number
+                  minimum: 0
+                protein_g:
+                  type: number
+                  minimum: 0
+                fat_g:
+                  type: number
+                  minimum: 0
+                carb_g:
+                  type: number
+                  minimum: 0
+                sodium_mg:
+                  type: number
+                  minimum: 0
+                story:
+                  type: string
+                  maxLength: 400
+                data_source:
+                  type: string
+                assumptions:
+                  type: string
+              required:
+              - name
+              - portion
+              - emoji
+              - origin
+              - kcal
+              - protein_g
+              - fat_g
+              - carb_g
+              - sodium_mg
+              additionalProperties: false
+          narrative:
+            type: object
+            properties:
+              key_signals:
+                type: array
+                items:
+                  type: string
+              metabolism:
+                type: string
+              care:
+                type: string
+              followup:
+                type: string
+            additionalProperties: false
+          nutrients:
+            type: array
+            items:
+              type: string
+          photo_url:
+            type:
+            - string
+            - 'null'
+          is_favorited:
+            type: boolean
+        additionalProperties: false
+    required:
+    - mealId
+    - patch
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/update_meal.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_diet_res
+      visibility:
+      - model
+      - app
+    runtime: diet
+    aliases:
+    - update_meal
+- name: diet_delete
+  title: 删一餐
+  description: 软删一条记录。调之前必须跟用户确认是哪一条。
+  inputSchema:
+    type: object
+    properties:
+      mealId:
+        type: string
+        minLength: 1
+        description: 记录 id，须复用工具返回值里的 meal_id，不要自己编。
+    required:
+    - mealId
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/delete_meal.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_diet_res
+      visibility:
+      - model
+      - app
+    runtime: diet
+    aliases:
+    - delete_meal
+- name: diet_meal
+  title: 查一餐
+  description: 按 meal_id 取单条记录。diet_day 的每餐已带宏量和食物，一般用不到。
+  inputSchema:
+    type: object
+    properties:
+      mealId:
+        type: string
+        minLength: 1
+        description: 记录 id，须复用工具返回值里的 meal_id，不要自己编。
+    required:
+    - mealId
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/get_meal.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_diet_res
+      visibility:
+      - model
+      - app
+    runtime: diet
+    aliases:
+    - get_meal
+    hidden: true
+- name: workout_today
+  title: 今日训练
+  description: 看当天的身体状态、训练排期与完成进度，并出训练卡。不传日期就是今天。
+  inputSchema:
+    type: object
+    properties:
+      date:
+        type: string
+        minLength: 10
+        maxLength: 10
+        description: 日期 YYYY-MM-DD，不传表示今天
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/get_today.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_workout_res
+      visibility:
+      - model
+      - app
+    runtime: workout
+    aliases:
+    - get_today
+- name: workout_readiness
+  title: 记录身体状态
+  description: 记录当天疲劳与酸痛，返回训练建议（normal / reduced / rest）。建议由脚本按固定规则算，不要自己判断，也不要在参数里传结论。一天一条，重复调用覆盖。
+  inputSchema:
+    type: object
+    properties:
+      date:
+        type: string
+        minLength: 10
+        maxLength: 10
+        description: 日期 YYYY-MM-DD，不传表示今天
+      fatigue:
+        type: integer
+        minimum: 1
+        maximum: 5
+        description: 疲劳程度，1 最轻 5 最重
+      soreness:
+        type: array
+        maxItems: 9
+        description: 肌肉酸痛清单，没有酸痛就不传或传空数组
+        items:
+          type: object
+          properties:
+            part:
+              type: string
+              enum:
+              - neck
+              - shoulder
+              - chest
+              - back
+              - waist
+              - hip
+              - thigh_front
+              - thigh_back
+              - calf
+              description: 部位：颈部/肩部/胸部/背部/腰部/臀部/大腿前侧/大腿后侧/小腿
+            level:
+              type: string
+              enum:
+              - mild
+              - moderate
+              - severe
+              description: 程度：轻微/中度/严重，不传按轻微记
+          required:
+          - part
+          additionalProperties: false
+    required:
+    - fatigue
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/log_readiness.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_workout_res
+      visibility:
+      - model
+      - app
+    runtime: workout
+    aliases:
+    - log_readiness
+- name: workout_plan
+  title: 排训练
+  description: 给某天排训练。当天还没排过就新建一场（要 plan_name / cycle_index / cycle_size）；已经排过就把这次的动作接在末尾，已完成的不动，加练也用它。
+  inputSchema:
+    type: object
+    properties:
+      date:
+        type: string
+        minLength: 10
+        maxLength: 10
+        description: 日期 YYYY-MM-DD，不传表示今天
+      plan_name:
+        type: string
+        minLength: 1
+        maxLength: 40
+        description: 计划名，如「臀腿与核心」。新建一场时必填，当天已有排期时忽略
+      cycle_index:
+        type: integer
+        minimum: 1
+        maximum: 99
+        description: 这是本周期第几次，对应「第 2/3 次」里的 2。新建一场时必填，当天已有排期时忽略
+      cycle_size:
+        type: integer
+        minimum: 1
+        maximum: 99
+        description: 本周期共几次，对应「第 2/3 次」里的 3。新建一场时必填，当天已有排期时忽略
+      exercises:
+        type: array
+        minItems: 1
+        maxItems: 20
+        description: 动作清单，按数组顺序上屏；当天已有排期时接在末尾
+        items:
+          type: object
+          properties:
+            exercise_key:
+              type: string
+              enum:
+              - goblet_squat
+              - bulgarian_split_squat
+              - romanian_deadlift
+              - hip_thrust
+              - glute_bridge
+              - walking_lunge
+              - push_up
+              - dumbbell_bench_press
+              - bent_over_row
+              - lat_pulldown
+              - bent_over_fly
+              - overhead_press
+              - lateral_raise
+              - bicep_curl
+              - triceps_extension
+              - plank
+              - side_plank
+              - dead_bug
+              - slider_mountain_climber
+              - ab_wheel_kneeling_rollout
+              description: 动作标识，必须是动作资料里已有的
+            name:
+              type: string
+              minLength: 1
+              maxLength: 40
+              description: 显示名，不传用动作资料里的名字
+            sets:
+              type: integer
+              minimum: 1
+              maximum: 20
+              description: 组数，不传用默认值
+            reps:
+              type: integer
+              minimum: 1
+              maximum: 300
+              description: 每组次数，按秒计的动作填秒数，不传用默认值
+            load_text:
+              type: string
+              maxLength: 30
+              description: 负重描述，如「5kg壶铃」，徒手传空字符串
+          required:
+          - exercise_key
+          additionalProperties: false
+    required:
+    - exercises
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/plan_session.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_workout_res
+      visibility:
+      - model
+      - app
+    runtime: workout
+    aliases:
+    - plan_session
+- name: workout_done
+  title: 勾完成
+  description: 把动作标成已完成，一次可以多个。用 names（动作名）或 positions（第几个，从 1 数，跟卡面顺序一致）指；不给 session_id 就是今天那一场。全部勾完自动收场。
+  inputSchema:
+    type: object
+    properties:
+      names:
+        type: array
+        minItems: 1
+        items:
+          type: string
+          minLength: 1
+        description: 动作名，如 ["臀桥","硬拉"]；「第2个动作」这种说法也认
+      positions:
+        type: array
+        minItems: 1
+        items:
+          type: integer
+          minimum: 1
+          maximum: 20
+        description: 第几个动作，从 1 数，跟卡面顺序一致
+      date:
+        type: string
+        minLength: 10
+        maxLength: 10
+        description: 日期 YYYY-MM-DD，不传表示今天
+      session_id:
+        type: string
+        minLength: 1
+        description: 老调用用的训练 id；不传就是 date 那天（缺省今天）的那一场
+      exercise_id:
+        type: string
+        minLength: 1
+        description: 老调用用的动作 id；新调用用 names / positions
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/complete_exercise.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_workout_res
+      visibility:
+      - model
+      - app
+    runtime: workout
+    aliases:
+    - complete_exercise
+    legacy_params:
+    - session_id
+    - exercise_id
+- name: workout_adjust
+  title: 改组次
+  description: 改某个动作的组数、次数或负重。动作用 name 或 position（第几个）指，不给 session_id 就是今天那一场。
+  inputSchema:
+    type: object
+    properties:
+      name:
+        type: string
+        minLength: 1
+        description: 动作名
+      position:
+        type: integer
+        minimum: 1
+        maximum: 20
+        description: 第几个动作，从 1 数
+      sets:
+        type: integer
+        minimum: 1
+        maximum: 20
+        description: 新组数，不改就别传
+      reps:
+        type: integer
+        minimum: 1
+        maximum: 300
+        description: 新次数，不改就别传
+      load_text:
+        type: string
+        maxLength: 30
+        description: 新负重描述，传空字符串表示徒手
+      date:
+        type: string
+        minLength: 10
+        maxLength: 10
+        description: 日期 YYYY-MM-DD，不传表示今天
+      session_id:
+        type: string
+        minLength: 1
+        description: 老调用用的训练 id；不传就是 date 那天（缺省今天）的那一场
+      exercise_id:
+        type: string
+        minLength: 1
+        description: 老调用用的动作 id；新调用用 names / positions
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/update_exercise_setting.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_workout_res
+      visibility:
+      - model
+      - app
+    runtime: workout
+    aliases:
+    - update_exercise_setting
+    legacy_params:
+    - session_id
+    - exercise_id
+- name: workout_detail
+  title: 动作要领
+  description: 动作要领：主要肌群、呼吸、难度、常见错误，以及它在今天这场里的设置。用 position（今天第几个）、name 或 exercise_key 指。
+  inputSchema:
+    type: object
+    properties:
+      position:
+        type: integer
+        minimum: 1
+        maximum: 20
+        description: 今天第几个动作，从 1 数；卡片「查要领」递进来的「第1个动作」就填 1
+      name:
+        type: string
+        minLength: 1
+        description: 动作名，先在今天的清单里找，找不到再查动作资料
+      exercise_key:
+        type: string
+        enum:
+        - goblet_squat
+        - bulgarian_split_squat
+        - romanian_deadlift
+        - hip_thrust
+        - glute_bridge
+        - walking_lunge
+        - push_up
+        - dumbbell_bench_press
+        - bent_over_row
+        - lat_pulldown
+        - bent_over_fly
+        - overhead_press
+        - lateral_raise
+        - bicep_curl
+        - triceps_extension
+        - plank
+        - side_plank
+        - dead_bug
+        - slider_mountain_climber
+        - ab_wheel_kneeling_rollout
+        description: 动作标识
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/get_exercise_detail.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_workout_res
+      visibility:
+      - model
+      - app
+    runtime: workout
+    aliases:
+    - get_exercise_detail
+- name: workout_month
+  title: 训练月历
+  description: 某个月每天排了什么、练完没有。
+  inputSchema:
+    type: object
+    properties:
+      month:
+        type: string
+        minLength: 7
+        maxLength: 7
+        description: 月份 YYYY-MM
+    required:
+    - month
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/get_month.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_workout_res
+      visibility:
+      - model
+      - app
+    runtime: workout
+    aliases:
+    - get_month
+- name: workout_add
+  title: 追加动作
+  description: 往当天已有的那场末尾追加动作；当天没排过会报 SESSION_NOT_FOUND。一般直接用 workout_plan。
+  inputSchema:
+    type: object
+    properties:
+      date:
+        type: string
+        minLength: 10
+        maxLength: 10
+        description: 日期 YYYY-MM-DD，不传表示今天
+      exercises:
+        type: array
+        minItems: 1
+        maxItems: 20
+        description: 要追加的动作，按数组顺序排在现有动作后面
+        items:
+          type: object
+          properties:
+            exercise_key:
+              type: string
+              enum:
+              - goblet_squat
+              - bulgarian_split_squat
+              - romanian_deadlift
+              - hip_thrust
+              - glute_bridge
+              - walking_lunge
+              - push_up
+              - dumbbell_bench_press
+              - bent_over_row
+              - lat_pulldown
+              - bent_over_fly
+              - overhead_press
+              - lateral_raise
+              - bicep_curl
+              - triceps_extension
+              - plank
+              - side_plank
+              - dead_bug
+              - slider_mountain_climber
+              - ab_wheel_kneeling_rollout
+              description: 动作标识，必须是动作资料里已有的
+            name:
+              type: string
+              minLength: 1
+              maxLength: 40
+              description: 显示名，不传用动作资料里的名字
+            sets:
+              type: integer
+              minimum: 1
+              maximum: 20
+              description: 组数，不传用默认值
+            reps:
+              type: integer
+              minimum: 1
+              maximum: 300
+              description: 每组次数，按秒计的动作填秒数，不传用默认值
+            load_text:
+              type: string
+              maxLength: 30
+              description: 负重描述，如「5kg壶铃」，徒手传空字符串
+          required:
+          - exercise_key
+          additionalProperties: false
+    required:
+    - exercises
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/add_exercise.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_workout_res
+      visibility:
+      - model
+      - app
+    runtime: workout
+    aliases:
+    - add_exercise
+    hidden: true
+- name: workout_finish
+  title: 整场收场
+  description: 把整场标成已完成，不连带勾动作。全部勾完时 workout_done 会自动收场，一般用不到。
+  inputSchema:
+    type: object
+    properties:
+      date:
+        type: string
+        minLength: 10
+        maxLength: 10
+        description: 日期 YYYY-MM-DD，不传表示今天
+      session_id:
+        type: string
+        minLength: 1
+        description: 老调用用的训练 id；不传就是 date 那天（缺省今天）的那一场
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/complete_session.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_workout_res
+      visibility:
+      - model
+      - app
+    runtime: workout
+    aliases:
+    - complete_session
+    hidden: true
+    legacy_params:
+    - session_id
+- name: body_log
+  title: 记体重围度
+  description: 记当天的体重或腰围、臀围、大腿围，至少一项。一天一条，同一天再记会覆盖。
+  inputSchema:
+    type: object
+    properties:
+      date:
+        type: string
+        minLength: 10
+        maxLength: 10
+        description: 日期 YYYY-MM-DD，不传表示今天
+      waist_cm:
+        type: number
+        minimum: 20
+        maximum: 250
+        description: 腹围，厘米
+      hip_cm:
+        type: number
+        minimum: 20
+        maximum: 250
+        description: 臀围，厘米
+      thigh_cm:
+        type: number
+        minimum: 20
+        maximum: 250
+        description: 大腿围，厘米
+      weight_kg:
+        type: number
+        minimum: 20
+        maximum: 300
+        description: 体重，公斤
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/log_measurement.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_workout_res
+      visibility:
+      - model
+      - app
+    runtime: workout
+    aliases:
+    - log_measurement
+- name: body_trend
+  title: 体重围度趋势
+  description: 某一项（waist / hip / thigh / weight）最近若干个记录点的趋势。
+  inputSchema:
+    type: object
+    properties:
+      part:
+        type: string
+        enum:
+        - waist
+        - hip
+        - thigh
+        - weight
+        description: 部位：waist 腹围 / hip 臀围 / thigh 大腿围 / weight 体重
+      weeks:
+        type: integer
+        minimum: 2
+        maximum: 52
+        description: 返回最近多少个记录点，默认 5
+    required:
+    - part
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/get_measurement_trend.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_workout_res
+      visibility:
+      - model
+      - app
+    runtime: workout
+    aliases:
+    - get_measurement_trend
+- name: body_profile_set
+  title: 设身体档案
+  description: 设置性别、身高、年龄、日常活动量，用来算基础代谢。体重用 body_log 记。
+  inputSchema:
+    type: object
+    properties:
+      sex:
+        type: string
+        enum:
+        - male
+        - female
+        description: 生理性别，用于基础代谢公式
+      height_cm:
+        type: number
+        minimum: 100
+        maximum: 250
+        description: 身高，厘米
+      age:
+        type: integer
+        minimum: 10
+        maximum: 120
+        description: 年龄
+      activity_level:
+        type: string
+        enum:
+        - sedentary
+        - light
+        - moderate
+        description: 日常活动量档位（不含训练，训练消耗另计）
+    required:
+    - sex
+    - height_cm
+    - age
+    - activity_level
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/set_body_profile.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_workout_res
+      visibility:
+      - model
+      - app
+    runtime: workout
+    aliases:
+    - set_body_profile
+- name: body_profile
+  title: 看身体档案
+  description: 看身体档案和基础代谢；缺档案或缺体重时在 missing 里说明。
+  inputSchema:
+    type: object
+    properties: {}
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/get_body_profile.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_workout_res
+      visibility:
+      - model
+      - app
+    runtime: workout
+    aliases:
+    - get_body_profile
+- name: body_expenditure
+  title: 当日消耗
+  description: 算某天的能量消耗：基础代谢 + 日常活动 + 训练。缺档案或体重时对应项为 null，不要拿估值顶。
+  inputSchema:
+    type: object
+    properties:
+      date:
+        type: string
+        minLength: 10
+        maxLength: 10
+        description: 日期 YYYY-MM-DD，不传表示今天
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/get_expenditure.py
+  _meta:
+    ui:
+      resourceUri: ai_apps.skills.health_steward_workout_res
+      visibility:
+      - model
+    runtime: workout
+    aliases:
+    - get_expenditure
+- name: nutrition_summary
+  title: 营养打分
+  description: 按推荐区间给当天摄入打分，并返回推荐区间。五项都传就按入参打分；一项都不传就按当天饮食记录合计，膳食纤维标成未知。只传其中几项会报错。
+  inputSchema:
+    type: object
+    properties:
+      date:
+        type: string
+        minLength: 10
+        maxLength: 10
+        description: 日期 YYYY-MM-DD，不传即今天。仅用于展示，不写库
+      kcal:
+        type: number
+        minimum: 0
+        description: 今日总热量
+      carb_g:
+        type: number
+        minimum: 0
+        description: 今日碳水克数
+      protein_g:
+        type: number
+        minimum: 0
+        description: 今日蛋白质克数
+      fat_g:
+        type: number
+        minimum: 0
+        description: 今日脂肪克数
+      fiber_g:
+        type: number
+        minimum: 0
+        description: 今日膳食纤维克数。五项都传时由调用方给；一项都不传时饮食记录里没有这一项，回执标成未知，不当成 0
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/get_nutrition_summary.py
+  _meta:
+    ui:
+      visibility:
+      - model
+    runtime: workout
+    aliases:
+    - get_nutrition_summary
+- name: nutrition_target
+  title: 设营养目标
+  description: 设置每日营养推荐区间（kcal / 碳水 / 蛋白 / 脂肪 / 纤维），不传的项保持原值。
+  inputSchema:
+    type: object
+    properties:
+      kcal:
+        type: object
+        properties:
+          min:
+            type: number
+            minimum: 0
+          max:
+            type: number
+            minimum: 0
+        required:
+        - min
+        - max
+        additionalProperties: false
+      carb_g:
+        type: object
+        properties:
+          min:
+            type: number
+            minimum: 0
+          max:
+            type: number
+            minimum: 0
+        required:
+        - min
+        - max
+        additionalProperties: false
+      protein_g:
+        type: object
+        properties:
+          min:
+            type: number
+            minimum: 0
+          max:
+            type: number
+            minimum: 0
+        required:
+        - min
+        - max
+        additionalProperties: false
+      fat_g:
+        type: object
+        properties:
+          min:
+            type: number
+            minimum: 0
+          max:
+            type: number
+            minimum: 0
+        required:
+        - min
+        - max
+        additionalProperties: false
+      fiber_g:
+        type: object
+        properties:
+          min:
+            type: number
+            minimum: 0
+          max:
+            type: number
+            minimum: 0
+        required:
+        - min
+        - max
+        additionalProperties: false
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/set_nutrition_target.py
+  _meta:
+    ui:
+      visibility:
+      - model
+    runtime: workout
+    aliases:
+    - set_nutrition_target
+- name: report_daily
+  title: 健康日报
+  description: 生成当天的健康日报 HTML（工作区产物），判成功看回执里的 report_path。传 date 由脚本读记录；也可以传 report_data。同时给时以 report_data 为准。两个都不传会报错，不会退回旧版报告。
+  inputSchema:
+    type: object
+    properties:
+      date:
+        type: string
+        minLength: 10
+        maxLength: 10
+        description: 日期 YYYY-MM-DD。传了就由脚本读这一天的饮食和训练记录来组装
+      day_complete_confirmed:
+        type: boolean
+        description: 用户确认过这是全天记录时填 true。不传按 false，报告走降级页
+      report_data:
+        type: object
+        description: 'health-report-v1.0 日报输入。date / weekday / day_complete_confirmed 标明是哪天、 全天记完没有；meals[] 每餐要
+          totals 五项（只给 kcal 会让营养图的三项算成 0）； exercises[] 是主动运动；bmr_kcal 与 daily_activity_kcal 取不到就填 null。
+
+          '
+        additionalProperties: true
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/get_daily_report.py
+  _meta:
+    ui:
+      visibility:
+      - model
+    runtime: workout
+    aliases:
+    - get_daily_report
+- name: report_weekly
+  title: 健康周报
+  description: 生成本周的健康周报 HTML，判成功看回执里的 report_path；有效日不足 3 天不出 HTML、只给 summary。传 date 或 week_start 由脚本读这一周的记录；也可以传 report_data。同时给时以 report_data 为准。
+  inputSchema:
+    type: object
+    properties:
+      date:
+        type: string
+        minLength: 10
+        maxLength: 10
+        description: 这一周里的任意一天 YYYY-MM-DD。不传 week_start 时，取它所在周的周一
+      week_start:
+        type: string
+        minLength: 10
+        maxLength: 10
+        description: 周一 YYYY-MM-DD。给了就以它为准，必须是周一
+      report_data:
+        type: object
+        description: 'health-report-v1.0 周报输入。week_start 是周一、week_end 是周日且正好差 6 天； days[] 一天一条，未记录的餐次与运动槽填 null
+          不填 0； profile 给身高体重与四项目标；next_week_plan 可选，给了就渲染第三张周历。
+
+          '
+        additionalProperties: true
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/get_weekly_report.py
+  _meta:
+    ui:
+      visibility:
+      - model
+    runtime: workout
+    aliases:
+    - get_weekly_report
+- name: now_card
+  title: 到点该不该发
+  description: 判断这一轮提醒发不发。send 为 false 就不要调 show_widget，也不要说已经提醒过；为 true 就把 show_widget 原样交给宿主的 show_widget，不要改字段、不要再搜图。
+  inputSchema:
+    type: object
+    properties:
+      scene:
+        type: string
+        enum:
+        - s1
+        - s2
+        - s3
+        - s4
+        description: s1 三餐 / s2 训练 / s3 日报 / s4 周报
+      thing_id:
+        type: string
+        description: 真实 thing id。给了就和 todo_id 一起写进卡；不给则两个都不写
+      todo_id:
+        type: string
+        description: 不传时按场景用 todo-s1-meals / todo-s2-train / todo-s3-daily / todo-s4-weekly
+      date:
+        type: string
+        minLength: 10
+        maxLength: 10
+        description: YYYY-MM-DD，不传即今天（上海时区）
+      slot:
+        type: string
+        enum:
+        - breakfast
+        - lunch
+        - dinner
+        description: s1 用。不传则 10 点前早餐、15 点前午餐、否则晚餐。规则 instruction 里写了就传那个
+      day_complete_confirmed:
+        type: boolean
+        description: s3 用。用户确认过全天记完才填 true
+      week_start:
+        type: string
+        minLength: 10
+        maxLength: 10
+        description: s4 用。周一 YYYY-MM-DD
+    required:
+    - scene
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/now_card.py
+  _meta:
+    ui:
+      visibility:
+      - model
+    runtime: workout
+- name: now_setup
+  title: 算出提醒参数
+  description: 首次建提醒时把 Thing、Todo、Trigger 的参数算好。模型照抄去调 make-things，本工具不创建。规则一律 enabled false，启用是创建顺序的最后一步。
+  inputSchema:
+    type: object
+    properties:
+      scenes:
+        type: array
+        minItems: 1
+        items:
+          type: string
+          enum:
+          - s1
+          - s2
+          - s3
+          - s4
+        description: 要建哪几条。不传就是四条都建
+      times:
+        type: object
+        properties:
+          breakfast:
+            type: string
+            description: HH:MM，默认 08:30
+          lunch:
+            type: string
+            description: HH:MM，默认 11:30
+          dinner:
+            type: string
+            description: HH:MM，默认 17:30
+          train:
+            type: string
+            description: HH:MM，默认 08:00
+          daily:
+            type: string
+            description: HH:MM，默认 22:00
+          weekly:
+            type: string
+            description: HH:MM，默认周日 22:00
+        additionalProperties: false
+        description: 只覆盖要改的时刻
+      thing_id:
+        type: string
+        description: 已经有 Thing 时填上，初始动态会带上 thingId
+    additionalProperties: false
+  outputSchema:
+    type: object
+    additionalProperties: true
+  handler:
+    type: script
+    path: scripts/now_setup.py
+  _meta:
+    ui:
+      visibility:
+      - model
+    runtime: workout

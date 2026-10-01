@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume / CV</title>
+<style>
+  :root{
+    --ink:#000000;
+    --ink2:#333333;
+    --muted:#8a8a8a;
+    --line:#e8e8e8;
+    --side:#000000;
+    --side2:#000000;
+    --accent:#ff6a00;
+    --accent2:#ff6a00;
+    --accent-soft:#fff0e3;
+    --side-text:#ececec;
+    --side-muted:#8f8f8f;
+  }
+  /* ===== 可商用开源字体（内嵌）：英文 Inter（替代 Helvetica Neue）+ 中文回落 Noto Sans SC ===== */
+  @font-face{ font-family:"Inter"; font-weight:400; src:url("fonts/Inter-Regular.ttf") format("truetype"); }
+  @font-face{ font-family:"Inter"; font-weight:500; src:url("fonts/Inter-Medium.ttf") format("truetype"); }
+  @font-face{ font-family:"Inter"; font-weight:600; src:url("fonts/Inter-SemiBold.ttf") format("truetype"); }
+  @font-face{ font-family:"Inter"; font-weight:700; src:url("fonts/Inter-Bold.ttf") format("truetype"); }
+  @font-face{ font-family:"Noto Sans SC"; font-weight:400; src:url("fonts/NotoSansSC-Regular.otf") format("opentype"); }
+  @font-face{ font-family:"Noto Sans SC"; font-weight:700; src:url("fonts/NotoSansSC-Bold.otf") format("opentype"); }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  @page{ size:A4; margin:0; }
+  html,body{ font-family:"Inter","Noto Sans SC",sans-serif; color:var(--ink); -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{ background:#fff; }
+
+  .page{
+    width:210mm; height:297mm;
+    margin:0 auto; background:#fff;
+    display:flex; position:relative; overflow:hidden;
+  }
+
+  /* ============ Sidebar ============ */
+  .side{
+    width:68mm; flex:0 0 68mm;
+    background:#000000;
+    color:var(--side-text);
+    padding:13mm 9mm 13mm;
+    display:flex; flex-direction:column; justify-content:space-between;
+  }
+  /* 各小节均匀撑满纵向空间，首块贴顶、末块贴底，与主栏底部齐平 */
+  .side > *{ flex:0 0 auto; }
+  .avatar{
+    width:32mm; height:32mm; border-radius:50%;
+    margin:0 auto 6mm; background:rgba(255,255,255,.08);
+    border:2px solid rgba(255,255,255,.25);
+    display:flex; align-items:center; justify-content:center;
+    font-size:9pt; color:var(--side-muted); text-align:center; line-height:1.4;
+  }
+  .side-block{ margin-bottom:0; }
+  .side-h{
+    font-size:11pt; font-weight:700; letter-spacing:2px;
+    color:#fff; margin-bottom:4mm; position:relative; padding-bottom:2.5mm;
+    text-transform:uppercase;
+  }
+  .side-h::after{ content:""; position:absolute; left:0; bottom:0; width:14mm; height:2.5px; border-radius:2px; background:var(--accent); }
+
+  .contact-item{ display:flex; align-items:flex-start; gap:3mm; font-size:8.5pt; color:var(--side-text); margin-bottom:3mm; line-height:1.4; }
+  .contact-item .ic{ flex:0 0 4.5mm; height:4.5mm; border-radius:6px; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:6pt; color:#000; margin-top:.4mm; }
+
+  .skill{ margin-bottom:3.2mm; }
+  .skill .row{ display:flex; justify-content:space-between; font-size:8.5pt; margin-bottom:1.6mm; color:var(--side-text); }
+  .skill .row .lv{ color:var(--side-muted); font-size:7.5pt; }
+  .bar{ height:4px; background:rgba(255,255,255,.12); border-radius:3px; overflow:hidden; }
+  .bar > i{ display:block; height:100%; background:var(--accent); border-radius:3px; }
+
+  .tag-wrap{ display:flex; flex-wrap:wrap; gap:2mm; }
+  .tag{ font-size:7.5pt; padding:1.2mm 2.8mm; border:1px solid rgba(255,106,0,.6); border-radius:10px; color:var(--side-text); background:rgba(255,106,0,.14); }
+
+  .lang-item{ display:flex; justify-content:space-between; font-size:8.5pt; margin-bottom:3mm; color:var(--side-text); }
+  .lang-item .dots{ letter-spacing:1px; color:var(--accent); }
+  .lang-item .dots .o{ color:rgba(255,255,255,.2); }
+
+  /* ============ Main ============ */
+  .main{ flex:1; padding:12mm 12mm 10mm; }
+  .name{ font-size:24pt; font-weight:700; letter-spacing:.5px; line-height:1; }
+  .name .sub{ display:block; font-size:9pt; font-weight:400; color:var(--muted); letter-spacing:3px; margin-top:2mm; text-transform:uppercase; }
+  .title-line{ font-size:11pt; color:var(--accent); font-weight:600; margin-top:3mm; letter-spacing:.5px; }
+  .intro{ font-size:9pt; color:var(--ink2); line-height:1.55; margin-top:3.5mm; padding-top:3.5mm; border-top:1px solid var(--line); text-align:justify; }
+
+  .sec{ margin-top:4.5mm; }
+  .sec-h{ display:flex; align-items:center; gap:3.5mm; margin-bottom:3mm; }
+  .sec-h .num{ width:8mm; height:8mm; flex:0 0 8mm; background:var(--accent); color:#000; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:11pt; font-weight:700; }
+  .sec-h .tt{ font-size:13pt; font-weight:700; color:var(--ink); letter-spacing:.5px; text-transform:uppercase; }
+
+  .item{ position:relative; padding-left:7mm; padding-bottom:3.2mm; }
+  .item::before{ content:""; position:absolute; left:0; top:1.5mm; width:7px; height:7px; border-radius:50%; background:#fff; border:2px solid var(--accent); z-index:2; }
+  .item::after{ content:""; position:absolute; left:3px; top:1.5mm; bottom:-1mm; width:1px; background:var(--line); }
+  .item:last-child::after{ display:none; }
+  .item .top{ display:flex; justify-content:space-between; align-items:baseline; gap:4mm; }
+  .item .role{ font-size:11pt; font-weight:700; color:var(--ink); }
+  .item .org{ font-size:9.5pt; color:var(--accent); font-weight:600; margin-top:.8mm; }
+  .item .date{ font-size:8pt; color:var(--muted); white-space:nowrap; background:var(--accent-soft); padding:.8mm 2.5mm; border-radius:8px; }
+  .item ul{ margin:1.8mm 0 0; padding-left:4mm; }
+  .item ul li{ font-size:9pt; color:var(--ink2); line-height:1.5; margin-bottom:.8mm; text-align:justify; }
+  .item ul li::marker{ color:var(--accent); }
+
+  .edu .deg{ font-size:9pt; color:var(--ink2); margin-top:.8mm; }
+
+  .footer{ margin-top:4mm; padding-top:3mm; border-top:1px solid var(--line); font-size:7.5pt; color:var(--muted); text-align:center; letter-spacing:.5px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ================= Sidebar ================= -->
+  <aside class="side">
+    <div class="avatar">PHOTO</div>
+
+    <div class="side-block">
+      <div class="side-h">Contact</div>
+      <div class="contact-item"><span class="ic">T</span><span>+86 138-0000-0000</span></div>
+      <div class="contact-item"><span class="ic">@</span><span>your.name@email.com</span></div>
+      <div class="contact-item"><span class="ic">L</span><span>Chaoyang, Beijing</span></div>
+      <div class="contact-item"><span class="ic">W</span><span>github.com/yourname</span></div>
+    </div>
+
+    <div class="side-block">
+      <div class="side-h">Skills</div>
+      <div class="skill">
+        <div class="row"><span>Data Analysis</span><span class="lv">Expert</span></div>
+        <div class="bar"><i style="width:92%"></i></div>
+      </div>
+      <div class="skill">
+        <div class="row"><span>Project Mgmt.</span><span class="lv">Proficient</span></div>
+        <div class="bar"><i style="width:85%"></i></div>
+      </div>
+      <div class="skill">
+        <div class="row"><span>Collaboration</span><span class="lv">Proficient</span></div>
+        <div class="bar"><i style="width:88%"></i></div>
+      </div>
+      <div class="skill">
+        <div class="row"><span>Copywriting</span><span class="lv">Good</span></div>
+        <div class="bar"><i style="width:75%"></i></div>
+      </div>
+    </div>
+
+    <div class="side-block">
+      <div class="side-h">Tools</div>
+      <div class="tag-wrap">
+        <span class="tag">Excel</span>
+        <span class="tag">SQL</span>
+        <span class="tag">Python</span>
+        <span class="tag">Tableau</span>
+        <span class="tag">PowerPoint</span>
+        <span class="tag">Figma</span>
+        <span class="tag">Jira</span>
+      </div>
+    </div>
+
+    <div class="side-block">
+      <div class="side-h">Languages</div>
+      <div class="lang-item"><span>Mandarin (Native)</span><span class="dots">●●●●●</span></div>
+      <div class="lang-item"><span>English (CET-6)</span><span class="dots">●●●●<span class="o">●</span></span></div>
+      <div class="lang-item"><span>Japanese (N2)</span><span class="dots">●●●<span class="o">●●</span></span></div>
+    </div>
+
+    <div class="side-block">
+      <div class="side-h">Honors</div>
+      <div class="contact-item"><span class="ic">★</span><span>PMP Certification</span></div>
+      <div class="contact-item"><span class="ic">★</span><span>Outstanding Graduate</span></div>
+      <div class="contact-item"><span class="ic">★</span><span>Employee of the Year ×2</span></div>
+    </div>
+  </aside>
+
+  <!-- ================= Main ================= -->
+  <main class="main">
+    <div class="name">Zhang San<span class="sub">Senior Operations Manager</span></div>
+    <div class="title-line">Senior Operations Manager / Data-Driven Growth</div>
+    <p class="intro">
+      Operations and growth professional with 8 years of internet industry experience. Skilled at data-driven decision-making, having led a user-base growth project scaling from 100K to 5M. Strong in full user lifecycle management, campaign planning and cross-functional collaboration; led a 12-person team to achieve 60% annual GMV growth. Results-oriented, with a talent for finding high-ROI growth paths under limited resources.
+    </p>
+
+    <!-- Work Experience -->
+    <section class="sec">
+      <div class="sec-h">
+        <span class="num">1</span>
+        <span class="tt">Work Experience</span>
+      </div>
+
+      <div class="item">
+        <div class="top">
+          <div>
+            <div class="role">Senior Operations Manager</div>
+            <div class="org">ABC Technology Co., Ltd.</div>
+          </div>
+          <span class="date">Jun 2021 - Present</span>
+        </div>
+        <ul>
+          <li>Led the user growth and retention system; lifted monthly active users from 1.8M to 5M through refined cohort operations, raising 6-month retention by 14 percentage points.</li>
+          <li>Designed the membership points and benefits program, increasing paid-member penetration from 5% to 18% and driving ~¥32M in annual revenue.</li>
+          <li>Built the A/B testing and dashboard framework, cutting campaign decision cycles from 2 weeks to 3 days and boosting team iteration efficiency by 40%.</li>
+        </ul>
+      </div>
+
+      <div class="item">
+        <div class="top">
+          <div>
+            <div class="role">Operations Supervisor</div>
+            <div class="org">XYZ Network Technology</div>
+          </div>
+          <span class="date">Mar 2018 - May 2021</span>
+        </div>
+        <ul>
+          <li>Ran daily operations for core categories; planned a flagship campaign that surpassed ¥15M GMV, up 65% year over year.</li>
+          <li>Built a 5-person content team from scratch, growing owned-content traffic share from 0 to 30%.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Key Projects -->
+    <section class="sec">
+      <div class="sec-h">
+        <span class="num">2</span>
+        <span class="tt">Key Projects</span>
+      </div>
+
+      <div class="item">
+        <div class="top">
+          <div>
+            <div class="role">User Growth Platform</div>
+            <div class="org">Project Lead</div>
+          </div>
+          <span class="date">Jan 2022 - Sep 2022</span>
+        </div>
+        <ul>
+          <li>Led a 4-department effort to build a growth platform with reusable campaign and reach components, cutting new-campaign launch time by 50%.</li>
+          <li>Post-launch, automated reach covered 8M users per quarter, lowering labor cost by ~35%.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Education -->
+    <section class="sec">
+      <div class="sec-h">
+        <span class="num">3</span>
+        <span class="tt">Education</span>
+      </div>
+      <div class="item edu">
+        <div class="top">
+          <div>
+            <div class="role">ABC University</div>
+            <div class="deg">B.A. in Marketing</div>
+          </div>
+          <span class="date">Sep 2014 - Jun 2018</span>
+        </div>
+        <ul>
+          <li>Core coursework: Marketing, Consumer Behavior, Statistics, Data Analysis.</li>
+          <li>First-class scholarship for three consecutive years; head of the Student Union Practice Department.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

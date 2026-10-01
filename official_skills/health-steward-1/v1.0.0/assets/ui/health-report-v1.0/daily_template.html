@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="w4x9cCkCoT1clmj4GDWW8m">
+<head data-page-node-id="1DSl8L6539e52375Vf5LuJ">
+<meta charset="UTF-8" data-page-node-id="qy6j2CmYbUh8OgfzicWaSh">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" data-page-node-id="vOt3EIsOFwTrCJ1V2hCiKr">
+<title>健康日报 · {{DATE_SHORT}}</title>
+<style>
+:root{
+  --ink:#171815;--text:#555853;--muted:#8A8D88;--hair:#E8E9E6;--white:#FFF;
+  --overall:#6E7972;--overall-soft:#F0F2F0;--overall-line:#DDE2DE;
+  --diet:#D97745;--diet-deep:#974727;--diet-soft:#FAEEE7;--diet-line:#EECFBE;
+  --sport:#477DA3;--sport-deep:#285C80;--sport-soft:#EAF2F7;--sport-line:#C9DDE9;
+  --good:#3F8067;--warn:#B06B2D;--advice:#6E766F;--advice-soft:#F0F1EE;--advice-line:#DADDD7;
+  --num:"DIN Alternate","SF Pro Display",-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;background:#F4F4F2}
+body{font-family:"PingFang SC",-apple-system,"Helvetica Neue",sans-serif;background:#F4F4F2;color:var(--ink);line-height:1.6}
+.page{width:100%;max-width:430px;min-height:100vh;margin:0 auto;background:#FAFAF8;padding:0 0 calc(28px + env(safe-area-inset-bottom))}
+.num{font-family:var(--num);font-variant-numeric:tabular-nums}
+.serif{font-family:"Songti SC","Noto Serif SC",Georgia,serif}
+.hero{padding:32px 22px 24px;background:linear-gradient(180deg,#EEF1EE 0%,#F7F8F6 66%,#FAFAF8 100%)}
+.date{font-size:11px;letter-spacing:.14em;font-weight:600;color:var(--overall)}
+h1{font-size:28px;font-weight:500;letter-spacing:-.3px;line-height:1.42;margin-top:12px}
+.day-desc{font-size:14px;line-height:1.9;color:#4D504C;margin-top:13px}
+.day-desc b{font-weight:600;color:var(--diet-deep)}
+
+.module{margin:12px 12px 0;border:1px solid;border-radius:22px;padding:10px}
+.module.overall{background:var(--overall-soft);border-color:var(--overall-line)}
+.module.diet{background:var(--diet-soft);border-color:var(--diet-line)}
+.module.sport{background:var(--sport-soft);border-color:var(--sport-line)}
+.module.closing{background:var(--advice-soft);border-color:var(--advice-line)}
+.module-head{display:flex;align-items:center;padding:7px 6px 12px}
+.module-head .index{font-size:10px;font-weight:700;letter-spacing:.1em;margin-right:8px}
+.module.overall .index{color:var(--overall)}.module.diet .index{color:var(--diet-deep)}.module.sport .index{color:var(--sport-deep)}.module.closing .index{color:var(--advice)}
+.module-head h2{font-size:17px;font-weight:600}
+.module-head .meta{font-size:11px;color:var(--muted);margin-left:auto}
+.sheet{background:var(--white);border-radius:15px;padding:17px 16px}
+.sheet+.sheet{margin-top:9px}
+
+/* Overall */
+.energy-kicker{font-size:11px;color:var(--muted);letter-spacing:.04em}
+.energy-result{display:flex;align-items:baseline;gap:7px;margin-top:5px;flex-wrap:wrap}
+.energy-result .value{font-size:43px;line-height:1;font-weight:700;letter-spacing:-1.5px}
+.energy-result .unit{font-size:13px;color:var(--muted);font-weight:500}
+.energy-result .label{font-size:16px;font-weight:600;color:{{BALANCE_DOT_COLOR}}}
+.energy-lead{font-size:12px;color:var(--text);line-height:1.7;margin-top:11px}
+.energy-coverage{margin-top:17px;padding-top:14px;border-top:1px solid var(--hair)}
+.balance-axis{position:relative;height:34px;margin:4px 7px 0}
+.balance-track{position:absolute;left:0;right:0;top:13px;height:8px;border-radius:999px;background:linear-gradient(90deg,#DCEDE6 0%,#79AC95 45%,#D9DAD7 49%,#D9DAD7 51%,#E7A276 55%,#F5DED0 100%)}
+.balance-center{position:absolute;left:50%;top:8px;width:1px;height:19px;background:#777B76}
+.balance-dot{position:absolute;left:{{BALANCE_DOT_POSITION}}%;top:8px;width:18px;height:18px;border-radius:50%;background:{{BALANCE_DOT_COLOR}};border:3px solid #FFF;box-shadow:0 0 0 1px {{BALANCE_DOT_SHADOW}};transform:translateX(-50%)}
+.balance-dot::after{content:"{{BALANCE_SIGNED_TEXT}}";position:absolute;left:50%;bottom:21px;transform:translateX(-50%);font:700 9px var(--num);color:{{BALANCE_DOT_COLOR}};white-space:nowrap}
+.balance-labels{display:grid;grid-template-columns:1fr auto 1fr;align-items:start;margin-top:3px;font-size:10px;font-weight:600;line-height:1.35}
+.balance-labels .left{color:var(--good);text-align:left}.balance-labels .mid{color:var(--muted);text-align:center;font-weight:400}.balance-labels .right{color:var(--diet-deep);text-align:right}
+.energy-explain{font-size:11.5px;color:var(--text);line-height:1.65;margin-top:14px;padding:11px 12px;border-radius:11px;background:{{BALANCE_EXPLAIN_BG}};border-left:3px solid {{BALANCE_DOT_COLOR}}}
+.energy-explain b{color:{{BALANCE_DOT_COLOR}}}
+.eq-title{font-size:12px;color:var(--text);margin-bottom:10px}.eq-title b{color:var(--ink)}
+.eq-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.eq{border:1px solid var(--hair);border-radius:12px;padding:10px;display:flex;align-items:center;min-width:0}
+.eq .emoji{font-size:24px;margin-right:7px;flex:none}.eq .main{font-size:12px;font-weight:600;line-height:1.35}.eq small{display:block;font-size:9px;color:var(--muted);font-weight:400;margin-top:2px}
+.eq-note{font-size:9.5px;color:var(--muted);line-height:1.5;margin-top:8px}
+.io-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.io{border-radius:12px;padding:12px}.io.d{background:var(--diet-soft)}.io.s{background:var(--sport-soft)}
+.io .k{font-size:10px;color:var(--muted)}.io .icons{font-size:16px;letter-spacing:1px;margin-top:4px}.io .desc{font-size:10px;color:var(--text);line-height:1.45;margin-top:3px}.io .v{font-size:15px;font-weight:700;margin-top:6px}.io.d .v{color:var(--diet-deep)}.io.s .v{color:var(--sport-deep)}
+
+/* Diet */
+.meal-photo{width:100%;aspect-ratio:16/8.4;object-fit:cover;border-radius:13px;display:block;background:#EEE}
+.meal-head{display:flex;align-items:baseline;margin-top:12px}.meal-head h3{font-size:15px}.meal-head .time{font-size:11px;color:var(--muted);margin-left:7px}.meal-head .kcal{margin-left:auto;color:var(--diet-deep);font-size:14px;font-weight:700}.meal-head small{font-size:9px;color:var(--muted);font-weight:400}
+.scene{font-size:12.5px;color:var(--text);line-height:1.7;margin-top:6px}
+.dishes{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;margin-top:9px}.dish{font-size:12px;color:var(--text);display:flex;align-items:center;min-width:0}.dish .emoji{font-size:15px;width:23px;flex:none}.dish .portion{font-size:10px;color:var(--muted);margin-left:4px}
+.meal-signal{font-size:11.5px;color:var(--diet-deep);line-height:1.6;border-left:2px solid var(--diet);padding-left:9px;margin-top:10px}
+.missing{font-size:12px;color:var(--muted);text-align:center;border:1px dashed #D9D7D3;border-radius:12px;padding:12px}
+.chart-title{font-size:14px;font-weight:600}.chart-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.chart{height:210px;position:relative;margin-top:12px;padding:13px 8px 35px 32px;border-bottom:1px solid #D8D9D6}
+.scale-line{position:absolute;left:32px;right:8px;border-top:1px dashed #CED0CC}.scale-line.s100{top:13px}.scale-line.s50{top:94px}.scale-line span{position:absolute;left:-31px;top:-8px;font-size:9px;color:var(--muted)}
+.bars{height:162px;display:flex;align-items:flex-end;gap:12px;position:relative;z-index:1}
+.col{position:relative;flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-width:0}.bar-value{font-size:11px;font-weight:700;margin-bottom:4px}.bar{width:min(30px,70%);border-radius:7px 7px 0 0}.bar-label{position:absolute;left:50%;transform:translateX(-50%);bottom:-29px;width:64px;font-size:10px;color:var(--text);text-align:center;line-height:1.25}.bar-label small{display:block;font-size:8px;color:var(--muted)}
+.overall-copy{font-size:12.5px;color:var(--text);line-height:1.75}.overall-copy b{color:var(--diet-deep)}
+
+/* Sport */
+.exercise-card{border:1px solid var(--sport-line);border-radius:13px;padding:13px}
+.exercise-head{display:flex;align-items:center}.exercise-head .emoji{font-size:21px;margin-right:8px}.exercise-head h3{font-size:14px}.exercise-head .time{font-size:10px;color:var(--muted);margin-left:7px}.exercise-head .kcal{margin-left:auto;color:var(--sport-deep);font-size:14px;font-weight:700}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);margin-top:12px;padding-top:11px;border-top:1px solid var(--hair)}
+.metric{text-align:center;border-right:1px solid var(--hair)}.metric:last-child{border-right:none}.metric .v{font-size:14px;font-weight:700;color:var(--sport-deep)}.metric .v small{font-size:8px;color:var(--muted);font-weight:400}.metric .k{font-size:9px;color:var(--muted);margin-top:1px}
+.burn-title{font-size:13px;font-weight:600;margin-bottom:10px}.burn-title span{display:block;font-size:10px;color:var(--muted);font-weight:400;margin-top:2px}
+.burn-card{border:1px solid var(--sport-line);border-radius:12px;padding:11px 12px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;margin-top:8px}
+.burn-card .emoji{font-size:19px}.burn-card .name{font-size:12.5px;font-weight:600}.burn-card .why{font-size:10px;color:var(--muted);grid-column:2}.burn-card .value{font-size:14px;font-weight:700;color:var(--sport-deep);grid-row:1/3;grid-column:3;text-align:right}.burn-card .value small{display:block;font-size:9px;color:var(--muted);font-weight:400}.burn-card .food-eq{grid-column:2/4;font-size:9.5px;color:var(--sport-deep);padding-top:6px;margin-top:2px;border-top:1px dashed var(--sport-line)}
+.total-flow{display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap;font-size:10px;color:var(--muted);margin:13px 0 9px}.total-flow b{font-size:11px;color:var(--sport-deep)}
+.total-burn{background:var(--sport-deep);color:#FFF;border-radius:13px;padding:14px;display:flex;align-items:center}.total-burn .k{font-size:12px}.total-burn .sub{font-size:9px;opacity:.7;margin-top:2px}.total-burn .v{margin-left:auto;font-size:23px;font-weight:700}.total-burn small{font-size:10px;font-weight:400;opacity:.7}
+.food-note{font-size:9.5px;color:var(--muted);line-height:1.5;margin-top:9px;text-align:center}
+
+/* Closing */
+.reviews{display:grid;grid-template-columns:1fr 1fr;gap:8px}.review{border:1px solid var(--hair);border-radius:13px;padding:12px;min-height:164px}.tag{font-size:9px;font-weight:700;border-radius:999px;padding:3px 7px;display:inline-block}.review.good .tag{background:#EAF5F0;color:var(--good)}.review.warn .tag{background:#FAEFE4;color:var(--warn)}
+.review h3{font-size:13px;line-height:1.5;margin-top:8px}.review p{font-size:10.5px;color:var(--text);line-height:1.6;margin-top:6px}.review .calc{font-size:9.5px;color:var(--muted);margin-top:8px}
+.tomorrow{border-top:1px solid var(--hair);margin-top:15px;padding-top:15px}.tomorrow .kicker{font-size:10px;letter-spacing:.12em;font-weight:700;color:var(--advice)}.tomorrow h3{font-size:21px;line-height:1.45;font-weight:500;margin-top:7px}.tomorrow p{font-size:12px;color:var(--text);line-height:1.75;margin-top:8px}
+.foot{text-align:center;font-size:10px;color:var(--muted);line-height:1.7;padding:24px 22px 0}
+
+@media(max-width:360px){
+  .hero{padding-left:18px;padding-right:18px}h1{font-size:25px}.day-desc{font-size:13px}
+  .module{margin-left:8px;margin-right:8px;padding:8px}.sheet{padding:15px 13px}
+  .energy-result .value{font-size:39px}.coverage-legend{font-size:9px;gap:7px}.eq-grid,.io-grid{gap:6px}.eq{padding:8px 7px}.eq .emoji{font-size:20px}.eq .main{font-size:11px}
+  .dishes{grid-template-columns:1fr}.bars{gap:7px}.chart{padding-left:28px}.scale-line{left:28px}.scale-line span{left:-27px}
+  .metrics{grid-template-columns:repeat(2,1fr);row-gap:9px}.metric:nth-child(2){border-right:none}.metric:nth-child(-n+2){padding-bottom:8px;border-bottom:1px solid var(--hair)}
+  .reviews{grid-template-columns:1fr}.review{min-height:auto}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="hero">
+    <div class="date">{{DATE_DISPLAY}}</div>
+    <h1 class="serif">{{HERO_TITLE}}</h1>
+    <p class="day-desc serif">{{DAY_DESCRIPTION_HTML}}</p>
+  </header>
+
+  <section class="module overall">
+    <div class="module-head"><span class="index">01</span><h2>整体数据分析</h2><span class="meta">摄入与消耗</span></div>
+    <div class="sheet">
+      <div class="energy-kicker">今天的能量收支</div>
+      <div class="energy-result"><span class="value num">{{BALANCE_ABS_KCAL}}</span><span class="unit">kcal</span><span class="label">{{BALANCE_STATE_LABEL}}</span></div>
+      <p class="energy-lead">{{ENERGY_LEAD}}</p>
+      <div class="energy-coverage">
+        <div class="balance-axis"><div class="balance-track"></div><div class="balance-center"></div><div class="balance-dot"></div></div>
+        <div class="balance-labels"><span class="left">消耗大于摄入</span><span class="mid">持平</span><span class="right">摄入大于消耗</span></div>
+      </div>
+      <div class="energy-explain">{{ENERGY_EXPLANATION_HTML}}</div>
+    </div>
+    <div class="sheet">
+      <div class="eq-title">净差值 <b class="num">{{BALANCE_ABS_KCAL}} kcal</b>，换成生活里的量大约是：</div>
+      <div class="eq-grid">
+        <div class="eq"><span class="emoji">{{KCAL_EQUIVALENT_EMOJI}}</span><span class="main">{{KCAL_EQUIVALENT_TITLE}}<small>{{KCAL_EQUIVALENT_NOTE}}</small></span></div>
+        <div class="eq"><span class="emoji">{{ACTIVITY_EQUIVALENT_EMOJI}}</span><span class="main">{{ACTIVITY_EQUIVALENT_TITLE}}<small>{{ACTIVITY_EQUIVALENT_NOTE}}</small></span></div>
+      </div>
+      <div class="eq-note">{{EQUIVALENT_DISCLAIMER}}</div>
+    </div>
+    <div class="sheet">
+      <div class="io-grid">
+        <div class="io d"><div class="k">摄入 · 吃了什么</div><div class="icons">{{INTAKE_EMOJIS}}</div><div class="desc">{{INTAKE_SUMMARY}}</div><div class="v num">+{{INTAKE_KCAL}} kcal</div></div>
+        <div class="io s"><div class="k">消耗 · 用在哪里</div><div class="icons">{{BURN_EMOJIS}}</div><div class="desc">{{BURN_SUMMARY}}</div><div class="v num">−{{TOTAL_BURN_KCAL}} kcal</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="module diet">
+    <div class="module-head"><span class="index">02</span><h2>摄入 · 饮食</h2><span class="meta">{{MEAL_COUNT}} 餐有记录</span></div>
+    {{MEAL_CARDS_HTML}}
+    {{MISSING_MEAL_HTML}}
+    <div class="sheet">
+      <div class="chart-title">全天营养达成度</div><div class="chart-sub">{{NUTRITION_CHART_SUBTITLE}}</div>
+      <div class="chart">
+        <div class="scale-line s100"><span>100%</span></div><div class="scale-line s50"><span>50%</span></div>
+        <div class="bars">
+          <div class="col"><div class="bar-value num" style="color:var(--diet-deep)">{{KCAL_PERCENT}}%</div><div class="bar" style="height:{{KCAL_BAR_HEIGHT}}%;background:var(--diet)"></div><div class="bar-label">热量<small>{{INTAKE_KCAL}} kcal</small></div></div>
+          <div class="col"><div class="bar-value num" style="color:#5872B4">{{PROTEIN_PERCENT}}%</div><div class="bar" style="height:{{PROTEIN_BAR_HEIGHT}}%;background:#6F88C8"></div><div class="bar-label">蛋白质<small>{{PROTEIN_G}}g</small></div></div>
+          <div class="col"><div class="bar-value num" style="color:#B77A2C">{{FAT_PERCENT}}%</div><div class="bar" style="height:{{FAT_BAR_HEIGHT}}%;background:#D59B50"></div><div class="bar-label">脂肪<small>{{FAT_G}}g</small></div></div>
+          <div class="col"><div class="bar-value num" style="color:#579265">{{CARB_PERCENT}}%</div><div class="bar" style="height:{{CARB_BAR_HEIGHT}}%;background:#72A87E"></div><div class="bar-label">碳水<small>{{CARB_G}}g</small></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="sheet"><p class="overall-copy">{{NUTRITION_SUMMARY_HTML}}</p></div>
+  </section>
+
+  <section class="module sport">
+    <div class="module-head"><span class="index">03</span><h2>消耗 · 运动</h2><span class="meta">总消耗 {{TOTAL_BURN_KCAL}} kcal</span></div>
+    <div class="sheet">{{EXERCISE_CARDS_HTML}}</div>
+    <div class="sheet">
+      <div class="burn-title">今天的三类消耗<span>每一项都用 kcal 表示，三项相加得到总消耗</span></div>
+      <article class="burn-card"><span class="emoji">🫀</span><div><div class="name">基础代谢</div><div class="why">维持心跳、呼吸、体温</div></div><div class="value num">{{BMR_KCAL}}<small>kcal</small></div><div class="food-eq">{{BMR_EQUIVALENT}}</div></article>
+      <article class="burn-card"><span class="emoji">🏃</span><div><div class="name">日常活动</div><div class="why">通勤、站立、普通走动</div></div><div class="value num">{{DAILY_ACTIVITY_KCAL}}<small>kcal</small></div><div class="food-eq">{{DAILY_ACTIVITY_EQUIVALENT}}</div></article>
+      <article class="burn-card"><span class="emoji">{{ACTIVE_EMOJI}}</span><div><div class="name">主动运动</div><div class="why">{{ACTIVE_SOURCE_TEXT}}</div></div><div class="value num">{{ACTIVE_KCAL}}<small>kcal</small></div><div class="food-eq">{{ACTIVE_EQUIVALENT}}</div></article>
+      <div class="total-flow"><span class="num">{{BMR_KCAL}} kcal</span><span>+</span><span class="num">{{DAILY_ACTIVITY_KCAL}} kcal</span><span>+</span><span class="num">{{ACTIVE_KCAL}} kcal</span><span>=</span><b class="num">{{TOTAL_BURN_KCAL}} kcal</b></div>
+      <div class="total-burn"><div><div class="k">今日总消耗</div><div class="sub">基础代谢 + 日常活动 + 主动运动</div></div><div class="v num">{{TOTAL_BURN_KCAL}}<small> kcal</small></div></div>
+      <div class="food-note">食物类比仅帮助理解能量量级，不代表建议按对应食物补吃。</div>
+    </div>
+  </section>
+
+  <section class="module closing">
+    <div class="module-head"><span class="index">04</span><h2>今日小结与明日行动</h2><span class="meta">一句夸 · 一句提醒</span></div>
+    <div class="sheet">
+      <div class="reviews">
+        <article class="review good"><span class="tag">做得好</span><h3>{{GOOD_TITLE}}</h3><p>{{GOOD_BODY}}</p><div class="calc num">{{GOOD_CALC}}</div></article>
+        <article class="review warn"><span class="tag">要留意</span><h3>{{WARN_TITLE}}</h3><p>{{WARN_BODY}}</p><div class="calc num">{{WARN_CALC}}</div></article>
+      </div>
+      <div class="tomorrow"><div class="kicker">明天 · 一个小改变</div><h3 class="serif">{{TOMORROW_TITLE}}</h3><p class="serif">{{TOMORROW_BODY}}</p></div>
+    </div>
+  </section>
+
+  <footer class="foot">{{FOOTER_TEXT}}</footer>
+</div>
+</body>
+</html>

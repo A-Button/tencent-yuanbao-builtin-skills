@@ -1,0 +1,832 @@
+{
+  "_comment": [
+    "今日训练 XCard。白底。动作行未完成时可勾选，已完成则右侧变成 ✓，行还在。",
+    "点选不发 prompt；底部「查要领」读选中槽位（第1/2/3个动作）。不要把已完成收成摘要行。"
+  ],
+  "components": [
+    {
+      "id": "root",
+      "component": "Card",
+      "children": [
+        "visual-shell"
+      ],
+      "style": {
+        "padding": 0
+      }
+    },
+    {
+      "id": "visual-shell",
+      "component": "Card",
+      "children": [
+        "content"
+      ],
+      "style": {
+        "containerColor": "basic_container_primary",
+        "shape": 24,
+        "padding": 10
+      }
+    },
+    {
+      "id": "content",
+      "component": "Column",
+      "children": [
+        "title-frame",
+        "body-frame"
+      ],
+      "align": "stretch"
+    },
+    {
+      "id": "title-frame",
+      "component": "Box",
+      "children": [
+        "title-column"
+      ],
+      "style": {
+        "padding": {
+          "horizontal": 16,
+          "vertical": 14
+        }
+      }
+    },
+    {
+      "id": "title-column",
+      "component": "Column",
+      "children": [
+        "title-row",
+        "source",
+        "plan"
+      ],
+      "align": "stretch",
+      "style": {
+        "spacing": 8
+      }
+    },
+    {
+      "id": "title-row",
+      "component": "Row",
+      "children": [
+        "heading",
+        "cycle"
+      ],
+      "justify": "spaceBetween",
+      "align": "center"
+    },
+    {
+      "id": "heading",
+      "component": "Text",
+      "text": {
+        "path": "/card_badge"
+      },
+      "variant": "h5",
+      "style": {
+        "color": "basic_function_blue"
+      }
+    },
+    {
+      "id": "cycle",
+      "component": "Text",
+      "text": {
+        "path": "/card_time"
+      },
+      "variant": "caption",
+      "style": {
+        "color": "basic_text_quaternary"
+      }
+    },
+    {
+      "id": "source",
+      "component": "Text",
+      "text": {
+        "path": "/card_source"
+      },
+      "variant": "caption",
+      "style": {
+        "color": "basic_text_quaternary"
+      }
+    },
+    {
+      "id": "plan",
+      "component": "Text",
+      "text": {
+        "path": "/card_plan"
+      },
+      "variant": "h4"
+    },
+    {
+      "id": "body-frame",
+      "component": "Box",
+      "children": [
+        "body-card"
+      ],
+      "style": {
+        "padding": {
+          "start": 12,
+          "end": 12,
+          "bottom": 12
+        }
+      }
+    },
+    {
+      "id": "body-card",
+      "component": "Card",
+      "children": [
+        "body"
+      ],
+      "style": {
+        "containerColor": "basic_container_primary",
+        "shape": 20,
+        "padding": 18
+      }
+    },
+    {
+      "id": "body",
+      "component": "Column",
+      "children": [
+        "progress",
+        "roster",
+        "more-visible",
+        "action-row"
+      ],
+      "align": "stretch",
+      "style": {
+        "spacing": 10
+      }
+    },
+    {
+      "id": "progress",
+      "component": "Text",
+      "text": {
+        "path": "/card_progress"
+      },
+      "variant": "caption",
+      "style": {
+        "color": "basic_text_quaternary"
+      }
+    },
+    {
+      "id": "roster",
+      "component": "Column",
+      "children": [
+        "vis-row-0",
+        "vis-row-1",
+        "vis-row-2"
+      ],
+      "align": "stretch",
+      "style": {
+        "spacing": 6
+      }
+    },
+    {
+      "id": "vis-row-0",
+      "component": "Visibility",
+      "value": {
+        "path": "/card_exercises/0/present"
+      },
+      "child": "rowcard-0"
+    },
+    {
+      "id": "rowcard-0",
+      "component": "Card",
+      "child": "row-0",
+      "style": {
+        "containerColor": "basic_container_primary",
+        "shape": 12,
+        "padding": {
+          "start": 10,
+          "end": 10,
+          "top": 8,
+          "bottom": 8
+        }
+      }
+    },
+    {
+      "id": "row-0",
+      "component": "Row",
+      "children": [
+        "icon-card-0",
+        "row-main-0",
+        "trail-0"
+      ],
+      "align": "center",
+      "style": {
+        "spacing": 10
+      }
+    },
+    {
+      "id": "icon-card-0",
+      "component": "Card",
+      "child": "row-icon-0",
+      "style": {
+        "containerColor": "basic_container_secondary",
+        "shape": 10,
+        "padding": 8
+      }
+    },
+    {
+      "id": "row-icon-0",
+      "component": "Text",
+      "text": {
+        "path": "/card_exercises/0/icon"
+      },
+      "variant": "h4"
+    },
+    {
+      "id": "row-main-0",
+      "component": "Column",
+      "children": [
+        "vis-name-live-0",
+        "vis-name-done-0",
+        "row-meta-0"
+      ],
+      "weight": 1,
+      "style": {
+        "spacing": 2
+      }
+    },
+    {
+      "id": "row-name-live-0",
+      "component": "Text",
+      "text": {
+        "path": "/card_exercises/0/name"
+      },
+      "variant": "h5"
+    },
+    {
+      "id": "vis-name-live-0",
+      "component": "Visibility",
+      "value": {
+        "path": "/card_exercises/0/not_done"
+      },
+      "child": "row-name-live-0"
+    },
+    {
+      "id": "vis-name-done-0",
+      "component": "Visibility",
+      "value": {
+        "path": "/card_exercises/0/done"
+      },
+      "child": "row-name-done-0"
+    },
+    {
+      "id": "row-name-done-0",
+      "component": "Text",
+      "text": {
+        "path": "/card_exercises/0/name"
+      },
+      "variant": "h5",
+      "style": {
+        "color": "basic_text_quaternary"
+      }
+    },
+    {
+      "id": "row-meta-0",
+      "component": "Text",
+      "text": {
+        "path": "/card_exercises/0/meta"
+      },
+      "variant": "caption",
+      "style": {
+        "color": "basic_text_quaternary"
+      }
+    },
+    {
+      "id": "pick-0",
+      "component": "ChoicePicker",
+      "variant": "mutuallyExclusive",
+      "displayStyle": "checkbox",
+      "options": [
+        {
+          "label": " ",
+          "value": "第1个动作"
+        }
+      ],
+      "value": {
+        "path": "/card_selected"
+      }
+    },
+    {
+      "id": "trail-0",
+      "component": "Box",
+      "children": [
+        "vis-pick-0",
+        "vis-done-0"
+      ]
+    },
+    {
+      "id": "vis-pick-0",
+      "component": "Visibility",
+      "value": {
+        "path": "/card_exercises/0/not_done"
+      },
+      "child": "pick-0"
+    },
+    {
+      "id": "vis-done-0",
+      "component": "Visibility",
+      "value": {
+        "path": "/card_exercises/0/done"
+      },
+      "child": "done-mark-0"
+    },
+    {
+      "id": "done-mark-0",
+      "component": "Text",
+      "text": "✓",
+      "variant": "h5",
+      "style": {
+        "color": "basic_text_quaternary"
+      }
+    },
+    {
+      "id": "vis-row-1",
+      "component": "Visibility",
+      "value": {
+        "path": "/card_exercises/1/present"
+      },
+      "child": "rowcard-1"
+    },
+    {
+      "id": "rowcard-1",
+      "component": "Card",
+      "child": "row-1",
+      "style": {
+        "containerColor": "basic_container_primary",
+        "shape": 12,
+        "padding": {
+          "start": 10,
+          "end": 10,
+          "top": 8,
+          "bottom": 8
+        }
+      }
+    },
+    {
+      "id": "row-1",
+      "component": "Row",
+      "children": [
+        "icon-card-1",
+        "row-main-1",
+        "trail-1"
+      ],
+      "align": "center",
+      "style": {
+        "spacing": 10
+      }
+    },
+    {
+      "id": "icon-card-1",
+      "component": "Card",
+      "child": "row-icon-1",
+      "style": {
+        "containerColor": "basic_container_secondary",
+        "shape": 10,
+        "padding": 8
+      }
+    },
+    {
+      "id": "row-icon-1",
+      "component": "Text",
+      "text": {
+        "path": "/card_exercises/1/icon"
+      },
+      "variant": "h4"
+    },
+    {
+      "id": "row-main-1",
+      "component": "Column",
+      "children": [
+        "vis-name-live-1",
+        "vis-name-done-1",
+        "row-meta-1"
+      ],
+      "weight": 1,
+      "style": {
+        "spacing": 2
+      }
+    },
+    {
+      "id": "row-name-live-1",
+      "component": "Text",
+      "text": {
+        "path": "/card_exercises/1/name"
+      },
+      "variant": "h5"
+    },
+    {
+      "id": "vis-name-live-1",
+      "component": "Visibility",
+      "value": {
+        "path": "/card_exercises/1/not_done"
+      },
+      "child": "row-name-live-1"
+    },
+    {
+      "id": "vis-name-done-1",
+      "component": "Visibility",
+      "value": {
+        "path": "/card_exercises/1/done"
+      },
+      "child": "row-name-done-1"
+    },
+    {
+      "id": "row-name-done-1",
+      "component": "Text",
+      "text": {
+        "path": "/card_exercises/1/name"
+      },
+      "variant": "h5",
+      "style": {
+        "color": "basic_text_quaternary"
+      }
+    },
+    {
+      "id": "row-meta-1",
+      "component": "Text",
+      "text": {
+        "path": "/card_exercises/1/meta"
+      },
+      "variant": "caption",
+      "style": {
+        "color": "basic_text_quaternary"
+      }
+    },
+    {
+      "id": "pick-1",
+      "component": "ChoicePicker",
+      "variant": "mutuallyExclusive",
+      "displayStyle": "checkbox",
+      "options": [
+        {
+          "label": " ",
+          "value": "第2个动作"
+        }
+      ],
+      "value": {
+        "path": "/card_selected"
+      }
+    },
+    {
+      "id": "trail-1",
+      "component": "Box",
+      "children": [
+        "vis-pick-1",
+        "vis-done-1"
+      ]
+    },
+    {
+      "id": "vis-pick-1",
+      "component": "Visibility",
+      "value": {
+        "path": "/card_exercises/1/not_done"
+      },
+      "child": "pick-1"
+    },
+    {
+      "id": "vis-done-1",
+      "component": "Visibility",
+      "value": {
+        "path": "/card_exercises/1/done"
+      },
+      "child": "done-mark-1"
+    },
+    {
+      "id": "done-mark-1",
+      "component": "Text",
+      "text": "✓",
+      "variant": "h5",
+      "style": {
+        "color": "basic_text_quaternary"
+      }
+    },
+    {
+      "id": "vis-row-2",
+      "component": "Visibility",
+      "value": {
+        "path": "/card_exercises/2/present"
+      },
+      "child": "rowcard-2"
+    },
+    {
+      "id": "rowcard-2",
+      "component": "Card",
+      "child": "row-2",
+      "style": {
+        "containerColor": "basic_container_primary",
+        "shape": 12,
+        "padding": {
+          "start": 10,
+          "end": 10,
+          "top": 8,
+          "bottom": 8
+        }
+      }
+    },
+    {
+      "id": "row-2",
+      "component": "Row",
+      "children": [
+        "icon-card-2",
+        "row-main-2",
+        "trail-2"
+      ],
+      "align": "center",
+      "style": {
+        "spacing": 10
+      }
+    },
+    {
+      "id": "icon-card-2",
+      "component": "Card",
+      "child": "row-icon-2",
+      "style": {
+        "containerColor": "basic_container_secondary",
+        "shape": 10,
+        "padding": 8
+      }
+    },
+    {
+      "id": "row-icon-2",
+      "component": "Text",
+      "text": {
+        "path": "/card_exercises/2/icon"
+      },
+      "variant": "h4"
+    },
+    {
+      "id": "row-main-2",
+      "component": "Column",
+      "children": [
+        "vis-name-live-2",
+        "vis-name-done-2",
+        "row-meta-2"
+      ],
+      "weight": 1,
+      "style": {
+        "spacing": 2
+      }
+    },
+    {
+      "id": "row-name-live-2",
+      "component": "Text",
+      "text": {
+        "path": "/card_exercises/2/name"
+      },
+      "variant": "h5"
+    },
+    {
+      "id": "vis-name-live-2",
+      "component": "Visibility",
+      "value": {
+        "path": "/card_exercises/2/not_done"
+      },
+      "child": "row-name-live-2"
+    },
+    {
+      "id": "vis-name-done-2",
+      "component": "Visibility",
+      "value": {
+        "path": "/card_exercises/2/done"
+      },
+      "child": "row-name-done-2"
+    },
+    {
+      "id": "row-name-done-2",
+      "component": "Text",
+      "text": {
+        "path": "/card_exercises/2/name"
+      },
+      "variant": "h5",
+      "style": {
+        "color": "basic_text_quaternary"
+      }
+    },
+    {
+      "id": "row-meta-2",
+      "component": "Text",
+      "text": {
+        "path": "/card_exercises/2/meta"
+      },
+      "variant": "caption",
+      "style": {
+        "color": "basic_text_quaternary"
+      }
+    },
+    {
+      "id": "pick-2",
+      "component": "ChoicePicker",
+      "variant": "mutuallyExclusive",
+      "displayStyle": "checkbox",
+      "options": [
+        {
+          "label": " ",
+          "value": "第3个动作"
+        }
+      ],
+      "value": {
+        "path": "/card_selected"
+      }
+    },
+    {
+      "id": "trail-2",
+      "component": "Box",
+      "children": [
+        "vis-pick-2",
+        "vis-done-2"
+      ]
+    },
+    {
+      "id": "vis-pick-2",
+      "component": "Visibility",
+      "value": {
+        "path": "/card_exercises/2/not_done"
+      },
+      "child": "pick-2"
+    },
+    {
+      "id": "vis-done-2",
+      "component": "Visibility",
+      "value": {
+        "path": "/card_exercises/2/done"
+      },
+      "child": "done-mark-2"
+    },
+    {
+      "id": "done-mark-2",
+      "component": "Text",
+      "text": "✓",
+      "variant": "h5",
+      "style": {
+        "color": "basic_text_quaternary"
+      }
+    },
+    {
+      "id": "more-visible",
+      "component": "Visibility",
+      "value": {
+        "path": "/card_has_more"
+      },
+      "child": "more-click"
+    },
+    {
+      "id": "more-click",
+      "component": "Clickable",
+      "child": "more-line",
+      "action": {
+        "functionCall": {
+          "call": "sendQuery",
+          "args": {
+            "prompt": {
+              "path": "/card_more_prompt"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "more-line",
+      "component": "Text",
+      "text": {
+        "path": "/card_more"
+      },
+      "variant": "caption",
+      "style": {
+        "color": "basic_function_blue"
+      }
+    },
+    {
+      "id": "action-row",
+      "component": "Row",
+      "children": [
+        "adjust-slot",
+        "expand-slot"
+      ],
+      "align": "stretch",
+      "style": {
+        "spacing": 8
+      }
+    },
+    {
+      "_note": "Button 没声明 weight，写在它上面是静默忽略；宽度只能由外面这层 Column 分。",
+      "id": "adjust-slot",
+      "component": "Column",
+      "children": [
+        "vis-cue",
+        "vis-adjust"
+      ],
+      "align": "stretch",
+      "weight": 2
+    },
+    {
+      "_note": "Button 没声明 weight，写在它上面是静默忽略；宽度只能由外面这层 Column 分。",
+      "id": "expand-slot",
+      "component": "Column",
+      "children": [
+        "expand"
+      ],
+      "align": "stretch",
+      "weight": 3
+    },
+    {
+      "id": "expand",
+      "component": "Button",
+      "child": "expand-label",
+      "variant": "primary",
+      "style": {
+        "containerColor": "components_button_primary",
+        "shape": 16,
+        "height": 48
+      },
+      "action": {
+        "functionCall": {
+          "call": "sendQuery",
+          "args": {
+            "prompt": "今天这些动作我练完了，帮我记上"
+          }
+        }
+      }
+    },
+    {
+      "id": "expand-label",
+      "component": "Text",
+      "text": "练了这些，帮我记上",
+      "style": {
+        "color": "components_button_primary_title"
+      }
+    },
+    {
+      "id": "vis-adjust",
+      "component": "Visibility",
+      "value": {
+        "path": "/card_is_empty"
+      },
+      "child": "adjust"
+    },
+    {
+      "id": "adjust",
+      "component": "Button",
+      "child": "adjust-label",
+      "variant": "default",
+      "style": {
+        "containerColor": "components_button_gray",
+        "shape": 16,
+        "height": 48
+      },
+      "action": {
+        "functionCall": {
+          "call": "sendQuery",
+          "args": {
+            "prompt": "我想调整今天的训练计划"
+          }
+        }
+      }
+    },
+    {
+      "id": "adjust-label",
+      "component": "Text",
+      "text": "改计划",
+      "style": {
+        "color": "basic_text_primary"
+      }
+    },
+    {
+      "id": "vis-cue",
+      "component": "Visibility",
+      "value": {
+        "path": "/card_has_cue"
+      },
+      "child": "cue"
+    },
+    {
+      "id": "cue",
+      "component": "Button",
+      "child": "cue-label",
+      "variant": "default",
+      "style": {
+        "containerColor": "components_button_gray",
+        "shape": 16,
+        "height": 48
+      },
+      "action": {
+        "functionCall": {
+          "call": "sendQuery",
+          "args": {
+            "prompt": {
+              "call": "formatString",
+              "args": {
+                "value": "看「${/card_selected/0}」的动作要领"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "cue-label",
+      "component": "Text",
+      "text": "查要领",
+      "style": {
+        "color": "basic_text_primary"
+      }
+    }
+  ]
+}

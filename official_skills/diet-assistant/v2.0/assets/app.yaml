@@ -1,0 +1,222 @@
+id: diet-assistant
+name: 饮食助手
+version: v1.0
+description: 拍照记一餐、算营养、写整餐分析。移动端一级页使用 XCard 今日饮食摘要，桌面端一级页和移动端二级页使用 HTML 三 tab 详情。
+
+# photoUrl 收两种形态：LLM 链路给短链，VLM 链路给沙箱路径（[user_image_path]）。
+# 两种都活不过这次会话，所以 record_meal 落库时就把字节冻结到档案卷上
+# （store.freeze_photo），记录里只留相对 key，出卡时再解成路径交给宿主换长效地址。
+# 档案目录（store.py 的 DIET_DATA_DIR）按用户持久化，两条链路共用同一份，
+# 切换链路时用户的饮食记录不会断。
+
+# 只有一条 Resource，且只是个句柄：前端拿这个 uri 去模版平台取渲染资源，XCard 摘要和
+# HTML 详情都在那边，本包不带 path、不随包交付任何页面文件。运行时 _run.py 下发的同样
+# 只有 uri 和数据。
+resources:
+  - uri: chat.chat_output.xcard_diet_res
+    name: 今日饮食记录
+    description: 饮食助手渲染资源。移动端一级页是 XCard 今日饮食摘要，桌面端一级页和移动端二级页是三 tab 详情（本餐详细分析 / 今日食书 / 统计洞察）。
+    mimeType: application/a2ui+json
+    # 每次调用下发的 structuredContent 是完整快照（本餐 + 今日 + 统计），不是增量。
+    # 缺省语义是追加，会让连续几餐攒成多份 payload，所以显式声明只留最新一份。
+    dataMode: keep_latest
+
+tools:
+  - name: show_app
+    title: 饮食助手 API
+    description: >
+      饮食助手业务入口。通过 operation 区分动作：record_meal / estimate_meal /
+      get_meal / get_day / get_stats / update_meal / delete_meal。
+
+      用户已经吃了、或只传食物图没说「只算不算」，走 record_meal（落库出卡）；
+      明确只问热量（菜谱 / 配料表 / 生食材 / 纯文字「多少卡」）走 estimate_meal，
+      不落库但卡片照出。拿不准时有图走 record_meal。
+
+      两者都只收每一项食物的营养估值，合计与 4-4-9 交叉核验由脚本完成，不要自己
+      心算 totals 传进来。同天同餐次再记一次是新建独立卡（同槽多卡），不合并。
+
+      每次调用都会同时刷新移动端 XCard 摘要和 HTML 三 tab 详情。返回给模型的只有
+      精简回执（meal_id / totals / 核验结果，供改删定位），正文按 SKILL 写，
+      **不要把 meal_id 或「已存入…」贴进用户可见正文。**
+    inputSchema:
+      type: object
+      properties:
+        operation:
+          type: string
+          enum: [record_meal, estimate_meal, get_meal, get_day, get_stats, update_meal, delete_meal]
+        items:
+          type: array
+          description: >
+            本餐食物清单。每项必填 name / portion / emoji / origin 以及
+            kcal / protein_g / fat_g / carb_g / sodium_mg 五个营养估值；
+            story / data_source / assumptions 可选但强烈建议补齐，卡片的食物
+            详情列表要用。
+          items:
+            type: object
+            properties:
+              name: {type: string}
+              portion:
+                type: string
+                maxLength: 3
+                description: >
+                  份量单位，直接渲染在卡片食物列表右栏，**最多 3 个字**：
+                  「1个」「一份」「一碗」「一杯」「半份」「一小把」。
+                  不要填克重或毫升（「约250g」这种是计量不是份量，会被契约挡掉）。
+                  括号补充也算进这 3 个字，「半包（50g）」同样会被退回。
+                  克重折算、部位假设一律写进 assumptions，不要塞这里。
+
+              emoji: {type: string}
+              origin: {type: string}
+              kcal: {type: number}
+              protein_g: {type: number}
+              fat_g: {type: number}
+              carb_g: {type: number}
+              sodium_mg: {type: number}
+              story: {type: string, maxLength: 400}
+              data_source: {type: string}
+              assumptions: {type: string}
+            required: [name, portion, emoji, origin, kcal, protein_g, fat_g, carb_g, sodium_mg]
+            additionalProperties: false
+        title:
+          type: string
+          maxLength: 40
+          description: >
+            卡片标题，record_meal / estimate_meal 必填。是提炼不是命名：
+            先从这顿里挑一个具体的、看得见的东西——一缕热气、
+            一层油光、汤见了底、只买了一颗——标题从它长出来，菜名一个字不出现也行：
+            如「夜灯下的油炸时光」「一碗热气里的牛骨香」「只收一颗的海苔小贝」。
+            餐次已印在卡片时间行，标题里再挂「午餐：」「夜宵 · 」这类前缀会被直接拒收。
+        sceneOneliner:
+          type: string
+          maxLength: 200
+          description: >
+            卡片「场景速写」块，record_meal / estimate_meal 必填。1–2 句白描，不是评价：
+            写看得见的——份量多大、怎么摆的、
+            吃到什么程度、什么时间什么光线，如「一大碗牛肉面里卧着颗卤蛋，汤喝到见底，
+            面也捞得干干净净」。不要写热量高不高、够不够均衡（那是 narrative 的事），
+            也不要写「已为你记录」这类流程汇报。与 title 分工不同，不要说同一件事。
+        narrative:
+          type: object
+          description: >
+            解读文案。care 会渲染在卡片底部的「本餐营养学分析」。
+            record_meal 建议传齐四段；estimate_meal **必填 care**（测算也出卡，
+            空了底部会空），key_signals / metabolism / followup 可选。
+          properties:
+            key_signals: {type: array, items: {type: string}}
+            metabolism: {type: string}
+            care: {type: string}
+            followup: {type: string}
+          additionalProperties: false
+          required: [care]
+        nutrients:
+          type: array
+          items: {type: string}
+          description: 主要营养成分标签，如 ["蛋白质","膳食纤维"]，渲染在今日食书的餐次摘要。
+        photoUrl:
+          type: string
+          description: >
+            用户上传照片的引用，**record_meal / estimate_meal 本轮有图就必填**——
+            测算也出卡，一样要配图，别因为「不落库」就省掉。
+
+            抄当前这条消息里的 `[user_image_path]`（`/data/inputs/xxx.jpg`），
+            原样抄，不要改写成 http。路径由宿主出卡时换成长效地址。
+            只有入站没拷上、提示词里是 `[user_image_url]` 时才抄那条地址。
+
+            只抄当前这条消息里的那一个，不要从历史消息里翻，更不要自己编一条。
+            缺省为 null：档案里仍是 null，出卡时填兜底图、角标「无图」。
+        eatenAt:
+          type: string
+          description: >
+            ISO 8601 用餐时间。优先级：用户说的钟点 > 照片拍摄时间 > 上传时刻（缺省）。
+            有拍摄时间时填 capture time，并配 eatenAtSource=photo。
+        eatenAtSource:
+          type: string
+          enum: [photo, upload, user]
+          description: user=用户口述；photo=照片拍摄时间；upload=上传时刻（默认）。
+        mealType:
+          type: string
+          enum: [breakfast, beverage, lunch, afternoon_tea, dinner, midnight]
+          description: >
+            餐次槽位。优先级：用户明确说了哪一餐 > 按 eatenAt 时间窗派生 >
+            上传时刻派生。用户说「这是午餐」时必须显式传 lunch。
+        beverageOnly:
+          type: boolean
+          description: 本餐只有饮品时置 true，直接归 beverage 且不并入任何一餐。
+        aiPrice:
+          type: number
+          minimum: 0
+          description: 这一餐的估价（元）。record_meal / estimate_meal 必填，渲染在营养账单顶部「AI估值」。
+        userId:
+          type: string
+          description: 可选用户标识；缺省使用当前本地用户。
+        mealId:
+          type: string
+        patch:
+          type: object
+          description: >
+            update_meal 的字段级改动，只允许修改下列业务字段。
+            update_meal 只用于纠错（记错了菜、份量写多了、删掉某一项）。
+            用户又补了一样真吃过的东西（「还吃了个酸奶」）要走 record_meal 新建一条，
+            不要把老 items 加上新东西整份覆盖回来——那样第二张卡永远出不来。
+          properties:
+            eaten_at: {type: string}
+            eaten_at_source: {type: string, enum: [photo, upload, user]}
+            meal_type: {type: string, enum: [breakfast, beverage, lunch, afternoon_tea, dinner, midnight]}
+            title: {type: string, maxLength: 40}
+            scene_oneliner: {type: string, maxLength: 200}
+            items:
+              type: array
+              minItems: 1
+              items:
+                type: object
+                properties:
+                  name: {type: string}
+                  # 份量单位，最多 3 个字，不填克重。理由同上面 items.portion。
+                  portion: {type: string, maxLength: 3}
+                  emoji: {type: string}
+                  origin: {type: string}
+                  kcal: {type: number, minimum: 0}
+                  protein_g: {type: number, minimum: 0}
+                  fat_g: {type: number, minimum: 0}
+                  carb_g: {type: number, minimum: 0}
+                  sodium_mg: {type: number, minimum: 0}
+                  story: {type: string, maxLength: 400}
+                  data_source: {type: string}
+                  assumptions: {type: string}
+                required: [name, portion, emoji, origin, kcal, protein_g, fat_g, carb_g, sodium_mg]
+                additionalProperties: false
+            narrative:
+              type: object
+              properties:
+                key_signals: {type: array, items: {type: string}}
+                metabolism: {type: string}
+                care: {type: string}
+                followup: {type: string}
+              additionalProperties: false
+            nutrients: {type: array, items: {type: string}}
+            photo_url: {type: [string, "null"]}
+            is_favorited: {type: boolean}
+          additionalProperties: false
+        date:
+          type: string
+          description: get_day / get_stats 的日期，格式 YYYY-MM-DD，缺省为今天。
+        period:
+          type: string
+          enum: [day, week]
+          description: get_stats 的统计档位，缺省 week。
+        tab:
+          type: string
+          enum: [meal, today, stats]
+          description: 覆盖卡片默认落在哪个 tab；不传按 operation 的默认值。
+      required: [operation]
+      additionalProperties: false
+    outputSchema:
+      type: object
+      additionalProperties: true
+    handler:
+      type: script
+      path: scripts/diet_api.py
+    _meta:
+      ui:
+        resourceUri: chat.chat_output.xcard_diet_res
+        visibility: [model, app]

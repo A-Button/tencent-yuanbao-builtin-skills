@@ -1,0 +1,13 @@
+{
+  "status": "User-supplied report art. ENFJ is the temporary mascot for all types until the remaining type images arrive.",
+  "mascots": {
+    "default_file": "report-art/enfj.png",
+    "type_files": {}
+  },
+  "slots": {
+    "communication": {"file": "report-art/communication.png"},
+    "decision": {"file": "report-art/decision.png"},
+    "growth": {"file": "report-art/growth.png"},
+    "reflection": {"file": "report-art/reflection.png"}
+  }
+}

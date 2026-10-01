@@ -1,0 +1,87 @@
+---
+name: {{APP_ID}}
+description: {{APP_DESCRIPTION}}
+keywords:
+  - {{APP_NAME}}
+packageType: app-skill
+instructionOnly: false
+metadata:
+  version: {{VERSION}}
+  openclaw:
+    requiresNetwork: false
+    dataClassification: personal-data
+---
+
+# {{APP_NAME}}
+
+## 角色与入口
+
+完全本地的 App Skill，无远程服务依赖。数据存在**按用户挂载的持久卷** `{{STORE_PATH}}`，而不是每个沙箱各一份的 `~/`。同一用户的所有沙箱挂的是同一份 `/data/user`，因此 Agent 写入与 UI 直调读到的是同一份数据，不会分叉；本地运行没有这个挂载时自动退到 `~/.one-agent/data/{{APP_ID}}/`。读写必须经统一 CLI `app`，禁止直接编辑数据文件。
+
+下面这些 App 工具通过沙箱内 `app`（`/data/skills/bin/app`）调用。一个操作一个 tool；没有 UI 或宿主交互的辅助脚本按其说明直接运行，不强制走 `app`：
+
+```bash
+app {{APP_ID}} list_{{ENTITY_PLURAL}} '{}'
+app {{APP_ID}} create_{{ENTITY}} '{"title": "..."}'
+app {{APP_ID}} update_{{ENTITY}} '{"id": "...", "notes": "..."}'
+app {{APP_ID}} delete_{{ENTITY}} '{"id": "..."}'
+```
+
+查询工具的输入 schema 与调用方式：
+
+```bash
+app {{APP_ID}} describe
+```
+
+列出当前可见工具：
+
+```bash
+app {{APP_ID}} toollist
+```
+
+参数不确定时先执行 `app {{APP_ID}} describe`，禁止猜字段。
+
+## 执行优先级（严格约束，单一真源）
+
+以下规则优先于其它章节：
+
+1. **Schema 优先**：首次调用或参数不确定时，先 `app {{APP_ID}} describe`。
+2. **只走统一 CLI**：禁止直接执行 `scripts/` 下的 handler，禁止绕过 `app`。只有经 `app` 调用，UI 才拿得到数据并上屏。
+3. **需要记录上下文时先查询**：更新或删除前若还没有目标记录 ID，先调 `list_{{ENTITY_PLURAL}}`。写操作的模型输出只包含本次变更，不能把 UI 的完整快照当作模型已知信息。
+4. **有信息就写入**：收集需求时一次只追问一个关键问题；一旦拿到标题（或明确的更新/删除对象），立即写入，禁止长时间只问不写。
+5. **调用过程不可见**：回复不展示脚本名、命令、参数、原始返回或错误堆栈。
+
+## 结果与运行要求
+
+App 工具使用 `handler.type: python`，默认调用与工具同名的同步入口（如 `create_{{ENTITY}}(args)`），需要不同名称时配置 `handler.function`。只有字段不存在时才使用默认值，显式空值会报错。stdout 是模型结果，函数返回值是 UI 数据，stderr 用于日志；业务脚本不处理传输文件或旁路标记。查询输出保留记录明细和 ID，写操作输出本次变更；UI 始终收到完整快照。
+
+运行环境需要支持该契约的新版 `app`；页面回调入口也必须支持相同契约。旧的直接执行脚本并解析 stdout 的入口需要先升级。普通脚本不受此函数约定约束。
+
+## Agent 操作
+
+| tool | 用途 | 必填 | Agent |
+|---|---|---|---|
+| `list_{{ENTITY_PLURAL}}` | 查看全部记录 | — | 允许 |
+| `create_{{ENTITY}}` | 新建记录 | `title` | 允许 |
+| `update_{{ENTITY}}` | 更新标题或备注 | `id` | 允许 |
+| `delete_{{ENTITY}}` | 删除记录 | `id` | 允许 |
+
+四个都不是敏感交易操作。用户直接说"帮我记一条"时应立即创建。
+
+## 字段说明
+
+- `title`：标题，`create_{{ENTITY}}` 必填，非空字符串。
+- `notes`：备注，可选；`update_{{ENTITY}}` 传空字符串表示清空。
+- `id`：系统生成。Agent 应复用工具返回结果里的 `id`，不得凭标题猜测。
+
+## 常见坑
+
+1. 直接执行 `scripts/` 下的 handler，UI 拿不到数据、不会刷新。
+2. 清空 `notes` 用空字符串，不要传 `null`。
+3. 删除不可逆，批量删除前应向用户确认。
+4. `id` 不需要用户记忆，复用返回结果里的即可。
+
+## 沟通规则
+
+- 默认简体中文，回复简洁。
+- 创建/更新/删除成功后只复述标题和关键字段变化，不暴露 `id`。

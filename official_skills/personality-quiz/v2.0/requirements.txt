@@ -1,4 +1,4 @@
 # Build/verification dependency; verified with Python 3.9 and WebP support.
 # Calendar and astronomy engines are vendored under scripts/vendor/.
 # Generated HTML remains offline and needs no Python packages.
-Pillow==11.3.0
+Pillow==12.3.0

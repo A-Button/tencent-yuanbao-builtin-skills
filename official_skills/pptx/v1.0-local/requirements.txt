@@ -7,6 +7,6 @@
 # 安装源：ensure_deps.py 走普通 pip，沿用预装环境的 pip 配置；
 # 镜像源（如国内加速）由桌面端预装 Python 环境负责，脚本不介入。
 
-Pillow==12.3.0     # 图片优化/替换：optimize_template_media.py, replace_image.py
+Pillow==13.0.0     # 图片优化/替换：optimize_template_media.py, replace_image.py
 fonttools==4.63.0  # 字体子集嵌入：embed_fonts.py
 defusedxml==0.7.1  # XML 安全解析：office/unpack.py, office/pack.py, clean.py
